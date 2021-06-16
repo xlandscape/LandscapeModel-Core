@@ -1,0 +1,124 @@
+"""
+Class definition of an individual Monte Carlo run.
+"""
+import datetime
+import importlib
+import base
+import components
+import xml.etree.ElementTree
+
+
+class MCRun:
+    """
+    A individual Monte Carlo run of a Landscape Model experiment.
+    """
+    # CHANGELOG
+    base.VERSION.added("1.1.1", "base.MCRun class for managing individual Monte Carlo runs")
+    base.VERSION.changed("1.1.2", "base.MCRun allows disabling components in configuration")
+    base.VERSION.changed("1.1.2", "base.MCRun allows disabling links between inputs and outputs")
+    base.VERSION.changed("1.2.12", "base.MCRun.run() signals MC run start to observer")
+    base.VERSION.changed("1.3.5", "base.MCRun refactored")
+    base.VERSION.changed("1.3.20", "base.MCRun can be enabled/disabled also through expression in configuration")
+    base.VERSION.changed("1.3.27", "base.MCRun parses scales of user-defined parameters")
+    base.VERSION.changed("1.3.35", "base.MCRun can continue previous simulations")
+    base.VERSION.added("1.4.1", "Changelog in base.MCRun")
+    base.VERSION.changed("1.4.2", "Changelog description")
+
+    def __init__(self, xml_file, **keywords):
+        config = xml.etree.ElementTree.parse(xml_file)
+        observers = base.observers_from_xml(config.find("Observers"), **keywords)
+        self._observer = base.MultiObserver(observers)
+        store_config = config.find("Store")
+        store_module = importlib.import_module(store_config.attrib["module"])
+        store_params = {}
+        for storeParam in store_config:
+            observer_reference = storeParam.find("ObserverReference")
+            if observer_reference is not None:
+                store_params[storeParam.tag.lower()] = self._observer
+            else:
+                store_params[storeParam.tag.lower()] = base.convert(storeParam)
+        self._store = getattr(store_module, store_config.attrib["class"])(**store_params)
+        self._composition = {}
+        user_parameters = []
+        for componentConfig in config.find("Composition"):
+            if self._store.has_dataset(componentConfig.tag):
+                self._observer.write_message(
+                    2,
+                    "Component " + componentConfig.tag + " already present in data store",
+                    "Configuration and parameterization ignored"
+                )
+            elif ("enabled" not in componentConfig.attrib or componentConfig.attrib["enabled"] == "true") and \
+                    ("enabled_expression" not in componentConfig.attrib or
+                     eval(componentConfig.attrib["enabled_expression"])):
+                component_module = importlib.import_module(componentConfig.attrib["module"])
+                try:
+                    component = getattr(component_module, componentConfig.attrib["class"])(
+                        componentConfig.tag, self._observer, self._store)
+                except AttributeError:
+                    raise AttributeError(
+                        "Module '" + str(componentConfig.attrib["module"]) + "' does not contain a component '" +
+                        componentConfig.attrib["class"] + "'")
+                for inputConfig in componentConfig:
+                    from_output = inputConfig.find("FromOutput")
+                    if from_output is not None:
+                        if "enabled" not in from_output.attrib or from_output.attrib["enabled"] == "true":
+                            if from_output.attrib["component"] in self._composition:
+                                source_component = self._composition[from_output.attrib["component"]]
+                                component.inputs[inputConfig.tag] = source_component.outputs[
+                                    from_output.attrib["output"]
+                                ]
+                            elif self._store.has_dataset(from_output.attrib["component"]):
+                                output_name = from_output.attrib["component"] + "/" + from_output.attrib["output"]
+                                component.inputs[inputConfig.tag] = base.Output(
+                                    output_name,
+                                    self._store
+                                )
+                                self._observer.write_message(
+                                    3,
+                                    "Using stored data of " + output_name + " to satisfy",
+                                    "input " + inputConfig.tag + " of component " + componentConfig.tag
+                                )
+                            else:
+                                raise KeyError("No component '" + from_output.attrib["component"] + "' in composition")
+                    else:
+                        value = base.convert(inputConfig)
+                        user_parameters.append(
+                            components.UserParameter(
+                                componentConfig.tag + "/" + inputConfig.tag,
+                                value,
+                                inputConfig.attrib["scales"] if "scales" in inputConfig.attrib else None,
+                                inputConfig.attrib["unit"] if "unit" in inputConfig.attrib else None
+                            )
+                        )
+                    for extensionConfig in inputConfig.findall("Extension"):
+                        params = {}
+                        for param in extensionConfig:
+                            params[param.tag.lower()] = param.text
+                        extension_module = importlib.import_module(extensionConfig.attrib["module"])
+                        extension = getattr(extension_module, extensionConfig.attrib["class"])(**params)
+                        component.inputs[inputConfig.tag].add_extension(extension)
+                self._composition[component.name] = component
+        user_parameters_component = components.UserParameters(
+            "__UserParameters__", user_parameters, self._observer, self._store)
+        for outputName in user_parameters_component.outputs:
+            output = user_parameters_component.outputs[outputName]
+            component_name, input_name = output.name.split("/")
+            self._composition[component_name].inputs[input_name] = output
+        return
+
+    def run(self):
+        """
+        Conducts the Monte Carlo run.
+        :return: Nothing.
+        """
+        mc_start_time = datetime.datetime.now()
+        self._observer.mc_run_started(self._composition)
+        for component in self._composition.values():
+            component_start_time = datetime.datetime.now()
+            self._observer.write_message(5, "Running component " + component.name)
+            component.run()
+            self._observer.write_message(5, "Component " + component.name + " finished")
+            self._observer.write_message(5, "Elapsed time: " + str(datetime.datetime.now() - component_start_time))
+        self._store.close()
+        self._observer.mc_run_finished("Elapsed time: " + str(datetime.datetime.now() - mc_start_time))
+        return

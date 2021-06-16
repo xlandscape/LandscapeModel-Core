@@ -1,0 +1,147 @@
+"""
+Class definition of a GraphML observer.
+"""
+
+import base
+import xml.etree.ElementTree
+
+
+class GraphMLObserver(base.Observer):
+    """
+    An observer that writes a Landscape Model's composition as a GraphML file.
+
+    PARAMETERS
+    output_file: The path to which the GraphML file should be written.
+    include_modules: If the string "true" (case-insensitive), modules ae included into the GraphML file.
+    """
+    # CHANGELOG
+    base.VERSION.added("1.2.12", "observer.GraphMLObserver")
+    base.VERSION.changed("1.2.13", "further implementation of observer.GraphMLObserver")
+    base.VERSION.added("1.3.24", "observer.GraphMLObserver.flush() and observer.GraphMLObserver.write()")
+    base.VERSION.changed("1.3.33", "observer.GraphMLObserver refactored")
+    base.VERSION.added("1.4.1", "Changelog in observer.GraphMLObserver")
+    base.VERSION.changed("1.4.1", "observer.GraphMLObserver class documentation")
+
+    def __init__(self, output_file, include_modules):
+        super(GraphMLObserver, self).__init__()
+        self._outputFile = output_file
+        self._include_modules = str.lower(include_modules) == "true"
+        return
+
+    def experiment_finished(self, detail=None):
+        """
+        Reacts when an experiment is completed.
+        :param detail: Additional details to report.
+        :return: Nothing.
+        """
+        return
+
+    def input_get_values(self, component_input):
+        """
+        Reacts when values are requested from a component input.
+        :param component_input: The input being requested.
+        :return: Nothing.
+        """
+        return
+
+    def mc_run_finished(self, detail=None):
+        """
+        Reacts when a Monte Carlo run is finished.
+        :param detail: Additional details to report.
+        :return: Nothing.
+        """
+        return
+
+    def store_set_values(self, level, store_name, message):
+        """
+        Reacts when values are stored.
+        :param level: The severity of the message.
+        :param store_name: The storage name.
+        :param message: The message to report.
+        :return: Nothing.
+        """
+        return
+
+    def write_message(self, level, message, detail=None):
+        """
+        Sends a message to the reporter.
+        :param level: The severity of the message.
+        :param message: The message to report.
+        :param detail: Additional details to report.
+        :return: Nothing.
+        """
+        return
+
+    def mc_run_started(self, composition):
+        """
+        Reacts when a Monte Carlo run has started.
+        :param composition: The composition of the Monte Carlo run.
+        :return: Nothing.
+        """
+
+        # noinspection SpellCheckingInspection
+        graph_ml = xml.etree.ElementTree.Element(
+            "graphml",
+            {
+                "xmlns": "http://graphml.graphdrawing.org/xmlns",
+                "xmlns:xsi": "http://www.w3org/2001/XMLSchema-instance",
+                "xsi:schemaLocation": "http://graphml.graphdrawing.org/xmlns " +
+                                      "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"
+            }
+        )
+        graph_ml.append(xml.etree.ElementTree.Element(
+            "key", {"id": "name", "for": "node", "attr.name": "name", "attr.type": "string"}))
+        graph_ml.append(xml.etree.ElementTree.Element(
+            "key", {"id": "type", "for": "node", "attr.name": "type", "attr.type": "string"}))
+        # noinspection SpellCheckingInspection
+        graph = xml.etree.ElementTree.Element("graph", {"id": "composition", "edgedefault": "directed"})
+        graph_ml.append(graph)
+        modules = set()
+        for component in composition.values():
+            component_node = self._create_node(component.name, "component")
+            graph.append(component_node)
+            providing_component_names = set(
+                [
+                    inp.provider.output.component.name
+                    for inp in component.inputs
+                    if inp.has_provider and inp.provider.output.component
+                ]
+            )
+            for providing_component in providing_component_names:
+                edge = xml.etree.ElementTree.Element("edge", {"source": providing_component, "target": component.name})
+                graph.append(edge)
+            if self._include_modules and component.module:
+                module_label = component.module.name + " " + component.module.version
+                modules.add(module_label)
+                edge = xml.etree.ElementTree.Element("edge", {"source": component.name, "target": module_label})
+                graph.append(edge)
+        for module_name in modules:
+            graph.append(self._create_node(module_name, "module"))
+        xml.etree.ElementTree.ElementTree(graph_ml).write(self._outputFile, encoding="utf-8", xml_declaration=True)
+        return
+
+    def flush(self):
+        """
+        Flushes the buffer of the reporter.
+        :return: Nothing.
+        """
+        return
+
+    def write(self, text):
+        """
+        Requests the reporter to write text.
+        :param text: The text to write.
+        :return: Nothing.
+        """
+        return
+
+    @staticmethod
+    def _create_node(name, entity_type):
+        node = xml.etree.ElementTree.Element("node", {"id": name})
+        name_sub_node = xml.etree.ElementTree.Element("data", {"key": "name"})
+        name_sub_node.text = name
+        node.append(name_sub_node)
+        type_sub_node = xml.etree.ElementTree.Element("data", {"key": "type"})
+        type_sub_node.text = entity_type
+        node.append(type_sub_node)
+        return node

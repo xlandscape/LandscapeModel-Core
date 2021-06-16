@@ -1,0 +1,786 @@
+# Changelog
+This is the changelog for the Landscape Model core. It was automatically created on 2021-02-22.
+
+## [1.4.8] - 2021-02-03
+
+### Added
+
+### Changed
+
+### Fixed
+- conversion of MC identifier to integer
+
+
+## [1.4.7] - 2021-02-03
+
+### Added
+
+### Changed
+
+### Fixed
+- components.Lulc added path to proj.db zo fix errors on some systems
+
+
+## [1.4.6] - 2021-01-19
+
+### Added
+
+### Changed
+- identifier argument of initializer, parent run no longer randomly sampled
+- New system macro \_MC\_ID\_
+
+### Fixed
+
+
+## [1.4.5] - 2012-12-29
+
+### Added
+- base.functions.reporting()
+- components.ReportingHydrographicMap.draw() static method
+- components.ReportingHydrographicMap.draw() static method
+
+### Changed
+- components.ReportingHydrographicMap observer initialization argument renamed
+
+### Fixed
+- components.CsvReader spelling error in inline documentation
+- components.ReportingDistribution spelling error in documentation
+
+
+## [1.4.4] - 2012-12-15
+
+### Added
+- components.DeleteFolder component
+
+### Changed
+- store.SqlLiteStore manages chunks
+
+### Fixed
+
+
+## [1.4.3] - 2020-12-14
+
+### Added
+- store.SqlLiteStore.execute() method
+- components.CsvReader component
+
+### Changed
+- base.functions.convert() can evaluate values
+- store.SqlLiteStore got create argument for extending existing datasets
+- store.SqlLiteStore.set\_values() can add foreign keys
+- store.SqlLiteStore manages physical units
+
+### Fixed
+- store.SqlLiteStore can use existing directory
+- store.SqlLiteStore uses new version system
+
+
+## [1.4.2] - 2020-12-07
+
+### Added
+- Corrections in README
+
+### Changed
+- Changelog description
+- Changelog description
+- Changelog description
+- Changelog description
+- Changelog description
+- Changelog description
+- new components.HydrologyFromTimeSeries inputs InflowTimeseriesPath, ImportInflows
+- new components.HydrologyFromTimeSeries outputs InflowReaches and Inflow
+- components.HydrologyFromTimeSeries (optionally) reads inflows from fields
+- Changelog description
+- Changelog description
+- Changelog description
+
+### Fixed
+
+
+## [1.4.1] - 2020-12-03
+
+### Added
+- Changelog in base.VERSION
+- base.VersionCollection for managing revision history
+- Changelog in base.CheckResult
+- Changelog in base.Component
+- Changelog in base.DataAttributes
+- Changelog in base.DataProvider
+- Changelog in base.Extensions
+- Changelog in base.functions
+- Changelog in base.Input
+- Changelog in base.InputContainer
+- Changelog in base.Module
+- Changelog in base.Observer
+- Changelog in base.Output
+- Changelog in base.OutputContainer
+- Changelog in base.Store
+- Changelog in base.Values
+- Changelog in components.CsvReader
+- Changelog in components.DepositionToPecSoil
+- Changelog in class attrib.Class
+- Changelog in class attrib.Equals
+- Changelog in class attrib.Ontology
+- Changelog in class attrib.Scales
+- Changelog in attrib.Transformable
+- Changelog in class attrib.Unit
+- Changelog in attrib.\_\_init\_\_
+- Changelog in components.DepositionToReach
+- Changelog in components.DoseResponse
+- Changelog in components.Efate
+- Changelog in store.InMemoryStore
+- Changelog in store.SqlLiteStore
+- store.SqlLiteStore.has\_dataset()
+- Changelog in store.X3dfStore
+- Changelog in stores.\_\_init\_\_
+- Changelog in components.ReportingDistribution
+- components.ReportingDistribution class documentation
+- Changelog in components.ReportingHydrographicMap
+- Changelog in components.HydrologyFromTimeSeries
+- Changelog in components.LandscapeScenarioPreparation
+- Changelog in components.Lulc
+- Changelog in components.MarsWeather
+- Changelog in components.PpmCalendar
+- Changelog in components.TerRQ
+- components.TerRQ class documentation
+- Changelog in components.UserParameters
+- Changelog in components.\_\_init\_\_
+- Changelog in base.MCRun
+- Changelog in base.Project
+- base.Project.version
+- Changelog in base.UserParameters
+- Changelog in base.Experiment
+- Changelog in base.Uasa
+- Changelog in base.\_\_init\_\_
+
+### Changed
+- Changed base.VERSION to a base.VersionCollection, tracking changes in classes
+- base.VersionInfo completely rewritten to move changelogs nearer to code
+- components.CsvReader class documentation
+- components.DepositionToPecSoil class documentation
+- Removed unused output PecSoil 2 from components.DepositionToPecSoil
+- Removed class attrib.VERSION
+- components.DepositionToReach class documentation
+- components.DoseResponse class documentation
+- components.Efate class documentation
+- store.InMemoryStore class documentation
+- store.SqlLiteStore has now base.Store as superclass
+- store.SqlLiteStore class documentation
+- store.X3dfStore class documentation
+- Removed stores.VERSION
+- components.ReportingHydrographicMap class documentation
+- components.HydrologyFromTimeSeries class documentation
+- components.LandscapeScenarioPreparation class documentation
+- components.Lulc class documentation
+- components.MarsWeather class documentation
+- components.PpmCalendar class documentation
+- components.UserParameters class documentation
+- Removed components.VERSION
+- base.Experiment.write\_info\_xml() uses new version classes
+
+### Fixed
+- base.functions.observers\_from\_xml() passes lock argument only if needed by observer
+- components.DoseResponse attrib namespace reference
+- components.TerRQ attrib namespace reference
+
+
+## [1.4] - 2020-10-23
+
+### Added
+- components.DoseResponse component
+- components.ReportingDistribution component
+- components.ReportingHydrographicMap component
+- components.TerRQ component
+
+### Changed
+- components.CascadeToxswa repackaged as external part
+- components.CmfContinuous repackaged as external part
+- components.LEffectModel repackaged as external part
+- components.LP50 repackaged as external part
+- components.RunOffPrzm repackaged as external part
+- components.StepsRivernetwork repackaged as external part
+- components.StreamCom repackaged as external part
+- components.XSprayDrift repackaged as external part
+- observer.AnalysisObserver repackaged as external part
+- observer.ReportingObserver repackaged as external part
+
+### Fixed
+
+
+## [1.3.35] - 2020-08-12
+
+### Added
+- base.Store.has\_dataset() to check whether store contains specific data
+- store.X3dfStore.has\_dataset()
+
+### Changed
+- base.functions.run\_process() manages system environment variables
+- store.X3dfStore can be initialized using existing data
+- components.MarsWeather no longer uses a provisional output container
+- base.MCRun can continue previous simulations
+- base.Uasa.create() regex refactored
+
+### Fixed
+- base.functions.replace\_tokens() treats None values as empty string
+
+
+## [1.3.34] - 2020-08-04
+
+### Added
+- Additional unit conversions in class attrib.Unit
+
+### Changed
+
+### Fixed
+
+
+## [1.3.33] - 2020-07-30
+
+### Added
+- base.DataAttributes.append() for dynamically adding data attributes
+- base.Values.unit and base.Values.Scales for quick access to these metadata
+- attrib.Class support of list[bytes], list[float], list[str] and tuple[float]
+- Scale attribute checker
+- components.UserParameters.unit
+
+### Changed
+- base.Component refactored
+- base.DataAttributes refactored
+- base.Extensions refactored
+- base.Input.read() passes metadata from provider to base.Values object
+- base.InputContainer refactored
+- components.CsvReader refactored
+- attrib.Class.check() returns base.CheckResult instead of tuple
+- attrib.Equals.check() returns base.CheckResult instead of tuple
+- attrib.Equals refactored
+- attrib.Ontology.check() returns base.CheckResult instead of tuple
+- attrib.Transformable.check() returns base.CheckResult instead of tuple
+- attrib.Unit.check() returns base.CheckResult instead of tuple
+- components.DepositionToReach checks input types strictly
+- components.DepositionToReach checks for physical units
+- components.DepositionToReach reports physical units to the data store
+- components.DepositionToReach checks for scales
+- store.InMemoryStore stores physical unit if specified
+- store.X3dfStore no longer casts list[bytes] to bytes
+- store.X3dfStore can store and read lists of strings
+- store.X3dfStore is explicit about its parameters
+- store.X3dfStore stores physical unit if specified
+- store.X3dfStore.describe() outputs scales
+- components.HydrologyFromTimeSeries checks input types strictly
+- components.HydrologyFromTimeSeries checks for physical units
+- components.HydrologyFromTimeSeries reports physical units to the data store
+- components.HydrologyFromTimeSeries checks for scales
+- components.Lulc checks input types strictly
+- components.Lulc checks for physical units
+- components.Lulc reports physical units to the data store
+- components.Lulc checks for scales
+- components.MarsWeather checks input types strictly
+- components.MarsWeather checks for physical units
+- components.MarsWeather reports physical unit of average temperature to data store
+- components.MarsWeather checks for scales
+- components.PpmCalendar checks input types strictly
+- components.PpmCalendar checks for physical units
+- components.PpmCalendar reports physical units to the data store
+- components.PpmCalendar checks for scales
+- components.UserParameters reports physical units to the data store
+
+### Fixed
+- base.functions.convert() crashes with empty lists
+
+
+## [1.3.29] - 2020-06-15
+
+### Added
+
+### Changed
+- components.LandscapeScenarioPreparation can calculate flow grids from DEM
+
+### Fixed
+- Input slicing in components.DepositionToPecSoil
+
+
+## [1.3.28] - 2020-06-03
+
+### Added
+- base.Store class for representing Landscape Model stores
+- components.LandscapeScenarioPreparation component
+
+### Changed
+
+### Fixed
+
+
+## [1.3.27] - 2020-05-20
+
+### Added
+- store.SqlLiteStore
+- store.SqlLiteStore
+
+### Changed
+- base.VersionInfo refactored
+- components.DepositionToPecSoil refactored
+- Soil depth is now parameter in components.DepositionToPecSoil
+- components.DepositionToReach specifies scales
+- components.Efate refactored
+- store.InMemoryStore slice keyword renamed to slices
+- store.InMemoryStore updated
+- store.SqlLiteStore slice keyword renamed to slices
+- store.X3dfStore acknowledges scales keyword for all value types
+- store.X3dfStore default keyword added
+- store.X3dfStore slice keyword renamed to slices
+- components.Lulc specifies scales
+- components.MarsWeather specifies scales
+- components.PpmCalendar specifies scales
+- components.UserParameters specifies scales
+- components.UserParameters expects list of UserParameters as values
+- base.MCRun parses scales of user-defined parameters
+- base.UserParameters refactored
+- base.Uasa refactored
+
+### Fixed
+
+
+## [1.3.24] - 2020-04-02
+
+### Added
+- base.functions.run\_process() for invoking system processes
+- base.Observer.flush() and base.Observer.flush() to use observers as streams
+
+### Changed
+- base.Experiment sets standard and error output to default observer
+
+### Fixed
+- base.functions.chunkSlices() determining chunk size when dimensions have the same extent
+
+
+## [1.3.22] - 2020-03-27
+
+### Added
+
+### Changed
+- More explanatory error messages in components.HydrologyFromTimeSeries
+
+### Fixed
+
+
+## [1.3.21] - 2020-03-26
+
+### Added
+- base.OutputContainer.append() for dynamically adding outputs
+
+### Changed
+
+### Fixed
+
+
+## [1.3.20] - 2020-03-23
+
+### Added
+
+### Changed
+- base.functions.observers\_from\_xml() enables/disables observers also through expression
+- base.functions.convert() separator of list[str] parameters changed to |
+- base.MCRun can be enabled/disabled also through expression in configuration
+
+### Fixed
+
+
+## [1.3.13] - 2020-02-07
+
+### Added
+
+### Changed
+- base.DataProvider refactored
+- Option to disable observers in configuration by base.functions.observers\_from\_xml()
+- base.Input refactored
+- base.Output refactored
+
+### Fixed
+
+
+## [1.3.5] - 2020-01-08
+
+### Added
+
+### Changed
+- base.CheckResult refactored
+- base.functions.replaceTokens() replaces $$-tokens before $-tokens
+- base.functions refactored
+- base.Module refactored
+- base.Observer refactored
+- base.OutputContainer refactored
+- base.Values refactored
+- base.MCRun refactored
+- base.Project refactored
+- base.Experiment refactored
+- base.Experiment project encapsulation and support of versions
+- base.\_\_init\_\_ refactored
+
+### Fixed
+
+
+## [1.3.3] - 2019-12-15
+
+### Added
+- Unit attribute class to check and convert physical units (currently hard-coded)
+
+### Changed
+
+### Fixed
+
+
+## [1.3.2] - 2019-12-10
+
+### Added
+
+### Changed
+- Enforce strict checks in components.Lulc
+
+### Fixed
+
+
+## [1.2.40] - 2019-11-21
+
+### Added
+- components.MarsWeather component
+
+### Changed
+
+### Fixed
+
+
+## [1.2.37]
+
+### Added
+- Ontology attribute checker
+
+### Changed
+- Specified X3df file mode in store.X3dfStore
+- Ability to open X3df in different modes in store.X3dfStore
+- store.X3dfStore refactored
+
+### Fixed
+
+
+## [1.2.36]
+
+### Added
+
+### Changed
+- components.HydrologyFromTimeSeries provides water body volume and wet surface area
+- components.HydrologyFromTimeSeries allows specifying time frame
+
+### Fixed
+
+
+## [1.2.35]
+
+### Added
+
+### Changed
+- Class checks in components.Lulc
+
+### Fixed
+- base.Uasa.create() function parsing improved
+
+
+## [1.2.34]
+
+### Added
+
+### Changed
+- Better exceptions in components.Lulc
+
+### Fixed
+
+
+## [1.2.31]
+
+### Added
+
+### Changed
+- init script recursive to run entire folders
+- base.Uasa.create() parameter generation possible in sub-directories
+- base.Uasa.create() can process pre-defined lists
+
+### Fixed
+
+
+## [1.2.28]
+
+### Added
+
+### Changed
+- components.DepositionToReach outputs reach identifiers
+- components.HydrologyFromTimeSeries no longer depends on hydrography input
+
+### Fixed
+
+
+## [1.2.27]
+
+### Added
+
+### Changed
+- ProbabilityFieldApplied introduced in components.PpmCalendar
+
+### Fixed
+
+
+## [1.2.25]
+
+### Added
+
+### Changed
+- Support of NoneType in store.X3dfStore
+- components.PpmCalendar RandomSeed parameter
+
+### Fixed
+
+
+## [1.2.20]
+
+### Added
+- components.HydrologyFromTimeSeries component
+
+### Changed
+- components.DepositionToReach basic implementation
+- Support of dates and times in store.X3dfStore
+- components.Lulc distinguishes between supplementary data formats
+- components.Lulc can import additional attributes from base geometry shapefile
+- components.PpmCalendar no longer outputs SprayApplication objects
+
+### Fixed
+
+
+## [1.2.19]
+
+### Added
+
+### Changed
+- components.Lulc ROI extent as meta-datum in package.xinfo
+
+### Fixed
+
+
+## [1.2.18]
+
+### Added
+
+### Changed
+- components.Lulc has new input XML schema and checks layer consistency
+
+### Fixed
+
+
+## [1.2.17]
+
+### Added
+- base.Uasa class for managing uncertainty and sensitivity analyses
+
+### Changed
+- base.functions.replaceTokens() accepts non-string values
+- base.UserParameters understand uncertainty / sensitivity analysis XML attribute
+- base.Experiment has new macro \_PARAM\_DIR\_
+- base.Experiment is more flexible in parameter directory
+
+### Fixed
+
+
+## [1.2.16]
+
+### Added
+
+### Changed
+- Slicing enabled for list[byte] in store.X3dfStore
+- components.PpmCalendar output refactored
+
+### Fixed
+
+
+## [1.2.14]
+
+### Added
+
+### Changed
+
+### Fixed
+- wrong calculation in components.DepositionToPecSoil
+
+
+## [1.2.13]
+
+### Added
+
+### Changed
+
+### Fixed
+
+
+## [1.2.12]
+
+### Added
+- base.Observer.mc\_run\_started() for messages about newly started Monte Carlo runs
+
+### Changed
+- base.MCRun.run() signals MC run start to observer
+
+### Fixed
+
+
+## [1.2.7]
+
+### Added
+
+### Changed
+
+### Fixed
+
+
+## [1.2.6]
+
+### Added
+
+### Changed
+- components.Lulc provides absolute paths for directories also
+
+### Fixed
+
+
+## [1.2.5]
+
+### Added
+
+### Changed
+- components.Lulc can provide flexible set of outputs
+- components.PpmCalendar target LULC type input now str
+
+### Fixed
+
+
+## [1.2.4]
+
+### Added
+
+### Changed
+
+### Fixed
+
+
+## [1.2.3]
+
+### Added
+- base.InputContainer append() and \_\_contains\_\_()
+- components.DepositionToReach component stub
+
+### Changed
+
+### Fixed
+- base.functions.chunkSlices() indexing
+
+
+## [1.2.2]
+
+### Added
+
+### Changed
+- store.X3dfStore now handles boolean values separately
+
+### Fixed
+
+
+## [1.2.1]
+
+### Added
+- attrib.Class checker support of list[int] type
+- base.Project class for representing Landscape Model scenarios
+
+### Changed
+- base.functions.replaceTokens() allows macros in source path
+- base.Experiment expects a global section in the Monte Carlo run configuration
+- base.Experiment has new macro \_X3DIR\_
+
+### Fixed
+
+
+## [1.1.6]
+
+### Added
+- base.VERSION for describing code changes
+- base.VersionInfo for describing individual revisions
+- Value equality checker
+- Changelog through VersionInfo class in attrib namespace
+- Changelog through VersionInfo class in observer namespace
+- Changelog through VersionInfo class in components namespace
+- base.Experiment.write\_info\_xml() for saving runtime information of the experiment
+- Changelog through VersionInfo class in base namespace
+
+### Changed
+
+### Fixed
+
+
+## [1.1.5]
+
+### Added
+
+### Changed
+- components.DepositionToPecSoil reports scale information of output to data store
+- components.DepositionToPecSoil requests storing of maximum value of PEC soil
+- components.Efate stores metadata of PEC
+- store.X3dfStore scale information for numpy arrays if provided
+- store.X3dfStore can calculate maximum for numpy arrays
+
+### Fixed
+
+
+## [1.1.2]
+
+### Added
+
+### Changed
+- components.Efate exposure inputs made optional
+- base.MCRun allows disabling components in configuration
+- base.MCRun allows disabling links between inputs and outputs
+
+### Fixed
+
+
+## [1.1.1]
+
+### Added
+- base.CheckResult class for exchanging observer messages
+- base.Component class representing Landscape Model components
+- base.DataAttributes class as a data attribute container
+- base.DataProvider class for data providers
+- base.Extensions class as a container for data extensions
+- base.functions providing helper functions
+- base.Input class for representing component inputs
+- base.InputContainer class for collecting the inputs of a component
+- base.Module class for describing Landscape Model modules
+- base.Observer class for representing Landscape Model observers
+- base.Output class for representing component outputs
+- base.OutputContainer class for collecting outputs of a component
+- base.Values class for exchanged data values
+- components.CsvReader component
+- components.DepositionToPecSoil component
+- attrib.Class
+- Transformable attribute checker
+- attrib namespace
+- components.Efate component
+- store.InMemoryStore
+- store.X3dfStore
+- components namespace
+- components.Lulc component
+- components.PpmCalendar component
+- components.UserParameters component
+- components namespace
+- base.MCRun class for managing individual Monte Carlo runs
+- base.UserParameters class for user-defined parameters
+- base.Experiment class for managing individual experiments
+- base namespace
+
+### Changed
+- components.PpmCalendar now requires Fields and Lulc inputs to be of type list[int]
+
+### Fixed

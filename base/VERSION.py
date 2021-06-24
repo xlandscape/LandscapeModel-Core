@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION = base.VersionCollection(
+    base.VersionInfo("1.4.9", "2021-06-24"),
     base.VersionInfo("1.4.8", "2021-02-03"),
     base.VersionInfo("1.4.7", "2021-02-03"),
     base.VersionInfo("1.4.6", "2021-01-19"),
@@ -74,6 +75,7 @@ VERSION.changed("1.4.0", "`observer.ReportingObserver` repackaged as external pa
 VERSION.changed("1.4.1", "Changed `base.VERSION` to a `base.VersionCollection`, tracking changes in classes")
 VERSION.added("1.4.1", "Changelog in `base.VERSION` ")
 VERSION.added("1.4.2", "Corrections in `README` ")
+base.VERSION.changed("1.4.9", "`base` changelog uses markdown for code elements")
 
 # CHANGELOG VersionCollection.py
 VERSION.added("1.4.1", "`base.VersionCollection` for managing revision history")
@@ -82,3 +84,9 @@ VERSION.added("1.4.1", "`base.VersionCollection` for managing revision history")
 VERSION.added("1.1.6", "`base.VersionInfo` for describing individual revisions")
 VERSION.changed("1.3.27", "`base.VersionInfo` refactored")
 VERSION.changed("1.4.1", "`base.VersionInfo` completely rewritten to move changelogs nearer to code")
+
+# CHANGELOG init.py
+base.VERSION.changed("1.4.9", "`init.py` spell check exclusions")
+
+# CHANGELOG document.py
+base.VERSION.added("1.4.9", "`document.py` ")

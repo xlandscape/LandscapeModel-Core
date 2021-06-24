@@ -26,6 +26,7 @@ class EnvironmentalFate(base.Component):
     base.VERSION.changed("1.3.27", "`components.EnvironmentalFate` refactored")
     base.VERSION.added("1.4.1", "Changelog in `components.EnvironmentalFate`")
     base.VERSION.changed("1.4.1", "`components.EnvironmentalFate` class documentation")
+    base.VERSION.changed("1.4.9", "renamed `components.EnvironmentalFate` component")
 
     def __init__(self, name, observer, store):
         super(EnvironmentalFate, self).__init__(name, observer, store)

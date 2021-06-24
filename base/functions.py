@@ -34,6 +34,7 @@ base.VERSION.added("1.4.1", "Changelog in `base.functions` ")
 base.VERSION.fixed("1.4.1", "`base.functions.observers_from_xml()` passes lock argument only if needed by observer")
 base.VERSION.changed("1.4.3", "`base.functions.convert()` can evaluate values")
 base.VERSION.added("1.4.5", "`base.functions.reporting()` ")
+base.VERSION.changed("1.4.9", "`base.functions` changelog uses markdown for code elements")
 
 
 def cartesian_product(*arrays):

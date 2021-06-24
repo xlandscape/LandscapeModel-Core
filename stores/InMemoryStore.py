@@ -19,6 +19,7 @@ class InMemoryStore(base.Store):
     base.VERSION.changed("1.3.33", "store.InMemoryStore stores physical unit if specified")
     base.VERSION.added("1.4.1", "Changelog in store.InMemoryStore")
     base.VERSION.changed("1.4.1", "store.InMemoryStore class documentation")
+    base.VERSION.changed("1.4.9", "`store.InMemoryStore` data type access")
 
     def __init__(self):
         self._data = {}

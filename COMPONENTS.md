@@ -176,13 +176,13 @@ It was automatically created on 2021-06-24.
     Provides landscape scenarios to the Landscape Model.
 
     INPUTS
-    BaseLandscapeGeometries: A valid file path to a package.xinfo file. A string of global scale. Value has no unit.
+    BaseLandscapeGeometries: A valid file path to a package file. A string of global scale. Value has no unit.
     No ontological description is associated with the input.
 
     OUTPUTS
     Outputs of this components are provisional, i.e., they are defined by links from inputs and have to be satisfied
-    by data in the CSV file. Outputs are Crs, Extent, and information specified in the package.xinfo of the landscape
-    scenario.
+    by data in the CSV file. Outputs are Crs, Extent, and information specified in the package information file of the
+    landscape scenario.
     
 
 ## MarsWeather

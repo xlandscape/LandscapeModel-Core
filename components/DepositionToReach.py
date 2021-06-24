@@ -8,7 +8,7 @@ import attrib
 
 class DepositionToReach(base.Component):
     """
-    Calculates initial efate in reaches for spray-drift deposition.
+    Calculates the initial environmental fate in reaches for spray-drift depositions.
 
     INPUTS
     Deposition: The substance deposited at the water surface. A NumPy array of scales time/day, space/base_geometry.
@@ -74,7 +74,7 @@ class DepositionToReach(base.Component):
         self.outputs["Deposition"].set_values(
             np.ndarray,
             shape=(data_set_info["shape"][0], reaches.shape[0]),
-            dtype=data_set_info["dtype"],
+            data_type=data_set_info["dtype"],
             chunks=(data_set_info["shape"][0], 1),
             scales="time/day, space/reach",
             unit=data_set_info["unit"]

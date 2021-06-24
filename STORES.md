@@ -1,6 +1,6 @@
 # Stores
-This file lists all stores that are current included in the Landscape Model core.
-It was automatically created on 2021-02-22.
+This file lists all stores that are currently included in the Landscape Model core.
+It was automatically created on 2021-06-24.
 
 
 ## InMemoryStore

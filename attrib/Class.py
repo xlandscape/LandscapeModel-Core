@@ -9,11 +9,11 @@ class Class:
     Checks whether values are instances of a specific Python class.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "attrib.Class")
-    base.VERSION.added("1.2.1", "attrib.Class checker support of list[int] type")
-    base.VERSION.added("1.3.33", "attrib.Class support of list[bytes], list[float], list[str] and tuple[float]")
-    base.VERSION.changed("1.3.33", "attrib.Class.check() returns base.CheckResult instead of tuple")
-    base.VERSION.added("1.4.1", "Changelog in class attrib.Class")
+    base.VERSION.added("1.1.1", "`attrib.Class` ")
+    base.VERSION.added("1.2.1", "`attrib.Class` checker support of list[int] type")
+    base.VERSION.added("1.3.33", "`attrib.Class` support of list[bytes], list[float], list[str] and tuple[float]")
+    base.VERSION.changed("1.3.33", "`attrib.Class.check()` returns base.CheckResult instead of tuple")
+    base.VERSION.added("1.4.1", "Changelog in class `attrib.Class` ")
     base.VERSION.changed("1.4.2", "Changelog description")
 
     def __init__(self, expected_type, severity=2):

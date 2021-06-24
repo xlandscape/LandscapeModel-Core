@@ -11,8 +11,8 @@ class Ontology:
     """
     # CHANGELOG
     base.VERSION.added("1.2.37", "Ontology attribute checker")
-    base.VERSION.changed("1.3.33", "attrib.Ontology.check() returns base.CheckResult instead of tuple")
-    base.VERSION.added("1.4.1", "Changelog in class attrib.Ontology")
+    base.VERSION.changed("1.3.33", "`attrib.Ontology.check()` returns base.CheckResult instead of tuple")
+    base.VERSION.added("1.4.1", "Changelog in class `attrib.Ontology`")
     base.VERSION.changed("1.4.2", "Changelog description")
 
     # onto = owl ready2.get_ontology("file:///" + )

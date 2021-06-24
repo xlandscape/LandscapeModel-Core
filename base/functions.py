@@ -14,24 +14,26 @@ import inspect
 
 
 # CHANGELOG
-base.VERSION.added("1.1.1", "base.functions providing helper functions")
-base.VERSION.changed("1.2.1", "base.functions.replaceTokens() allows macros in source path")
-base.VERSION.fixed("1.2.3", "base.functions.chunkSlices() indexing")
-base.VERSION.changed("1.2.17", "base.functions.replaceTokens() accepts non-string values")
-base.VERSION.changed("1.3.5", "base.functions.replaceTokens() replaces $$-tokens before $-tokens")
-base.VERSION.changed("1.3.5", "base.functions refactored")
-base.VERSION.changed("1.3.13", "Option to disable observers in configuration by base.functions.observers_from_xml()")
-base.VERSION.changed("1.3.20", "base.functions.observers_from_xml() enables/disables observers also through expression")
-base.VERSION.changed("1.3.20", "base.functions.convert() separator of list[str] parameters changed to |")
-base.VERSION.fixed("1.3.24", "base.functions.chunkSlices() determining chunk size when dimensions have the same extent")
-base.VERSION.added("1.3.24", "base.functions.run_process() for invoking system processes")
-base.VERSION.fixed("1.3.33", "base.functions.convert() crashes with empty lists")
-base.VERSION.changed("1.3.35", "base.functions.run_process() manages system environment variables")
-base.VERSION.fixed("1.3.35", "base.functions.replace_tokens() treats None values as empty string")
-base.VERSION.added("1.4.1", "Changelog in base.functions")
-base.VERSION.fixed("1.4.1", "base.functions.observers_from_xml() passes lock argument only if needed by observer")
-base.VERSION.changed("1.4.3", "base.functions.convert() can evaluate values")
-base.VERSION.added("1.4.5", "base.functions.reporting()")
+base.VERSION.added("1.1.1", "`base.functions` providing helper functions")
+base.VERSION.changed("1.2.1", "`base.functions.replaceTokens()` allows macros in source path")
+base.VERSION.fixed("1.2.3", "`base.functions.chunkSlices()` indexing")
+base.VERSION.changed("1.2.17", "`base.functions.replaceTokens()` accepts non-string values")
+base.VERSION.changed("1.3.5", "`base.functions.replaceTokens()` replaces $$-tokens before $-tokens")
+base.VERSION.changed("1.3.5", "`base.functions `refactored")
+base.VERSION.changed("1.3.13", "Option to disable observers in configuration by `base.functions.observers_from_xml()` ")
+base.VERSION.changed(
+    "1.3.20", "`base.functions.observers_from_xml()` enables/disables observers also through expression")
+base.VERSION.changed("1.3.20", "`base.functions.convert()` separator of list[str] parameters changed to |")
+base.VERSION.fixed(
+    "1.3.24", "`base.functions.chunkSlices()` determining chunk size when dimensions have the same extent")
+base.VERSION.added("1.3.24", "`base.functions.run_process()` for invoking system processes")
+base.VERSION.fixed("1.3.33", "`base.functions.convert()` crashes with empty lists")
+base.VERSION.changed("1.3.35", "`base.functions.run_process()` manages system environment variables")
+base.VERSION.fixed("1.3.35", "`base.functions.replace_tokens()` treats None values as empty string")
+base.VERSION.added("1.4.1", "Changelog in `base.functions` ")
+base.VERSION.fixed("1.4.1", "`base.functions.observers_from_xml()` passes lock argument only if needed by observer")
+base.VERSION.changed("1.4.3", "`base.functions.convert()` can evaluate values")
+base.VERSION.added("1.4.5", "`base.functions.reporting()` ")
 
 
 def cartesian_product(*arrays):

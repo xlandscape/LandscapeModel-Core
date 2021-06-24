@@ -170,6 +170,7 @@ class LandscapeScenarioPreparation(base.Component):
             memory_data_set.DeleteLayer("analysisBuffer.shp")
         gdal.RasterizeLayer(analysis_buffer_raster, [1], ogr_layer, burn_values=[0])
         xml.etree.ElementTree.SubElement(supplementary, "analysis_distance_groups").text = "AnalysisBuffer.tif"
-        xml.etree.ElementTree.ElementTree(landscape_package).write(os.path.join(output_path, "package.xinfo"), "utf-8",
-                                                                   True)
+        # noinspection SpellCheckingInspection
+        xml.etree.ElementTree.ElementTree(landscape_package).write(
+            os.path.join(output_path, "package.xinfo"), "utf-8", True)
         return

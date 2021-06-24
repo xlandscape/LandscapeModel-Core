@@ -83,10 +83,9 @@ class X3dfStore(base.Store):
         :return: A dictionary containing metadata about the data set.
         """
         data_set = self._f[name]
-        # noinspection SpellCheckingInspection
         return {
             "shape": data_set.shape,
-            "dtype": data_set.dtype,
+            "data_type": data_set.dtype,
             "chunks": data_set.chunks,
             "unit": data_set.attrs.get("unit", None),
             "scales": data_set.attrs.get("scales", "global")
@@ -150,7 +149,7 @@ class X3dfStore(base.Store):
             default=None,
             unit=None,
             shape=None,
-            dtype=None,
+            data_type=None,
             chunks=None,
             create=True,
             slices=None,
@@ -164,7 +163,7 @@ class X3dfStore(base.Store):
         :param default: The default value for a new value array.
         :param unit: The physical unit of the values.
         :param shape: The shape of a newly created empty array.
-        :param dtype: The data type of a newly created empty array.
+        :param data_type: The data type of a newly created empty array.
         :param chunks: The chunk size for a newly created empty array.
         :param create: Specifies whether a data set should be created or not.
         :param slices: Defines the portion of the data set that was passed to the function.
@@ -224,7 +223,7 @@ class X3dfStore(base.Store):
             type_name = values.__module__ + "." + values.__qualname__
             # noinspection SpellCheckingInspection
             if type_name == "numpy.ndarray":
-                data_set = self._f.create_dataset(name, compression="gzip", shape=shape, dtype=dtype, chunks=chunks)
+                data_set = self._f.create_dataset(name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks)
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"
             else:

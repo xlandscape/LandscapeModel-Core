@@ -10,9 +10,9 @@ class Equals:
     """
     # CHANGELOG
     base.VERSION.added("1.1.6", "Value equality checker")
-    base.VERSION.changed("1.3.33", "attrib.Equals.check() returns base.CheckResult instead of tuple")
-    base.VERSION.changed("1.3.33", "attrib.Equals refactored")
-    base.VERSION.added("1.4.1", "Changelog in class attrib.Equals")
+    base.VERSION.changed("1.3.33", "`attrib.Equals.check()` returns base.CheckResult instead of tuple")
+    base.VERSION.changed("1.3.33", "`attrib.Equals` refactored")
+    base.VERSION.added("1.4.1", "Changelog in class `attrib.Equals` ")
     base.VERSION.changed("1.4.2", "Changelog description")
 
     def __init__(self, value, severity=1):

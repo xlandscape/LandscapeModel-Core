@@ -1,12 +1,12 @@
 """
-Class definition for the Landscape Model Efate component.
+Class definition for the Landscape Model EnvironmentalFate component.
 """
 import math
 import numpy as np
 import base
 
 
-class Efate(base.Component):
+class EnvironmentalFate(base.Component):
     """
     Calculates environmental fate based on a simple half-time degradation.
 
@@ -20,15 +20,15 @@ class Efate(base.Component):
     space_x/1sqm, space_y/1sqm.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "components.Efate component")
-    base.VERSION.changed("1.1.2", "components.Efate exposure inputs made optional")
-    base.VERSION.changed("1.1.5", "components.Efate stores metadata of PEC")
-    base.VERSION.changed("1.3.27", "components.Efate refactored")
-    base.VERSION.added("1.4.1", "Changelog in components.Efate")
-    base.VERSION.changed("1.4.1", "components.Efate class documentation")
+    base.VERSION.added("1.1.1", "`components.EnvironmentalFate` component")
+    base.VERSION.changed("1.1.2", "`components.EnvironmentalFate` exposure inputs made optional")
+    base.VERSION.changed("1.1.5", "`components.EnvironmentalFate` stores metadata of PEC")
+    base.VERSION.changed("1.3.27", "`components.EnvironmentalFate` refactored")
+    base.VERSION.added("1.4.1", "Changelog in `components.EnvironmentalFate`")
+    base.VERSION.changed("1.4.1", "`components.EnvironmentalFate` class documentation")
 
     def __init__(self, name, observer, store):
-        super(Efate, self).__init__(name, observer, store)
+        super(EnvironmentalFate, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input("SprayDriftExposure", (), self.default_observer),
             base.Input("RunOffExposure", (), self.default_observer),
@@ -52,12 +52,13 @@ class Efate(base.Component):
         self.outputs["Pec"].set_values(
             np.ndarray,
             shape=data_set_info["shape"],
-            dtype=data_set_info["dtype"],
+            data_type=data_set_info["data_type"],
             chunks=base.chunk_size(
                 (1, None, None),
                 (data_set_info["shape"][0], data_set_info["shape"][1], data_set_info["shape"][2])),
             scales="time/day, space_x/1sqm, space_y/1sqm")
-        pec_current_day = np.zeros((1, data_set_info["shape"][1], data_set_info["shape"][2]), data_set_info["dtype"])
+        pec_current_day = np.zeros(
+            (1, data_set_info["shape"][1], data_set_info["shape"][2]), data_set_info["data_type"])
         for t in range(data_set_info["shape"][0]):
             current_slice = (slice(t, t + 1), slice(0, data_set_info["shape"][1]), slice(0, data_set_info["shape"][2]))
             pec_current_day *= math.exp(-math.log(2) / soil_dt50)

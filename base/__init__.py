@@ -23,7 +23,7 @@ from .MCRun import *
 from .Project import *
 from .UserParameters import *
 from .Experiment import *
-from .Uasa import *
+from .UncertaintyAndSensitivityAnalysis import *
 
 import base.VERSION
 

@@ -17,6 +17,7 @@ def run(argument, basedir=None):
     import base
     sys.path.extend([os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "variant"))])
     ext = os.path.splitext(argument)[1]
+    # noinspection SpellCheckingInspection
     if ext == ".xrun":
         parameters = base.UserParameters(argument)
         experiment = base.Experiment(
@@ -25,9 +26,10 @@ def run(argument, basedir=None):
             param_dir=basedir
         )
         experiment.run()
+    # noinspection SpellCheckingInspection
     elif ext == ".xuasa":
         parameters = base.UserParameters(argument)
-        configuration = base.Uasa(parameters)
+        configuration = base.UncertaintyAndSensitivityAnalysis(parameters)
         configuration.create()
     elif os.path.isdir(argument):
         if basedir is None:
@@ -46,6 +48,7 @@ def start_notebook():
     """
     import notebook.notebookapp
     os.environ["JUPYTER_PATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "variant", "jupyter"))
+    # noinspection SpellCheckingInspection
     os.environ["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__)))
     app = notebook.notebookapp.NotebookApp()
     app.initialize([

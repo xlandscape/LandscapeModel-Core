@@ -67,7 +67,7 @@ class DoseResponse(base.Component):
             np.ndarray,
             chunks=data_set_info["chunks"],
             shape=data_set_info["shape"],
-            dtype=data_set_info["dtype"],
+            data_type=data_set_info["data_type"],
             scales=data_set_info["scales"],
             unit="1"
         )

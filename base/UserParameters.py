@@ -21,10 +21,10 @@ class UserParameters:
         for parameter in config:
             self.params[parameter.tag] = parameter.text
         self._xml = xml_file
-        if "uasa" in config.attrib:
-            self._uasa = int(config.attrib["uasa"])
+        if "uncertainty_sensitivity_analysis_runs" in config.attrib:
+            self._uncertaintyAndSensitivityAnalysis = int(config.attrib["uncertainty_sensitivity_analysis_runs"])
         else:
-            self._uasa = None
+            self._uncertaintyAndSensitivityAnalysis = None
         if "subdir" in config.attrib:
             self._subdir = config.attrib["subdir"]
         else:
@@ -48,17 +48,17 @@ class UserParameters:
         return self._xml
 
     @property
-    def uasa(self):
+    def uncertainty_sensitivity_analysis(self):
         """
-        Gets the number of UASA runs.
-        :return: The number of UASA runs.
+        Gets the number of uncertainty or sensitivity analysis runs.
+        :return: The number of uncertainty or sensitivity analysis runs.
         """
-        return self._uasa
+        return self._uncertaintyAndSensitivityAnalysis
 
     @property
     def subdir(self):
         """
-        Gets the sub-directory for the UASA runs.
-        :return: A string containing the sub-directory for the UASA runs.
+        Gets the sub-directory for the uncertainty or sensitivity analysis runs.
+        :return: A string containing the sub-directory for the uncertainty or sensitivity analysis runs.
         """
         return self._subdir

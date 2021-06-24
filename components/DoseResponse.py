@@ -24,6 +24,7 @@ class DoseResponse(base.Component):
     base.VERSION.added("1.4.1", "Changelog in components.DoseResponse")
     base.VERSION.changed("1.4.1", "components.DoseResponse class documentation")
     base.VERSION.fixed("1.4.1", "components.DoseResponse attrib namespace reference")
+    base.VERSION.changed("1.4.9", "`components.DoseResponse` data type access")
 
     def __init__(self, name, observer, store):
         super(DoseResponse, self).__init__(name, observer, store)

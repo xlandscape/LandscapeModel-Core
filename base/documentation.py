@@ -6,6 +6,10 @@ import inspect
 import base
 
 
+# CHANGELOG
+base.VERSION.added("1.4.9", "`base.documentation` ")
+
+
 def write_changelog(name, version_history, file_path):
     """
     Writes an updated changelog according to the version history stored along with the code.

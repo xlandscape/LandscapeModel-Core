@@ -32,6 +32,7 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.3.33", "components.DepositionToReach checks for scales")
     base.VERSION.added("1.4.1", "Changelog in components.DepositionToReach")
     base.VERSION.changed("1.4.1", "components.DepositionToReach class documentation")
+    base.VERSION.changed("1.4.9", "`components.DepositionToReach` data type access")
 
     def __init__(self, name, observer, store):
         super(DepositionToReach, self).__init__(name, observer, store)

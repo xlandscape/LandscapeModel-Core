@@ -14,6 +14,7 @@ class Ontology:
     base.VERSION.changed("1.3.33", "`attrib.Ontology.check()` returns base.CheckResult instead of tuple")
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Ontology`")
     base.VERSION.changed("1.4.2", "Changelog description")
+    base.VERSION.changed("1.4.9", "`attrib.Ontology` changelog uses markdown for code elements")
 
     # onto = owl ready2.get_ontology("file:///" + )
     # owl ready2.onto_path.append(r"F:\Temp\onto")

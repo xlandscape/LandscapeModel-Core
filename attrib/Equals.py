@@ -14,6 +14,7 @@ class Equals:
     base.VERSION.changed("1.3.33", "`attrib.Equals` refactored")
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Equals` ")
     base.VERSION.changed("1.4.2", "Changelog description")
+    base.VERSION.changed("1.4.9", "`attrib.Equals` changelog uses markdown for code elements")
 
     def __init__(self, value, severity=1):
         self._value = value

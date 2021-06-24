@@ -14,6 +14,7 @@ class UserParameters:
     base.VERSION.changed("1.2.17", "base.UserParameters understand uncertainty / sensitivity analysis XML attribute")
     base.VERSION.changed("1.3.27", "base.UserParameters refactored")
     base.VERSION.added("1.4.1", "Changelog in base.UserParameters")
+    base.VERSION.changed("1.4.9", "`base.UserParameters` property names")
 
     def __init__(self, xml_file):
         self._params = {}

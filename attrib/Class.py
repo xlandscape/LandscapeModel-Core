@@ -15,6 +15,7 @@ class Class:
     base.VERSION.changed("1.3.33", "`attrib.Class.check()` returns base.CheckResult instead of tuple")
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Class` ")
     base.VERSION.changed("1.4.2", "Changelog description")
+    base.VERSION.changed("1.4.9", "`attrib.Class` changelog uses markdown for code elements")
 
     def __init__(self, expected_type, severity=2):
         self._type = expected_type

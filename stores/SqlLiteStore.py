@@ -34,6 +34,7 @@ class SqlLiteStore(base.Store):
     base.VERSION.added("1.4.3", "store.SqlLiteStore.execute() method")
     base.VERSION.changed("1.4.3", "store.SqlLiteStore manages physical units")
     base.VERSION.changed("1.4.4", "store.SqlLiteStore manages chunks")
+    base.VERSION.changed("1.4.9", "`store.SqlLiteStore` data type access")
 
     def __init__(self, file_path, observer, create=True):
         self._observer = observer

@@ -1,6 +1,45 @@
 # Changelog
 This is the changelog for the Landscape Model core. It was automatically created on 2021-06-24.
 
+## [1.4.9] - 2021-06-24
+
+### Added
+- `document.py` 
+- `base.documentation` 
+
+### Changed
+- `base` changelog uses markdown for code elements
+- `init.py` spell check exclusions
+- `base.functions` changelog uses markdown for code elements
+- `components.DepositionToPecSoil` data type access
+- `attrib.Class` changelog uses markdown for code elements
+- `attrib.Equals` changelog uses markdown for code elements
+- `attrib.Ontology` changelog uses markdown for code elements
+- `attrib.Scales` changelog uses markdown for code elements
+- `attrib.Unit` changelog uses markdown for code elements
+- `attrib` changelog uses markdown for code elements
+- `components.DepositionToReach` data type access
+- `components.DoseResponse` data type access
+- renamed `components.EnvironmentalFate` component
+- `store.InMemoryStore` data type access
+- `store.SqlLiteStore` data type access
+- `store.X3dfStore` data type access
+- `stores` changelog uses markdown for code elements
+- `components.ExportData` data type access
+- `components.ReportingHydrographicMap` changelog uses markdown for code elements
+- renamed `components.HydrologyFromTimeSeries` component
+- `components.LandscapeScenarioPreparation` spell check exclusion
+- `components.lulc` changelog uses markdown for code elements
+- `components.TerRQ` data type access
+- `components` imports updated to reflect renamed components
+- `base.UserParameters` property names
+- `base.UncertaintyAndSensitivityAnalysis` renamed
+- `base.UncertaintyAndSensitivityAnalysis` renamed local variables
+- `base` updated imports to changed class names
+
+### Fixed
+
+
 ## [1.4.8] - 2021-02-03
 
 ### Added
@@ -43,7 +82,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - components.ReportingHydrographicMap.\_\_init\_\_ observer argument renamed
 
 ### Fixed
-- components.CsvReader spelling error in inline documentation
+- components.ExportData spelling error in inline documentation
 - components.ReportingDistribution spelling error in documentation
 
 
@@ -62,7 +101,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 ### Added
 - store.SqlLiteStore.execute() method
-- components.CsvReader component
+- components.ExportData component
 
 ### Changed
 - `base.functions.convert()` can evaluate values
@@ -127,7 +166,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Changelog in `attrib` 
 - Changelog in components.DepositionToReach
 - Changelog in components.DoseResponse
-- Changelog in `components.Efate`
+- Changelog in `components.EnvironmentalFate`
 - Changelog in store.InMemoryStore
 - Changelog in store.SqlLiteStore
 - store.SqlLiteStore.has\_dataset()
@@ -150,7 +189,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - base.Project.version
 - Changelog in base.UserParameters
 - Changelog in base.Experiment
-- Changelog in `base.Uasa` 
+- Changelog in `base.UncertaintyAndSensitivityAnalysis` 
 - Changelog in base.\_\_init\_\_
 - Changelog in observer.ConsoleObserver
 - Changelog in observer.GraphMLObserver
@@ -166,7 +205,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Removed class `attrib.VERSION` 
 - components.DepositionToReach class documentation
 - components.DoseResponse class documentation
-- `components.Efate` class documentation
+- `components.EnvironmentalFate` class documentation
 - store.InMemoryStore class documentation
 - store.SqlLiteStore has now base.Store as superclass
 - store.SqlLiteStore class documentation
@@ -206,7 +245,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.LEffectModel` repackaged as external part
 - `components.LP50` repackaged as external part
 - `components.RunOffPrzm` repackaged as external part
-- `components.StepsRivernetwork` repackaged as external part
+- `components.StepsRiverNetwork` repackaged as external part
 - `components.StreamCom` repackaged as external part
 - `components.XSprayDrift` repackaged as external part
 - `observer.AnalysisObserver` repackaged as external part
@@ -226,7 +265,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - store.X3dfStore can be initialized using existing data
 - components.MarsWeather no longer uses a provisional output container
 - base.MCRun can continue previous simulations
-- `base.Uasa.create()` regex refactored
+- `base.UncertaintyAndSensitivityAnalysis.create()` regex refactored
 
 ### Fixed
 - `base.functions.replace\_tokens()` treats None values as empty string
@@ -330,7 +369,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - components.DepositionToPecSoil refactored
 - Soil depth is now parameter in components.DepositionToPecSoil
 - components.DepositionToReach specifies scales
-- `components.Efate` refactored
+- `components.EnvironmentalFate` refactored
 - store.InMemoryStore slice keyword renamed to slices
 - store.InMemoryStore updated
 - store.SqlLiteStore slice keyword renamed to slices
@@ -344,7 +383,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - components.UserParameters expects list of UserParameters as values
 - base.MCRun parses scales of user-defined parameters
 - base.UserParameters refactored
-- `base.Uasa` refactored
+- `base.UncertaintyAndSensitivityAnalysis` refactored
 
 ### Fixed
 
@@ -494,7 +533,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Class checks in `components.Lulc` 
 
 ### Fixed
-- `base.Uasa.create()` function parsing improved
+- `base.UncertaintyAndSensitivityAnalysis.create()` function parsing improved
 
 
 ## [1.2.34]
@@ -513,8 +552,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 ### Changed
 - init script recursive to run entire folders
-- `base.Uasa.create()` parameter generation possible in sub-directories
-- `base.Uasa.create()` can process pre-defined lists
+- `base.UncertaintyAndSensitivityAnalysis.create()` parameter generation possible in sub-directories
+- `base.UncertaintyAndSensitivityAnalysis.create()` can process pre-defined lists
 
 ### Fixed
 
@@ -571,7 +610,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- `components.Lulc` ROI extent as meta-datum in `package.xinfo`
+- `components.Lulc` ROI extent as meta-datum in package info file
 
 ### Fixed
 
@@ -589,7 +628,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ## [1.2.17]
 
 ### Added
-- `base.Uasa` class for managing uncertainty and sensitivity analyses
+- `base.UncertaintyAndSensitivityAnalysis` class for managing uncertainty and sensitivity analyses
 
 ### Changed
 - `base.functions.replaceTokens()` accepts non-string values
@@ -744,7 +783,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Changed
 - components.DepositionToPecSoil reports scale information of output to data store
 - components.DepositionToPecSoil requests storing of maximum value of PEC soil
-- `components.Efate` stores metadata of PEC
+- `components.EnvironmentalFate` stores metadata of PEC
 - store.X3dfStore scale information for numpy arrays if provided
 - store.X3dfStore can calculate maximum for numpy arrays
 
@@ -756,7 +795,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- `components.Efate` exposure inputs made optional
+- `components.EnvironmentalFate` exposure inputs made optional
 - base.MCRun allows disabling components in configuration
 - base.MCRun allows disabling links between inputs and outputs
 
@@ -784,7 +823,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `attrib.Class` 
 - Transformable attribute checker
 - `attrib` namespace
-- `components.Efate` component
+- `components.EnvironmentalFate` component
 - store.InMemoryStore
 - store.X3dfStore
 - components namespace

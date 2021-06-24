@@ -1,6 +1,6 @@
 # Components
-This file lists all components that are current included in the Landscape Model core.
-It was automatically created on 2021-02-22.
+This file lists all components that are currently included in the Landscape Model core.
+It was automatically created on 2021-06-24.
 
 
 ## CsvReader
@@ -38,7 +38,7 @@ It was automatically created on 2021-02-22.
     
 
 ## DepositionToReach
-    Calculates initial efate in reaches for spray-drift deposition.
+    Calculates the initial environmental fate in reaches for spray-drift depositions.
 
     INPUTS
     Deposition: The substance deposited at the water surface. A NumPy array of scales time/day, space/base_geometry.
@@ -65,7 +65,7 @@ It was automatically created on 2021-02-22.
     Effect: The calculated effect. A NumPy array with the same scale as the exposure input. Values have a unit of 1.
     
 
-## Efate
+## EnvironmentalFate
     Calculates environmental fate based on a simple half-time degradation.
 
     INPUTS
@@ -132,22 +132,22 @@ It was automatically created on 2021-02-22.
     None.
     
 
-## HydrologyFromTimeseries
+## HydrologyFromTimeSeries
     Loads hydrological data from an HDF5 file.
 
     INPUTS
-    Timeseries: A valid file path to the input HDF5 data. A string of global scale. Value has no unit.
+    TimeSeries: A valid file path to the input HDF5 data. A string of global scale. Value has no unit.
     FromTime: The start time of the requested hydrology. A datetime.date of global scale. Value has no unit.
     ToTime: The end time of the requested hydrology. A datetime.date of global scale. Value has no unit.
-    InflowTimeseriesPath: The pah where reach-inflows are stored. A string of global scale. Value has no unit.
+    InflowTimeSeriesPath: The path where reach-inflows are stored. A string of global scale. Value has no unit.
     ImportInflows: Specifies whether reach inflows from fields are imported. A bool of global scale. Value has no unit.
 
     OUTPUTS
     Flow: The water flow. A NumPy array of scales time/hour, space/reach. Values have a unit of m³/d.
     Depth: The water depth. A NumPy array of scales time/hour, space/reach. Values have a unit m.
     Reaches: The numeric identifier of reaches. A list[int] of scale space/reach.
-    TimeseriesStart: The start time of the hydrological data. A datetime.datetime of global scale. Value has no unit.
-    TimeseriesEnd: The end time of the hydrological data. A datetime.datetime of global scale. Value has no unit.
+    TimeSeriesStart: The start time of the hydrological data. A datetime.datetime of global scale. Value has no unit.
+    TimeSeriesEnd: The end time of the hydrological data. A datetime.datetime of global scale. Value has no unit.
     Volume: The water volume. A NumPy array of scales time/hour, space/reach. Values have a unit of m³.
     Area: The water surface area. A NumPy array of scales time/hour, space/reach. Values have a unit of m².
     InflowReaches: Identifier that receive inflows from fields. A NumPy array of scale space/reach2. Values have no

@@ -10,10 +10,11 @@ class Unit:
     """
     # CHANGELOG
     base.VERSION.added("1.3.3", "Unit attribute class to check and convert physical units (currently hard-coded)")
-    base.VERSION.changed("1.3.33", "attrib.Unit.check() returns base.CheckResult instead of tuple")
-    base.VERSION.added("1.3.34", "Additional unit conversions in class attrib.Unit")
-    base.VERSION.added("1.4.1", "Changelog in class attrib.Unit")
+    base.VERSION.changed("1.3.33", "`attrib.Unit.check()` returns base.CheckResult instead of tuple")
+    base.VERSION.added("1.3.34", "Additional unit conversions in class `attrib.Unit`")
+    base.VERSION.added("1.4.1", "Changelog in class `attrib.Unit` ")
     base.VERSION.changed("1.4.2", "Changelog description")
+    base.VERSION.changed("1.4.9", "`attrib.Unit` changelog uses markdown for code elements")
 
     def __init__(self, expected_unit, severity=2):
         self._unit = expected_unit

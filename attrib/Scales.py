@@ -10,8 +10,9 @@ class Scales:
     """
     # CHANGELOG
     base.VERSION.added("1.3.33", "Scale attribute checker")
-    base.VERSION.added("1.4.1", "Changelog in class attrib.Scales")
+    base.VERSION.added("1.4.1", "Changelog in class `attrib.Scales` ")
     base.VERSION.changed("1.4.2", "Changelog description")
+    base.VERSION.changed("1.4.9", "`attrib.Scales` changelog uses markdown for code elements")
 
     def __init__(self, expected_scales, severity=2):
         self._scales = expected_scales

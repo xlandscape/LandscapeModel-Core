@@ -34,6 +34,7 @@ class SqlLiteStore(base.Store):
     base.VERSION.added("1.4.3", "store.SqlLiteStore.execute() method")
     base.VERSION.changed("1.4.3", "store.SqlLiteStore manages physical units")
     base.VERSION.changed("1.4.4", "store.SqlLiteStore manages chunks")
+    base.VERSION.changed("1.4.9", "`store.SqlLiteStore` data type access")
 
     def __init__(self, file_path, observer, create=True):
         self._observer = observer
@@ -63,7 +64,7 @@ class SqlLiteStore(base.Store):
             values,
             scales=None,
             shape=None,
-            dtype=None,
+            data_type=None,
             create=True,
             slices=None,
             default=None,
@@ -78,7 +79,7 @@ class SqlLiteStore(base.Store):
         :param values: The actual values.
         :param scales: The scales the values apply to.
         :param shape: The shape of the values if not obvious from the values.
-        :param dtype: The type of the value if not obvious from the values.
+        :param data_type: The type of the value if not obvious from the values.
         :param create: A boolean defining whether an entry in the database should be created or not (for appending).
         :param slices: Specifies a slice for partial updates of values.
         :param default: The default value if no actual value is given.
@@ -159,7 +160,7 @@ class SqlLiteStore(base.Store):
         elif isinstance(values, type):
             type_name = values.__module__ + "." + values.__qualname__
             if type_name == "numpy.ndarray":
-                data_type = numpy_mappings[dtype]
+                data_type = numpy_mappings[data_type]
                 original_type = "numpy.ndarray"
                 encoded_values = []
                 stored_shape = shape
@@ -319,8 +320,8 @@ class SqlLiteStore(base.Store):
     def _cartesian_product(*arrays):
         # adapted from https://stackoveflow.com/questions/11144513
         la = len(arrays)
-        dtype = np.result_type(*arrays)
-        arr = np.empty([len(a) for a in arrays] + [la], dtype=dtype)
+        data_type = np.result_type(*arrays)
+        arr = np.empty([len(a) for a in arrays] + [la], dtype=data_type)
         for i, a in enumerate(np.ix_(*arrays)):
             arr[..., i] = a
         return arr.reshape(-1, la), arr.shape[:-1]
@@ -338,7 +339,7 @@ class SqlLiteStore(base.Store):
         table_info = self._connection.execute("PRAGMA table_info(`{}`)".format(data_info[0])).fetchall()
         data_type = [x[2] for x in table_info if x[1] == name][0]
         unit = self._connection.execute("SELECT unit FROM data_attributes WHERE data_name = ?", (name,)).fetchone()
-        return {"shape": eval(scale_info[0]), "dtype": type_mappings[data_type], "chunks": None, "unit": unit[0]}
+        return {"shape": eval(scale_info[0]), "data_type": type_mappings[data_type], "chunks": None, "unit": unit[0]}
 
     @staticmethod
     def _slices_to_range_limits(slices):

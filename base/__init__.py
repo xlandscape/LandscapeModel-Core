@@ -23,7 +23,7 @@ from .MCRun import *
 from .Project import *
 from .UserParameters import *
 from .Experiment import *
-from .Uasa import *
+from .UncertaintyAndSensitivityAnalysis import *
 
 import base.VERSION
 
@@ -32,3 +32,4 @@ base.VERSION.added("1.1.1", "base namespace")
 base.VERSION.added("1.1.6", "Changelog through VersionInfo class in base namespace")
 base.VERSION.changed("1.3.5", "base.__init__ refactored")
 base.VERSION.added("1.4.1", "Changelog in base.__init__")
+base.VERSION.changed("1.4.9", "`base` updated imports to changed class names")

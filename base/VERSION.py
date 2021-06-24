@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION = base.VersionCollection(
+    base.VersionInfo("1.4.9", "2021-06-24"),
     base.VersionInfo("1.4.8", "2021-02-03"),
     base.VersionInfo("1.4.7", "2021-02-03"),
     base.VersionInfo("1.4.6", "2021-01-19"),
@@ -59,26 +60,33 @@ VERSION = base.VersionCollection(
 )
 
 # CHANGELOG
-VERSION.added("1.1.6", "base.VERSION for describing code changes")
+VERSION.added("1.1.6", "`base.VERSION` for describing code changes")
 VERSION.changed("1.2.31", "init script recursive to run entire folders")
-VERSION.changed("1.4.0", "components.CascadeToxswa repackaged as external part")
-VERSION.changed("1.4.0", "components.CmfContinuous repackaged as external part")
-VERSION.changed("1.4.0", "components.LEffectModel repackaged as external part")
-VERSION.changed("1.4.0", "components.LP50 repackaged as external part")
-VERSION.changed("1.4.0", "components.RunOffPrzm repackaged as external part")
-VERSION.changed("1.4.0", "components.StepsRivernetwork repackaged as external part")
-VERSION.changed("1.4.0", "components.StreamCom repackaged as external part")
-VERSION.changed("1.4.0", "components.XSprayDrift repackaged as external part")
-VERSION.changed("1.4.0", "observer.AnalysisObserver repackaged as external part")
-VERSION.changed("1.4.0", "observer.ReportingObserver repackaged as external part")
-VERSION.changed("1.4.1", "Changed base.VERSION to a base.VersionCollection, tracking changes in classes")
-VERSION.added("1.4.1", "Changelog in base.VERSION")
-VERSION.added("1.4.2", "Corrections in README")
+VERSION.changed("1.4.0", "`components.CascadeToxswa` repackaged as external part")
+VERSION.changed("1.4.0", "`components.CmfContinuous` repackaged as external part")
+VERSION.changed("1.4.0", "`components.LEffectModel` repackaged as external part")
+VERSION.changed("1.4.0", "`components.LP50` repackaged as external part")
+VERSION.changed("1.4.0", "`components.RunOffPrzm` repackaged as external part")
+VERSION.changed("1.4.0", "`components.StepsRiverNetwork` repackaged as external part")
+VERSION.changed("1.4.0", "`components.StreamCom` repackaged as external part")
+VERSION.changed("1.4.0", "`components.XSprayDrift` repackaged as external part")
+VERSION.changed("1.4.0", "`observer.AnalysisObserver` repackaged as external part")
+VERSION.changed("1.4.0", "`observer.ReportingObserver` repackaged as external part")
+VERSION.changed("1.4.1", "Changed `base.VERSION` to a `base.VersionCollection`, tracking changes in classes")
+VERSION.added("1.4.1", "Changelog in `base.VERSION` ")
+VERSION.added("1.4.2", "Corrections in `README` ")
+base.VERSION.changed("1.4.9", "`base` changelog uses markdown for code elements")
 
 # CHANGELOG VersionCollection.py
-VERSION.added("1.4.1", "base.VersionCollection for managing revision history")
+VERSION.added("1.4.1", "`base.VersionCollection` for managing revision history")
 
 # CHANGELOG VersionInfo.py
-VERSION.added("1.1.6", "base.VersionInfo for describing individual revisions")
-VERSION.changed("1.3.27", "base.VersionInfo refactored")
-VERSION.changed("1.4.1", "base.VersionInfo completely rewritten to move changelogs nearer to code")
+VERSION.added("1.1.6", "`base.VersionInfo` for describing individual revisions")
+VERSION.changed("1.3.27", "`base.VersionInfo` refactored")
+VERSION.changed("1.4.1", "`base.VersionInfo` completely rewritten to move changelogs nearer to code")
+
+# CHANGELOG init.py
+base.VERSION.changed("1.4.9", "`init.py` spell check exclusions")
+
+# CHANGELOG document.py
+base.VERSION.added("1.4.9", "`document.py` ")

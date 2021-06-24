@@ -32,6 +32,7 @@ class LandscapeScenarioPreparation(base.Component):
     base.VERSION.changed("1.3.29", "components.LandscapeScenarioPreparation can calculate flow grids from DEM")
     base.VERSION.added("1.4.1", "Changelog in components.LandscapeScenarioPreparation")
     base.VERSION.changed("1.4.1", "components.LandscapeScenarioPreparation class documentation")
+    base.VERSION.changed("1.4.9", "`components.LandscapeScenarioPreparation` spell check exclusion")
 
     def __init__(self, name, observer, store):
         super(LandscapeScenarioPreparation, self).__init__(name, observer, store)
@@ -170,6 +171,7 @@ class LandscapeScenarioPreparation(base.Component):
             memory_data_set.DeleteLayer("analysisBuffer.shp")
         gdal.RasterizeLayer(analysis_buffer_raster, [1], ogr_layer, burn_values=[0])
         xml.etree.ElementTree.SubElement(supplementary, "analysis_distance_groups").text = "AnalysisBuffer.tif"
-        xml.etree.ElementTree.ElementTree(landscape_package).write(os.path.join(output_path, "package.xinfo"), "utf-8",
-                                                                   True)
+        # noinspection SpellCheckingInspection
+        xml.etree.ElementTree.ElementTree(landscape_package).write(
+            os.path.join(output_path, "package.xinfo"), "utf-8", True)
         return

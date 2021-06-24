@@ -19,6 +19,7 @@ class InMemoryStore(base.Store):
     base.VERSION.changed("1.3.33", "store.InMemoryStore stores physical unit if specified")
     base.VERSION.added("1.4.1", "Changelog in store.InMemoryStore")
     base.VERSION.changed("1.4.1", "store.InMemoryStore class documentation")
+    base.VERSION.changed("1.4.9", "`store.InMemoryStore` data type access")
 
     def __init__(self):
         self._data = {}
@@ -54,7 +55,7 @@ class InMemoryStore(base.Store):
             scales=None,
             unit=None,
             shape=None,
-            dtype=None,
+            data_type=None,
             chunks=None,
             create=True,
             slices=None
@@ -66,7 +67,7 @@ class InMemoryStore(base.Store):
         :param scales: The scales to which the values of the data set apply.
         :param unit: The physical unit of the values.
         :param shape: The shape of a newly created empty array.
-        :param dtype: The data type of a newly created empty array.
+        :param data_type: The data type of a newly created empty array.
         :param chunks: The chunk size for a newly created empty array.
         :param create: Specifies whether a data set should be created or not.
         :param slices: Defines the portion of the data set that was passed to the function.
@@ -76,7 +77,7 @@ class InMemoryStore(base.Store):
             type_name = values.__module__ + "." + values.__qualname__
             # noinspection SpellCheckingInspection
             if type_name == "numpy.ndarray" and create:
-                self._data[name] = numpy.zeros(shape, dtype)
+                self._data[name] = numpy.zeros(shape, data_type)
             else:
                 raise TypeError("Unsupported type: " + str(type(values)))
         elif isinstance(values, numpy.ndarray) and slices is not None:

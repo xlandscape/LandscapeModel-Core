@@ -24,6 +24,7 @@ class DoseResponse(base.Component):
     base.VERSION.added("1.4.1", "Changelog in components.DoseResponse")
     base.VERSION.changed("1.4.1", "components.DoseResponse class documentation")
     base.VERSION.fixed("1.4.1", "components.DoseResponse attrib namespace reference")
+    base.VERSION.changed("1.4.9", "`components.DoseResponse` data type access")
 
     def __init__(self, name, observer, store):
         super(DoseResponse, self).__init__(name, observer, store)
@@ -67,7 +68,7 @@ class DoseResponse(base.Component):
             np.ndarray,
             chunks=data_set_info["chunks"],
             shape=data_set_info["shape"],
-            dtype=data_set_info["dtype"],
+            data_type=data_set_info["data_type"],
             scales=data_set_info["scales"],
             unit="1"
         )

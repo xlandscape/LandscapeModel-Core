@@ -16,33 +16,34 @@ class Lulc(base.Component):
     Provides landscape scenarios to the Landscape Model.
 
     INPUTS
-    BaseLandscapeGeometries: A valid file path to a package.xinfo file. A string of global scale. Value has no unit.
+    BaseLandscapeGeometries: A valid file path to a package file. A string of global scale. Value has no unit.
     No ontological description is associated with the input.
 
     OUTPUTS
     Outputs of this components are provisional, i.e., they are defined by links from inputs and have to be satisfied
-    by data in the CSV file. Outputs are Crs, Extent, and information specified in the package.xinfo of the landscape
-    scenario.
+    by data in the CSV file. Outputs are Crs, Extent, and information specified in the package information file of the
+    landscape scenario.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "components.Lulc component")
-    base.VERSION.changed("1.2.5", "components.Lulc can provide flexible set of outputs")
-    base.VERSION.changed("1.2.6", "components.Lulc provides absolute paths for directories also")
-    base.VERSION.changed("1.2.18", "components.Lulc has new input XML schema and checks layer consistency")
-    base.VERSION.changed("1.2.19", "components.Lulc ROI extent as meta-datum in package.xinfo")
-    base.VERSION.changed("1.2.20", "components.Lulc distinguishes between supplementary data formats")
-    base.VERSION.changed("1.2.20", "components.Lulc can import additional attributes from base geometry shapefile")
-    base.VERSION.changed("1.2.34", "Better exceptions in components.Lulc")
-    base.VERSION.changed("1.2.35", "Class checks in components.Lulc")
-    base.VERSION.changed("1.3.2", "Enforce strict checks in components.Lulc")
-    base.VERSION.changed("1.3.27", "components.Lulc specifies scales")
-    base.VERSION.changed("1.3.33", "components.Lulc checks input types strictly")
-    base.VERSION.changed("1.3.33", "components.Lulc checks for physical units")
-    base.VERSION.changed("1.3.33", "components.Lulc reports physical units to the data store")
-    base.VERSION.changed("1.3.33", "components.Lulc checks for scales")
-    base.VERSION.added("1.4.1", "Changelog in components.Lulc")
-    base.VERSION.changed("1.4.1", "components.Lulc class documentation")
-    base.VERSION.fixed("1.4.7", "components.Lulc added path to proj.db zo fix errors on some systems")
+    base.VERSION.added("1.1.1", "`components.Lulc` component")
+    base.VERSION.changed("1.2.5", "`components.Lulc` can provide flexible set of outputs")
+    base.VERSION.changed("1.2.6", "`components.Lulc` provides absolute paths for directories also")
+    base.VERSION.changed("1.2.18", "`components.Lulc` has new input XML schema and checks layer consistency")
+    base.VERSION.changed("1.2.19", "`components.Lulc` ROI extent as meta-datum in package info file")
+    base.VERSION.changed("1.2.20", "`components.Lulc` distinguishes between supplementary data formats")
+    base.VERSION.changed("1.2.20", "`components.Lulc` can import additional attributes from base geometry shapefile")
+    base.VERSION.changed("1.2.34", "Better exceptions in `components.Lulc` ")
+    base.VERSION.changed("1.2.35", "Class checks in `components.Lulc` ")
+    base.VERSION.changed("1.3.2", "Enforce strict checks in `components.Lulc` ")
+    base.VERSION.changed("1.3.27", "`components.Lulc` specifies scales")
+    base.VERSION.changed("1.3.33", "`components.Lulc` checks input types strictly")
+    base.VERSION.changed("1.3.33", "`components.Lulc` checks for physical units")
+    base.VERSION.changed("1.3.33", "`components.Lulc` reports physical units to the data store")
+    base.VERSION.changed("1.3.33", "`components.Lulc` checks for scales")
+    base.VERSION.added("1.4.1", "Changelog in `components.Lulc` ")
+    base.VERSION.changed("1.4.1", "`components.Lulc` class documentation")
+    base.VERSION.fixed("1.4.7", "`components.Lulc` added path to proj.db zo fix errors on some systems")
+    base.VERSION.changed("1.4.9", "`components.lulc` changelog uses markdown for code elements")
 
     def __init__(self, name, observer, store):
         super(Lulc, self).__init__(name, observer, store)
@@ -158,7 +159,7 @@ class Lulc(base.Component):
                 self.outputs[dataset_name].set_values(
                     np.ndarray,
                     shape=(r.RasterXSize, r.RasterYSize),
-                    dtype=np.int,
+                    data_type=np.int,
                     chunks=(min(block_size_x, r.RasterXSize), min(block_size_y, r.RasterYSize)),
                     scales="space_x/" + cell_area + "sqm, space_y/" + cell_area + "sqm"
                 )

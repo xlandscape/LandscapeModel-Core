@@ -29,6 +29,7 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.added("1.4.1", "Changelog in components.DepositionToPecSoil")
     base.VERSION.changed("1.4.1", "components.DepositionToPecSoil class documentation")
     base.VERSION.changed("1.4.1", "Removed unused output PecSoil 2 from components.DepositionToPecSoil")
+    base.VERSION.changed("1.4.9", "`components.DepositionToPecSoil` data type access")
 
     def __init__(self, name, observer, store):
         super(DepositionToPecSoil, self).__init__(name, observer, store)
@@ -51,8 +52,13 @@ class DepositionToPecSoil(base.Component):
         soil_mass = soil_bulk_density * depth * 10  # [kg]
         quotient = soil_mass * 1e4 / 1e3
         chunk_slices = base.chunk_slices(data_set_info["shape"], data_set_info["chunks"])
-        self.outputs["PecSoil"].set_values(np.ndarray, chunks=data_set_info["chunks"], shape=data_set_info["shape"],
-                                           dtype=data_set_info["dtype"], scales="time/day, space_x/1sqm, space_y/1sqm")
+        self.outputs["PecSoil"].set_values(
+            np.ndarray,
+            chunks=data_set_info["chunks"],
+            shape=data_set_info["shape"],
+            data_type=data_set_info["data_type"],
+            scales="time/day, space_x/1sqm, space_y/1sqm"
+        )
         for chunkSlice in chunk_slices:
             deposition = self.inputs["Deposition"].read(slices=chunkSlice).values
             pec_soil = deposition / quotient

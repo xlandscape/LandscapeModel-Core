@@ -104,6 +104,8 @@ def convert(input_config):
     """
     raw_value = eval(input_config.text) if "eval" in input_config.attrib \
                                            and input_config.attrib["eval"].lower() == "true" else input_config.text
+    if raw_value is not None:
+        raw_value = raw_value.strip()
     if "type" in input_config.attrib:
         if input_config.attrib["type"] == "bool":
             value = raw_value.lower() == "true"

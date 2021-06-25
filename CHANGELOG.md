@@ -1,5 +1,25 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-06-24.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-06-25.
+
+## [1.4.11] - 2021-06-25
+
+### Added
+
+### Changed
+- parsing of XML parameters strips whitespaces
+
+### Fixed
+
+
+## [1.4.10] - 2021-06-24
+
+### Added
+
+### Changed
+
+### Fixed
+- automatic documentation error
+
 
 ## [1.4.9] - 2021-06-24
 

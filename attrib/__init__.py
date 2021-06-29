@@ -3,6 +3,7 @@ Imports of the attrib module.
 """
 from .Class import *
 from .Equals import *
+from .InList import *
 from .Ontology import *
 from .Scales import *
 from .Transformable import *

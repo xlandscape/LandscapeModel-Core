@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-06-25.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-06-29.
+
+## [1.4.12] - 2021-06-29
+
+### Added
+- `attrib.InList` attribute to check whether a value is within a set of allowed values
+
+### Changed
+
+### Fixed
+
 
 ## [1.4.11] - 2021-06-25
 

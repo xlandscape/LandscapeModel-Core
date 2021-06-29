@@ -9,6 +9,7 @@ class InList:
     Checks whether a value is within a list of  allowed values.
     """
     # CHANGELOG
+    base.VERSION.added("1.4.12", "`attrib.InList` attribute to check whether a value is within a set of allowed values")
 
     def __init__(self, values, severity=1):
         self._values = values

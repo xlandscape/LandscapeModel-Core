@@ -31,6 +31,7 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.3.35", "components.MarsWeather no longer uses a provisional output container")
     base.VERSION.added("1.4.1", "Changelog in components.MarsWeather")
     base.VERSION.changed("1.4.1", "components.MarsWeather class documentation")
+    base.VERSION.changed("1.4.13", "added physical units to `MarsWeather` outputs")
 
     def __init__(self, name, observer, store):
         super(MarsWeather, self).__init__(name, observer, store)
@@ -47,8 +48,23 @@ class MarsWeather(base.Component):
                 self.default_observer
             )
         ])
-        # self._outputs = base.ProvisionalOutputs(self, store)
-        self._outputs = base.OutputContainer(self, [base.Output("TEMPERATURE_AVG", store, self)])
+        self._outputs = base.OutputContainer(
+            self,
+            (
+                base.Output("TEMPERATURE_AVG", store, self),
+                base.Output("PRECIPITATION", store, self),
+                base.Output("ET0", store, self),
+                base.Output("WINDSPEED", store, self),
+                base.Output("RADIATION", store, self)
+            )
+        )
+        self._units = {
+            "TEMPERATURE_AVG": "°C",
+            "PRECIPITATION": "mm/d",
+            "ET0": "mm/d",
+            "WINDSPEED": "m/s",
+            "RADIATION": "kJ/(m²*d)"
+        }
         return
 
     def run(self):
@@ -68,6 +84,5 @@ class MarsWeather(base.Component):
             idx = data[0].index(outputName)
             output_data = np.array([float(r[idx]) for r in filtered_data], dtype=np.float32)
             output = self.outputs[outputName]
-            unit = "°C" if outputName == "TEMPERATURE_AVG" else None
-            output.set_values(output_data, scales="time/day", unit=unit)
+            output.set_values(output_data, scales="time/day", unit=self._units[outputName])
         return

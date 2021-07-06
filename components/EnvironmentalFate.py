@@ -4,6 +4,7 @@ Class definition for the Landscape Model EnvironmentalFate component.
 import math
 import numpy as np
 import base
+import attrib
 
 
 class EnvironmentalFate(base.Component):
@@ -27,14 +28,23 @@ class EnvironmentalFate(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.EnvironmentalFate`")
     base.VERSION.changed("1.4.1", "`components.EnvironmentalFate` class documentation")
     base.VERSION.changed("1.4.9", "renamed `components.EnvironmentalFate` component")
+    base.VERSION.changed("1.4.14", "added semantic descriptions to `EnvironmentalFate` component")
 
     def __init__(self, name, observer, store):
         super(EnvironmentalFate, self).__init__(name, observer, store)
-        self._inputs = base.InputContainer(self, [
-            base.Input("SprayDriftExposure", (), self.default_observer),
-            base.Input("RunOffExposure", (), self.default_observer),
-            base.Input("SoilDT50", (), self.default_observer)
-        ])
+        self._inputs = base.InputContainer(self, (
+            base.Input(
+                "SprayDriftExposure",
+                (attrib.Class(np.ndarray), attrib.Scales("time/day, space_x/1sqm, space_y/1sqm"), attrib.Unit("g/ha")),
+                self.default_observer
+            ),
+            base.Input(
+                "RunOffExposure",
+                (attrib.Class(np.ndarray), attrib.Scales("time/day, space_x/1sqm, space_y/1sqm"), attrib.Unit("g/ha")),
+                self.default_observer),
+            base.Input(
+                "SoilDT50", (attrib.Class(float), attrib.Scales("global"), attrib.Unit("d")), self.default_observer)
+        ))
         self._outputs = base.OutputContainer(self, [base.Output("Pec", store, self)])
         return
 
@@ -56,8 +66,11 @@ class EnvironmentalFate(base.Component):
             data_type=data_set_info["data_type"],
             chunks=base.chunk_size(
                 (1, None, None),
-                (data_set_info["shape"][0], data_set_info["shape"][1], data_set_info["shape"][2])),
-            scales="time/day, space_x/1sqm, space_y/1sqm")
+                (data_set_info["shape"][0], data_set_info["shape"][1], data_set_info["shape"][2])
+            ),
+            scales="time/day, space_x/1sqm, space_y/1sqm",
+            unit="g/ha"
+        )
         pec_current_day = np.zeros(
             (1, data_set_info["shape"][1], data_set_info["shape"][2]), data_set_info["data_type"])
         for t in range(data_set_info["shape"][0]):

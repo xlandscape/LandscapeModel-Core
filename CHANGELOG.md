@@ -1,5 +1,25 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-06-29.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-07-06.
+
+## [1.4.14] - 2021-07-06
+
+### Added
+
+### Changed
+- added semantic descriptions to `EnvironmentalFate` component
+
+### Fixed
+
+
+## [1.4.13] - 2021-07-05
+
+### Added
+
+### Changed
+- added physical units to `MarsWeather` outputs
+
+### Fixed
+
 
 ## [1.4.12] - 2021-06-29
 

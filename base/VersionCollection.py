@@ -6,12 +6,15 @@ import distutils.version
 
 class VersionCollection:
     """
-    Collects version collection t compile a changelog.
+    Collects version changes to compile a changelog.
     """
     # CHANGELOG can be found in VERSION.py to avoid circular references
 
     def __init__(self, *versions):
         self._versions = versions
+        self._roadmap = []
+        self._authors = []
+        self._acknowledgements = []
         return
 
     def __iter__(self):
@@ -76,3 +79,27 @@ class VersionCollection:
         :return: The highest version number found in the collection.
         """
         return max(self._versions)
+
+    @property
+    def roadmap(self):
+        """
+        Planned changes to current version.
+        :return: A list of changes planned for future versions.
+        """
+        return self._roadmap
+
+    @property
+    def authors(self):
+        """
+        The authors that contributed to the project.
+        :return: A list of contributing authors.
+        """
+        return self._authors
+
+    @property
+    def acknowledgements(self):
+        """
+        Persons or project of special mention.
+        :return: A list of acknowledged persons and projects.
+        """
+        return self._acknowledgements

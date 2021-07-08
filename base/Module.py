@@ -13,9 +13,10 @@ class Module:
     base.VERSION.changed("1.3.5", "base.Module refactored")
     base.VERSION.added("1.4.1", "Changelog in base.Module")
 
-    def __init__(self, name, version):
+    def __init__(self, name, version, doc_file=None):
         self._name = name
         self._version = version
+        self._doc_file = doc_file
         return
 
     @property
@@ -31,3 +32,10 @@ class Module:
         Gets the version of the module as specified by the module author.
         """
         return self._version
+
+    @property
+    def doc_file(self):
+        """
+        Gets the path of the additional documentation file, if available.
+        """
+        return self._doc_file

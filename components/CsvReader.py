@@ -35,7 +35,7 @@ class CsvReader(base.Component):
         """
         # noinspection PyTypeChecker
         data = np.genfromtxt(self.inputs["FilePath"].read().values, delimiter=",", dtype=None, names=True)
-        for outputName in self.outputs:
-            output = self.outputs[outputName]
-            output.set_values(data[outputName])
+        for component_output in self.outputs:
+            output = self.outputs[component_output.name]
+            output.set_values(data[component_output.name])
         return

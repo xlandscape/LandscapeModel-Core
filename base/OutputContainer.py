@@ -33,7 +33,7 @@ class OutputContainer:
         return output
 
     def __iter__(self):
-        return self._items.__iter__()
+        return self._items.values().__iter__()
 
     def append(self, output):
         """

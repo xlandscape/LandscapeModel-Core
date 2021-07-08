@@ -100,8 +100,8 @@ class MCRun:
                 self._composition[component.name] = component
         user_parameters_component = components.UserParameters(
             "__UserParameters__", user_parameters, self._observer, self._store)
-        for outputName in user_parameters_component.outputs:
-            output = user_parameters_component.outputs[outputName]
+        for component_output in user_parameters_component.outputs:
+            output = user_parameters_component.outputs[component_output.name]
             component_name, input_name = output.name.split("/")
             self._composition[component_name].inputs[input_name] = output
         return

@@ -13,6 +13,8 @@ class OutputContainer:
     base.VERSION.changed("1.3.5", "base.OutputContainer refactored")
     base.VERSION.added("1.3.21", "base.OutputContainer.append() for dynamically adding outputs")
     base.VERSION.added("1.4.1", "Changelog in base.OutputContainer")
+    base.VERSION.changed(
+        "1.5.0", "Iteration over `base.OutputContainer` now returns `Output` objects instead of their names")
 
     def __init__(self, component=None, outputs=None):
         self._items = {}

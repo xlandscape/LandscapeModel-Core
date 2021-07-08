@@ -10,6 +10,7 @@ import xml.etree.ElementTree
 
 # CHANGELOG
 base.VERSION.added("1.4.9", "`base.documentation` ")
+base.VERSION.added("1.5.0", "`base.documentation` methods `document_component` and `write_contribution_notes` ")
 
 
 def write_changelog(name, version_history, file_path):

@@ -1,5 +1,26 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-07-06.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-07-08.
+
+## [1.5] - 2021-07-08
+
+### Added
+- properties `roadmap`, `authors` and `acknowledgements` to `base.VersionCollection` 
+- `base.Input.description` 
+- `base.Module.doc\_file` 
+- `base.Output` properties `default\_attributes`, `description` and `attribute\_hints` 
+- `base.documentation` methods `document\_component` and `write\_contribution\_notes` 
+
+### Changed
+- fixed spelling in `base.VersionCollection` 
+- `base.Output` manages default attributes, output description and hints for attribute descriptions
+- if no attributes are specified in a `base.Output.set\_values()` call, specified defaults are used
+- Iteration over `base.OutputContainer` now returns `Output` objects instead of their names
+- `components.CsvReader` outputs are iterated by object instead of name
+- `components.MarsWeather` outputs are iterated by object instead of name
+- `base.MCRun` component outputs are iterated by object instead of name
+
+### Fixed
+
 
 ## [1.4.14] - 2021-07-06
 

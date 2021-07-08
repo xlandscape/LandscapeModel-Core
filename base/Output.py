@@ -12,8 +12,14 @@ class Output:
     base.VERSION.added("1.1.1", "base.Output class for representing component outputs")
     base.VERSION.changed("1.3.13", "base.Output refactored")
     base.VERSION.added("1.4.1", "Changelog in base.Output")
+    base.VERSION.changed(
+        "1.5.0", "`base.Output` manages default attributes, output description and hints for attribute descriptions")
+    base.VERSION.changed(
+        "1.5.0", "if no attributes are specified in a `base.Output.set_values()` call, specified defaults are used")
+    base.VERSION.added(
+        "1.5.0", "`base.Output` properties `default_attributes`, `description` and `attribute_hints` ")
 
-    def __init__(self, name, store, component=None):
+    def __init__(self, name, store, component=None, default_attributes=None, description=None, attribute_hints=None):
         self._name = name
         self._store = store
         self._component = component
@@ -21,6 +27,9 @@ class Output:
             self._storeName = name
         else:
             self._storeName = component.name + "/" + name
+        self._default_attributes = {} if default_attributes is None else default_attributes
+        self._description = description
+        self._attribute_hints = attribute_hints
         return
 
     def describe(self):
@@ -46,6 +55,9 @@ class Output:
         :param keywords: Additional keywords controlling the data storage.
         :return: Nothing.
         """
+        for attribute, value in self._default_attributes.items():
+            if attribute not in keywords:
+                keywords[attribute] = value
         self.store.set_values(self.store_name, values, **keywords)
         return
 
@@ -80,3 +92,27 @@ class Output:
         :return: A string of the data store name.
         """
         return self._storeName
+
+    @property
+    def default_attributes(self):
+        """
+        A set of default attributes associated with the output.
+        :return: A dictionary of attribute names and their default value.
+        """
+        return self._default_attributes
+
+    @property
+    def description(self):
+        """
+        A textual description of the input.
+        :return: A string containing the textual description of the input.
+        """
+        return self._description
+
+    @property
+    def attribute_hints(self):
+        """
+        Contains hints about data attributes useful for documentation.
+        :return: A dictionary of attribute types and textual or object hints.
+        """
+        return self._attribute_hints

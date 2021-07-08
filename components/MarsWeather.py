@@ -32,6 +32,7 @@ class MarsWeather(base.Component):
     base.VERSION.added("1.4.1", "Changelog in components.MarsWeather")
     base.VERSION.changed("1.4.1", "components.MarsWeather class documentation")
     base.VERSION.changed("1.4.13", "added physical units to `MarsWeather` outputs")
+    base.VERSION.changed("1.5.0", "`components.MarsWeather` outputs are iterated by object instead of name")
 
     def __init__(self, name, observer, store):
         super(MarsWeather, self).__init__(name, observer, store)
@@ -80,9 +81,9 @@ class MarsWeather(base.Component):
         last_date = self.inputs["LastDate"].read().values
         filtered_data = [r for r in data[1:] if first_date <= datetime.date(int(r[date_idx[0]]), int(r[date_idx[1]]),
                                                                             int(r[date_idx[2]])) <= last_date]
-        for outputName in self.outputs:
-            idx = data[0].index(outputName)
+        for component_output in self.outputs:
+            idx = data[0].index(component_output.name)
             output_data = np.array([float(r[idx]) for r in filtered_data], dtype=np.float32)
-            output = self.outputs[outputName]
-            output.set_values(output_data, scales="time/day", unit=self._units[outputName])
+            output = self.outputs[component_output.name]
+            output.set_values(output_data, scales="time/day", unit=self._units[component_output.name])
         return

@@ -13,14 +13,16 @@ class Input:
     base.VERSION.changed("1.3.13", "base.Input refactored")
     base.VERSION.changed("1.3.33", "base.Input.read() passes metadata from provider to base.Values object")
     base.VERSION.added("1.4.1", "Changelog in base.Input")
+    base.VERSION.added("1.5.0", "`base.Input.description` ")
 
-    def __init__(self, name, attributes, observer=None, provider=None):
+    def __init__(self, name, attributes, observer=None, provider=None, description=None):
         self._name = name        
         self._provider = provider
         self._attributes = base.DataAttributes(attributes)
         self._messages = []
         self._observer = observer
         self._extensions = []
+        self._description = description
         return
 
     def add_extension(self, extension):
@@ -124,3 +126,11 @@ class Input:
         :return: True if the input has a provider else false.
         """
         return self._provider is not None
+
+    @property
+    def description(self):
+        """
+        A textual description of the input.
+        :return: A string containing the textual description of the input.
+        """
+        return self._description

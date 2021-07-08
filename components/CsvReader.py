@@ -21,6 +21,7 @@ class CsvReader(base.Component):
     base.VERSION.changed("1.3.33", "components.CsvReader refactored")
     base.VERSION.added("1.4.1", "Changelog in components.CsvReader")
     base.VERSION.changed("1.4.1", "components.CsvReader class documentation")
+    base.VERSION.changed("1.5.0", "`components.CsvReader` outputs are iterated by object instead of name")
 
     def __init__(self, name, observer, store):
         super(CsvReader, self).__init__(name, observer, store)
@@ -35,7 +36,7 @@ class CsvReader(base.Component):
         """
         # noinspection PyTypeChecker
         data = np.genfromtxt(self.inputs["FilePath"].read().values, delimiter=",", dtype=None, names=True)
-        for outputName in self.outputs:
-            output = self.outputs[outputName]
-            output.set_values(data[outputName])
+        for component_output in self.outputs:
+            output = self.outputs[component_output.name]
+            output.set_values(data[component_output.name])
         return

@@ -23,6 +23,7 @@ class MCRun:
     base.VERSION.changed("1.3.35", "base.MCRun can continue previous simulations")
     base.VERSION.added("1.4.1", "Changelog in base.MCRun")
     base.VERSION.changed("1.4.2", "Changelog description")
+    base.VERSION.changed("1.5.0", "`base.MCRun` component outputs are iterated by object instead of name")
 
     def __init__(self, xml_file, **keywords):
         config = xml.etree.ElementTree.parse(xml_file)
@@ -100,8 +101,8 @@ class MCRun:
                 self._composition[component.name] = component
         user_parameters_component = components.UserParameters(
             "__UserParameters__", user_parameters, self._observer, self._store)
-        for outputName in user_parameters_component.outputs:
-            output = user_parameters_component.outputs[outputName]
+        for component_output in user_parameters_component.outputs:
+            output = user_parameters_component.outputs[component_output.name]
             component_name, input_name = output.name.split("/")
             self._composition[component_name].inputs[input_name] = output
         return

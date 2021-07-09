@@ -1,5 +1,18 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-07-08.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-07-09.
+
+## [1.5.1] - 2021-07-09
+
+### Added
+
+### Changed
+- small changes in `base.Output` changelog
+- small changes in `components.CsvReader` changelog
+- small changes in `components.MarsWeather` changelog
+- small changes in `base.MCRun` changelog
+
+### Fixed
+
 
 ## [1.5] - 2021-07-08
 

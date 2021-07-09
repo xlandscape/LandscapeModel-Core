@@ -17,6 +17,7 @@ class Output:
     base.VERSION.changed("1.5.0", "usage of specified defaults if no attributes passed in a call to set values")
     base.VERSION.added(
         "1.5.0", "`base.Output` properties `default_attributes`, `description` and `attribute_hints` ")
+    base.VERSION.changed("1.5.1", "small changes in `base.Output` changelog")
 
     def __init__(self, name, store, component=None, default_attributes=None, description=None, attribute_hints=None):
         self._name = name

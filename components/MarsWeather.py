@@ -33,6 +33,7 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.4.1", "components.MarsWeather class documentation")
     base.VERSION.changed("1.4.13", "added physical units to `MarsWeather` outputs")
     base.VERSION.changed("1.5.0", "`components.MarsWeather` iterates over output objects instead of names")
+    base.VERSION.changed("1.5.1", "small changes in `components.MarsWeather` changelog")
 
     def __init__(self, name, observer, store):
         super(MarsWeather, self).__init__(name, observer, store)

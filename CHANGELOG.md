@@ -13,11 +13,11 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Changed
 - fixed spelling in `base.VersionCollection` 
 - `base.Output` manages default attributes, output description and hints for attribute descriptions
-- if no attributes are specified in a `base.Output.set\_values()` call, specified defaults are used
+- usage of specified defaults if no attributes passed in a call to set values
 - Iteration over `base.OutputContainer` now returns `Output` objects instead of their names
-- `components.CsvReader` outputs are iterated by object instead of name
-- `components.MarsWeather` outputs are iterated by object instead of name
-- `base.MCRun` component outputs are iterated by object instead of name
+- `components.CsvReader` iterates over output objects instead of names
+- `components.MarsWeather` iterates over output objects instead of names
+- `base.MCRun` iterates over output objects instead of names
 
 ### Fixed
 

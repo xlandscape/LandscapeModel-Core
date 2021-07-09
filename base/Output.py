@@ -14,8 +14,7 @@ class Output:
     base.VERSION.added("1.4.1", "Changelog in base.Output")
     base.VERSION.changed(
         "1.5.0", "`base.Output` manages default attributes, output description and hints for attribute descriptions")
-    base.VERSION.changed(
-        "1.5.0", "if no attributes are specified in a `base.Output.set_values()` call, specified defaults are used")
+    base.VERSION.changed("1.5.0", "usage of specified defaults if no attributes passed in a call to set values")
     base.VERSION.added(
         "1.5.0", "`base.Output` properties `default_attributes`, `description` and `attribute_hints` ")
 

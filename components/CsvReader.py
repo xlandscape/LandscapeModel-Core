@@ -21,7 +21,8 @@ class CsvReader(base.Component):
     base.VERSION.changed("1.3.33", "components.CsvReader refactored")
     base.VERSION.added("1.4.1", "Changelog in components.CsvReader")
     base.VERSION.changed("1.4.1", "components.CsvReader class documentation")
-    base.VERSION.changed("1.5.0", "`components.CsvReader` outputs are iterated by object instead of name")
+    base.VERSION.changed("1.5.0", "`components.CsvReader` iterates over output objects instead of names")
+    base.VERSION.changed("1.5.1", "small changes in `components.CsvReader` changelog")
 
     def __init__(self, name, observer, store):
         super(CsvReader, self).__init__(name, observer, store)

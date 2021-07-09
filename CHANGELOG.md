@@ -1,5 +1,18 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-07-08.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-07-09.
+
+## [1.5.1] - 2021-07-09
+
+### Added
+
+### Changed
+- small changes in `base.Output` changelog
+- small changes in `components.CsvReader` changelog
+- small changes in `components.MarsWeather` changelog
+- small changes in `base.MCRun` changelog
+
+### Fixed
+
 
 ## [1.5] - 2021-07-08
 
@@ -13,11 +26,11 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Changed
 - fixed spelling in `base.VersionCollection` 
 - `base.Output` manages default attributes, output description and hints for attribute descriptions
-- if no attributes are specified in a `base.Output.set\_values()` call, specified defaults are used
+- usage of specified defaults if no attributes passed in a call to set values
 - Iteration over `base.OutputContainer` now returns `Output` objects instead of their names
-- `components.CsvReader` outputs are iterated by object instead of name
-- `components.MarsWeather` outputs are iterated by object instead of name
-- `base.MCRun` component outputs are iterated by object instead of name
+- `components.CsvReader` iterates over output objects instead of names
+- `components.MarsWeather` iterates over output objects instead of names
+- `base.MCRun` iterates over output objects instead of names
 
 ### Fixed
 

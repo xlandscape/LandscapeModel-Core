@@ -1,9 +1,19 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-07-09.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-07-13.
+
+## [1.5.2] - 2021-07-13
+
+### Added
+
+### Changed
+
+### Fixed
+
 
 ## [1.5.1] - 2021-07-09
 
 ### Added
+- `base.documentation` methods for documenting scenarios
 
 ### Changed
 - small changes in `base.Output` changelog
@@ -21,7 +31,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `base.Input.description` 
 - `base.Module.doc\_file` 
 - `base.Output` properties `default\_attributes`, `description` and `attribute\_hints` 
-- `base.documentation` methods `document\_component` and `write\_contribution\_notes` 
+- `base.documentation` methods for documenting components
 
 ### Changed
 - fixed spelling in `base.VersionCollection` 

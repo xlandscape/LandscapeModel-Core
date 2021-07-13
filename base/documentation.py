@@ -261,3 +261,97 @@ Contributions to the project are welcome. Please contact the authors.
 These contribution notes refer to the general Landscape Model contribution guidelines and were written on {}. 
 """.format(datetime.date.today()))
     return
+
+
+def document_scenario(info_file, file_path):
+    """
+    :param info_file: The path of scenario information file.
+    :param file_path: The path where the readme file is written to.
+    :return: Nothing.
+    """
+    scenario_info = xml.etree.ElementTree.parse(info_file)
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write("""## Table of Contents
+* [About the project](#about-the-project)
+  * [Built With](#built-with)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+* [Roadmap](#roadmap)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
+* [Acknowledgements](#acknowledgements)
+
+
+## About the project
+{about}
+This is an automatically generated documentation based on the available scenario metadata. The current version of this 
+document is from {current_date}.
+
+### Built with
+The scenario can be used in the following Landscape Models:
+""".format(about=inspect.cleandoc(scenario_info.find("Description").text), current_date=datetime.date.today()))
+        for version in scenario_info.findall("SupportedRuntimeVersions/Version"):
+            f.write("* {} version {} and higher\n\n\n".format(version.attrib["variant"], version.attrib["number"]))
+        f.write("""## Getting Started
+### Prerequisites
+Make sure you use the latest version of the Landscape Model.
+
+### Installation
+Copy the complete scenario folder unaltered into the `scenario` sub-directory of your model. Reference the scenario
+from the model parameterization. For details how to reference the scenario from the user parameterization, see the 
+`README` of the model.
+
+
+## Usage
+The scenario adds the following macros to the Landscape Model:
+""")
+        for item in scenario_info.findall("Content/Item"):
+            f.write("* `:{}` (version {})\n".format(item.attrib["name"], item.attrib["version"]))
+        f.write("""
+### Roadmap
+The scenario is final and not further developed. It will be, however, updated to reflect new requirements by the 
+Landscape Model core and individual Landscape Model variants.
+
+
+## Contributing
+Contributions are welcome. Please contact the authors (see [Contact](#contact)) and see the `CONTRIBUTING` document.
+
+
+## License
+Distributed under the CC0 License. See `LICENSE` for more information.
+
+
+## Contact
+""")
+        for contact in scenario_info.findall("Contacts/Contact"):
+            f.write("* " + contact.text + "\n")
+        f.write("\n\n## Acknowledgements\n")
+        for acknowledgement in scenario_info.findall("Acknowledgements/Acknowledgement"):
+            f.write("* {}\n".format(acknowledgement.text))
+    return
+
+
+def write_scenario_changelog(info_file, file_path):
+    """
+    Writes an updated scenario changelog according to the version history stored in the scenario info file.
+    :param info_file: The path of scenario information file.
+    :param file_path: The path of file where the changelog is written to.
+    :return: Nothing.
+    """
+    scenario_info = xml.etree.ElementTree.parse(info_file)
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write("# Changelog\nThis list contains all additions, changes and fixes for the scenario.\n")
+        f.write("It was automatically created on {}".format(datetime.date.today()))
+        for version in scenario_info.findall("Changelog/Version"):
+            f.write("\n\n## [{}] - {}\n### Added\n".format(version.attrib["number"], version.attrib["date"]))
+            for addition in version.findall("Addition"):
+                f.write("- {}\n".format(addition.text))
+            f.write("\n###Changed\n")
+            for change in version.findall("Change"):
+                f.write("- {}\n".format(change.text))
+            f.write("\n###Fixed\n")
+            for fix in version.findall("Fix"):
+                f.write("- {}\n".format(fix.text))

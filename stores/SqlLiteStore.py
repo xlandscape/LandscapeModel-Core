@@ -20,20 +20,18 @@ class SqlLiteStore(base.Store):
     observer: An observer that handles the messages emitted by the store.
     """
     # CHANGELOG
-    base.VERSION.added("1.3.27", "store.SqlLiteStore")
-    base.VERSION.added("1.3.27", "store.SqlLiteStore")
-    base.VERSION.changed("1.3.27", "store.SqlLiteStore slice keyword renamed to slices")
-    base.VERSION.added("1.4.1", "Changelog in store.SqlLiteStore")
-    base.VERSION.changed("1.4.1", "store.SqlLiteStore has now base.Store as superclass")
-    base.VERSION.changed("1.4.1", "store.SqlLiteStore class documentation")
-    base.VERSION.added("1.4.1", "store.SqlLiteStore.has_dataset()")
-    base.VERSION.fixed("1.4.3", "store.SqlLiteStore can use existing directory")
-    base.VERSION.fixed("1.4.3", "store.SqlLiteStore uses new version system")
-    base.VERSION.changed("1.4.3", "store.SqlLiteStore got create argument for extending existing datasets")
-    base.VERSION.changed("1.4.3", "store.SqlLiteStore.set_values() can add foreign keys")
-    base.VERSION.added("1.4.3", "store.SqlLiteStore.execute() method")
-    base.VERSION.changed("1.4.3", "store.SqlLiteStore manages physical units")
-    base.VERSION.changed("1.4.4", "store.SqlLiteStore manages chunks")
+    base.VERSION.added("1.3.27", "`store.SqlLiteStore` ")
+    base.VERSION.added("1.4.1", "Changelog in `store.SqlLiteStore`")
+    base.VERSION.changed("1.4.1", "`store.SqlLiteStore` has now `base.Store` as superclass")
+    base.VERSION.changed("1.4.1", "`store.SqlLiteStore` class documentation")
+    base.VERSION.added("1.4.1", "s`tore.SqlLiteStore.has_dataset()` ")
+    base.VERSION.fixed("1.4.3", "`store.SqlLiteStore` can use existing directory")
+    base.VERSION.fixed("1.4.3", "`store.SqlLiteStore` uses new version system")
+    base.VERSION.changed("1.4.3", "`store.SqlLiteStore` got `create` argument for extending existing datasets")
+    base.VERSION.changed("1.4.3", "`store.SqlLiteStore.set_values()` can add foreign keys")
+    base.VERSION.added("1.4.3", "`store.SqlLiteStore.execute()` method")
+    base.VERSION.changed("1.4.3", "`store.SqlLiteStore` manages physical units")
+    base.VERSION.changed("1.4.4", "`store.SqlLiteStore` manages chunks")
     base.VERSION.changed("1.4.9", "`store.SqlLiteStore` data type access")
 
     def __init__(self, file_path, observer, create=True):

@@ -9,9 +9,9 @@ class Component:
     The base type for all Landscape Model components.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "base.Component class representing Landscape Model components")
-    base.VERSION.changed("1.3.33", "base.Component refactored")
-    base.VERSION.added("1.4.1", "Changelog in base.Component")
+    base.VERSION.added("1.1.1", "`base.Component` class representing Landscape Model components")
+    base.VERSION.changed("1.3.33", "`base.Component` refactored")
+    base.VERSION.added("1.4.1", "Changelog in `base.Component`")
 
     def __init__(self, name, default_observer, default_store):
         self._inputs = base.InputContainer(self)

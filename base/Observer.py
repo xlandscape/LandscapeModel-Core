@@ -9,11 +9,12 @@ class Observer:
     Base class for Landscape Model observers.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "base.Observer class for representing Landscape Model observers")
-    base.VERSION.added("1.2.12", "base.Observer.mc_run_started() for messages about newly started Monte Carlo runs")
-    base.VERSION.changed("1.3.5", "base.Observer refactored")
-    base.VERSION.added("1.3.24", "base.Observer.flush() and base.Observer.flush() to use observers as streams")
-    base.VERSION.added("1.4.1", "Changelog in base.Observer")
+    base.VERSION.added("1.1.1", "`base.Observer` class for representing Landscape Model observers")
+    base.VERSION.added("1.2.12", "`base.Observer.mc_run_started()` for messages about newly started Monte Carlo runs")
+    base.VERSION.changed("1.3.5", "`base.Observer` refactored")
+    base.VERSION.added(
+        "1.3.24", "Added `base.Observer.flush()` and `base.Observer.write()` to use observers as streams")
+    base.VERSION.added("1.4.1", "Changelog in `base.Observer` ")
 
     def __init__(self):
         self._default_observer = None

@@ -19,16 +19,16 @@ class DepositionToPecSoil(base.Component):
     space_y/1sqm.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "components.DepositionToPecSoil component")
-    base.VERSION.changed("1.1.5", "components.DepositionToPecSoil reports scale information of output to data store")
-    base.VERSION.changed("1.1.5", "components.DepositionToPecSoil requests storing of maximum value of PEC soil")
-    base.VERSION.fixed("1.2.14", "wrong calculation in components.DepositionToPecSoil")
-    base.VERSION.changed("1.3.27", "components.DepositionToPecSoil refactored")
-    base.VERSION.changed("1.3.27", "Soil depth is now parameter in components.DepositionToPecSoil")
-    base.VERSION.fixed("1.3.29", "Input slicing in components.DepositionToPecSoil")
-    base.VERSION.added("1.4.1", "Changelog in components.DepositionToPecSoil")
-    base.VERSION.changed("1.4.1", "components.DepositionToPecSoil class documentation")
-    base.VERSION.changed("1.4.1", "Removed unused output PecSoil 2 from components.DepositionToPecSoil")
+    base.VERSION.added("1.1.1", "`components.DepositionToPecSoil` component")
+    base.VERSION.changed("1.1.5", "`components.DepositionToPecSoil` reports scale information of output to data store")
+    base.VERSION.changed("1.1.5", "`components.DepositionToPecSoil` requests storing of maximum value of PEC soil")
+    base.VERSION.fixed("1.2.14", "wrong calculation in `components.DepositionToPecSoil` ")
+    base.VERSION.changed("1.3.27", "`components.DepositionToPecSoil` refactored")
+    base.VERSION.changed("1.3.27", "Soil depth is now parameter in `components.DepositionToPecSoil` ")
+    base.VERSION.fixed("1.3.29", "Input slicing in `components.DepositionToPecSoil` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.DepositionToPecSoil` ")
+    base.VERSION.changed("1.4.1", "`components.DepositionToPecSoil` class documentation")
+    base.VERSION.changed("1.4.1", "Removed unused output `PecSoil 2` from `components.DepositionToPecSoil` ")
     base.VERSION.changed("1.4.9", "`components.DepositionToPecSoil` data type access")
 
     def __init__(self, name, observer, store):

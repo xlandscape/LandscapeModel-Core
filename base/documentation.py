@@ -33,13 +33,13 @@ def write_changelog(name, version_history, file_path):
                 "\n\n## [{}]{}\n\n".format(version, "" if version.date is None else " - {}".format(version.date)))
             f.write("### Added\n")
             for message in version.additions:
-                f.write("- {}\n".format(message.replace("_", r"\_")))
+                f.write("- {}\n".format(message))
             f.write("\n### Changed\n")
             for message in version.changes:
-                f.write("- {}\n".format(message.replace("_", r"\_")))
+                f.write("- {}\n".format(message))
             f.write("\n### Fixed\n")
             for message in version.fixes:
-                f.write("- {}\n".format(message.replace("_", r"\_")))
+                f.write("- {}\n".format(message))
 
 
 def document_components(components_module, file_path):

@@ -14,9 +14,9 @@ class LogFileObserver(base.Observer):
     logfile: The path and file name of the logfile to write.
     """
     # CHANGELOG
-    base.VERSION.added("1.3.24", "observer.LogFileObserver")
-    base.VERSION.added("1.4.1", "Changelog in observer.LogFileObserver")
-    base.VERSION.changed("1.4.1", "observer.LogFileObserver class documentation")
+    base.VERSION.added("1.3.24", "`observer.LogFileObserver` ")
+    base.VERSION.added("1.4.1", "Changelog in `observer.LogFileObserver` ")
+    base.VERSION.changed("1.4.1", "`observer.LogFileObserver` class documentation")
 
     def __init__(self, **keywords):
         super(LogFileObserver, self).__init__()

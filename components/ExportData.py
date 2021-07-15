@@ -24,8 +24,8 @@ class ExportData(base.Component):
     None.
     """
     # CHANGELOG
-    base.VERSION.added("1.4.3", "components.ExportData component")
-    base.VERSION.fixed("1.4.5", "components.ExportData spelling error in inline documentation")
+    base.VERSION.added("1.4.3", "`components.ExportData` component")
+    base.VERSION.fixed("1.4.5", "`components.ExportData` spelling error in inline documentation")
     base.VERSION.changed("1.4.9", "`components.ExportData` data type access")
 
     def __init__(self, name, observer, store):

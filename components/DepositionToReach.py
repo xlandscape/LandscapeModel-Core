@@ -22,16 +22,16 @@ class DepositionToReach(base.Component):
     Reaches: The identifiers of individual reaches. A NumPy array of scale space/reach.
     """
     # CHANGELOG
-    base.VERSION.added("1.2.3", "components.DepositionToReach component stub")
-    base.VERSION.changed("1.2.20", "components.DepositionToReach basic implementation")
-    base.VERSION.changed("1.2.28", "components.DepositionToReach outputs reach identifiers")
-    base.VERSION.changed("1.3.27", "components.DepositionToReach specifies scales")
-    base.VERSION.changed("1.3.33", "components.DepositionToReach checks input types strictly")
-    base.VERSION.changed("1.3.33", "components.DepositionToReach checks for physical units")
-    base.VERSION.changed("1.3.33", "components.DepositionToReach reports physical units to the data store")
-    base.VERSION.changed("1.3.33", "components.DepositionToReach checks for scales")
-    base.VERSION.added("1.4.1", "Changelog in components.DepositionToReach")
-    base.VERSION.changed("1.4.1", "components.DepositionToReach class documentation")
+    base.VERSION.added("1.2.3", "`components.DepositionToReach` component stub")
+    base.VERSION.changed("1.2.20", "`components.DepositionToReach` basic implementation")
+    base.VERSION.changed("1.2.28", "`components.DepositionToReach` outputs reach identifiers")
+    base.VERSION.changed("1.3.27", "`components.DepositionToReach` specifies scales")
+    base.VERSION.changed("1.3.33", "`components.DepositionToReach` checks input types strictly")
+    base.VERSION.changed("1.3.33", "`components.DepositionToReach` checks for physical units")
+    base.VERSION.changed("1.3.33", "`components.DepositionToReach` reports physical units to the data store")
+    base.VERSION.changed("1.3.33", "`components.DepositionToReach` checks for scales")
+    base.VERSION.added("1.4.1", "Changelog in `components.DepositionToReach`")
+    base.VERSION.changed("1.4.1", "`components.DepositionToReach` class documentation")
     base.VERSION.changed("1.4.9", "`components.DepositionToReach` data type access")
 
     def __init__(self, name, observer, store):

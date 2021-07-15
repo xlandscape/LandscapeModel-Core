@@ -9,9 +9,9 @@ class Module:
     Encapsulates a module used by the Landscape Model.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "base.Module class for describing Landscape Model modules")
-    base.VERSION.changed("1.3.5", "base.Module refactored")
-    base.VERSION.added("1.4.1", "Changelog in base.Module")
+    base.VERSION.added("1.1.1", "`base.Module` class for describing Landscape Model modules")
+    base.VERSION.changed("1.3.5", "`base.Module` refactored")
+    base.VERSION.added("1.4.1", "Changelog in `base.Module` ")
     base.VERSION.added("1.5.0", "`base.Module.doc_file` ")
 
     def __init__(self, name, version, doc_file=None):

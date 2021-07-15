@@ -25,6 +25,7 @@ class MCRun:
     base.VERSION.changed("1.4.2", "`base.McRun` changelog description")
     base.VERSION.changed("1.5.0", "`base.MCRun` iterates over output objects instead of names")
     base.VERSION.changed("1.5.1", "small changes in `base.MCRun` changelog")
+    base.VERSION.changed("1.5.3", "`base.MCRun` changelog uses markdown for code elements")
 
     def __init__(self, xml_file, **keywords):
         config = xml.etree.ElementTree.parse(xml_file)

@@ -33,6 +33,7 @@ class DepositionToReach(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.DepositionToReach`")
     base.VERSION.changed("1.4.1", "`components.DepositionToReach` class documentation")
     base.VERSION.changed("1.4.9", "`components.DepositionToReach` data type access")
+    base.VERSION.changed("1.5.3", "`components.DepositionToReach` changelog uses markdown for code elements")
 
     def __init__(self, name, observer, store):
         super(DepositionToReach, self).__init__(name, observer, store)

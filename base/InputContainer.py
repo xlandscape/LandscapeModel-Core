@@ -13,6 +13,7 @@ class InputContainer:
     base.VERSION.added("1.2.3", "Added `base.InputContainer.append()` and `.__contains__()` ")
     base.VERSION.changed("1.3.33", "`base.InputContainer` refactored")
     base.VERSION.added("1.4.1", "Changelog in `base.InputContainer` ")
+    base.VERSION.changed("1.5.3", "`base.InputContainer` changelog uses markdown for code elements")
 
     def __init__(self, component=None, inputs=None):
         self._items = {}

@@ -12,6 +12,7 @@ import xml.etree.ElementTree
 base.VERSION.added("1.4.9", "`base.documentation` ")
 base.VERSION.added("1.5.0", "`base.documentation` methods for documenting components")
 base.VERSION.added("1.5.1", "`base.documentation` methods for documenting scenarios")
+base.VERSION.added("1.5.3", "`base.documentation.write_changelog()` no longer escapes underscores")
 
 
 def write_changelog(name, version_history, file_path):

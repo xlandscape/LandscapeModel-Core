@@ -23,6 +23,7 @@ class ConsoleObserver(base.Observer):
     base.VERSION.changed("1.3.24", "`observer.ConsoleObserver` refactored")
     base.VERSION.added("1.4.1", "Changelog in `observer.ConsoleObserver` ")
     base.VERSION.changed("1.4.1", "`observer.ConsoleObserver` class documentation")
+    base.VERSION.changed("1.5.3", "`observer.ConsoleObserver` changelog uses markdown for code elements")
 
     def __init__(self, lock=None, print_output=False):
         super(ConsoleObserver, self).__init__()

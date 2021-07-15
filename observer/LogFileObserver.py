@@ -17,6 +17,7 @@ class LogFileObserver(base.Observer):
     base.VERSION.added("1.3.24", "`observer.LogFileObserver` ")
     base.VERSION.added("1.4.1", "Changelog in `observer.LogFileObserver` ")
     base.VERSION.changed("1.4.1", "`observer.LogFileObserver` class documentation")
+    base.VERSION.changed("1.5.3", "`observer.LogFileObserver` changelog uses markdown for code elements")
 
     def __init__(self, **keywords):
         super(LogFileObserver, self).__init__()

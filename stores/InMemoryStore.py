@@ -20,6 +20,7 @@ class InMemoryStore(base.Store):
     base.VERSION.added("1.4.1", "Changelog in `store.InMemoryStore` ")
     base.VERSION.changed("1.4.1", "`store.InMemoryStore` class documentation")
     base.VERSION.changed("1.4.9", "`store.InMemoryStore` data type access")
+    base.VERSION.changed("1.5.3", "`store.InMemoryStore` changelog uses markdown for code elements")
 
     def __init__(self):
         self._data = {}

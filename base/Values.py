@@ -13,6 +13,7 @@ class Values:
     base.VERSION.changed("1.3.5", "`base.Values` refactored")
     base.VERSION.added("1.3.33", "Quick access to metadata by `base.Values.unit` and `base.Values.scales` ")
     base.VERSION.added("1.4.1", "Changelog in `base.Values` ")
+    base.VERSION.changed("1.5.3", "`base.Values` changelog uses markdown for code elements")
 
     # noinspection PyUnusedLocal
     def __init__(self, values, extensions, unit=None, scales="global", **keywords):

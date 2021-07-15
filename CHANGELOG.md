@@ -1,6 +1,56 @@
 # Changelog
 This is the changelog for the Landscape Model core. It was automatically created on 2021-07-15.
 
+## [1.5.3] - 2021-07-15
+
+### Added
+- `base.documentation.write_changelog()` no longer escapes underscores
+
+### Changed
+- `base.CheckResult` changelog uses markdown for code elements
+- `base.Component` changelog uses markdown for code elements
+- `base.DataAttributes` changelog uses markdown for code elements
+- `base.DataProvider` changelog uses markdown for code elements
+- `base.Extensions` changelog uses markdown for code elements
+- `base.Input` changelog uses markdown for code elements
+- `base.InputContainer` changelog uses markdown for code elements
+- `base.Module` changelog uses markdown for code elements
+- `base.Observer` changelog uses markdown for code elements
+- `base.Output` changelog uses markdown for code elements
+- `base.OutputContainer` changelog uses markdown for code elements
+- `base.Store` changelog uses markdown for code elements
+- `base.Values` changelog uses markdown for code elements
+- `components.CsvReader` changelog uses markdown for code elements
+- `components.DeleteFolder` changelog uses markdown for code elements
+- `components.DepositionToPecSoil` changelog uses markdown for code elements
+- `attrib.Transformable` changelog uses markdown for code elements
+- `components.DepositionToReach` changelog uses markdown for code elements
+- `components.DoseResponse` changelog uses markdown for code elements
+- `store.InMemoryStore` changelog uses markdown for code elements
+- `store.SqlLiteStore` changelog uses markdown for code elements
+- `store.X3fdStore` changelog uses markdown for code elements
+- `components.ExportData` changelog uses markdown for code elements
+- `components.ReportingHydrographicMap` changelog uses markdown for code elements
+- `components.ReportingHydrographicMap` markdown usage extended
+- `components.LandscapeScenarioPreparation` changelog uses markdown for code elements
+- `components.MarsWeather` changelog uses markdown for code elements
+- `components.PpmCalendar` changelog uses markdown for code elements
+- `components.TerRQ` changelog uses markdown for code elements
+- `components.UserParameters` changelog uses markdown for code elements
+- `base.MCRun` changelog uses markdown for code elements
+- `base.Project` changelog uses markdown for code elements
+- `base.UserParameters` changelog uses markdown for code elements
+- `base.Experiment` changelog uses markdown for code elements
+- `base` changelog uses markdown for code elements
+- `observer.ConsoleObserver` changelog uses markdown for code elements
+- `observer.GraphMLObserver` changelog uses markdown for code elements
+- `observer.LogFileObserver` changelog uses markdown for code elements
+- `observer` changelog uses markdown for code elements
+
+### Fixed
+- `stores` changelog
+
+
 ## [1.5.2] - 2021-07-13
 
 ### Added

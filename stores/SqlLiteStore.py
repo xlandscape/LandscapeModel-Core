@@ -33,6 +33,7 @@ class SqlLiteStore(base.Store):
     base.VERSION.changed("1.4.3", "`store.SqlLiteStore` manages physical units")
     base.VERSION.changed("1.4.4", "`store.SqlLiteStore` manages chunks")
     base.VERSION.changed("1.4.9", "`store.SqlLiteStore` data type access")
+    base.VERSION.changed("1.5.3", "`store.SqlLiteStore` changelog uses markdown for code elements")
 
     def __init__(self, file_path, observer, create=True):
         self._observer = observer

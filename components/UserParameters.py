@@ -22,6 +22,7 @@ class UserParameters(base.Component):
     base.VERSION.changed("1.3.33", "`components.UserParameters` reports physical units to the data store")
     base.VERSION.added("1.4.1", "Changelog in `components.UserParameters` ")
     base.VERSION.changed("1.4.1", "`components.UserParameters` class documentation")
+    base.VERSION.changed("1.5.3", "`components.UserParameters` changelog uses markdown for code elements")
 
     def __init__(self, name, values, observer, store):
         super(UserParameters, self).__init__(name, observer, store)

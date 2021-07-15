@@ -33,6 +33,7 @@ class Experiment:
     base.VERSION.changed("1.4.1", "`base.Experiment.write_info_xml()` uses new `Version` classes")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.6", "New system macro `_MC_ID_` ")
+    base.VERSION.changed("1.5.3", "`base.Experiment` changelog uses markdown for code elements")
 
     def __init__(self, parameters=None, work_dir="run", param_dir=None, project_dir=None):
         basedir = os.path.abspath(work_dir)

@@ -15,6 +15,7 @@ class OutputContainer:
     base.VERSION.added("1.4.1", "Changelog in `base.OutputContainer`")
     base.VERSION.changed(
         "1.5.0", "Iteration over `base.OutputContainer` now returns `Output` objects instead of their names")
+    base.VERSION.changed("1.5.3", "`base.OutputContainer` changelog uses markdown for code elements")
 
     def __init__(self, component=None, outputs=None):
         self._items = {}

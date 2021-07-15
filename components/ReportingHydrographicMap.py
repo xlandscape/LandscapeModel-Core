@@ -44,6 +44,7 @@ class ReportingHydrographicMap(base.Component):
     base.VERSION.added("1.4.5", "`components.ReportingHydrographicMap.draw()` static method")
     base.VERSION.changed("1.4.5", "`components.ReportingHydrographicMap.__init__` `observer` argument renamed")
     base.VERSION.changed("1.4.9", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
+    base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` markdown usage extended")
 
     def __init__(self, name, default_observer, store):
         super(ReportingHydrographicMap, self).__init__(name, default_observer, store)

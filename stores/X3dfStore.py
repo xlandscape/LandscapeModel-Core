@@ -50,6 +50,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.4.6", "`store.X3dfStore` parent run no longer randomly sampled")
     base.VERSION.fixed("1.4.8", "`store.X3dfStore` conversion of MC identifier to integer")
     base.VERSION.changed("1.4.9", "`store.X3dfStore` data type access")
+    base.VERSION.changed("1.5.3", "`store.X3fdStore` changelog uses markdown for code elements")
 
     def __init__(self, file_path, observer=None, mode="a", initialization=None, identifier=0):
         hdf5_file = os.path.join(file_path, "arr.dat")

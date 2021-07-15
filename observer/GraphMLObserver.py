@@ -21,6 +21,7 @@ class GraphMLObserver(base.Observer):
     base.VERSION.changed("1.3.33", "`observer.GraphMLObserver` refactored")
     base.VERSION.added("1.4.1", "Changelog in `observer.GraphMLObserver` ")
     base.VERSION.changed("1.4.1", "`observer.GraphMLObserver` class documentation")
+    base.VERSION.changed("1.5.3", "`observer.GraphMLObserver` changelog uses markdown for code elements")
 
     def __init__(self, output_file, include_modules):
         super(GraphMLObserver, self).__init__()

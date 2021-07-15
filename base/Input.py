@@ -14,6 +14,7 @@ class Input:
     base.VERSION.changed("1.3.33", "`base.Input.read()` passes metadata from provider to `base.Values` object")
     base.VERSION.added("1.4.1", "Changelog in `base.Input`")
     base.VERSION.added("1.5.0", "`base.Input.description` ")
+    base.VERSION.changed("1.5.3", "`base.Input` changelog uses markdown for code elements")
 
     def __init__(self, name, attributes, observer=None, provider=None, description=None):
         self._name = name        

@@ -12,6 +12,7 @@ class CheckResult:
     base.VERSION.added("1.1.1", "`base.CheckResult` class for exchanging observer messages")
     base.VERSION.changed("1.3.5", "`base.CheckResult` refactored")
     base.VERSION.added("1.4.1", "Changelog in `base.CheckResult`")
+    base.VERSION.changed("1.5.3", "`base.CheckResult` changelog uses markdown for code elements")
 
     def __init__(self, message, adapted_values):
         self._message = message

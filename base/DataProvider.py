@@ -9,9 +9,10 @@ class DataProvider:
     A provider of data for the Landscape Model.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "base.DataProvider class for data providers")
-    base.VERSION.changed("1.3.13", "base.DataProvider refactored")
-    base.VERSION.added("1.4.1", "Changelog in base.DataProvider")
+    base.VERSION.added("1.1.1", "`base.DataProvider` class for data providers")
+    base.VERSION.changed("1.3.13", "`base.DataProvider` refactored")
+    base.VERSION.added("1.4.1", "Changelog in `base.DataProvider`")
+    base.VERSION.changed("1.5.3", "`base.DataProvider` changelog uses markdown for code elements")
 
     def __init__(self, output):
         self._output = output

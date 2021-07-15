@@ -24,11 +24,12 @@ class ReportingDistribution(base.Component):
     None.
     """
     # CHANGELOG
-    base.VERSION.added("1.4.0", "components.ReportingDistribution component")
-    base.VERSION.added("1.4.1", "Changelog in components.ReportingDistribution")
-    base.VERSION.added("1.4.1", "components.ReportingDistribution class documentation")
-    base.VERSION.fixed("1.4.5", "components.ReportingDistribution spelling error in documentation")
-    base.VERSION.added("1.4.5", "components.ReportingHydrographicMap.draw() static method")
+    base.VERSION.added("1.4.0", "`components.ReportingDistribution` component")
+    base.VERSION.added("1.4.1", "Changelog in `components.ReportingDistribution` ")
+    base.VERSION.added("1.4.1", "`components.ReportingDistribution` class documentation")
+    base.VERSION.fixed("1.4.5", "`components.ReportingDistribution` spelling error in documentation")
+    base.VERSION.added("1.4.5", "`components.ReportingHydrographicMap.draw()` static method")
+    base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
 
     def __init__(self, name, observer, store):
         super(ReportingDistribution, self).__init__(name, observer, store)

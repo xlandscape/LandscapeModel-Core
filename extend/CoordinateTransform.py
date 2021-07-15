@@ -10,9 +10,10 @@ class CoordinateTransform:
     Extends values by the possibility to transform them.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "extend.CoordinateTransform")
-    base.VERSION.changed("1.3.33", "extend.CoordinateTransform refactored")
-    base.VERSION.added("1.4.1", "Changelog in extend.CoordinateTransform")
+    base.VERSION.added("1.1.1", "`extend.CoordinateTransform` ")
+    base.VERSION.changed("1.3.33", "`extend.CoordinateTransform` refactored")
+    base.VERSION.added("1.4.1", "Changelog in `extend.CoordinateTransform`")
+    base.VERSION.changed("1.5.3", "`extend.CoordinateTransform` changelog uses markdown for code elements")
 
     def __init__(self, transformation_type, offset):
         if transformation_type == "date":

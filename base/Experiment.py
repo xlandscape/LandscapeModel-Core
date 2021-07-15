@@ -20,19 +20,20 @@ class Experiment:
     An individual experiment prepared for the Landscape Model.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "base.Experiment class for managing individual experiments")
-    base.VERSION.added("1.1.6", "base.Experiment.write_info_xml() for saving runtime information of the experiment")
-    base.VERSION.changed("1.2.1", "base.Experiment expects a global section in the Monte Carlo run configuration")
-    base.VERSION.changed("1.2.1", "base.Experiment has new macro _X3DIR_")
-    base.VERSION.changed("1.2.17", "base.Experiment has new macro _PARAM_DIR_")
-    base.VERSION.changed("1.2.17", "base.Experiment is more flexible in parameter directory")
-    base.VERSION.changed("1.3.5", "base.Experiment refactored")
-    base.VERSION.changed("1.3.5", "base.Experiment project encapsulation and support of versions")
-    base.VERSION.changed("1.3.24", "base.Experiment sets standard and error output to default observer")
-    base.VERSION.added("1.4.1", "Changelog in base.Experiment")
-    base.VERSION.changed("1.4.1", "base.Experiment.write_info_xml() uses new version classes")
+    base.VERSION.added("1.1.1", "`base.Experiment` class for managing individual experiments")
+    base.VERSION.added("1.1.6", "`base.Experiment.write_info_xml()` for saving runtime information of the experiment")
+    base.VERSION.changed("1.2.1", "`base.Experiment` expects a global section in the Monte Carlo run configuration")
+    base.VERSION.changed("1.2.1", "`base.Experiment` has new macro `_X3DIR_` ")
+    base.VERSION.changed("1.2.17", "`base.Experiment` has new macro `_PARAM_DIR_` ")
+    base.VERSION.changed("1.2.17", "`base.Experiment` is more flexible in parameter directory")
+    base.VERSION.changed("1.3.5", "`base.Experiment` refactored")
+    base.VERSION.changed("1.3.5", "`base.Experiment` project encapsulation and support of versions")
+    base.VERSION.changed("1.3.24", "`base.Experiment` sets standard and error output to default observer")
+    base.VERSION.added("1.4.1", "Changelog in `base.Experiment` ")
+    base.VERSION.changed("1.4.1", "`base.Experiment.write_info_xml()` uses new `Version` classes")
     base.VERSION.changed("1.4.2", "Changelog description")
-    base.VERSION.changed("1.4.6", "New system macro _MC_ID_")
+    base.VERSION.changed("1.4.6", "New system macro `_MC_ID_` ")
+    base.VERSION.changed("1.5.3", "`base.Experiment` changelog uses markdown for code elements")
 
     def __init__(self, parameters=None, work_dir="run", param_dir=None, project_dir=None):
         basedir = os.path.abspath(work_dir)

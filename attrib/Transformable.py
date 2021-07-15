@@ -9,9 +9,10 @@ class Transformable:
     Checks whether values have an attached transformation function.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "Transformable attribute checker")
-    base.VERSION.changed("1.3.33", "attrib.Transformable.check() returns base.CheckResult instead of tuple")
-    base.VERSION.added("1.4.1", "Changelog in attrib.Transformable")
+    base.VERSION.added("1.1.1", "`Transformable` attribute checker")
+    base.VERSION.changed("1.3.33", "`attrib.Transformable.check()` returns base.CheckResult instead of tuple")
+    base.VERSION.added("1.4.1", "Changelog in `attrib.Transformable`")
+    base.VERSION.changed("1.5.3", "`attrib.Transformable` changelog uses markdown for code elements")
 
     def __init__(self, severity=2):
         self._type = type

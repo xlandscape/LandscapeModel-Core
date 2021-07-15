@@ -43,20 +43,22 @@ class PpmCalendar(base.Component):
     AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. Th values have no unit.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "components.PpmCalendar component")
-    base.VERSION.changed("1.1.1", "components.PpmCalendar now requires Fields and Lulc inputs to be of type list[int]")
-    base.VERSION.changed("1.2.5", "components.PpmCalendar target LULC type input now str")
-    base.VERSION.changed("1.2.16", "components.PpmCalendar output refactored")
-    base.VERSION.changed("1.2.20", "components.PpmCalendar no longer outputs SprayApplication objects")
-    base.VERSION.changed("1.2.25", "components.PpmCalendar RandomSeed parameter")
-    base.VERSION.changed("1.2.27", "ProbabilityFieldApplied introduced in components.PpmCalendar")
-    base.VERSION.changed("1.3.27", "components.PpmCalendar specifies scales")
-    base.VERSION.changed("1.3.33", "components.PpmCalendar checks input types strictly")
-    base.VERSION.changed("1.3.33", "components.PpmCalendar checks for physical units")
-    base.VERSION.changed("1.3.33", "components.PpmCalendar reports physical units to the data store")
-    base.VERSION.changed("1.3.33", "components.PpmCalendar checks for scales")
-    base.VERSION.added("1.4.1", "Changelog in components.PpmCalendar")
-    base.VERSION.changed("1.4.1", "components.PpmCalendar class documentation")
+    base.VERSION.added("1.1.1", "`components.PpmCalendar` component")
+    base.VERSION.changed(
+        "1.1.1", "`components.PpmCalendar` now requires Fields and Lulc inputs to be of type list[int]")
+    base.VERSION.changed("1.2.5", "`components.PpmCalendar` target LULC type input now str")
+    base.VERSION.changed("1.2.16", "`components.PpmCalendar` output refactored")
+    base.VERSION.changed("1.2.20", "`components.PpmCalendar` no longer outputs SprayApplication objects")
+    base.VERSION.changed("1.2.25", "components.PpmCalendar`.RandomSeed` parameter")
+    base.VERSION.changed("1.2.27", "`ProbabilityFieldApplied` introduced in `components.PpmCalendar` ")
+    base.VERSION.changed("1.3.27", "`components.PpmCalendar` specifies scales")
+    base.VERSION.changed("1.3.33", "`components.PpmCalendar` checks input types strictly")
+    base.VERSION.changed("1.3.33", "`components.PpmCalendar` checks for physical units")
+    base.VERSION.changed("1.3.33", "`components.PpmCalendar` reports physical units to the data store")
+    base.VERSION.changed("1.3.33", "`components.PpmCalendar` checks for scales")
+    base.VERSION.added("1.4.1", "Changelog in `components.PpmCalendar` ")
+    base.VERSION.changed("1.4.1", "`components.PpmCalendar` class documentation")
+    base.VERSION.changed("1.5.3", "`components.PpmCalendar` changelog uses markdown for code elements")
 
     def __init__(self, name, observer, store):
         super(PpmCalendar, self).__init__(name, observer, store)

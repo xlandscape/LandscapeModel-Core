@@ -13,18 +13,19 @@ class MCRun:
     A individual Monte Carlo run of a Landscape Model experiment.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "base.MCRun class for managing individual Monte Carlo runs")
-    base.VERSION.changed("1.1.2", "base.MCRun allows disabling components in configuration")
-    base.VERSION.changed("1.1.2", "base.MCRun allows disabling links between inputs and outputs")
-    base.VERSION.changed("1.2.12", "base.MCRun.run() signals MC run start to observer")
-    base.VERSION.changed("1.3.5", "base.MCRun refactored")
-    base.VERSION.changed("1.3.20", "base.MCRun can be enabled/disabled also through expression in configuration")
-    base.VERSION.changed("1.3.27", "base.MCRun parses scales of user-defined parameters")
-    base.VERSION.changed("1.3.35", "base.MCRun can continue previous simulations")
-    base.VERSION.added("1.4.1", "Changelog in base.MCRun")
-    base.VERSION.changed("1.4.2", "Changelog description")
+    base.VERSION.added("1.1.1", "`base.MCRun` class for managing individual Monte Carlo runs")
+    base.VERSION.changed("1.1.2", "`base.MCRun` allows disabling components in configuration")
+    base.VERSION.changed("1.1.2", "`base.MCRun` allows disabling links between inputs and outputs")
+    base.VERSION.changed("1.2.12", "`base.MCRun.run()` signals MC run start to observer")
+    base.VERSION.changed("1.3.5", "`base.MCRun` refactored")
+    base.VERSION.changed("1.3.20", "`base.MCRun` can be enabled/disabled also through expression in configuration")
+    base.VERSION.changed("1.3.27", "`base.MCRun` parses user-defined parameter scales")
+    base.VERSION.changed("1.3.35", "`base.MCRun` can continue previous simulations")
+    base.VERSION.added("1.4.1", "Changelog in `base.MCRun` ")
+    base.VERSION.changed("1.4.2", "`base.McRun` changelog description")
     base.VERSION.changed("1.5.0", "`base.MCRun` iterates over output objects instead of names")
     base.VERSION.changed("1.5.1", "small changes in `base.MCRun` changelog")
+    base.VERSION.changed("1.5.3", "`base.MCRun` changelog uses markdown for code elements")
 
     def __init__(self, xml_file, **keywords):
         config = xml.etree.ElementTree.parse(xml_file)

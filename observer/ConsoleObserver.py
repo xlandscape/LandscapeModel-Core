@@ -17,12 +17,13 @@ class ConsoleObserver(base.Observer):
     output. Setting it to True is useful when using the observer within a Jupyter notebook.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "observer.ConsoleObserver")
-    base.VERSION.added("1.2.12", "observer.ConsoleObserver.mc_run_started()")
-    base.VERSION.added("1.3.24", "observer.ConsoleObserver.flush() and observer.ConsoleObserver.write()")
-    base.VERSION.changed("1.3.24", "observer.ConsoleObserver refactored")
-    base.VERSION.added("1.4.1", "Changelog in observer.ConsoleObserver")
-    base.VERSION.changed("1.4.1", "observer.ConsoleObserver class documentation")
+    base.VERSION.added("1.1.1", "`observer.ConsoleObserver` ")
+    base.VERSION.added("1.2.12", "`observer.ConsoleObserver.mc_run_started()` ")
+    base.VERSION.added("1.3.24", "Added `observer.ConsoleObserver.flush()` and `observer.ConsoleObserver.write()` ")
+    base.VERSION.changed("1.3.24", "`observer.ConsoleObserver` refactored")
+    base.VERSION.added("1.4.1", "Changelog in `observer.ConsoleObserver` ")
+    base.VERSION.changed("1.4.1", "`observer.ConsoleObserver` class documentation")
+    base.VERSION.changed("1.5.3", "`observer.ConsoleObserver` changelog uses markdown for code elements")
 
     def __init__(self, lock=None, print_output=False):
         super(ConsoleObserver, self).__init__()

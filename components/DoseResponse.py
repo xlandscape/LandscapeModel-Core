@@ -20,11 +20,12 @@ class DoseResponse(base.Component):
     Effect: The calculated effect. A NumPy array with the same scale as the exposure input. Values have a unit of 1.
     """
     # CHANGELOG
-    base.VERSION.added("1.4.0", "components.DoseResponse component")
-    base.VERSION.added("1.4.1", "Changelog in components.DoseResponse")
-    base.VERSION.changed("1.4.1", "components.DoseResponse class documentation")
-    base.VERSION.fixed("1.4.1", "components.DoseResponse attrib namespace reference")
+    base.VERSION.added("1.4.0", "`components.DoseResponse` component")
+    base.VERSION.added("1.4.1", "Changelog in `components.DoseResponse`")
+    base.VERSION.changed("1.4.1", "`components.DoseResponse` class documentation")
+    base.VERSION.fixed("1.4.1", "`components.DoseResponse` attrib namespace reference")
     base.VERSION.changed("1.4.9", "`components.DoseResponse` data type access")
+    base.VERSION.changed("1.5.3", "`components.DoseResponse` changelog uses markdown for code elements")
 
     def __init__(self, name, observer, store):
         super(DoseResponse, self).__init__(name, observer, store)

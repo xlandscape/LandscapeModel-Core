@@ -28,11 +28,12 @@ class LandscapeScenarioPreparation(base.Component):
     None.
     """
     # CHANGELOG
-    base.VERSION.added("1.3.28", "components.LandscapeScenarioPreparation component")
-    base.VERSION.changed("1.3.29", "components.LandscapeScenarioPreparation can calculate flow grids from DEM")
-    base.VERSION.added("1.4.1", "Changelog in components.LandscapeScenarioPreparation")
-    base.VERSION.changed("1.4.1", "components.LandscapeScenarioPreparation class documentation")
+    base.VERSION.added("1.3.28", "`components.LandscapeScenarioPreparation` component")
+    base.VERSION.changed("1.3.29", "`components.LandscapeScenarioPreparation` can calculate flow grids from DEM")
+    base.VERSION.added("1.4.1", "Changelog in `components.LandscapeScenarioPreparation` ")
+    base.VERSION.changed("1.4.1", "`components.LandscapeScenarioPreparation` class documentation")
     base.VERSION.changed("1.4.9", "`components.LandscapeScenarioPreparation` spell check exclusion")
+    base.VERSION.changed("1.5.3", "`components.LandscapeScenarioPreparation` changelog uses markdown for code elements")
 
     def __init__(self, name, observer, store):
         super(LandscapeScenarioPreparation, self).__init__(name, observer, store)

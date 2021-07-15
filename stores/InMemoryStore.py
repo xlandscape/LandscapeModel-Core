@@ -13,13 +13,14 @@ class InMemoryStore(base.Store):
     None.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "store.InMemoryStore")
-    base.VERSION.changed("1.3.27", "store.InMemoryStore slice keyword renamed to slices")
-    base.VERSION.changed("1.3.27", "store.InMemoryStore updated")
-    base.VERSION.changed("1.3.33", "store.InMemoryStore stores physical unit if specified")
-    base.VERSION.added("1.4.1", "Changelog in store.InMemoryStore")
-    base.VERSION.changed("1.4.1", "store.InMemoryStore class documentation")
+    base.VERSION.added("1.1.1", "`store.InMemoryStore` ")
+    base.VERSION.changed("1.3.27", "`store.InMemoryStore` `slice` keyword renamed to `slices`")
+    base.VERSION.changed("1.3.27", "`store.InMemoryStore` updated")
+    base.VERSION.changed("1.3.33", "`store.InMemoryStore` stores physical unit if specified")
+    base.VERSION.added("1.4.1", "Changelog in `store.InMemoryStore` ")
+    base.VERSION.changed("1.4.1", "`store.InMemoryStore` class documentation")
     base.VERSION.changed("1.4.9", "`store.InMemoryStore` data type access")
+    base.VERSION.changed("1.5.3", "`store.InMemoryStore` changelog uses markdown for code elements")
 
     def __init__(self):
         self._data = {}

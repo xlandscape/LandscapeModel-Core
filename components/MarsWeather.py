@@ -22,18 +22,20 @@ class MarsWeather(base.Component):
     TEMPERATURE_AVG: The average temperature. A NumPy array of scale time/day. Values have a unit of °C.
     """
     # CHANGELOG
-    base.VERSION.added("1.2.40", "components.MarsWeather component")
-    base.VERSION.changed("1.3.27", "components.MarsWeather specifies scales")
-    base.VERSION.changed("1.3.33", "components.MarsWeather checks input types strictly")
-    base.VERSION.changed("1.3.33", "components.MarsWeather checks for physical units")
-    base.VERSION.changed("1.3.33", "components.MarsWeather reports physical unit of average temperature to data store")
-    base.VERSION.changed("1.3.33", "components.MarsWeather checks for scales")
-    base.VERSION.changed("1.3.35", "components.MarsWeather no longer uses a provisional output container")
-    base.VERSION.added("1.4.1", "Changelog in components.MarsWeather")
-    base.VERSION.changed("1.4.1", "components.MarsWeather class documentation")
+    base.VERSION.added("1.2.40", "`components.MarsWeather` component")
+    base.VERSION.changed("1.3.27", "`components.MarsWeather` specifies scales")
+    base.VERSION.changed("1.3.33", "`components.MarsWeather` checks input types strictly")
+    base.VERSION.changed("1.3.33", "`components.MarsWeather` checks for physical units")
+    base.VERSION.changed(
+        "1.3.33", "`components.MarsWeather` reports physical unit of average temperature to data store")
+    base.VERSION.changed("1.3.33", "`components.MarsWeather` checks for scales")
+    base.VERSION.changed("1.3.35", "`components.MarsWeather` no longer uses a provisional output container")
+    base.VERSION.added("1.4.1", "Changelog in `components.MarsWeather` ")
+    base.VERSION.changed("1.4.1", "`components.MarsWeather` class documentation")
     base.VERSION.changed("1.4.13", "added physical units to `MarsWeather` outputs")
     base.VERSION.changed("1.5.0", "`components.MarsWeather` iterates over output objects instead of names")
     base.VERSION.changed("1.5.1", "small changes in `components.MarsWeather` changelog")
+    base.VERSION.changed("1.5.3", "`components.MarsWeather` changelog uses markdown for code elements")
 
     def __init__(self, name, observer, store):
         super(MarsWeather, self).__init__(name, observer, store)

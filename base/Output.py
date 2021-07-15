@@ -9,15 +9,16 @@ class Output:
     A Landscape Model component output.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "base.Output class for representing component outputs")
-    base.VERSION.changed("1.3.13", "base.Output refactored")
-    base.VERSION.added("1.4.1", "Changelog in base.Output")
-    base.VERSION.changed(
-        "1.5.0", "`base.Output` manages default attributes, output description and hints for attribute descriptions")
+    base.VERSION.added("1.1.1", "`base.Output` class for representing component outputs")
+    base.VERSION.changed("1.3.13", "`base.Output` refactored")
+    base.VERSION.added("1.4.1", "Changelog in `base.Output` ")
+    base.VERSION.changed("1.5.0", "`base.Output` manages default attributes")
+    base.VERSION.changed("1.5.0", "`base.Output` output description and hints for attribute descriptions")
     base.VERSION.changed("1.5.0", "usage of specified defaults if no attributes passed in a call to set values")
     base.VERSION.added(
         "1.5.0", "`base.Output` properties `default_attributes`, `description` and `attribute_hints` ")
     base.VERSION.changed("1.5.1", "small changes in `base.Output` changelog")
+    base.VERSION.changed("1.5.3", "`base.Output` changelog uses markdown for code elements")
 
     def __init__(self, name, store, component=None, default_attributes=None, description=None, attribute_hints=None):
         self._name = name

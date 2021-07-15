@@ -20,11 +20,12 @@ class TerRQ(base.Component):
     RQ: The calculated RQ. A NumPy array of the same scales as the exposure input. Values have a unit of 1.
     """
     # CHANGELOG
-    base.VERSION.added("1.4.0", "components.TerRQ component")
-    base.VERSION.added("1.4.1", "Changelog in components.TerRQ")
-    base.VERSION.added("1.4.1", "components.TerRQ class documentation")
-    base.VERSION.fixed("1.4.1", "components.TerRQ attrib namespace reference")
+    base.VERSION.added("1.4.0", "`components.TerRQ` component")
+    base.VERSION.added("1.4.1", "Changelog in `components.TerRQ` ")
+    base.VERSION.added("1.4.1", "`components.TerRQ` class documentation")
+    base.VERSION.fixed("1.4.1", "`components.TerRQ` attrib namespace reference")
     base.VERSION.changed("1.4.9", "`components.TerRQ` data type access")
+    base.VERSION.changed("1.5.3", "`components.TerRQ` changelog uses markdown for code elements")
 
     def __init__(self, name, observer, store):
         super(TerRQ, self).__init__(name, observer, store)

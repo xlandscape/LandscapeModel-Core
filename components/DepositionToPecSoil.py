@@ -31,6 +31,7 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.changed("1.4.1", "Removed unused output `PecSoil 2` from `components.DepositionToPecSoil` ")
     base.VERSION.changed("1.4.9", "`components.DepositionToPecSoil` data type access")
     base.VERSION.changed("1.5.3", "`components.DepositionToPecSoil` changelog uses markdown for code elements")
+    base.VERSION.changed("1.5.4", "`components.DepositionToPecSoil` retrieval of output data type")
 
     def __init__(self, name, observer, store):
         super(DepositionToPecSoil, self).__init__(name, observer, store)

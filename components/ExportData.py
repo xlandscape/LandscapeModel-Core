@@ -83,7 +83,7 @@ class ExportData(base.Component):
             output.set_values(
                 numpy.ndarray,
                 shape=source_description["shape"],
-                dtype=source_description["data_type"],
+                data_type=source_description["data_type"],
                 chunks=source_description["chunks"],
                 scales=source_description["scales"],
                 unit=source_description["unit"],

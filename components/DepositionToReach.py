@@ -76,7 +76,7 @@ class DepositionToReach(base.Component):
         self.outputs["Deposition"].set_values(
             np.ndarray,
             shape=(data_set_info["shape"][0], reaches.shape[0]),
-            data_type=data_set_info["dtype"],
+            data_type=data_set_info["data_type"],
             chunks=(data_set_info["shape"][0], 1),
             scales="time/day, space/reach",
             unit=data_set_info["unit"]

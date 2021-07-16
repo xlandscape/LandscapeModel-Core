@@ -35,7 +35,9 @@ base.VERSION.fixed("1.4.1", "`base.functions.observers_from_xml()` passes lock a
 base.VERSION.changed("1.4.3", "`base.functions.convert()` can evaluate values")
 base.VERSION.added("1.4.5", "`base.functions.reporting()` ")
 base.VERSION.changed("1.4.9", "`base.functions` changelog uses markdown for code elements")
-base.VERSION.changed("1.4.11", "parsing of XML parameters strips whitespaces")
+base.VERSION.changed("1.4.11", "parsing of XML parameters strips whitespaces in `base.functions` ")
+base.VERSION.fixed("1.5.4", "stripping of raw configuration values in `base.functions` ")
+base.VERSION.changed("1.5.4", "parsing of raw parameters in `base.functions` ")
 
 
 def cartesian_product(*arrays):
@@ -103,10 +105,10 @@ def convert(input_config):
     :param input_config: The input type configuration.
     :return: A Python value of the configured type.
     """
-    raw_value = eval(input_config.text) if "eval" in input_config.attrib \
-                                           and input_config.attrib["eval"].lower() == "true" else input_config.text
-    if raw_value is not None:
-        raw_value = raw_value.strip()
+    text_value = None if input_config.text is None else input_config.text.strip()
+    raw_value = eval(text_value) if "eval" in input_config.attrib \
+                                    and input_config.attrib["eval"].lower() == "true" else text_value
+
     if "type" in input_config.attrib:
         if input_config.attrib["type"] == "bool":
             value = raw_value.lower() == "true"
@@ -117,9 +119,9 @@ def convert(input_config):
         elif input_config.attrib["type"] == "int":
             value = int(raw_value)
         elif input_config.attrib["type"] == "list[int]":
-            value = [int(x) for x in raw_value.split(" ")] if raw_value else []
+            value = [int(x) for x in raw_value.split()] if raw_value else []
         elif input_config.attrib["type"] == "list[float]":
-            value = [float(x) for x in raw_value.split(" ")] if raw_value else []
+            value = [float(x) for x in raw_value.split()] if raw_value else []
         elif input_config.attrib["type"] == "list[str]":
             value = [x for x in raw_value.split("|")] if raw_value else []
         elif input_config.attrib["type"] == "datetime":

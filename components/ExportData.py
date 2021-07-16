@@ -28,6 +28,7 @@ class ExportData(base.Component):
     base.VERSION.fixed("1.4.5", "`components.ExportData` spelling error in inline documentation")
     base.VERSION.changed("1.4.9", "`components.ExportData` data type access")
     base.VERSION.changed("1.5.3", "`components.ExportData` changelog uses markdown for code elements")
+    base.VERSION.fixed("1.5.4", "`components.ExportData` data type access")
 
     def __init__(self, name, observer, store):
         super(ExportData, self).__init__(name, observer, store)
@@ -83,7 +84,7 @@ class ExportData(base.Component):
             output.set_values(
                 numpy.ndarray,
                 shape=source_description["shape"],
-                dtype=source_description["data_type"],
+                data_type=source_description["data_type"],
                 chunks=source_description["chunks"],
                 scales=source_description["scales"],
                 unit=source_description["unit"],

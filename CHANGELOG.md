@@ -1,5 +1,19 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-07-15.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-07-16.
+
+## [1.5.4] - 2021-07-16
+
+### Added
+
+### Changed
+- parsing of raw parameters in `base.functions` 
+- `components.DepositionToPecSoil` retrieval of output data type
+- `components.MarsWeather` warning if weather file misses parameters
+
+### Fixed
+- stripping of raw configuration values in `base.functions` 
+- `components.ExportData` data type access
+
 
 ## [1.5.3] - 2021-07-15
 
@@ -131,7 +145,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- parsing of XML parameters strips whitespaces
+- parsing of XML parameters strips whitespaces in `base.functions` 
 
 ### Fixed
 

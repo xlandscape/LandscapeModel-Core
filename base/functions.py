@@ -35,7 +35,9 @@ base.VERSION.fixed("1.4.1", "`base.functions.observers_from_xml()` passes lock a
 base.VERSION.changed("1.4.3", "`base.functions.convert()` can evaluate values")
 base.VERSION.added("1.4.5", "`base.functions.reporting()` ")
 base.VERSION.changed("1.4.9", "`base.functions` changelog uses markdown for code elements")
-base.VERSION.changed("1.4.11", "parsing of XML parameters strips whitespaces")
+base.VERSION.changed("1.4.11", "parsing of XML parameters strips whitespaces in `base.functions` ")
+base.VERSION.fixed("1.5.4", "stripping of raw configuration values in `base.functions` ")
+base.VERSION.changed("1.5.4", "parsing of raw parameters in `base.functions` ")
 
 
 def cartesian_product(*arrays):

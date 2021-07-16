@@ -85,8 +85,11 @@ class MarsWeather(base.Component):
         filtered_data = [r for r in data[1:] if first_date <= datetime.date(int(r[date_idx[0]]), int(r[date_idx[1]]),
                                                                             int(r[date_idx[2]])) <= last_date]
         for component_output in self.outputs:
-            idx = data[0].index(component_output.name)
-            output_data = np.array([float(r[idx]) for r in filtered_data], dtype=np.float32)
-            output = self.outputs[component_output.name]
-            output.set_values(output_data, scales="time/day", unit=self._units[component_output.name])
+            if component_output.name in data[0]:
+                idx = data[0].index(component_output.name)
+                output_data = np.array([float(r[idx]) for r in filtered_data], dtype=np.float32)
+                output = self.outputs[component_output.name]
+                output.set_values(output_data, scales="time/day", unit=self._units[component_output.name])
+            else:
+                self.default_observer.write_message(2, "Weather file does not contain field " + component_output.name)
         return

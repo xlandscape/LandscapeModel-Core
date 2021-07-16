@@ -103,10 +103,10 @@ def convert(input_config):
     :param input_config: The input type configuration.
     :return: A Python value of the configured type.
     """
-    raw_value = eval(input_config.text) if "eval" in input_config.attrib \
-                                           and input_config.attrib["eval"].lower() == "true" else input_config.text
-    if isinstance(raw_value, str):
-        raw_value = raw_value.strip()
+    text_value = None if input_config.text is None else input_config.text.strip()
+    raw_value = eval(text_value) if "eval" in input_config.attrib \
+                                    and input_config.attrib["eval"].lower() == "true" else text_value
+
     if "type" in input_config.attrib:
         if input_config.attrib["type"] == "bool":
             value = raw_value.lower() == "true"
@@ -117,9 +117,9 @@ def convert(input_config):
         elif input_config.attrib["type"] == "int":
             value = int(raw_value)
         elif input_config.attrib["type"] == "list[int]":
-            value = [int(x) for x in raw_value.split(" ")] if raw_value else []
+            value = [int(x) for x in raw_value.split()] if raw_value else []
         elif input_config.attrib["type"] == "list[float]":
-            value = [float(x) for x in raw_value.split(" ")] if raw_value else []
+            value = [float(x) for x in raw_value.split()] if raw_value else []
         elif input_config.attrib["type"] == "list[str]":
             value = [x for x in raw_value.split("|")] if raw_value else []
         elif input_config.attrib["type"] == "datetime":

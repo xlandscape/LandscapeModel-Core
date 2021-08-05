@@ -65,7 +65,7 @@ portable without installation.
     which is the main entry point for the simulation.
  7. Make sure that the user parameterization can be passed conveniently to the `init.py`. This depends on your general
     setup, but for a portable version of your model you might want to create a `__start__.bat` in the
-    `%VARIANT_PATH%`. See this [sample of an startup batch](#sample-__start__bat).
+    `%VARIANT_PATH%`. See this [sample of a startup batch](#sample-__start__bat).
  8. Provide a parameterization template to the user so that becomes clear which parameters are available and required
     for your model. Add inline documentation (XML comments) to the parameterization file to help the user fill out the
     parameterization. The template file must have an `.xrun` file ending and should be placed in the 

@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION = base.VersionCollection(
+    base.VersionInfo("1.5.5", "2021-08-05"),
     base.VersionInfo("1.5.4", "2021-07-16"),
     base.VersionInfo("1.5.3", "2021-07-15"),
     base.VersionInfo("1.5.2", "2021-07-13"),
@@ -87,6 +88,8 @@ VERSION.added("1.4.1", "Changelog in `base.VERSION` ")
 VERSION.added("1.4.2", "Corrections in `README` ")
 VERSION.changed("1.4.9", "`base` changelog uses markdown for code elements")
 VERSION.fixed("1.4.10", "automatic documentation error")
+VERSION.changed("1.5.5", "renamed `LICENSE.txt` to `LICENSE` ")
+VERSION.fixed("1.5.5", "spelling error in readme")
 
 # CHANGELOG VersionCollection.py
 VERSION.added("1.4.1", "`base.VersionCollection` for managing revision history")

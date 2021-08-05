@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-07-16.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-08-05.
+
+## [1.5.5] - 2021-08-05
+
+### Added
+
+### Changed
+- renamed `LICENSE.txt` to `LICENSE` 
+
+### Fixed
+- spelling error in readme
+
 
 ## [1.5.4] - 2021-07-16
 

@@ -30,7 +30,7 @@ class Output:
             self._storeName = component.name + "/" + name
         self._default_attributes = {} if default_attributes is None else default_attributes
         self._description = description
-        self._attribute_hints = attribute_hints
+        self._attribute_hints = {} if attribute_hints is None else attribute_hints
         return
 
     def describe(self):

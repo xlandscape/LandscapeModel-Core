@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-08-05.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-08-13.
+
+## [1.5.6] - 2021-08-13
+
+### Added
+
+### Changed
+
+### Fixed
+- Handling of omitted `base.Output` attribute hints
+
 
 ## [1.5.5] - 2021-08-05
 

@@ -19,6 +19,7 @@ class Output:
         "1.5.0", "`base.Output` properties `default_attributes`, `description` and `attribute_hints` ")
     base.VERSION.changed("1.5.1", "small changes in `base.Output` changelog")
     base.VERSION.changed("1.5.3", "`base.Output` changelog uses markdown for code elements")
+    base.VERSION.fixed("1.5.6", "Handling of omitted `base.Output` attribute hints")
 
     def __init__(self, name, store, component=None, default_attributes=None, description=None, attribute_hints=None):
         self._name = name
@@ -30,7 +31,7 @@ class Output:
             self._storeName = component.name + "/" + name
         self._default_attributes = {} if default_attributes is None else default_attributes
         self._description = description
-        self._attribute_hints = attribute_hints
+        self._attribute_hints = {} if attribute_hints is None else attribute_hints
         return
 
     def describe(self):

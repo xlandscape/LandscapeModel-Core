@@ -13,6 +13,7 @@ base.VERSION.added("1.4.9", "`base.documentation` ")
 base.VERSION.added("1.5.0", "`base.documentation` methods for documenting components")
 base.VERSION.added("1.5.1", "`base.documentation` methods for documenting scenarios")
 base.VERSION.added("1.5.3", "`base.documentation.write_changelog()` no longer escapes underscores")
+base.VERSION.added("1.5.7", "`base.documentation.document_component()` documentation of `Equals` attribute")
 
 
 def write_changelog(name, version_history, file_path):
@@ -190,6 +191,8 @@ The following gives a sample configuration of the `{component_name}` component. 
                 elif type(attribute) is attrib.InList:
                     f.write("Allowed values are: {}.\n".format(
                         ", ".join(["`" + str(x) + "`" for x in attribute.values])))
+                elif type(attribute) is attrib.Equals:
+                    f.write("The currently only allowed value is {}.\n".format(attribute.value))
                 else:
                     raise TypeError("Unsupported attribute type: " + str(type(attribute)))
             f.write("\n")

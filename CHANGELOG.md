@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-08-13.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-08-17.
+
+## [1.5.7] - 2021-08-17
+
+### Added
+- `base.documentation.document_component()` documentation of `Equals` attribute
+
+### Changed
+
+### Fixed
+
 
 ## [1.5.6] - 2021-08-13
 

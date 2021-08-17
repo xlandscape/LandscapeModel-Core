@@ -190,6 +190,8 @@ The following gives a sample configuration of the `{component_name}` component. 
                 elif type(attribute) is attrib.InList:
                     f.write("Allowed values are: {}.\n".format(
                         ", ".join(["`" + str(x) + "`" for x in attribute.values])))
+                elif type(attribute) is attrib.Equals:
+                    f.write("The currently only allowed value is {}.\n".format(attribute.value))
                 else:
                     raise TypeError("Unsupported attribute type: " + str(type(attribute)))
             f.write("\n")

@@ -15,6 +15,20 @@ base.VERSION.added("1.5.0", "`base.documentation` methods for documenting compon
 base.VERSION.added("1.5.1", "`base.documentation` methods for documenting scenarios")
 base.VERSION.added("1.5.3", "`base.documentation.write_changelog()` no longer escapes underscores")
 base.VERSION.added("1.5.7", "`base.documentation.document_component()` documentation of `Equals` attribute")
+base.VERSION.changed(
+    "1.5.8",
+    """`base.documentation.document_component()` can now handle sample configurations with component names differing 
+    from object name"""
+)
+base.VERSION.changed(
+    "1.5.8",
+    """`base.documentation.document_component()`: long lines in XML samples are now wrapped to ensure 120 character 
+    width"""
+)
+base.VERSION.added(
+    "1.5.8",
+    "`base.documentation.document_component()` documentation of data_type attribute hint and default attribute"
+)
 
 
 def write_changelog(name, version_history, file_path):

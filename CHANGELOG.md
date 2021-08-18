@@ -1,5 +1,19 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-08-17.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-08-18.
+
+## [1.5.8] - 2021-08-18
+
+### Added
+- `base.documentation.document_component()` documentation of data_type attribute hint and default attribute
+
+### Changed
+- `base.documentation.document_component()` can now handle sample configurations with component names differing 
+    from object name
+- `base.documentation.document_component()`: long lines in XML samples are now wrapped to ensure 120 character 
+    width
+
+### Fixed
+
 
 ## [1.5.7] - 2021-08-17
 

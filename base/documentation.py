@@ -6,6 +6,7 @@ import inspect
 import base
 import attrib
 import xml.etree.ElementTree
+import textwrap
 
 
 # CHANGELOG
@@ -98,15 +99,18 @@ def document_stores(stores_module, file_path):
     return
 
 
-def document_component(component, file_path, sample_configuration):
+def document_component(component, file_path, sample_configuration, sample_component_name=None):
     """
     :param component: The component to document.
     :param file_path: The path of file where the readme is written to.
     :param sample_configuration: The path to a configuration file where the component is configured.
+    :param sample_component_name: The name of the component in the sample configuration if it does not equal the
+    component name.
     :return: Nothing.
     """
     module_doc = "" if component.module.doc_file is None else "(see `" + component.module.doc_file + "` for details)"
     configuration_xml = xml.etree.ElementTree.parse(sample_configuration)
+    component_name = component.name if sample_component_name is None else sample_component_name
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("""## Table of Contents
 * [About the project](#about-the-project)
@@ -166,9 +170,14 @@ The following gives a sample configuration of the `{component_name}` component. 
             component_name=component.name,
             component_module=component.__module__,
             component_class=type(component).__name__,
-            sample_configuration=inspect.cleandoc(
-                xml.etree.ElementTree.tostring(
-                    configuration_xml.getroot().find("Composition").find(component.name)).decode("utf-8"))
+            sample_configuration="\n".join(
+                textwrap.wrap(
+                    inspect.cleandoc(
+                        xml.etree.ElementTree.tostring(
+                            configuration_xml.getroot().find("Composition").find(component_name)).decode("utf-8")),
+                    120,
+                    replace_whitespace=False
+                ))
         ))
         for component_input in component.inputs:
             f.write("#### {}\n".format(component_input.name))
@@ -211,6 +220,8 @@ The following gives a sample configuration of the `{component_name}` component. 
                         f.write("Dimension {} spans {}.\n".format(i + 1, value[i]))
                 elif attribute == "chunks":
                     f.write("Chunking of the array is {}.\n".format(value))
+                elif attribute == "data_type":
+                    f.write("Individual array elements have a type of `{}`.\n".format(value.__name__))
                 else:
                     raise ValueError("Unsupported default attribute: " + attribute)
             for attribute, value in component_output.default_attributes.items():
@@ -223,6 +234,8 @@ The following gives a sample configuration of the `{component_name}` component. 
                         f.write("Values have no physical unit.\n")
                     else:
                         f.write("The physical unit of the values is `{}`.\n".format(value))
+                elif attribute == "default":
+                    f.write("The default value of the output is `{}`.\n".format(value))
                 else:
                     raise ValueError("Unsupported default attribute: " + attribute)
         f.write("\n\n## Roadmap\n")

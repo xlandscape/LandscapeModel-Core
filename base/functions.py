@@ -180,24 +180,32 @@ def replace_tokens(tokens, source, destination):
     return
 
 
-def run_process(command, working_directory, observer, env=None):
+def run_process(command, working_directory, observer, env=None, minimized=True):
     """
     Runs a separate process.
     :param command: A list describing the process call.
     :param working_directory: The working directory for the process.
     :param observer: The observer used for the process.
     :param env: A dictionary of environment variables available to the new process.
+    :param minimized: Specifies whether to start the process minimized.
     :return: Nothing.
     """
     if env is None:
         env = {}
-    result = subprocess.Popen(command,
-                              cwd=working_directory,
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.STDOUT,
-                              text=True,
-                              bufsize=1,
-                              env=dict(env, SystemRoot=os.getenv("SystemRoot")))
+    startupinfo = subprocess.STARTUPINFO()
+    if minimized:
+        startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW
+        startupinfo.wShowWindow = 6
+    result = subprocess.Popen(
+        command,
+        cwd=working_directory,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+        env=dict(env, SystemRoot=os.getenv("SystemRoot")),
+        startupinfo=startupinfo
+    )
     for text in iter(result.stdout.readline, ''):
         observer.write(text)
     result.stdout.close()

@@ -38,6 +38,7 @@ base.VERSION.changed("1.4.9", "`base.functions` changelog uses markdown for code
 base.VERSION.changed("1.4.11", "parsing of XML parameters strips whitespaces in `base.functions` ")
 base.VERSION.fixed("1.5.4", "stripping of raw configuration values in `base.functions` ")
 base.VERSION.changed("1.5.4", "parsing of raw parameters in `base.functions` ")
+base.VERSION.added("1.5.9", "`base.functions.run_process()` option to run external processes minimized")
 
 
 def cartesian_product(*arrays):

@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-08-18.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-08-23.
+
+## [1.5.9] - 2021-08-23
+
+### Added
+- `base.functions.run_process()` option to run external processes minimized
+
+### Changed
+
+### Fixed
+
 
 ## [1.5.8] - 2021-08-18
 

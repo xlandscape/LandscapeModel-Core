@@ -29,6 +29,8 @@ base.VERSION.added(
     "1.5.8",
     "`base.documentation.document_component()` documentation of data_type attribute hint and default attribute"
 )
+base.VERSION.added(
+    "1.5.10", "`base.documentation.document_component()` support for documentation of unit attribute hint")
 
 
 def write_changelog(name, version_history, file_path):

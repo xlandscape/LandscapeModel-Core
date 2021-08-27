@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-08-23.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-08-27.
+
+## [1.5.10] - 2021-08-27
+
+### Added
+- `base.documentation.document_component()` support for documentation of unit attribute hint
+
+### Changed
+
+### Fixed
+
 
 ## [1.5.9] - 2021-08-23
 

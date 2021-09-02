@@ -1,5 +1,20 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-08-27.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-09-02.
+
+## [1.6] - 2021-09-02
+
+### Added
+
+### Changed
+- updated runtime environment to Python 3.9.7
+- `store.X3dfStore` acknowledges that HDF-stored strings are now returned as bytes
+- `components.HydrologyFromTimeSeries` casts exported WKB geometries to bytes
+- `components.Lulc` updated path to Proj4 library
+- `components.Lulc` casts exported WKB geometries to bytes
+- `components.PpmCalendar` casts exported WKB geometries to bytes
+
+### Fixed
+
 
 ## [1.5.10] - 2021-08-27
 
@@ -253,7 +268,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.ReportingHydrographicMap` changelog uses markdown for code elements
 - renamed `components.HydrologyFromTimeSeries` component
 - `components.LandscapeScenarioPreparation` spell check exclusion
-- `components.lulc` changelog uses markdown for code elements
+- `components.Lulc` changelog uses markdown for code elements
 - `components.TerRQ` data type access
 - `components` imports updated to reflect renamed components
 - `base.UserParameters` property names

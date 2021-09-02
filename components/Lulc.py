@@ -43,7 +43,9 @@ class Lulc(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.Lulc` ")
     base.VERSION.changed("1.4.1", "`components.Lulc` class documentation")
     base.VERSION.fixed("1.4.7", "`components.Lulc` added path to proj.db zo fix errors on some systems")
-    base.VERSION.changed("1.4.9", "`components.lulc` changelog uses markdown for code elements")
+    base.VERSION.changed("1.4.9", "`components.Lulc` changelog uses markdown for code elements")
+    base.VERSION.changed("1.6.0", "`components.Lulc` updated path to Proj4 library")
+    base.VERSION.changed("1.6.0", "`components.Lulc` casts exported WKB geometries to bytes")
 
     def __init__(self, name, observer, store):
         super(Lulc, self).__init__(name, observer, store)

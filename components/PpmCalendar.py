@@ -59,6 +59,7 @@ class PpmCalendar(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.PpmCalendar` ")
     base.VERSION.changed("1.4.1", "`components.PpmCalendar` class documentation")
     base.VERSION.changed("1.5.3", "`components.PpmCalendar` changelog uses markdown for code elements")
+    base.VERSION.changed("1.6.0", "`components.PpmCalendar` casts exported WKB geometries to bytes")
 
     def __init__(self, name, observer, store):
         super(PpmCalendar, self).__init__(name, observer, store)

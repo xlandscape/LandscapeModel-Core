@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION = base.VersionCollection(
+    base.VersionInfo("1.6.0", "2021-09-02"),
     base.VersionInfo("1.5.10", "2021-08-27"),
     base.VersionInfo("1.5.9", "2021-08-23"),
     base.VersionInfo("1.5.8", "2021-08-18"),
@@ -111,3 +112,6 @@ VERSION.changed("1.4.9", "`init.py` spell check exclusions")
 
 # CHANGELOG document.py
 VERSION.added("1.4.9", "`document.py` ")
+
+# CHANGELOG runtime environment
+VERSION.changed("1.6.0", "updated runtime environment to Python 3.9.7")

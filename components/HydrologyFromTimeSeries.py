@@ -51,6 +51,7 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.4.2", "`components.HydrologyFromTimeSeries` (optionally) reads inflows from fields")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "renamed `components.HydrologyFromTimeSeries` component")
+    base.VERSION.changed("1.6.0", "`components.HydrologyFromTimeSeries` casts exported WKB geometries to bytes")
 
     def __init__(self, name, observer, store):
         super(HydrologyFromTimeSeries, self).__init__(name, observer, store)

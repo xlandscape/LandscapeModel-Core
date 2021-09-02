@@ -68,8 +68,19 @@ class Lulc(base.Component):
         Runs the component.
         :return: Nothing.
         """
-        os.environ["PROJ_LIB"] = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), "..", "bin", "Python38", "Lib", "site-packages", "osgeo", "data", "proj"))
+        os.environ["PROJ_LIB"] = os.path.abspath(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "bin",
+                "python-3.9.7-amd64",
+                "Lib",
+                "site-packages",
+                "osgeo",
+                "data",
+                "proj"
+            )
+        )
         landscape_info_file = self.inputs["BaseLandscapeGeometries"].read().values
         landscape_info_xml = xml.etree.ElementTree.parse(landscape_info_file).getroot()
         landscape_path = os.path.dirname(os.path.abspath(landscape_info_file))
@@ -227,7 +238,7 @@ class Lulc(base.Component):
             geom = feature.GetGeometryRef()
             if geom is None:
                 raise ValueError("Feature number " + str(i) + " has no geometry")
-            geometries.append(geom.ExportToWkb())
+            geometries.append(bytes(geom.ExportToWkb()))
             for attribute in attributes.items():
                 value = feature[attribute[0]]
                 if value is None:

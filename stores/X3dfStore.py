@@ -111,7 +111,7 @@ class X3dfStore(base.Store):
         elif original_type == "float":
             values = float(data_set[()])
         elif original_type == "str":
-            values = str(data_set[()])
+            values = data_set[()].decode()
         elif original_type == "list[bytes]":
             if "slices" in keywords:
                 values = data_set[keywords["slices"]].tostring()
@@ -128,18 +128,18 @@ class X3dfStore(base.Store):
         elif original_type == "list[object]":
             values = [pickle.loads(data_set[i]) for i in range(data_set.shape[0])]
         elif original_type == "datetime.date":
-            values = datetime.datetime.strptime(data_set[()], "%Y-%m-%d").date()
+            values = datetime.datetime.strptime(data_set[()].decode(), "%Y-%m-%d").date()
         elif original_type == "numpy.ndarray":
             if "slices" in keywords:
                 values = data_set[keywords["slices"]]
             else:
                 values = data_set[()]
         elif original_type == "datetime.datetime":
-            values = datetime.datetime.strptime(data_set[()], "%Y-%m-%d %H:%M:%S")
+            values = datetime.datetime.strptime(data_set[()].decode(), "%Y-%m-%d %H:%M:%S")
         elif original_type == "None":
             values = None
         elif original_type == "list[str]":
-            values = data_set[()].tolist()
+            values = [s.decode() for s in data_set[()].tolist()]
         else:
             raise TypeError("Stored type cannot be interpreted: " + original_type)
         return values
@@ -210,7 +210,7 @@ class X3dfStore(base.Store):
                 data_type = h5py.vlen_dtype(numpy.uint8)
                 data_set = self._f.create_dataset(name, (len(values),), dtype=data_type)
                 for i in range(len(values)):
-                    data_set[i] = numpy.fromstring(str(pickle.dumps(values[i], 0)), dtype=numpy.uint8)
+                    data_set[i] = numpy.fromstring(pickle.dumps(values[i], 0), dtype=numpy.uint8)
                 data_set.attrs["_type"] = "list[object]"
                 self._observer.store_set_values(3, "X3dfStore", "Stored list of pickled objects")
         elif isinstance(values, str):

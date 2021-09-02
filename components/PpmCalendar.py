@@ -188,7 +188,7 @@ class PpmCalendar(base.Component):
                             spray_application = SprayApplication(field, application_date, "PPP", application_rate,
                                                                  technology_drift_reduction, in_crop_buffer)
                             spray_applications.append(spray_application)
-                            applied_areas.append(applied_geometry.ExportToWkb())
+                            applied_areas.append(bytes(applied_geometry.ExportToWkb()))
         applied_fields = np.zeros(len(spray_applications), np.int)
         application_dates = np.zeros(len(spray_applications), int)
         application_rates = np.zeros(len(spray_applications))

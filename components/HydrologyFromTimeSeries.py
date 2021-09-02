@@ -100,7 +100,7 @@ class HydrologyFromTimeSeries(base.Component):
         :return: Nothing.
         """
         time_series = self.inputs["TimeSeries"].read().values
-        h5 = h5py.File(time_series, "r")
+        h5 = h5py.File(time_series)
         flow = h5["flow"]
         depth = h5["depth"]
         volume = h5["volume"]

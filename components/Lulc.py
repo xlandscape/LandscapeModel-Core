@@ -43,7 +43,9 @@ class Lulc(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.Lulc` ")
     base.VERSION.changed("1.4.1", "`components.Lulc` class documentation")
     base.VERSION.fixed("1.4.7", "`components.Lulc` added path to proj.db zo fix errors on some systems")
-    base.VERSION.changed("1.4.9", "`components.lulc` changelog uses markdown for code elements")
+    base.VERSION.changed("1.4.9", "`components.Lulc` changelog uses markdown for code elements")
+    base.VERSION.changed("1.6.0", "`components.Lulc` updated path to Proj4 library")
+    base.VERSION.changed("1.6.0", "`components.Lulc` casts exported WKB geometries to bytes")
 
     def __init__(self, name, observer, store):
         super(Lulc, self).__init__(name, observer, store)
@@ -68,8 +70,19 @@ class Lulc(base.Component):
         Runs the component.
         :return: Nothing.
         """
-        os.environ["PROJ_LIB"] = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), "..", "bin", "Python38", "Lib", "site-packages", "osgeo", "data", "proj"))
+        os.environ["PROJ_LIB"] = os.path.abspath(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "bin",
+                "python-3.9.7-amd64",
+                "Lib",
+                "site-packages",
+                "osgeo",
+                "data",
+                "proj"
+            )
+        )
         landscape_info_file = self.inputs["BaseLandscapeGeometries"].read().values
         landscape_info_xml = xml.etree.ElementTree.parse(landscape_info_file).getroot()
         landscape_path = os.path.dirname(os.path.abspath(landscape_info_file))
@@ -227,7 +240,7 @@ class Lulc(base.Component):
             geom = feature.GetGeometryRef()
             if geom is None:
                 raise ValueError("Feature number " + str(i) + " has no geometry")
-            geometries.append(geom.ExportToWkb())
+            geometries.append(bytes(geom.ExportToWkb()))
             for attribute in attributes.items():
                 value = feature[attribute[0]]
                 if value is None:

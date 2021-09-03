@@ -1,5 +1,18 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-09-02.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-09-03.
+
+## [1.6.1] - 2021-09-03
+
+### Added
+
+### Changed
+- Updated `components.LandscapeScenarioPreparation` to new metadata format
+- renamed to `components.LandscapeScenario`
+- Renamed some parameters in `components.PpmCalendar`
+- `components` imports updated to reflect renamed components
+
+### Fixed
+
 
 ## [1.6] - 2021-09-02
 
@@ -9,8 +22,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 - updated runtime environment to Python 3.9.7
 - `store.X3dfStore` acknowledges that HDF-stored strings are now returned as bytes
 - `components.HydrologyFromTimeSeries` casts exported WKB geometries to bytes
-- `components.Lulc` updated path to Proj4 library
-- `components.Lulc` casts exported WKB geometries to bytes
+- `components.LandscapeScenario` updated path to Proj4 library
+- `components.LandscapeScenario` casts exported WKB geometries to bytes
 - `components.PpmCalendar` casts exported WKB geometries to bytes
 
 ### Fixed
@@ -268,7 +281,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.ReportingHydrographicMap` changelog uses markdown for code elements
 - renamed `components.HydrologyFromTimeSeries` component
 - `components.LandscapeScenarioPreparation` spell check exclusion
-- `components.Lulc` changelog uses markdown for code elements
+- `components.LandscapeScenario` changelog uses markdown for code elements
 - `components.TerRQ` data type access
 - `components` imports updated to reflect renamed components
 - `base.UserParameters` property names
@@ -296,7 +309,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Changed
 
 ### Fixed
-- `components.Lulc` added path to proj.db zo fix errors on some systems
+- `components.LandscapeScenario` added path to proj.db zo fix errors on some systems
 
 
 ## [1.4.6] - 2021-01-19
@@ -417,7 +430,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Changelog in `components.ReportingHydrographicMap`
 - Changelog in `components.HydrologyFromTimeSeries` 
 - Changelog in `components.LandscapeScenarioPreparation` 
-- Changelog in `components.Lulc` 
+- Changelog in `components.LandscapeScenario` 
 - Changelog in `components.MarsWeather` 
 - Changelog in `components.PpmCalendar` 
 - Changelog in `components.TerRQ` 
@@ -454,7 +467,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.ReportingHydrographicMap` class documentation
 - `components.HydrologyFromTimeSeries` class documentation
 - `components.LandscapeScenarioPreparation` class documentation
-- `components.Lulc` class documentation
+- `components.LandscapeScenario` class documentation
 - `components.MarsWeather` class documentation
 - `components.PpmCalendar` class documentation
 - `components.UserParameters` class documentation
@@ -557,10 +570,10 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.HydrologyFromTimeSeries` checks for physical units
 - `components.HydrologyFromTimeSeries` reports physical units to the data store
 - `components.HydrologyFromTimeSeries` checks for scales
-- `components.Lulc` checks input types strictly
-- `components.Lulc` checks for physical units
-- `components.Lulc` reports physical units to the data store
-- `components.Lulc` checks for scales
+- `components.LandscapeScenario` checks input types strictly
+- `components.LandscapeScenario` checks for physical units
+- `components.LandscapeScenario` reports physical units to the data store
+- `components.LandscapeScenario` checks for scales
 - `components.MarsWeather` checks input types strictly
 - `components.MarsWeather` checks for physical units
 - `components.MarsWeather` reports physical unit of average temperature to data store
@@ -614,7 +627,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `store.X3dfStore` acknowledges `scales` keyword for all value types
 - `store.X3dfStore` `default` keyword added
 - `store.X3dfStore` `slice` keyword renamed to `slices` 
-- `components.Lulc` specifies scales
+- `components.LandscapeScenario` specifies scales
 - `components.MarsWeather` specifies scales
 - `components.PpmCalendar` specifies scales
 - `components.UserParameters` specifies scales
@@ -724,7 +737,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- Enforce strict checks in `components.Lulc` 
+- Enforce strict checks in `components.LandscapeScenario` 
 
 ### Fixed
 
@@ -768,7 +781,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- Class checks in `components.Lulc` 
+- Class checks in `components.LandscapeScenario` 
 
 ### Fixed
 - `base.UncertaintyAndSensitivityAnalysis.create()` function parsing improved
@@ -779,7 +792,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- Better exceptions in `components.Lulc` 
+- Better exceptions in `components.LandscapeScenario` 
 
 ### Fixed
 
@@ -836,8 +849,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Changed
 - `components.DepositionToReach` basic implementation
 - Support of dates and times in `store.X3dfStore` 
-- `components.Lulc` distinguishes between supplementary data formats
-- `components.Lulc` can import additional attributes from base geometry shapefile
+- `components.LandscapeScenario` distinguishes between supplementary data formats
+- `components.LandscapeScenario` can import additional attributes from base geometry shapefile
 - `components.PpmCalendar` no longer outputs SprayApplication objects
 
 ### Fixed
@@ -848,7 +861,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- `components.Lulc` ROI extent as meta-datum in package info file
+- `components.LandscapeScenario` ROI extent as meta-datum in package info file
 
 ### Fixed
 
@@ -858,7 +871,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- `components.Lulc` has new input XML schema and checks layer consistency
+- `components.LandscapeScenario` has new input XML schema and checks layer consistency
 
 ### Fixed
 
@@ -935,7 +948,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- `components.Lulc` provides absolute paths for directories also
+- `components.LandscapeScenario` provides absolute paths for directories also
 
 ### Fixed
 
@@ -945,8 +958,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- `components.Lulc` can provide flexible set of outputs
-- `components.PpmCalendar` target LULC type input now str
+- `components.LandscapeScenario` can provide flexible set of outputs
+- `components.PpmCalendar` target land-use / land-cover type input now str
 
 ### Fixed
 
@@ -1065,7 +1078,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `store.InMemoryStore` 
 - `store.X3dfStore` 
 - `stores` namespace
-- `components.Lulc` component
+- `components.LandscapeScenario` component
 - `components.PpmCalendar` component
 - `components.UserParameters` component
 - `components` namespace
@@ -1077,6 +1090,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `observer` namespace
 
 ### Changed
-- `components.PpmCalendar` now requires Fields and Lulc inputs to be of type list[int]
+- `components.PpmCalendar` now requires Fields and land-use / land-cover type inputs to be of type list[int]
 
 ### Fixed

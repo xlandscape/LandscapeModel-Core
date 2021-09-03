@@ -34,6 +34,7 @@ class LandscapeScenarioPreparation(base.Component):
     base.VERSION.changed("1.4.1", "`components.LandscapeScenarioPreparation` class documentation")
     base.VERSION.changed("1.4.9", "`components.LandscapeScenarioPreparation` spell check exclusion")
     base.VERSION.changed("1.5.3", "`components.LandscapeScenarioPreparation` changelog uses markdown for code elements")
+    base.VERSION.changed("1.6.1", "Updated `components.LandscapeScenarioPreparation` to new metadata format")
 
     def __init__(self, name, observer, store):
         super(LandscapeScenarioPreparation, self).__init__(name, observer, store)

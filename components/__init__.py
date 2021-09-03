@@ -12,7 +12,7 @@ from .ReportingDistribution import *
 from .ReportingHydrographicMap import *
 from .HydrologyFromTimeSeries import *
 from .LandscapeScenarioPreparation import *
-from .Lulc import *
+from .LandscapeScenario import *
 from .MarsWeather import *
 from .PpmCalendar import *
 from .TerRQ import *
@@ -26,3 +26,4 @@ base.VERSION.added("1.1.6", "Changelog through `VersionInfo` class in `component
 base.VERSION.added("1.4.1", "Changelog in `components` ")
 base.VERSION.changed("1.4.1", "Removed `components.VERSION` ")
 base.VERSION.changed("1.4.9", "`components` imports updated to reflect renamed components")
+base.VERSION.changed("1.6.1", "`components` imports updated to reflect renamed components")

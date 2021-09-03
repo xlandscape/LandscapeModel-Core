@@ -213,28 +213,28 @@ by the landscape scenario.
         <SimulationEnd>2015-03-01</SimulationEnd>
     </Global>
     <Composition>
-        <LULC module="components" class="Lulc">
+        <LandscapeScenario module="components" class="LandscapeScenario">
             <BaseLandscapeGeometries>$(:LandscapeScenario)</BaseLandscapeGeometries>
-        </LULC>
+        </LandscapeScenario>
         <PPM module="components" class="PpmCalendar">
             <SimulationStart type="date">$(SimulationStart)</SimulationStart>
             <SimulationEnd type="date">$(SimulationEnd)</SimulationEnd>
             <ApplicationWindows>03-01 to 03-01</ApplicationWindows>
             <Fields>
-                <FromOutput component="LULC" output="FeatureIds"/>
+                <FromOutput component="LandscapeScenario" output="FeatureIds"/>
             </Fields>
             <Lulc>
-                <FromOutput component="LULC" output="LulcTypeIds"/>
+                <FromOutput component="LandscapeScenario" output="FeatureTypeIds"/>
             </Lulc>
             <TargetLulcType>
-                <FromOutput component="LULC" output="target_lulc_type"/>
+                <FromOutput component="LandscapeScenario" output="target_type"/>
             </TargetLulcType>
             <ApplicationRate type="float" unit="g/ha">100</ApplicationRate>
             <TechnologyDriftReduction type="float" unit="1">0</TechnologyDriftReduction>
             <InCropBuffer type="float" unit="m">0</InCropBuffer>
             <InFieldMargin type="float" unit="m">0</InFieldMargin>
             <FieldGeometries>
-                <FromOutput component="LULC" output="Geometries"/>
+                <FromOutput component="LandscapeScenario" output="Geometries"/>
             </FieldGeometries>
             <MinimumAppliedArea type="float" unit="m²">10</MinimumAppliedArea>
             <RandomSeed type="int">0</RandomSeed>
@@ -338,7 +338,7 @@ blocks for components, observers and stores at the according places in the confi
 
 To add a component to the model, add a block in the `<Composition>` section of the Monte Carlo run configuration, e.g.,
 ```xml
-<LULC module="components" class="Lulc">
+<LULC module="components" class="LandscapeScenario">
     <BaseLandscapeGeometries>$(:LandscapeScenario)</BaseLandscapeGeometries>
 </LULC>
 ``` 

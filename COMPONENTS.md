@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2021-09-02.
+It was automatically created on 2021-09-03.
 
 
 ## CsvReader
@@ -157,13 +157,13 @@ It was automatically created on 2021-09-02.
     
 
 ## LandscapeScenarioPreparation
-    A component that prepares landscape scenarios ingested by the LULC component from geo-files.
+    A component that prepares landscape scenarios ingested by the LandscapeScenario component from geo-files.
 
     INPUTS
     OutputPath: The path where to write the landscape scenario to.
     LandscapeScenarioVersion: The version of the landscape scenario.
     LandscapeScenarioDescription: A description of the landscape scenario.
-    TargetFieldLulcType: The identifier of target LULC type.
+    TargetFieldLandUseLandCoverType: The identifier of the target land-use / land-cover type.
     BaseLandscapeGeometries: The base landscape geometries.
     FeatureIdAttribute: The name of the feature ID attribute.
     DEM: A digital elevation model.
@@ -172,7 +172,7 @@ It was automatically created on 2021-09-02.
     None.
     
 
-## Lulc
+## LandscapeScenario
     Provides landscape scenarios to the Landscape Model.
 
     INPUTS
@@ -208,8 +208,10 @@ It was automatically created on 2021-09-02.
     ApplicationWindows: A definition of application windows. A string of global scale. Value has no unit.
     Fields: A list of identifiers of individual geometries. A list[int] of scale space/base_geometry. Values have no
     unit.
-    Lulc: The LULC type of spatial units. A list[int] of scale space/base_geometry. Values have no unit.
-    TargetLulcType: The LULC type that is applied. A string of global scale. Value has no unit.
+    LandUseLandCoverTypes: The land-use and land-cover type of spatial units. A list[int] of scale space/base_geometry.
+    Values have no unit.
+    TargetLandUseLandCoverType: The land-use or land-cover type that is applied. A string of global scale. Value has no
+    unit.
     ApplicationRate: The application rate. A float of global scale. Value has a unit of g/ha.
     TechnologyDriftReduction: The fraction by which spray-drift is reduced due to technological measures. A float of
     global scale. Value has a unit of 1.

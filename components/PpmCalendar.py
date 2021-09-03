@@ -19,8 +19,10 @@ class PpmCalendar(base.Component):
     ApplicationWindows: A definition of application windows. A string of global scale. Value has no unit.
     Fields: A list of identifiers of individual geometries. A list[int] of scale space/base_geometry. Values have no
     unit.
-    Lulc: The LULC type of spatial units. A list[int] of scale space/base_geometry. Values have no unit.
-    TargetLulcType: The LULC type that is applied. A string of global scale. Value has no unit.
+    LandUseLandCoverTypes: The land-use and land-cover type of spatial units. A list[int] of scale space/base_geometry.
+    Values have no unit.
+    TargetLandUseLandCoverType: The land-use or land-cover type that is applied. A string of global scale. Value has no
+    unit.
     ApplicationRate: The application rate. A float of global scale. Value has a unit of g/ha.
     TechnologyDriftReduction: The fraction by which spray-drift is reduced due to technological measures. A float of
     global scale. Value has a unit of 1.
@@ -45,8 +47,10 @@ class PpmCalendar(base.Component):
     # CHANGELOG
     base.VERSION.added("1.1.1", "`components.PpmCalendar` component")
     base.VERSION.changed(
-        "1.1.1", "`components.PpmCalendar` now requires Fields and Lulc inputs to be of type list[int]")
-    base.VERSION.changed("1.2.5", "`components.PpmCalendar` target LULC type input now str")
+        "1.1.1",
+        "`components.PpmCalendar` now requires Fields and land-use / land-cover type inputs to be of type list[int]"
+    )
+    base.VERSION.changed("1.2.5", "`components.PpmCalendar` target land-use / land-cover type input now str")
     base.VERSION.changed("1.2.16", "`components.PpmCalendar` output refactored")
     base.VERSION.changed("1.2.20", "`components.PpmCalendar` no longer outputs SprayApplication objects")
     base.VERSION.changed("1.2.25", "components.PpmCalendar`.RandomSeed` parameter")
@@ -85,12 +89,12 @@ class PpmCalendar(base.Component):
                 self.default_observer
             ),
             base.Input(
-                "Lulc",
+                "LandUseLandCoverTypes",
                 (attrib.Class("list[int]", 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
                 self.default_observer
             ),
             base.Input(
-                "TargetLulcType",
+                "TargetLandUseLandCoverType",
                 (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
                 self.default_observer
             ),
@@ -157,8 +161,8 @@ class PpmCalendar(base.Component):
         simulation_end_year = self.inputs["SimulationEnd"].read().values.year
         application_windows = [x.split(" to ") for x in self.inputs["ApplicationWindows"].read().values.split(", ")]
         fields = self.inputs["Fields"].read().values
-        lulc = self.inputs["Lulc"].read().values
-        target_lulc_type = int(self.inputs["TargetLulcType"].read().values)
+        land_use_types = self.inputs["LandUseLandCoverTypes"].read().values
+        target_land_use_type = int(self.inputs["TargetLandUseLandCoverType"].read().values)
         application_rate = self.inputs["ApplicationRate"].read()
         technology_drift_reduction = self.inputs["TechnologyDriftReduction"].read()
         in_crop_buffer = self.inputs["InCropBuffer"].read().values
@@ -170,8 +174,8 @@ class PpmCalendar(base.Component):
             random.seed(random_seed)
         spray_applications = []
         applied_areas = []
-        for i in range(len(lulc)):
-            if lulc[i] == target_lulc_type:
+        for i in range(len(land_use_types)):
+            if land_use_types[i] == target_land_use_type:
                 field = fields[i]
                 applied_geometry = ogr.CreateGeometryFromWkb(self.inputs["FieldGeometries"].read(slices=(i,)).values[0])
                 if in_crop_buffer + in_field_margin > 0:

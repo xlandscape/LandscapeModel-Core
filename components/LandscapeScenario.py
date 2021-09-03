@@ -1,5 +1,5 @@
 """
-Class definition for the Landscape Model Lulc component.
+Class definition for the Landscape Model LandscapeScenario component.
 """
 from osgeo import gdal
 from osgeo import ogr
@@ -11,7 +11,7 @@ import attrib
 import numpy as np
 
 
-class Lulc(base.Component):
+class LandscapeScenario(base.Component):
     """
     Provides landscape scenarios to the Landscape Model.
 
@@ -25,30 +25,32 @@ class Lulc(base.Component):
     landscape scenario.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "`components.Lulc` component")
-    base.VERSION.changed("1.2.5", "`components.Lulc` can provide flexible set of outputs")
-    base.VERSION.changed("1.2.6", "`components.Lulc` provides absolute paths for directories also")
-    base.VERSION.changed("1.2.18", "`components.Lulc` has new input XML schema and checks layer consistency")
-    base.VERSION.changed("1.2.19", "`components.Lulc` ROI extent as meta-datum in package info file")
-    base.VERSION.changed("1.2.20", "`components.Lulc` distinguishes between supplementary data formats")
-    base.VERSION.changed("1.2.20", "`components.Lulc` can import additional attributes from base geometry shapefile")
-    base.VERSION.changed("1.2.34", "Better exceptions in `components.Lulc` ")
-    base.VERSION.changed("1.2.35", "Class checks in `components.Lulc` ")
-    base.VERSION.changed("1.3.2", "Enforce strict checks in `components.Lulc` ")
-    base.VERSION.changed("1.3.27", "`components.Lulc` specifies scales")
-    base.VERSION.changed("1.3.33", "`components.Lulc` checks input types strictly")
-    base.VERSION.changed("1.3.33", "`components.Lulc` checks for physical units")
-    base.VERSION.changed("1.3.33", "`components.Lulc` reports physical units to the data store")
-    base.VERSION.changed("1.3.33", "`components.Lulc` checks for scales")
-    base.VERSION.added("1.4.1", "Changelog in `components.Lulc` ")
-    base.VERSION.changed("1.4.1", "`components.Lulc` class documentation")
-    base.VERSION.fixed("1.4.7", "`components.Lulc` added path to proj.db zo fix errors on some systems")
-    base.VERSION.changed("1.4.9", "`components.Lulc` changelog uses markdown for code elements")
-    base.VERSION.changed("1.6.0", "`components.Lulc` updated path to Proj4 library")
-    base.VERSION.changed("1.6.0", "`components.Lulc` casts exported WKB geometries to bytes")
+    base.VERSION.added("1.1.1", "`components.LandscapeScenario` component")
+    base.VERSION.changed("1.2.5", "`components.LandscapeScenario` can provide flexible set of outputs")
+    base.VERSION.changed("1.2.6", "`components.LandscapeScenario` provides absolute paths for directories also")
+    base.VERSION.changed(
+        "1.2.18", "`components.LandscapeScenario` has new input XML schema and checks layer consistency")
+    base.VERSION.changed("1.2.19", "`components.LandscapeScenario` ROI extent as meta-datum in package info file")
+    base.VERSION.changed("1.2.20", "`components.LandscapeScenario` distinguishes between supplementary data formats")
+    base.VERSION.changed(
+        "1.2.20", "`components.LandscapeScenario` can import additional attributes from base geometry shapefile")
+    base.VERSION.changed("1.2.34", "Better exceptions in `components.LandscapeScenario` ")
+    base.VERSION.changed("1.2.35", "Class checks in `components.LandscapeScenario` ")
+    base.VERSION.changed("1.3.2", "Enforce strict checks in `components.LandscapeScenario` ")
+    base.VERSION.changed("1.3.27", "`components.LandscapeScenario` specifies scales")
+    base.VERSION.changed("1.3.33", "`components.LandscapeScenario` checks input types strictly")
+    base.VERSION.changed("1.3.33", "`components.LandscapeScenario` checks for physical units")
+    base.VERSION.changed("1.3.33", "`components.LandscapeScenario` reports physical units to the data store")
+    base.VERSION.changed("1.3.33", "`components.LandscapeScenario` checks for scales")
+    base.VERSION.added("1.4.1", "Changelog in `components.LandscapeScenario` ")
+    base.VERSION.changed("1.4.1", "`components.LandscapeScenario` class documentation")
+    base.VERSION.fixed("1.4.7", "`components.LandscapeScenario` added path to proj.db zo fix errors on some systems")
+    base.VERSION.changed("1.4.9", "`components.LandscapeScenario` changelog uses markdown for code elements")
+    base.VERSION.changed("1.6.0", "`components.LandscapeScenario` updated path to Proj4 library")
+    base.VERSION.changed("1.6.0", "`components.LandscapeScenario` casts exported WKB geometries to bytes")
 
     def __init__(self, name, observer, store):
-        super(Lulc, self).__init__(name, observer, store)
+        super(LandscapeScenario, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "BaseLandscapeGeometries",
@@ -88,7 +90,7 @@ class Lulc(base.Component):
         landscape_path = os.path.dirname(os.path.abspath(landscape_info_file))
         attributes = {
             landscape_info_xml.find("base/feature_id_attribute").text: "FeatureIds",
-            landscape_info_xml.find("base/feature_lulc_type_attribute").text: "LulcTypeIds"
+            landscape_info_xml.find("base/feature_type_attribute").text: "FeatureTypeIds"
         }
         for additionalAttribute in landscape_info_xml.find("base/additional_attributes"):
             attributes[additionalAttribute.text] = additionalAttribute.tag

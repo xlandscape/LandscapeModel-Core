@@ -13,13 +13,13 @@ import scipy.ndimage
 
 class LandscapeScenarioPreparation(base.Component):
     """
-    A component that prepares landscape scenarios ingested by the LULC component from geo-files.
+    A component that prepares landscape scenarios ingested by the LandscapeScenario component from geo-files.
 
     INPUTS
     OutputPath: The path where to write the landscape scenario to.
     LandscapeScenarioVersion: The version of the landscape scenario.
     LandscapeScenarioDescription: A description of the landscape scenario.
-    TargetFieldLulcType: The identifier of target LULC type.
+    TargetFieldLandUseLandCoverType: The identifier of the target land-use / land-cover type.
     BaseLandscapeGeometries: The base landscape geometries.
     FeatureIdAttribute: The name of the feature ID attribute.
     DEM: A digital elevation model.
@@ -41,11 +41,11 @@ class LandscapeScenarioPreparation(base.Component):
             base.Input("OutputPath", (), self.default_observer),
             base.Input("LandscapeScenarioVersion", (), self.default_observer),
             base.Input("LandscapeScenarioDescription", (), self.default_observer),
-            base.Input("TargetFieldLulcType", (), self.default_observer),
-            base.Input("HabitatLulcTypes", (), self.default_observer),
+            base.Input("TargetFieldLandUseLandCoverType", (), self.default_observer),
+            base.Input("HabitatLUseLandCoverTypes", (), self.default_observer),
             base.Input("BaseLandscapeGeometries", (), self.default_observer),
             base.Input("FeatureIdAttribute", (), self.default_observer),
-            base.Input("FeatureLulcTypeAttribute", (), self.default_observer),
+            base.Input("FeatureLandUsLandCoverTypeAttribute", (), self.default_observer),
             base.Input("DEM", (), self.default_observer)
         ])
         return
@@ -62,10 +62,10 @@ class LandscapeScenarioPreparation(base.Component):
         xml.etree.ElementTree.SubElement(meta, "version").text = self.inputs["LandscapeScenarioVersion"].read().values
         xml.etree.ElementTree.SubElement(meta, "description").text = self.inputs[
             "LandscapeScenarioDescription"].read().values
-        xml.etree.ElementTree.SubElement(meta, "target_lulc_type").text = self.inputs[
-            "TargetFieldLulcType"].read().values
-        xml.etree.ElementTree.SubElement(meta, "habitat_lulc_types").text = self.inputs[
-            "HabitatLulcTypes"].read().values
+        xml.etree.ElementTree.SubElement(meta, "target_type").text = self.inputs[
+            "TargetFieldLandUseLandCoverType"].read().values
+        xml.etree.ElementTree.SubElement(meta, "habitat_types").text = self.inputs[
+            "HabitatLandUseLandCoverTypes"].read().values
         ogr_driver = ogr.GetDriverByName("ESRI Shapefile")
         base_landscape_geometries = self.inputs["BaseLandscapeGeometries"].read().values
         ogr_data_set = ogr_driver.Open(base_landscape_geometries, 0)
@@ -81,8 +81,8 @@ class LandscapeScenarioPreparation(base.Component):
             base_landscape_geometries)
         xml.etree.ElementTree.SubElement(base_element, "feature_id_attribute").text = self.inputs[
             "FeatureIdAttribute"].read().values
-        xml.etree.ElementTree.SubElement(base_element, "feature_lulc_type_attribute").text = self.inputs[
-            "FeatureLulcTypeAttribute"].read().values
+        xml.etree.ElementTree.SubElement(base_element, "feature_type_attribute").text = self.inputs[
+            "FeatureLandUseLandCoverTypeAttribute"].read().values
         xml.etree.ElementTree.SubElement(base_element, "additional_attributes")
         supplementary = xml.etree.ElementTree.SubElement(landscape_package, "supplementary")
         raster_cols = int(round(extent[1] - extent[0]))
@@ -141,13 +141,13 @@ class LandscapeScenarioPreparation(base.Component):
             "flow_grid",
             {"deviatingExtent": "confirmed"}
         ).text = "flow.tif"
-        lulc_raster = raster_driver.Create(os.path.join(output_path, "lulc.tif"), raster_cols, raster_rows, 1,
-                                           gdal.GDT_UInt16, ["COMPRESS=LZW"])
-        lulc_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
-        lulc_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
-        gdal.RasterizeLayer(lulc_raster, [1], ogr_layer, burn_values=[1],
-                            options=["ATTRIBUTE=" + self.inputs["FeatureLulcTypeAttribute"].read().values])
-        xml.etree.ElementTree.SubElement(supplementary, "lulc_raster").text = "lulc.tif"
+        land_use_raster = raster_driver.Create(
+            os.path.join(output_path, "land_use.tif"), raster_cols, raster_rows, 1, gdal.GDT_UInt16, ["COMPRESS=LZW"])
+        land_use_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
+        land_use_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
+        gdal.RasterizeLayer(land_use_raster, [1], ogr_layer, burn_values=[1],
+                            options=["ATTRIBUTE=" + self.inputs["FeatureLandUseLandCoverTypeAttribute"].read().values])
+        xml.etree.ElementTree.SubElement(supplementary, "land_use_raster").text = "land_use.tif"
         analysis_buffer_raster = raster_driver.Create(os.path.join(output_path, "AnalysisBuffer.tif"), raster_cols,
                                                       raster_rows, 1, gdal.GDT_Byte, ["COMPRESS=LZW"])
         analysis_buffer_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
@@ -155,8 +155,8 @@ class LandscapeScenarioPreparation(base.Component):
         gdal.RasterizeLayer(analysis_buffer_raster, [1], ogr_layer, burn_values=[255])
         memory_driver = ogr.GetDriverByName("MEMORY")
         memory_data_set = memory_driver.CreateDataSource("analysisBuffers")
-        ogr_layer.SetAttributeFilter("{}={}".format(self.inputs["FeatureLulcTypeAttribute"].read().values,
-                                                    self.inputs["TargetFieldLulcType"].read().values))
+        ogr_layer.SetAttributeFilter("{}={}".format(self.inputs["FeatureLandUseLandCoverTypeAttribute"].read().values,
+                                                    self.inputs["TargetFieldLandUseLandCoverType"].read().values))
         for buffer_distance in [100, 50, 20, 5, 2, 1]:
             memory_layer = memory_data_set.CreateLayer("analysisBuffer.shp", ogr_layer.GetSpatialRef(),
                                                        ogr.wkbPolygon)

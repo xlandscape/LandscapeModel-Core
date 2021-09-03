@@ -12,7 +12,7 @@ from .ReportingDistribution import *
 from .ReportingHydrographicMap import *
 from .HydrologyFromTimeSeries import *
 from .LandscapeScenarioPreparation import *
-from .Lulc import *
+from .LandscapeScenario import *
 from .MarsWeather import *
 from .PpmCalendar import *
 from .TerRQ import *

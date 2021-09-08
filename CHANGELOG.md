@@ -1,11 +1,21 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-09-03.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-09-08.
+
+## [1.6.2] - 2021-09-08
+
+### Added
+
+### Changed
+
+### Fixed
+
 
 ## [1.6.1] - 2021-09-03
 
 ### Added
 
 ### Changed
+- updated Python packages
 - Updated `components.LandscapeScenarioPreparation` to new metadata format
 - renamed to `components.LandscapeScenario`
 - Renamed some parameters in `components.PpmCalendar`

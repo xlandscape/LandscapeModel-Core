@@ -18,11 +18,12 @@ class LogFileObserver(base.Observer):
     base.VERSION.added("1.4.1", "Changelog in `observer.LogFileObserver` ")
     base.VERSION.changed("1.4.1", "`observer.LogFileObserver` class documentation")
     base.VERSION.changed("1.5.3", "`observer.LogFileObserver` changelog uses markdown for code elements")
+    base.VERSION.changed("1.6.3", "`observer.LogFileObserver` uses utf-8 encoding for logfiles")
 
     def __init__(self, **keywords):
         super(LogFileObserver, self).__init__()
         os.makedirs(os.path.dirname(keywords["logfile"]), exist_ok=True)
-        self._file = open(keywords["logfile"], "a")
+        self._file = open(keywords["logfile"], "a", encoding="utf-8")
         return
 
     def __del__(self):

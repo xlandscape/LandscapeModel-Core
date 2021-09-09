@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-09-08.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-09-09.
+
+## [1.6.3] - 2021-09-09
+
+### Added
+
+### Changed
+- `observer.LogFileObserver` uses utf-8 encoding for logfiles
+
+### Fixed
+
 
 ## [1.6.2] - 2021-09-08
 

@@ -22,7 +22,7 @@ class LogFileObserver(base.Observer):
     def __init__(self, **keywords):
         super(LogFileObserver, self).__init__()
         os.makedirs(os.path.dirname(keywords["logfile"]), exist_ok=True)
-        self._file = open(keywords["logfile"], "a")
+        self._file = open(keywords["logfile"], "a", encoding="utf-8")
         return
 
     def __del__(self):

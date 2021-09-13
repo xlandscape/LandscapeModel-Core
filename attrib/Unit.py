@@ -2,6 +2,7 @@
 Class definition of the Landscape Model Unit attribute.
 """
 import base
+import numpy
 
 
 class Unit:
@@ -30,37 +31,53 @@ class Unit:
         if values.unit == self._unit:
             return base.CheckResult((4, "Values have unit " + str(self._unit)), values)
         original_unit = str(values.unit)
-        adapted_values = self.try_convert(values)
+        if isinstance(values.values, float) or isinstance(values.values, numpy.ndarray):
+            adapted_values = self.try_convert(values.values, original_unit)
+        elif isinstance(values.values, list) and all([isinstance(x, float) for x in values.values]):
+            adapted_values = [self.try_convert(x, original_unit) for x in values.values]
+            if adapted_values[0] is None:
+                adapted_values = None
+        else:
+            return base.CheckResult(
+                (
+                    self._severity,
+                    "Cannot convert values with unit " + original_unit + ", of " + str(type(values.values))
+                ),
+                values
+            )
         if adapted_values is not None:
             return base.CheckResult(
-                (3, "Values of unit " + original_unit + " have been converted to " + str(adapted_values.unit)),
-                adapted_values
+                (3, "Values of unit " + original_unit + " have been converted to " + str(self.unit)),
+                base.Values(adapted_values, values.extension, self._unit, values.scales)
             )
         return base.CheckResult(
             (self._severity, "Values have unit " + original_unit + ", not " + str(self._unit)),
             values
         )
 
-    def try_convert(self, values):
+    def try_convert(self, value, unit):
         """
-        Tries to convert values with one physical unit to another physical unit.
-        :param values: The values to convert.
+        Tries to convert a value with one physical unit to another physical unit.
+        :param value: The value to convert.
+        :param unit: The unit the value to convert currently is in.
         :return: The converted values or None if no conversion is possible.
         """
-        if values.unit == "g/ha" and self._unit == "mg/m²":
-            return base.Values(values.values * .1, values.extension, self._unit, values.scales)
-        elif values.unit == "m³/d" and self._unit == "m³/s":
-            return base.Values(values.values / 86400, values.extension, self._unit, values.scales)
-        elif values.unit == "mg/m³" and self._unit == "ng/l":
-            return base.Values(values.values * 1e3, values.extension, self._unit, values.scales)
-        elif values.unit == "g/m³" and self._unit == "ng/l":
-            return base.Values(values.values * 1e6, values.extension, self._unit, values.scales)
-        elif values.unit == "1/h" and self._unit == "1/d":
-            return base.Values(values.values * 24, values.extension, self._unit, values.scales)
-        elif values.unit == "l/(ng*h)" and self._unit == "l/(ng*d)":
-            return base.Values(values.values * 24, values.extension, self._unit, values.scales)
-        elif values.unit == "g/m³" and self._unit == "mg/m³":
-            return base.Values(values.values * 1e3, values.extension, self._unit, values.scales)
+        if unit == "g/ha" and self._unit == "mg/m²":
+            return value * .1
+        elif unit == "m³/d" and self._unit == "m³/s":
+            return value / 86400
+        elif unit == "mg/m³" and self._unit == "ng/l":
+            return value * 1e3
+        elif unit == "g/m³" and self._unit == "ng/l":
+            return value * 1e6
+        elif unit == "1/h" and self._unit == "1/d":
+            return value * 24
+        elif unit == "l/(ng*h)" and self._unit == "l/(ng*d)":
+            return value * 24
+        elif unit == "g/m³" and self._unit == "mg/m³":
+            return value * 1e3
+        elif unit == "g/cm³" and self._unit == "kg/m³":
+            return value * 1e3
         return None
 
     @property

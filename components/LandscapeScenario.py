@@ -48,7 +48,8 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.4.9", "`components.LandscapeScenario` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.0", "`components.LandscapeScenario` updated path to Proj4 library")
     base.VERSION.changed("1.6.0", "`components.LandscapeScenario` casts exported WKB geometries to bytes")
-    base.VERSION.changed("1.6.1", "renamed to `components.LandscapeScenario`")
+    base.VERSION.changed("1.6.1", "Renamed to `components.LandscapeScenario`")
+    base.VERSION.changed("1.6.4", "`components.LandscapeScenario` reads physical units from package metadata")
 
     def __init__(self, name, observer, store):
         super(LandscapeScenario, self).__init__(name, observer, store)
@@ -197,16 +198,20 @@ class LandscapeScenario(base.Component):
                 self.outputs[entry.tag].set_values(entry.text)
         for entry in landscape_info_xml.find("supplementary_shapefiles"):
             attributes = {}
+            units = {}
             for attribute in entry.find("attributes"):
                 attributes[attribute.attrib["column"]] = entry.tag + "_" + attribute.tag
+                units[entry.tag + "_" + attribute.tag] = \
+                    attribute.attrib["unit"] if "unit" in attribute.attrib else None
             self.import_shapefile(
                 os.path.join(landscape_path, entry.find("file_name").text),
                 attributes,
-                geometry_output=entry.tag + "_geom"
+                geometry_output=entry.tag + "_geom",
+                units=units
             )
         return
 
-    def import_shapefile(self, file_name, attributes, is_base=False, geometry_output="Geometries"):
+    def import_shapefile(self, file_name, attributes, is_base=False, geometry_output="Geometries", units=None):
         """
         Imports a shapefile into the Landscape Model by storing its geometries and attributes.
         :param: file_name: The path and file name of the shapefile.
@@ -252,5 +257,8 @@ class LandscapeScenario(base.Component):
                 values[attribute[1]].append(value)
         self.outputs[geometry_output].set_values(geometries, scales="space/base_geometry")
         for value in values.items():
-            self.outputs[value[0]].set_values(value[1], scales="space/base_geometry")
+            unit = None
+            if units is not None and value[0] in units:
+                unit = units[value[0]]
+            self.outputs[value[0]].set_values(value[1], scales="space/base_geometry", unit=unit)
         return

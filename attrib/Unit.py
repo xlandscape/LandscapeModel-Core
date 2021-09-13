@@ -16,6 +16,8 @@ class Unit:
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Unit` ")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Unit` changelog uses markdown for code elements")
+    base.VERSION.added("1.6.4", "`attrib.Unit` support for lists")
+    base.VERSION.added("1.6.4", "Further unit conversion to `attrib.Unit` ")
 
     def __init__(self, expected_unit, severity=2):
         self._unit = expected_unit

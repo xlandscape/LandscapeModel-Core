@@ -48,7 +48,8 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.4.9", "`components.LandscapeScenario` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.0", "`components.LandscapeScenario` updated path to Proj4 library")
     base.VERSION.changed("1.6.0", "`components.LandscapeScenario` casts exported WKB geometries to bytes")
-    base.VERSION.changed("1.6.1", "renamed to `components.LandscapeScenario`")
+    base.VERSION.changed("1.6.1", "Renamed to `components.LandscapeScenario`")
+    base.VERSION.changed("1.6.4", "`components.LandscapeScenario` reads physical units from package metadata")
 
     def __init__(self, name, observer, store):
         super(LandscapeScenario, self).__init__(name, observer, store)

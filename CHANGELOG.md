@@ -1,5 +1,17 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-09-09.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-09-13.
+
+## [1.6.4] - 2021-09-13
+
+### Added
+- `attrib.Unit` support for lists
+- Further unit conversion to `attrib.Unit` 
+
+### Changed
+- `components.LandscapeScenario` reads physical units from package metadata
+
+### Fixed
+
 
 ## [1.6.3] - 2021-09-09
 
@@ -27,7 +39,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Changed
 - updated Python packages
 - Updated `components.LandscapeScenarioPreparation` to new metadata format
-- renamed to `components.LandscapeScenario`
+- Renamed to `components.LandscapeScenario`
 - Renamed some parameters in `components.PpmCalendar`
 - `components` imports updated to reflect renamed components
 

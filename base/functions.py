@@ -39,6 +39,7 @@ base.VERSION.changed("1.4.11", "parsing of XML parameters strips whitespaces in 
 base.VERSION.fixed("1.5.4", "stripping of raw configuration values in `base.functions` ")
 base.VERSION.changed("1.5.4", "parsing of raw parameters in `base.functions` ")
 base.VERSION.added("1.5.9", "`base.functions.run_process()` option to run external processes minimized")
+base.VERSION.added("1.6.5", "`base.functions.run_process()` makes use of new Python dict union operator")
 
 
 def cartesian_product(*arrays):
@@ -204,7 +205,7 @@ def run_process(command, working_directory, observer, env=None, minimized=True):
         stderr=subprocess.STDOUT,
         text=True,
         bufsize=1,
-        env=dict(env, SystemRoot=os.getenv("SystemRoot")),
+        env=env | {"SystemRoot": os.getenv("SystemRoot")},
         startupinfo=startupinfo
     )
     for text in iter(result.stdout.readline, ''):

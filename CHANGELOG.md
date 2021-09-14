@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-09-13.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-09-14.
+
+## [1.6.5] - 2021-09-14
+
+### Added
+- `base.functions.run_process()` makes use of new Python dict union operator
+
+### Changed
+
+### Fixed
+
 
 ## [1.6.4] - 2021-09-13
 

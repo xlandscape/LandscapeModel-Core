@@ -204,7 +204,7 @@ def run_process(command, working_directory, observer, env=None, minimized=True):
         stderr=subprocess.STDOUT,
         text=True,
         bufsize=1,
-        env=dict(env, SystemRoot=os.getenv("SystemRoot")),
+        env=env | {"SystemRoot": os.getenv("SystemRoot")},
         startupinfo=startupinfo
     )
     for text in iter(result.stdout.readline, ''):

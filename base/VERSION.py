@@ -4,7 +4,8 @@ The changelog of the Landscape Model base module.
 import base.VersionInfo
 
 # RELEASES
-VERSION = base.VersionCollection(
+VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.7.0", "2021-09-17"),
     base.VersionInfo("1.6.5", "2021-09-14"),
     base.VersionInfo("1.6.4", "2021-09-13"),
     base.VersionInfo("1.6.3", "2021-09-09"),
@@ -101,19 +102,23 @@ VERSION.changed("1.4.9", "`base` changelog uses markdown for code elements")
 VERSION.fixed("1.4.10", "automatic documentation error")
 VERSION.changed("1.5.5", "renamed `LICENSE.txt` to `LICENSE` ")
 VERSION.fixed("1.5.5", "spelling error in readme")
+VERSION.added("1.7.0", "Type hints to `base.VERSION` ")
 
 # CHANGELOG VersionCollection.py
 VERSION.added("1.4.1", "`base.VersionCollection` for managing revision history")
 VERSION.changed("1.5.0", "fixed spelling in `base.VersionCollection` ")
 VERSION.added("1.5.0", "properties `roadmap`, `authors` and `acknowledgements` to `base.VersionCollection` ")
+VERSION.added("1.7.0", "Type hints to `base.VersionCollection` ")
 
 # CHANGELOG VersionInfo.py
 VERSION.added("1.1.6", "`base.VersionInfo` for describing individual revisions")
 VERSION.changed("1.3.27", "`base.VersionInfo` refactored")
 VERSION.changed("1.4.1", "`base.VersionInfo` completely rewritten to move changelogs nearer to code")
+VERSION.added("1.7.0", "Type hints to `base.VersionInfo` ")
 
 # CHANGELOG init.py
 VERSION.changed("1.4.9", "`init.py` spell check exclusions")
+VERSION.added("1.7.0", "Type hints to `init.py` ")
 
 # CHANGELOG document.py
 VERSION.added("1.4.9", "`document.py` ")

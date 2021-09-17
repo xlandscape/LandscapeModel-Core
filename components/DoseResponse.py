@@ -4,6 +4,7 @@ Class definition of the Dose-Response Landscape Model component.
 import numpy as np
 import base
 import attrib
+import typing
 
 
 class DoseResponse(base.Component):
@@ -26,9 +27,11 @@ class DoseResponse(base.Component):
     base.VERSION.fixed("1.4.1", "`components.DoseResponse` attrib namespace reference")
     base.VERSION.changed("1.4.9", "`components.DoseResponse` data type access")
     base.VERSION.changed("1.5.3", "`components.DoseResponse` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `components.DoseResponse` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DoseResponse` with base class")
 
-    def __init__(self, name, observer, store):
-        super(DoseResponse, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(DoseResponse, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
             self,
             [
@@ -53,10 +56,9 @@ class DoseResponse(base.Component):
                 )
             ]
         )
-        self._outputs = base.OutputContainer(self, [base.Output("Effect", store, self)])
-        return
+        self._outputs = base.OutputContainer(self, [base.Output("Effect", default_store, self)])
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -77,4 +79,3 @@ class DoseResponse(base.Component):
             exposure = self.inputs["Exposure"].read(slices=chunkSlice).values
             effect = 1 / (1 + np.exp(slope_factor * (np.log(exposure) - np.log(ec50))))
             self.outputs["Effect"].set_values(effect, slices=chunkSlice, create=False, calculate_max=True)
-        return

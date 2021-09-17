@@ -3,6 +3,7 @@ Class definition of the Landscape Model VersionInfo class.
 """
 import distutils.version
 import datetime
+import typing
 
 
 class VersionInfo(distutils.version.StrictVersion):
@@ -11,43 +12,39 @@ class VersionInfo(distutils.version.StrictVersion):
     """
     # CHANGELOG can be found in VERSION.py to avoid circular references
 
-    def __init__(self, version, date):
+    def __init__(self, version: str, date: typing.Optional[str]) -> None:
         super(VersionInfo, self).__init__(version)
         self._date = datetime.datetime.strptime(date, "%Y-%m-%d").date() if date else None
         self._additions = []
         self._changes = []
         self._fixes = []
-        return
 
-    def added(self, message):
+    def added(self, message: str) -> None:
         """
         Adds an addition to this version.
         :param message: A message describing the addition.
         :return: Nothing.
         """
         self._additions.append(message)
-        return
 
-    def changed(self, message):
+    def changed(self, message: str) -> None:
         """
         Adds a change to this version.
         :param message: A message describing the change.
         :return: Nothing.
         """
         self._changes.append(message)
-        return
 
-    def fixed(self, message):
+    def fixed(self, message: str) -> None:
         """
         Adds a fix to this version.
         :param message: A message describing the fix.
         :return: Nothing.
         """
         self._fixes.append(message)
-        return
 
     @property
-    def date(self):
+    def date(self) -> typing.Optional[datetime.date]:
         """
         The release date of the version.
         :return: A date.
@@ -55,7 +52,7 @@ class VersionInfo(distutils.version.StrictVersion):
         return self._date
 
     @property
-    def additions(self):
+    def additions(self) -> list[str]:
         """
         The additions of this version.
         :return: A list of messages.
@@ -63,7 +60,7 @@ class VersionInfo(distutils.version.StrictVersion):
         return self._additions
 
     @property
-    def changes(self):
+    def changes(self) -> list[str]:
         """
         The changes of this version.
         :return: A list of messages.
@@ -71,7 +68,7 @@ class VersionInfo(distutils.version.StrictVersion):
         return self._changes
 
     @property
-    def fixes(self):
+    def fixes(self) -> list[str]:
         """
         The fixes of this version.
         :return: A list of messages.

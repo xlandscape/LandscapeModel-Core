@@ -3,6 +3,7 @@ Class definition of the Landscape Model DeleteFolder component.
 """
 import base
 import shutil
+import typing
 
 
 class DeleteFolder(base.Component):
@@ -18,17 +19,17 @@ class DeleteFolder(base.Component):
     # CHANGELOG
     base.VERSION.added("1.4.4", "`components.DeleteFolder` component")
     base.VERSION.changed("1.5.3", "`components.DeleteFolder` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `components.DeleteFolder` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DeleteFolder` with base class")
 
-    def __init__(self, name, observer, store):
-        super(DeleteFolder, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(DeleteFolder, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [base.Input("Path", (), self.default_observer)])
         self._outputs = base.OutputContainer(self, [])
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing
         """
         shutil.rmtree(self._inputs["Path"].read().values)
-        return

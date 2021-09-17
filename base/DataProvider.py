@@ -13,19 +13,19 @@ class DataProvider:
     base.VERSION.changed("1.3.13", "`base.DataProvider` refactored")
     base.VERSION.added("1.4.1", "Changelog in `base.DataProvider`")
     base.VERSION.changed("1.5.3", "`base.DataProvider` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `base.DataProvider` ")
 
-    def __init__(self, output):
+    def __init__(self, output: base.Output) -> None:
         self._output = output
-        return
 
-    def describe(self):
+    def describe(self) -> dict:
         """
         Describes a data source.
         :return: A dictionary describing the data source.
         """
         return self.output.describe()
 
-    def get_values(self, **keywords):
+    def get_values(self, **keywords) -> base.Values:
         """
         Gets the values from the data provider.
         :param keywords: Additional keywords controlling the data retrieval.
@@ -35,7 +35,7 @@ class DataProvider:
         return values
 
     @property
-    def output(self):
+    def output(self) -> base.Output:
         """
         The Landscape Model component output associate with the data provider.
         :return: A Landscape Model component output.

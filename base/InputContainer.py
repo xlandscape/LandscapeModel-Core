@@ -2,11 +2,12 @@
 Class definition of the Landscape Model InputContainer class.
 """
 import base
+import typing
 
 
 class InputContainer:
     """
-    A container fr component inputs.
+    A container for component inputs.
     """
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.InputContainer` class for collecting the inputs of a component")
@@ -14,19 +15,23 @@ class InputContainer:
     base.VERSION.changed("1.3.33", "`base.InputContainer` refactored")
     base.VERSION.added("1.4.1", "Changelog in `base.InputContainer` ")
     base.VERSION.changed("1.5.3", "`base.InputContainer` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `base.InputContainer` ")
 
-    def __init__(self, component=None, inputs=None):
+    def __init__(
+            self,
+            component: typing.Optional["base.Component"] = None,
+            inputs: typing.Optional[typing.Sequence[base.Input]] = None
+    ) -> None:
         self._items = {}
         self._component = component
         if inputs is not None:
             for component_input in inputs:
                 self._items[component_input.name] = component_input
-        return
 
-    def __contains__(self, item):
+    def __contains__(self, item: base.Input) -> bool:
         return item in self._items
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> base.Input:
         try:
             component_input = self._items[key]
         except KeyError:
@@ -36,24 +41,22 @@ class InputContainer:
                 raise KeyError("There is no output named '" + key + "'")
         return component_input
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: base.Output) -> None:
         self[key].provider = base.DataProvider(value)
-        return
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[base.Input]:
         return self._items.values().__iter__()
 
-    def append(self, component_input):
+    def append(self, component_input: base.Input) -> None:
         """
         Appends an input to the input container.
         :param component_input: The input to append.
         :return: Nothing.
         """
         self._items[component_input.name] = component_input
-        return
 
     @property
-    def component(self):
+    def component(self) -> typing.Optional["base.Component"]:
         """
         Gets the component to which the input container belongs.
         :return: The component of the input container.

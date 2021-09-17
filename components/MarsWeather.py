@@ -5,6 +5,7 @@ import datetime
 import numpy as np
 import base
 import attrib
+import typing
 
 
 class MarsWeather(base.Component):
@@ -37,9 +38,11 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.5.1", "small changes in `components.MarsWeather` changelog")
     base.VERSION.changed("1.5.3", "`components.MarsWeather` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.4", "`components.MarsWeather` warning if weather file misses parameters")
+    base.VERSION.added("1.7.0", "Type hints to `components.MarsWeather` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.MarsWeather` with base class")
 
-    def __init__(self, name, observer, store):
-        super(MarsWeather, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(MarsWeather, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer),
             base.Input(
@@ -56,11 +59,11 @@ class MarsWeather(base.Component):
         self._outputs = base.OutputContainer(
             self,
             (
-                base.Output("TEMPERATURE_AVG", store, self),
-                base.Output("PRECIPITATION", store, self),
-                base.Output("ET0", store, self),
-                base.Output("WINDSPEED", store, self),
-                base.Output("RADIATION", store, self)
+                base.Output("TEMPERATURE_AVG", default_store, self),
+                base.Output("PRECIPITATION", default_store, self),
+                base.Output("ET0", default_store, self),
+                base.Output("WINDSPEED", default_store, self),
+                base.Output("RADIATION", default_store, self)
             )
         )
         self._units = {
@@ -70,9 +73,8 @@ class MarsWeather(base.Component):
             "WINDSPEED": "m/s",
             "RADIATION": "kJ/(m²*d)"
         }
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -93,4 +95,3 @@ class MarsWeather(base.Component):
                 output.set_values(output_data, scales="time/day", unit=self._units[component_output.name])
             else:
                 self.default_observer.write_message(2, "Weather file does not contain field " + component_output.name)
-        return

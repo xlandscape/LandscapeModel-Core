@@ -1,10 +1,12 @@
 """
 Class definition of a Landscape Model console observer.
 """
+import multiprocessing
 
 import colorama
 import sys
 import base
+import typing
 
 
 class ConsoleObserver(base.Observer):
@@ -24,15 +26,15 @@ class ConsoleObserver(base.Observer):
     base.VERSION.added("1.4.1", "Changelog in `observer.ConsoleObserver` ")
     base.VERSION.changed("1.4.1", "`observer.ConsoleObserver` class documentation")
     base.VERSION.changed("1.5.3", "`observer.ConsoleObserver` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `observer.ConsoleObserver` ")
 
-    def __init__(self, lock=None, print_output=False):
+    def __init__(self, lock: typing.Optional[multiprocessing.Lock] = None, print_output: bool = False) -> None:
         super(ConsoleObserver, self).__init__()
         colorama.init()
         self._lock = lock
         self._print_output = print_output
-        return
 
-    def experiment_finished(self, detail=""):
+    def experiment_finished(self, detail: str = "") -> None:
         """
         Reacts when an experiment is completed.
         :param detail: Additional details to report.
@@ -40,9 +42,8 @@ class ConsoleObserver(base.Observer):
         """
         self.write_message(4, "Experiment finished")
         self.write_message(5, detail)
-        return
 
-    def input_get_values(self, component_input):
+    def input_get_values(self, component_input: base.Input) -> None:
         """
         Reacts when values are requested from a component input.
         :param component_input: The input being requested.
@@ -50,9 +51,8 @@ class ConsoleObserver(base.Observer):
         """
         for message in component_input.messages:
             self.write_message(message[0], component_input.name + ":" + message[1] + ":GetValues", message[2])
-        return
 
-    def mc_run_finished(self, detail=""):
+    def mc_run_finished(self, detail: str = "") -> None:
         """
         Reacts when a Monte Carlo run is finished.
         :param detail: Additional details to report.
@@ -60,9 +60,8 @@ class ConsoleObserver(base.Observer):
         """
         self.write_message(4, "MC run finished")
         self.write_message(5, detail)
-        return
 
-    def store_set_values(self, level, store_name, message):
+    def store_set_values(self, level: int, store_name: str, message: str) -> None:
         """
         Reacts when values are stored.
         :param level: The severity of the message.
@@ -71,9 +70,8 @@ class ConsoleObserver(base.Observer):
         :return: Nothing.
         """
         self.write_message(level, store_name + ":SetValues", message)
-        return
 
-    def write_message(self, level, message, detail=""):
+    def write_message(self, level: int, message: str, detail: str = "") -> None:
         """
         Sends a message to the reporter.
         :param level: The severity of the message.
@@ -99,10 +97,8 @@ class ConsoleObserver(base.Observer):
         else:
             severity = ""
             color = colorama.Fore.WHITE
-
         if self._lock is not None:
             self._lock.acquire()
-
         if detail == "":
             self.write("{}{:6s}{}\n".format(color, severity, message) + colorama.Style.RESET_ALL)
         else:
@@ -111,27 +107,24 @@ class ConsoleObserver(base.Observer):
 
         if self._lock is not None:
             self._lock.release()
-        return
 
-    def mc_run_started(self, composition):
+    def mc_run_started(self, composition: typing.Mapping[str, base.Component]) -> None:
         """
         Reacts when a Monte Carlo run has started.
         :param composition: The composition of the Monte Carlo run.
         :return: Nothing.
         """
         self.write_message(5, "MC run start")
-        return
 
-    def flush(self):
+    def flush(self) -> None:
         """
         Flushes the buffer of the reporter.
         :return: Nothing.
         """
         if not self._print_output:
             sys.__stdout__.flush()
-        return
 
-    def write(self, text):
+    def write(self, text: str) -> None:
         """
         Requests the reporter to write text.
         :param text: The text to write.
@@ -141,4 +134,3 @@ class ConsoleObserver(base.Observer):
             print(text)
         else:
             sys.__stdout__.write(text)
-        return

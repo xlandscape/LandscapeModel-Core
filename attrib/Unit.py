@@ -3,9 +3,10 @@ Class definition of the Landscape Model Unit attribute.
 """
 import base
 import numpy
+import typing
 
 
-class Unit:
+class Unit(base.DataAttribute):
     """
     Checks whether values have a specific physical unit.
     """
@@ -18,13 +19,14 @@ class Unit:
     base.VERSION.changed("1.4.9", "`attrib.Unit` changelog uses markdown for code elements")
     base.VERSION.added("1.6.4", "`attrib.Unit` support for lists")
     base.VERSION.added("1.6.4", "Further unit conversion to `attrib.Unit` ")
+    base.VERSION.changed("1.7.0", "`attrib.Unit` got new base class `base.DataAttribute` ")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Unit` ")
 
-    def __init__(self, expected_unit, severity=2):
+    def __init__(self, expected_unit: typing.Optional[str], severity: int = 2) -> None:
         self._unit = expected_unit
         self._severity = severity
-        return
 
-    def check(self, values):
+    def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values of class compliance.
         :param values: The values to check.
@@ -57,7 +59,7 @@ class Unit:
             values
         )
 
-    def try_convert(self, value, unit):
+    def try_convert(self, value: float, unit: str) -> typing.Optional[float]:
         """
         Tries to convert a value with one physical unit to another physical unit.
         :param value: The value to convert.
@@ -83,7 +85,7 @@ class Unit:
         return None
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         Gets the name of the attribute checker.
         :return: A string containing the name of the attribute checker.
@@ -91,7 +93,7 @@ class Unit:
         return "UnitChecker"
 
     @property
-    def severity(self):
+    def severity(self) -> int:
         """
         Gets the severity of violations.
         :return: A number representing the severity of violations.
@@ -99,7 +101,7 @@ class Unit:
         return self._severity
 
     @property
-    def unit(self):
+    def unit(self) -> str:
         """
         Gets the unit to check for.
         :return: A string specifying the unit.

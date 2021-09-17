@@ -3,11 +3,12 @@ The Landscape Model startup script.
 """
 import os
 import sys
+import typing
 
 # CHANGELOG can be found in base\VERSION.py
 
 
-def run(argument, basedir=None):
+def run(argument: str, basedir: typing.Optional[str] = None) -> None:
     """
     Runs the Landscape Model.
     :param argument: The startup argument.
@@ -38,10 +39,9 @@ def run(argument, basedir=None):
             run(os.path.join(argument, elem), basedir)
     else:
         print("ERROR: Unknown file extension of " + argument)
-    return
 
 
-def start_notebook():
+def start_notebook() -> None:
     """
     Starts a Jupyter notebook for the current Landscape Model variant.
     :return: Nothing.
@@ -55,7 +55,6 @@ def start_notebook():
         r'--notebook-dir={}'.format(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "analysis")))
     ])
     app.start()
-    return
 
 
 if __name__ == "__main__":

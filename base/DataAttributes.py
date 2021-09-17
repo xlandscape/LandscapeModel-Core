@@ -2,6 +2,7 @@
 Class definition of the Landscape Model DataAttributes class.
 """
 import base
+import typing
 
 
 class DataAttributes:
@@ -14,19 +15,18 @@ class DataAttributes:
     base.VERSION.added("1.3.33", "`base.DataAttributes.append()` for dynamically adding data attributes")
     base.VERSION.added("1.4.1", "Changelog in `base.DataAttributes`")
     base.VERSION.changed("1.5.3", "`base.DataAttributes` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `base.DataAttributes` ")
 
-    def __init__(self, attributes):
-        self._attributes = attributes
-        return
+    def __init__(self, attributes: typing.Sequence[base.DataAttribute]) -> None:
+        self._attributes = list(attributes)
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[base.DataAttribute]:
         return self._attributes.__iter__()
 
-    def append(self, attribute):
+    def append(self, attribute: base.DataAttribute) -> None:
         """
         Appends another attribute to the list of present attributes.
         :param attribute: The attribute to append.
         :return: Nothing
         """
         self._attributes.append(attribute)
-        return

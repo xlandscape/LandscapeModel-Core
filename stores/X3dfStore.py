@@ -1,7 +1,6 @@
 """
 A class encapsulating an X3df data store.
 """
-
 import datetime
 import h5py
 import numpy
@@ -10,6 +9,7 @@ import pickle
 import glob
 import shutil
 import base
+import typing
 
 
 class X3dfStore(base.Store):
@@ -52,8 +52,16 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.4.9", "`store.X3dfStore` data type access")
     base.VERSION.changed("1.5.3", "`store.X3fdStore` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.0", "`store.X3dfStore` acknowledges that HDF-stored strings are now returned as bytes")
+    base.VERSION.added("1.7.0", "Type hints to `stores.X3dfStore` ")
 
-    def __init__(self, file_path, observer=None, mode="a", initialization=None, identifier=0):
+    def __init__(
+            self,
+            file_path: str,
+            observer: typing.Optional[base.Observer] = None,
+            mode: str = "a",
+            initialization: typing.Optional[str] = None,
+            identifier: int = 0
+    ) -> None:
         hdf5_file = os.path.join(file_path, "arr.dat")
         if mode != "r":
             try:
@@ -70,17 +78,15 @@ class X3dfStore(base.Store):
             shutil.copyfile(selected_source_run, hdf5_file)
         self._f = h5py.File(hdf5_file, mode)
         self._observer = observer
-        return
 
-    def close(self):
+    def close(self) -> None:
         """
         Closes the data store.
         :return:
         """
         self._f.close()
-        return
 
-    def describe(self, name):
+    def describe(self, name: str) -> dict[str, typing.Any]:
         """
         Returns metadata about a data set.
         :param name: The name of the data set.
@@ -95,7 +101,7 @@ class X3dfStore(base.Store):
             "scales": data_set.attrs.get("scales", "global")
         }
 
-    def get_values(self, name, **keywords):
+    def get_values(self, name: str, **keywords) -> typing.Any:
         """
         Retrieves values from a data set.
         :param name: The name of the data set.
@@ -147,18 +153,18 @@ class X3dfStore(base.Store):
 
     def set_values(
             self,
-            name,
-            values,
-            scales=None,
-            default=None,
-            unit=None,
-            shape=None,
-            data_type=None,
-            chunks=None,
-            create=True,
-            slices=None,
-            calculate_max=False
-    ):
+            name: str,
+            values: typing.Any,
+            scales: typing.Optional[str] = None,
+            default: typing.Any = None,
+            unit: typing.Optional[str] = None,
+            shape: typing.Optional[typing.Sequence[int]] = None,
+            data_type: typing.Optional[type] = None,
+            chunks: typing.Optional[typing.Sequence[slice]] = None,
+            create: bool = True,
+            slices: typing.Optional[typing.Sequence[slice]] = None,
+            calculate_max: bool = False
+    ) -> None:
         """
         Sets the values of a data set.
         :param name: The name of the data set.
@@ -268,7 +274,7 @@ class X3dfStore(base.Store):
             self._f[name].attrs["unit"] = unit
         return
 
-    def has_dataset(self, name, partial=False):
+    def has_dataset(self, name: str, partial: bool = False) -> bool:
         """
         Checks whether a dataset exists in the store or not.
         :param name: The name of the dataset.

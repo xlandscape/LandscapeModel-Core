@@ -1,11 +1,10 @@
 """
 Class definition of the Landscape Model Ontology checker.
 """
-# import owl ready2
 import base
 
 
-class Ontology:
+class Ontology(base.DataAttribute):
     """
     Checks for semantic relationships between values.
     """
@@ -15,32 +14,23 @@ class Ontology:
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Ontology`")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Ontology` changelog uses markdown for code elements")
+    base.VERSION.changed("1.7.0", "`attrib.Ontology` got new base class `base.DataAttribute` ")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Ontology` ")
+    base.VERSION.changed("1.7.0", "Removed deactivated code in `attrib.Ontology` ")
 
-    # onto = owl ready2.get_ontology("file:///" + )
-    # owl ready2.onto_path.append(r"F:\Temp\onto")
-    # onto = owl ready2.get_ontology(r"file://F:\Temp\pizza_onto.owl")
-    # onto.load()
-    def __init__(self, iri):
+    def __init__(self, iri: str) -> None:
         self._iri = iri
-        return
-    
-    @staticmethod
-    def check(values):
+
+    def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks whether values apply to an ontological definition.
         :param values: The values to check.
         :return: A CheckResult object.
         """
-        # owl ready2.onto_path.append(os.path.join(os.path.dir name(os.path.dir name(
-        # os.path.dir name(__file__))), "onto"))
-        # onto = owl ready2.get_ontology("abc.owl")
-        # onto = get_ontology("http://x3onto.org/landscape-model.owl")
-        # onto.load()
-        # onto = Ontology("")
         return base.CheckResult((4, "Ontology checked"), values)
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         Gets the name of the attribute checker.
         :return: A string containing the name of the attribute checker.

@@ -1,7 +1,10 @@
 """
 A collection of version information.
 """
+import typing
+
 import distutils.version
+import base
 
 
 class VersionCollection:
@@ -10,19 +13,18 @@ class VersionCollection:
     """
     # CHANGELOG can be found in VERSION.py to avoid circular references
 
-    def __init__(self, *versions):
+    def __init__(self, *versions: base.VersionInfo) -> None:
         self._versions = versions
         self._roadmap = []
         self._authors = []
         self._acknowledgements = []
-        return
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[base.VersionInfo]:
         self._sorted_versions = sorted(self._versions, reverse=True)
         self._idx = 0
         return self
 
-    def __next__(self):
+    def __next__(self) -> base.VersionInfo:
         if self._idx < len(self._sorted_versions):
             version = self._sorted_versions[self._idx]
             self._idx += 1
@@ -30,7 +32,7 @@ class VersionCollection:
         else:
             raise StopIteration
 
-    def added(self, version, message):
+    def added(self, version: str, message: str) -> None:
         """
         Adds a message to the additions of a version.
         :param version: The version to which an element was added.
@@ -42,9 +44,8 @@ class VersionCollection:
         if len(result) != 1:
             raise IndexError("Version number not found: " + version)
         result[0].added(message)
-        return
 
-    def changed(self, version, message):
+    def changed(self, version: str, message: str) -> None:
         """
         Adds a message to the changes of a version.
         :param version: The version in which an element was changed.
@@ -56,9 +57,8 @@ class VersionCollection:
         if len(result) != 1:
             raise IndexError("Version number not found: " + version)
         result[0].changed(message)
-        return
 
-    def fixed(self, version, message):
+    def fixed(self, version: str, message: str) -> None:
         """
         Adds a message to the fixes of a version.
         :param version: The version in which an element was fixed.
@@ -70,10 +70,9 @@ class VersionCollection:
         if len(result) != 1:
             raise IndexError("Version number not found: " + version)
         result[0].fixed(message)
-        return
 
     @property
-    def latest(self):
+    def latest(self) -> base.VersionInfo:
         """
         The latest version in the collection.
         :return: The highest version number found in the collection.
@@ -81,7 +80,7 @@ class VersionCollection:
         return max(self._versions)
 
     @property
-    def roadmap(self):
+    def roadmap(self) -> list[str]:
         """
         Planned changes to current version.
         :return: A list of changes planned for future versions.
@@ -89,7 +88,7 @@ class VersionCollection:
         return self._roadmap
 
     @property
-    def authors(self):
+    def authors(self) -> list[str]:
         """
         The authors that contributed to the project.
         :return: A list of contributing authors.
@@ -97,7 +96,7 @@ class VersionCollection:
         return self._authors
 
     @property
-    def acknowledgements(self):
+    def acknowledgements(self) -> list[str]:
         """
         Persons or project of special mention.
         :return: A list of acknowledged persons and projects.

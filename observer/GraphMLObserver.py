@@ -4,6 +4,7 @@ Class definition of a GraphML observer.
 
 import base
 import xml.etree.ElementTree
+import typing
 
 
 class GraphMLObserver(base.Observer):
@@ -22,58 +23,15 @@ class GraphMLObserver(base.Observer):
     base.VERSION.added("1.4.1", "Changelog in `observer.GraphMLObserver` ")
     base.VERSION.changed("1.4.1", "`observer.GraphMLObserver` class documentation")
     base.VERSION.changed("1.5.3", "`observer.GraphMLObserver` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `observer.GraphMLObserver` ")
+    base.VERSION.changed("1.7.0", "Removed unused methods in `observer.GraphMLObserver` ")
 
-    def __init__(self, output_file, include_modules):
+    def __init__(self, output_file: str, include_modules: str) -> None:
         super(GraphMLObserver, self).__init__()
         self._outputFile = output_file
         self._include_modules = str.lower(include_modules) == "true"
-        return
 
-    def experiment_finished(self, detail=None):
-        """
-        Reacts when an experiment is completed.
-        :param detail: Additional details to report.
-        :return: Nothing.
-        """
-        return
-
-    def input_get_values(self, component_input):
-        """
-        Reacts when values are requested from a component input.
-        :param component_input: The input being requested.
-        :return: Nothing.
-        """
-        return
-
-    def mc_run_finished(self, detail=None):
-        """
-        Reacts when a Monte Carlo run is finished.
-        :param detail: Additional details to report.
-        :return: Nothing.
-        """
-        return
-
-    def store_set_values(self, level, store_name, message):
-        """
-        Reacts when values are stored.
-        :param level: The severity of the message.
-        :param store_name: The storage name.
-        :param message: The message to report.
-        :return: Nothing.
-        """
-        return
-
-    def write_message(self, level, message, detail=None):
-        """
-        Sends a message to the reporter.
-        :param level: The severity of the message.
-        :param message: The message to report.
-        :param detail: Additional details to report.
-        :return: Nothing.
-        """
-        return
-
-    def mc_run_started(self, composition):
+    def mc_run_started(self, composition: typing.Mapping[str, base.Component]) -> None:
         """
         Reacts when a Monte Carlo run has started.
         :param composition: The composition of the Monte Carlo run.
@@ -119,22 +77,6 @@ class GraphMLObserver(base.Observer):
         for module_name in modules:
             graph.append(self._create_node(module_name, "module"))
         xml.etree.ElementTree.ElementTree(graph_ml).write(self._outputFile, encoding="utf-8", xml_declaration=True)
-        return
-
-    def flush(self):
-        """
-        Flushes the buffer of the reporter.
-        :return: Nothing.
-        """
-        return
-
-    def write(self, text):
-        """
-        Requests the reporter to write text.
-        :param text: The text to write.
-        :return: Nothing.
-        """
-        return
 
     @staticmethod
     def _create_node(name, entity_type):

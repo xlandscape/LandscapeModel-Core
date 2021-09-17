@@ -7,6 +7,7 @@ import numpy as np
 import base
 import attrib
 import os
+import typing
 
 
 class HydrologyFromTimeSeries(base.Component):
@@ -53,8 +54,8 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.4.9", "renamed `components.HydrologyFromTimeSeries` component")
     base.VERSION.changed("1.6.0", "`components.HydrologyFromTimeSeries` casts exported WKB geometries to bytes")
 
-    def __init__(self, name, observer, store):
-        super(HydrologyFromTimeSeries, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(HydrologyFromTimeSeries, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "TimeSeries",
@@ -83,19 +84,18 @@ class HydrologyFromTimeSeries(base.Component):
             )
         ])
         self._outputs = base.OutputContainer(self, [
-            base.Output("Flow", store, self),
-            base.Output("Depth", store, self),
-            base.Output("Reaches", store, self),
-            base.Output("TimeSeriesStart", store, self),
-            base.Output("TimeSeriesEnd", store, self),
-            base.Output("Volume", store, self),
-            base.Output("Area", store, self),
-            base.Output("InflowReaches", store, self),
-            base.Output("Inflow", store, self)
+            base.Output("Flow", default_store, self),
+            base.Output("Depth", default_store, self),
+            base.Output("Reaches", default_store, self),
+            base.Output("TimeSeriesStart", default_store, self),
+            base.Output("TimeSeriesEnd", default_store, self),
+            base.Output("Volume", default_store, self),
+            base.Output("Area", default_store, self),
+            base.Output("InflowReaches", default_store, self),
+            base.Output("Inflow", default_store, self)
         ])
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -195,4 +195,3 @@ class HydrologyFromTimeSeries(base.Component):
                     if np.any(np.isinf(inflows)):
                         raise ValueError("Unexpected temporal layout in file: " + inflow_file)
                     self.outputs["Inflow"].set_values(inflows, slices=(slice(number_hours), reach_index), create=False)
-        return

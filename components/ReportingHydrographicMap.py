@@ -12,6 +12,7 @@ import matplotlib.cm
 import numpy
 import datetime
 import os
+import typing
 
 
 class ReportingHydrographicMap(base.Component):
@@ -46,19 +47,19 @@ class ReportingHydrographicMap(base.Component):
     base.VERSION.changed("1.4.9", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` markdown usage extended")
 
-    def __init__(self, name, default_observer, store):
-        super(ReportingHydrographicMap, self).__init__(name, default_observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(ReportingHydrographicMap, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
             self,
             [
                 base.Input(
                     "Hydrography",
-                    (attrib.Class("list[bytes]", 1),  attrib.Scales("space/base_geometry", 1)),
+                    (attrib.Class(list[bytes], 1),  attrib.Scales("space/base_geometry", 1)),
                     self.default_observer
                 ),
                 base.Input(
                     "HydrographicReachIds",
-                    (attrib.Class("list[int]", 1), attrib.Scales("space/base_geometry", 1)),
+                    (attrib.Class(list[int], 1), attrib.Scales("space/base_geometry", 1)),
                     self.default_observer
                 ),
                 base.Input(
@@ -74,7 +75,7 @@ class ReportingHydrographicMap(base.Component):
                 base.Input("Values", [attrib.Class(numpy.ndarray, 1)], self.default_observer),
                 base.Input(
                     "ValuesReachIds",
-                    (attrib.Class("list[int]", 1), attrib.Scales("space/reach", 1)),
+                    (attrib.Class(list[int], 1), attrib.Scales("space/reach", 1)),
                     self.default_observer
                 ),
                 base.Input("Title", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
@@ -87,13 +88,12 @@ class ReportingHydrographicMap(base.Component):
                 base.Input(
                    "ValuesNormalization", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
                 base.Input(
-                    "ColorMap", (attrib.Class("list[str]", 1), attrib.Scales("global", 1)), self.default_observer)
+                    "ColorMap", (attrib.Class(list[str], 1), attrib.Scales("global", 1)), self.default_observer)
             ]
         )
         self._outputs = base.OutputContainer(self, [])
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -173,25 +173,24 @@ class ReportingHydrographicMap(base.Component):
         output_file = self._inputs["OutputFile"].read().values
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         matplotlib.pyplot.savefig(output_file)
-        return
 
     @staticmethod
     def draw(
-            data_store,
-            hydrography,
-            hydrographic_reach_ids,
-            simulation_start,
-            displayed_time,
-            values,
-            values_reach_ids,
-            title,
-            output_file,
-            displayed_unit=None,
-            scale_max_value=None,
-            scale_min_value=None,
-            values_normalization=None,
-            color_map=None
-    ):
+            data_store: str,
+            hydrography: str,
+            hydrographic_reach_ids: str,
+            simulation_start: datetime.date,
+            displayed_time: datetime.date,
+            values: str,
+            values_reach_ids: str,
+            title: str,
+            output_file: str,
+            displayed_unit: typing.Optional[str] = None,
+            scale_max_value: typing.Optional[float] = None,
+            scale_min_value: typing.Optional[float] = None,
+            values_normalization: typing.Optional[str] = None,
+            color_map: typing.Optional[typing.Sequence[str]] = None
+    ) -> None:
         """
         Draws a map displaying the distribution of values in a hydrographic network.
         :param data_store: The file path where the X3df store is located.
@@ -231,4 +230,3 @@ class ReportingHydrographicMap(base.Component):
                 ("ValuesReachIds", values_reach_ids)
             )
         )
-        return

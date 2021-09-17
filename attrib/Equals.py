@@ -2,9 +2,10 @@
 Class definition for the Landscape Model Equals attribute.
 """
 import base
+import typing
 
 
-class Equals:
+class Equals(base.DataAttribute):
     """
     Checks whether two values are equal.
     """
@@ -16,12 +17,11 @@ class Equals:
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Equals` changelog uses markdown for code elements")
 
-    def __init__(self, value, severity=1):
+    def __init__(self, value: typing.Any, severity: int = 1) -> None:
         self._value = value
         self._severity = severity
-        return
 
-    def check(self, values):
+    def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks the values.
         :param values: The values to check.
@@ -36,7 +36,7 @@ class Equals:
             )
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         Gets the name of the attribute checker.
         :return: A string containing the name.
@@ -44,7 +44,7 @@ class Equals:
         return "EqualsChecker"
 
     @property
-    def severity(self):
+    def severity(self) -> int:
         """
         Gets the default severity of violations.
         :return: An integer representing the default severity.
@@ -52,7 +52,7 @@ class Equals:
         return self._severity
 
     @property
-    def value(self):
+    def value(self) -> typing.Any:
         """
         Gets the value to compare with.
         :return: The value to compare with.

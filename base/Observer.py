@@ -2,6 +2,7 @@
 Class definitions of a Landscape Model observer and the MultiObserver.
 """
 import base
+import typing
 
 
 class Observer:
@@ -17,35 +18,34 @@ class Observer:
     base.VERSION.added("1.4.1", "Changelog in `base.Observer` ")
     base.VERSION.changed("1.5.3", "`base.Observer` changelog uses markdown for code elements")
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._default_observer = None
-        return
 
-    def experiment_finished(self, detail=""):
+    def experiment_finished(self, detail: str = "") -> None:
         """
         Reacts when an experiment is completed.
         :param detail: Additional details to report.
         :return: Nothing.
         """
-        raise NotImplementedError
+        return
 
-    def input_get_values(self, component_input):
+    def input_get_values(self, component_input: base.Input) -> None:
         """
         Reacts when values are requested from a component input.
         :param component_input: The input being requested.
         :return: Nothing.
         """
-        raise NotImplementedError
+        return
 
-    def mc_run_finished(self, detail=""):
+    def mc_run_finished(self, detail: str = "") -> None:
         """
         Reacts when a Monte Carlo run is finished.
         :param detail: Additional details to report.
         :return: Nothing.
         """
-        raise NotImplementedError
+        return
 
-    def store_set_values(self, level, store_name, message):
+    def store_set_values(self, level: int, store_name: str, message: str) -> None:
         """
         Reacts when values are stored.
         :param level: The severity of the message.
@@ -53,9 +53,9 @@ class Observer:
         :param message: The message to report.
         :return: Nothing.
         """
-        raise NotImplementedError
+        return
 
-    def write_message(self, level, message, detail=""):
+    def write_message(self, level: int, message: str, detail: str = "") -> None:
         """
         Sends a message to the reporter.
         :param level: The severity of the message.
@@ -63,33 +63,33 @@ class Observer:
         :param detail: Additional details to report.
         :return: Nothing.
         """
-        raise NotImplementedError
+        return
 
-    def mc_run_started(self, composition):
+    def mc_run_started(self, composition: typing.Mapping[str, "base.Component"]) -> None:
         """
         Reacts when a Monte Carlo run has started.
         :param composition: The composition of the Monte Carlo run.
         :return: Nothing.
         """
-        raise NotImplementedError
+        return
 
-    def flush(self):
+    def flush(self) -> None:
         """
         Flushes the buffer of the reporter.
         :return: Nothing.
         """
-        raise NotImplementedError
+        return
 
-    def write(self, text):
+    def write(self, text: str) -> None:
         """
         Requests the reporter to write text.
         :param text: The text to write.
         :return: Nothing.
         """
-        raise NotImplementedError
+        return
 
     @property
-    def default_observer(self):
+    def default_observer(self) -> typing.Optional["base.Observer"]:
         """
         Gets the default observer of the observer.
         :return: A Landscape Model observer.
@@ -97,7 +97,7 @@ class Observer:
         return self._default_observer
 
     @default_observer.setter
-    def default_observer(self, observer):
+    def default_observer(self, observer: "base.Observer") -> None:
         """
         Sets the default observer of the observer.
         :param observer: The new default observer.
@@ -109,14 +109,13 @@ class MultiObserver(Observer):
     """
     A Landscape Model observer that encapsulates multiple observers.
     """
-    def __init__(self, observers):
+    def __init__(self, observers: typing.Sequence["base.Observer"]) -> None:
         super(MultiObserver, self).__init__()
         self._observers = observers
         for observer in self.observers:
             observer.default_observer = self
-        return
 
-    def experiment_finished(self, detail=""):
+    def experiment_finished(self, detail: str = "") -> None:
         """
         Reacts when an experiment is completed.
         :param detail: Additional details to report.
@@ -124,9 +123,8 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.experiment_finished(detail)
-        return
 
-    def input_get_values(self, component_input):
+    def input_get_values(self, component_input: base.Input) -> None:
         """
         Reacts when values are requested from a component input.
         :param component_input: The input being requested.
@@ -134,9 +132,8 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.input_get_values(component_input)
-        return
 
-    def mc_run_finished(self, detail=""):
+    def mc_run_finished(self, detail: str = "") -> None:
         """
         Reacts when a Monte Carlo run is finished.
         :param detail: Additional details to report.
@@ -144,9 +141,8 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.mc_run_finished(detail)
-        return
 
-    def store_set_values(self, level, store_name, message):
+    def store_set_values(self, level: int, store_name: str, message: str) -> None:
         """
         Reacts when values are stored.
         :param level: The severity of the message.
@@ -156,9 +152,8 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.store_set_values(level, store_name, message)
-        return
 
-    def write_message(self, level, message, detail=""):
+    def write_message(self, level: int, message: str, detail: str = "") -> None:
         """
         Sends a message to the reporter.
         :param level: The severity of the message.
@@ -168,9 +163,8 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.write_message(level, message, detail)
-        return
 
-    def mc_run_started(self, composition):
+    def mc_run_started(self, composition: typing.Mapping[str, "base.Component"]) -> None:
         """
         Reacts when a Monte Carlo run has started.
         :param composition: The composition of the Monte Carlo run.
@@ -178,18 +172,16 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.mc_run_started(composition)
-        return
 
-    def flush(self):
+    def flush(self) -> None:
         """
         Flushes the buffer of the reporter.
         :return: Nothing.
         """
         for observer in self._observers:
             observer.flush()
-        return
 
-    def write(self, text):
+    def write(self, text: str) -> None:
         """
         Requests the reporter to write text.
         :param text: The text to write.
@@ -197,10 +189,9 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.write(text)
-        return
 
     @property
-    def observers(self):
+    def observers(self) -> typing.Sequence["base.Observer"]:
         """
         The observers encapsulated by the MultiObserver.
         :return: A list of Landscape Model observers.

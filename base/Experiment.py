@@ -11,6 +11,7 @@ import sys
 import base
 import xml.etree.ElementTree
 import importlib
+import typing
 
 global globalLock
 
@@ -35,7 +36,13 @@ class Experiment:
     base.VERSION.changed("1.4.6", "New system macro `_MC_ID_` ")
     base.VERSION.changed("1.5.3", "`base.Experiment` changelog uses markdown for code elements")
 
-    def __init__(self, parameters=None, work_dir="run", param_dir=None, project_dir=None):
+    def __init__(
+            self,
+            parameters: typing.Optional[base.UserParameters] = None,
+            work_dir: str = "run",
+            param_dir: typing.Optional[str] = None,
+            project_dir: typing.Optional[str] = None
+    ) -> None:
         basedir = os.path.abspath(work_dir)
         experiment_temporary_xml = os.path.join(basedir, ''.join(
             random.choice(string.ascii_uppercase + string.digits) for _ in range(16)) + ".xml")
@@ -95,9 +102,8 @@ class Experiment:
         self._observer.write_message(5, "Working directory: " + replace_tokens["_EXP_BASE_DIR_"])
         self.write_info_xml(
             os.path.join(replace_tokens["_EXP_DIR_"], "info.xml"), config.find("Parts"), project.version)
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the experiment.
         :return: Nothing.
@@ -117,10 +123,9 @@ class Experiment:
             for mcConfig in self.mc_run_configurations:
                 base.MCRun(mcConfig).run()
         self._observer.experiment_finished("Elapsed time: " + str(datetime.datetime.now() - experiment_start_time))
-        return
 
     @staticmethod
-    def write_info_xml(path, model_parts, scenario_version):
+    def write_info_xml(path: str, model_parts: xml.etree.ElementTree.Element, scenario_version: str) -> None:
         """
         Writes version information into an XML file.
         :param path: The file name of the XML file to write to.
@@ -140,10 +145,9 @@ class Experiment:
             xml.etree.ElementTree.SubElement(parts, model_part.tag).text = str(part_class.VERSION.latest)
         xml.etree.ElementTree.SubElement(versions, "scenario").text = scenario_version
         xml.etree.ElementTree.ElementTree(info_xml).write(path, encoding="utf-8", xml_declaration=True)
-        return
 
     @property
-    def mc_run_configurations(self):
+    def mc_run_configurations(self) -> list[str]:
         """
         The Monte Carlo run configurations prepared for this experiment.
         :return: A list of Monte Carlo run configurations.
@@ -151,7 +155,7 @@ class Experiment:
         return self._mcRunConfigurations
 
     @property
-    def number_mc_runs(self):
+    def number_mc_runs(self) -> int:
         """
         The total number of Monte Carlo runs of this experiment.
         :return: The total number of Monte Carlo runs of this experiment.
@@ -159,7 +163,7 @@ class Experiment:
         return self._numberMC
 
     @property
-    def number_parallel_processes(self):
+    def number_parallel_processes(self) -> int:
         """
         The number of parallel processes planned for this experiment.
         :return: The number of parallel processes planned for this experiment.
@@ -167,7 +171,7 @@ class Experiment:
         return self._numberParallelProcesses
 
 
-def run_mc(mc_config):
+def run_mc(mc_config: str) -> None:
     """
     Runs an individual Monte Carlo run of the experiment.
     :param mc_config: The configuration of the Monte Carlo run.
@@ -176,7 +180,7 @@ def run_mc(mc_config):
     return base.MCRun(mc_config, lock=globalLock).run()
 
 
-def pool_init(lock):
+def pool_init(lock: multiprocessing.Lock) -> None:
     """
     Initializes a pool for parallel processing.
     :param lock: The lock shared among processes.
@@ -184,4 +188,3 @@ def pool_init(lock):
     """
     global globalLock
     globalLock = lock
-    return

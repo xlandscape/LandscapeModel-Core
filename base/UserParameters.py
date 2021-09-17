@@ -17,7 +17,7 @@ class UserParameters:
     base.VERSION.changed("1.4.9", "`base.UserParameters` property names")
     base.VERSION.changed("1.5.3", "`base.UserParameters` changelog uses markdown for code elements")
 
-    def __init__(self, xml_file):
+    def __init__(self, xml_file: str) -> None:
         self._params = {}
         config = xml.etree.ElementTree.parse(xml_file).getroot()
         for parameter in config:
@@ -31,10 +31,9 @@ class UserParameters:
             self._subdir = config.attrib["subdir"]
         else:
             self._subdir = ""
-        return
 
     @property
-    def params(self):
+    def params(self) -> dict[str, str]:
         """
         Gets the user-defined parameters.
         :return: A dictionary of the user-defined parameters.
@@ -42,7 +41,7 @@ class UserParameters:
         return self._params
 
     @property
-    def xml(self):
+    def xml(self) -> str:
         """
         Gets the file path of the original XML file.
         :return: The file path of the original XML file.
@@ -50,7 +49,7 @@ class UserParameters:
         return self._xml
 
     @property
-    def uncertainty_sensitivity_analysis(self):
+    def uncertainty_sensitivity_analysis(self) -> int:
         """
         Gets the number of uncertainty or sensitivity analysis runs.
         :return: The number of uncertainty or sensitivity analysis runs.
@@ -58,7 +57,7 @@ class UserParameters:
         return self._uncertaintyAndSensitivityAnalysis
 
     @property
-    def subdir(self):
+    def subdir(self) -> str:
         """
         Gets the sub-directory for the uncertainty or sensitivity analysis runs.
         :return: A string containing the sub-directory for the uncertainty or sensitivity analysis runs.

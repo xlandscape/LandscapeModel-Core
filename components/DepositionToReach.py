@@ -4,6 +4,7 @@ Class definition of the DepositionToReach Landscape Model component.
 import numpy as np
 import base
 import attrib
+import typing
 
 
 class DepositionToReach(base.Component):
@@ -35,8 +36,8 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.4.9", "`components.DepositionToReach` data type access")
     base.VERSION.changed("1.5.3", "`components.DepositionToReach` changelog uses markdown for code elements")
 
-    def __init__(self, name, observer, store):
-        super(DepositionToReach, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(DepositionToReach, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "Deposition",
@@ -54,17 +55,16 @@ class DepositionToReach(base.Component):
             ),
             base.Input(
                 "Mapping",
-                (attrib.Class("list[int]", 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
+                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
                 self.default_observer
             )
         ])
         self._outputs = base.OutputContainer(self, [
-            base.Output("Deposition", store, self),
-            base.Output("Reaches", store, self)
+            base.Output("Deposition", default_store, self),
+            base.Output("Reaches", default_store, self)
         ])
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -92,4 +92,3 @@ class DepositionToReach(base.Component):
             else:
                 self.default_observer.write_message(2, "Could not map reach #" + str(reachId))
         self.outputs["Reaches"].set_values(reaches, scales="space/reach")
-        return

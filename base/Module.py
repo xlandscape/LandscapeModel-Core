@@ -2,6 +2,7 @@
 Class definition for Landscape Model modules.
 """
 import base
+import typing
 
 
 class Module:
@@ -15,28 +16,27 @@ class Module:
     base.VERSION.added("1.5.0", "`base.Module.doc_file` ")
     base.VERSION.changed("1.5.3", "`base.Module` changelog uses markdown for code elements")
 
-    def __init__(self, name, version, doc_file=None):
+    def __init__(self, name: str, version: str, doc_file: typing.Optional[str] = None) -> None:
         self._name = name
         self._version = version
         self._doc_file = doc_file
-        return
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         Gets the name of the module as specified by the module author.
         """
         return self._name
 
     @property
-    def version(self):
+    def version(self) -> str:
         """
         Gets the version of the module as specified by the module author.
         """
         return self._version
 
     @property
-    def doc_file(self):
+    def doc_file(self) -> typing.Optional[str]:
         """
         Gets the path of the additional documentation file, if available.
         """

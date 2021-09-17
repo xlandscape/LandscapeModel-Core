@@ -27,7 +27,7 @@ class MCRun:
     base.VERSION.changed("1.5.1", "small changes in `base.MCRun` changelog")
     base.VERSION.changed("1.5.3", "`base.MCRun` changelog uses markdown for code elements")
 
-    def __init__(self, xml_file, **keywords):
+    def __init__(self, xml_file: str, **keywords) -> None:
         config = xml.etree.ElementTree.parse(xml_file)
         observers = base.observers_from_xml(config.find("Observers"), **keywords)
         self._observer = base.MultiObserver(observers)
@@ -107,9 +107,8 @@ class MCRun:
             output = user_parameters_component.outputs[component_output.name]
             component_name, input_name = output.name.split("/")
             self._composition[component_name].inputs[input_name] = output
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Conducts the Monte Carlo run.
         :return: Nothing.
@@ -124,4 +123,3 @@ class MCRun:
             self._observer.write_message(5, "Elapsed time: " + str(datetime.datetime.now() - component_start_time))
         self._store.close()
         self._observer.mc_run_finished("Elapsed time: " + str(datetime.datetime.now() - mc_start_time))
-        return

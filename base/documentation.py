@@ -7,6 +7,8 @@ import base
 import attrib
 import xml.etree.ElementTree
 import textwrap
+import types
+import typing
 
 
 # CHANGELOG
@@ -33,7 +35,7 @@ base.VERSION.added(
     "1.5.10", "`base.documentation.document_component()` support for documentation of unit attribute hint")
 
 
-def write_changelog(name, version_history, file_path):
+def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
     """
     Writes an updated changelog according to the version history stored along with the code.
     :param name: The name of the documented Landscape Model part.
@@ -61,7 +63,7 @@ def write_changelog(name, version_history, file_path):
                 f.write("- {}\n".format(message))
 
 
-def document_components(components_module, file_path):
+def document_components(components_module: types.ModuleType, file_path: str) -> None:
     """
     Documents the components included in the Landscape Model core.
     :param components_module: The module containing the components.
@@ -76,10 +78,9 @@ def document_components(components_module, file_path):
             if inspect.isclass(member) and issubclass(member, base.Component):
                 f.write("\n\n## {}".format(name))
                 f.write(member.__doc__)
-    return
 
 
-def document_observers(observers_module, file_path):
+def document_observers(observers_module: types.ModuleType, file_path: str) -> None:
     """
     Documents the observers included in the Landscape Model core.
     :param observers_module: The module containing the components.
@@ -94,10 +95,9 @@ def document_observers(observers_module, file_path):
             if inspect.isclass(member) and issubclass(member, base.Observer):
                 f.write("\n\n## {}".format(name))
                 f.write(member.__doc__)
-    return
 
 
-def document_stores(stores_module, file_path):
+def document_stores(stores_module: types.ModuleType, file_path: str) -> None:
     """
     Documents the stores included in the Landscape Model core.
     :param stores_module: The module containing the stores.
@@ -112,10 +112,15 @@ def document_stores(stores_module, file_path):
             if inspect.isclass(member) and issubclass(member, base.Store):
                 f.write("\n\n## {}".format(name))
                 f.write(member.__doc__)
-    return
 
 
-def document_component(component, file_path, sample_configuration, sample_component_name=None):
+def document_component(
+        component: base.Component,
+        file_path: str,
+        sample_configuration: str,
+        sample_component_name:
+        typing.Optional[str] = None
+) -> None:
     """
     :param component: The component to document.
     :param file_path: The path of file where the readme is written to.
@@ -200,23 +205,23 @@ The following gives a sample configuration of the `{component_name}` component. 
             if component_input.description:
                 f.write("{}  \n".format(inspect.cleandoc(component_input.description)))
             for attribute in component_input.attributes:
-                if type(attribute) is attrib.Class:
+                if isinstance(attribute, attrib.Class):
                     f.write("`{}` expects its values to be of type `{}`.\n".format(
                         component_input.name,
                         attribute.type if isinstance(attribute.type, str) else attribute.type.__name__
                     ))
-                elif type(attribute) is attrib.Scales:
+                elif isinstance(attribute, attrib.Scales):
                     f.write("Values have to refer to the `{}` scale.\n".format(attribute.scales))
-                elif type(attribute) is attrib.Unit:
+                elif isinstance(attribute, attrib.Unit):
                     if attribute.unit is None:
                         f.write("Values of the `{}` input may not have a physical unit.\n".format(component_input.name))
                     else:
                         f.write("The physical unit of the `{}` input values is `{}`.\n".format(
                             component_input.name, attribute.unit))
-                elif type(attribute) is attrib.InList:
+                elif isinstance(attribute, attrib.InList):
                     f.write("Allowed values are: {}.\n".format(
                         ", ".join(["`" + str(x) + "`" for x in attribute.values])))
-                elif type(attribute) is attrib.Equals:
+                elif isinstance(attribute, attrib.Equals):
                     f.write("The currently only allowed value is {}.\n".format(attribute.value))
                 else:
                     raise TypeError("Unsupported attribute type: " + str(type(attribute)))
@@ -282,10 +287,9 @@ Distributed under the CC0 License. See `LICENSE` for more information.
         f.write("\n\n## Acknowledgements\n")
         for acknowledgement in component.VERSION.acknowledgements:
             f.write("* " + acknowledgement + "  \n")
-    return
 
 
-def write_contribution_notes(file_path):
+def write_contribution_notes(file_path: str) -> None:
     """
     Writes contribution notes for a software project.
     :param file_path: The path of file where the contribution notes are written to.
@@ -296,10 +300,9 @@ def write_contribution_notes(file_path):
 Contributions to the project are welcome. Please contact the authors.  
 These contribution notes refer to the general Landscape Model contribution guidelines and were written on {}. 
 """.format(datetime.date.today()))
-    return
 
 
-def document_scenario(info_file, file_path):
+def document_scenario(info_file: str, file_path: str) -> None:
     """
     :param info_file: The path of scenario information file.
     :param file_path: The path where the readme file is written to.
@@ -367,10 +370,9 @@ Distributed under the CC0 License. See `LICENSE` for more information.
         f.write("\n\n## Acknowledgements\n")
         for acknowledgement in scenario_info.findall("Acknowledgements/Acknowledgement"):
             f.write("* {}\n".format(acknowledgement.text))
-    return
 
 
-def write_scenario_changelog(info_file, file_path):
+def write_scenario_changelog(info_file: str, file_path: str) -> None:
     """
     Writes an updated scenario changelog according to the version history stored in the scenario info file.
     :param info_file: The path of scenario information file.

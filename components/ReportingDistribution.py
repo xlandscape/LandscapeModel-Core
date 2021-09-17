@@ -6,6 +6,7 @@ import attrib
 import matplotlib.pyplot
 import numpy
 import os
+import typing
 
 
 class ReportingDistribution(base.Component):
@@ -31,8 +32,8 @@ class ReportingDistribution(base.Component):
     base.VERSION.added("1.4.5", "`components.ReportingHydrographicMap.draw()` static method")
     base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
 
-    def __init__(self, name, observer, store):
-        super(ReportingDistribution, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(ReportingDistribution, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
             self,
             [
@@ -45,9 +46,8 @@ class ReportingDistribution(base.Component):
             ]
         )
         self._outputs = base.OutputContainer(self, [])
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -63,10 +63,17 @@ class ReportingDistribution(base.Component):
         output_file = self._inputs["OutputFile"].read().values
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         matplotlib.pyplot.savefig(output_file)
-        return
 
     @staticmethod
-    def draw(data_store, values, x_label, title, x_min, x_max, output_file):
+    def draw(
+            data_store: str,
+            values: str,
+            x_label: str,
+            title: str,
+            x_min: float,
+            x_max: float,
+            output_file: str
+    ) -> None:
         """
         Plots the distribution of values.
         :param data_store: The file path where the X3df store is located.
@@ -84,4 +91,3 @@ class ReportingDistribution(base.Component):
             (("XLabel", x_label), ("Title", title), ("OutputFile", output_file), ("XMin", x_min), ("XMax", x_max)),
             (("Values", values),)
         )
-        return

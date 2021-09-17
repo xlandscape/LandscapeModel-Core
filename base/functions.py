@@ -1,6 +1,8 @@
 """
 This file contains various helper functions used throughout Landscape Model code.
 """
+import xml.etree.ElementTree
+
 import datetime
 import functools
 import importlib
@@ -11,6 +13,7 @@ import subprocess
 import os
 import base
 import inspect
+import typing
 
 
 # CHANGELOG
@@ -42,7 +45,7 @@ base.VERSION.added("1.5.9", "`base.functions.run_process()` option to run extern
 base.VERSION.added("1.6.5", "`base.functions.run_process()` makes use of new Python dict union operator")
 
 
-def cartesian_product(*arrays):
+def cartesian_product(*arrays: np.ndarray) -> np.ndarray:
     """
     Returns the Cartesian product of two or more arrays.
     :param arrays: The arrays from which the Cartesian product is calculated.
@@ -56,7 +59,7 @@ def cartesian_product(*arrays):
     return result_array.reshape(-1, number_arrays)
 
 
-def chunk_slices(shape, chunks):
+def chunk_slices(shape: typing.Sequence[int], chunks: typing.Sequence[int]) -> list[tuple[slice]]:
     """
     Returns an array of tuples specifying chunks of an multidimensional array.
     :param shape: The shape of the array to be sliced into chunks.
@@ -76,7 +79,7 @@ def chunk_slices(shape, chunks):
     return ranges
 
 
-def chunk_size(chunk, shape):
+def chunk_size(chunk: typing.Sequence[int], shape: typing.Sequence[int]) -> tuple[int]:
     """
     Calculates a chunk size for an multidimensional array.
     :param chunk: The requested chunk size.
@@ -101,7 +104,9 @@ def chunk_size(chunk, shape):
     return tuple(result)
 
 
-def convert(input_config):
+def convert(input_config: xml.etree.ElementTree.Element) -> typing.Optional[
+    typing.Union[bool, datetime.date, float, int, list[int], list[float], list[str], datetime.datetime, str]
+]:
     """
     Converts a configuration value into a Python value.
     :param input_config: The input type configuration.
@@ -110,7 +115,6 @@ def convert(input_config):
     text_value = None if input_config.text is None else input_config.text.strip()
     raw_value = eval(text_value) if "eval" in input_config.attrib \
                                     and input_config.attrib["eval"].lower() == "true" else text_value
-
     if "type" in input_config.attrib:
         if input_config.attrib["type"] == "bool":
             value = raw_value.lower() == "true"
@@ -135,7 +139,7 @@ def convert(input_config):
     return value
 
 
-def observers_from_xml(observers_xml, **keywords):
+def observers_from_xml(observers_xml: xml.etree.ElementTree.Element, **keywords) -> list[base.Observer]:
     """
     Instantiates Landscape Model observers according to an XML configuration.
     :param observers_xml: The observer configuration XML.
@@ -160,7 +164,7 @@ def observers_from_xml(observers_xml, **keywords):
     return observers
 
 
-def replace_tokens(tokens, source, destination):
+def replace_tokens(tokens: typing.Mapping[str, str], source: str, destination: str) -> None:
     """
     Replaces tokens in a text file and writes the resulting text to another file.
     :param tokens: The recognized tokens and their values.
@@ -179,10 +183,15 @@ def replace_tokens(tokens, source, destination):
             configuration = configuration.replace("$(" + key + ")", str(value or ""))
         with open(destination, "w") as f:
             f.write(configuration)
-    return
 
 
-def run_process(command, working_directory, observer, env=None, minimized=True):
+def run_process(
+        command: typing.Sequence[str],
+        working_directory: typing.Optional[str],
+        observer: base.Observer,
+        env: typing.Optional[typing.Mapping[str, str]] = None,
+        minimized: bool = True
+) -> None:
     """
     Runs a separate process.
     :param command: A list describing the process call.
@@ -212,10 +221,14 @@ def run_process(command, working_directory, observer, env=None, minimized=True):
         observer.write(text)
     result.stdout.close()
     result.wait()
-    return
 
 
-def reporting(data_store, reporting_element_class, parameters, links):
+def reporting(
+        data_store: str,
+        reporting_element_class: typing.Type[base.Component],
+        parameters: typing.Sequence[tuple[str, typing.Any]],
+        links: typing.Sequence[tuple[str, typing.Any]]
+) -> None:
     """
     Runs a reporting element in a default reporting environment.
     :param data_store: The file path where the X3df store is located.
@@ -242,4 +255,3 @@ def reporting(data_store, reporting_element_class, parameters, links):
     for name, dataset in links:
         reporting_element.inputs[name] = base.Output(dataset, x3df_store)
     reporting_element.run()
-    return

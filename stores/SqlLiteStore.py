@@ -9,6 +9,7 @@ import datetime
 import numpy as np
 import functools
 import operator
+import typing
 
 
 class SqlLiteStore(base.Store):
@@ -35,7 +36,7 @@ class SqlLiteStore(base.Store):
     base.VERSION.changed("1.4.9", "`store.SqlLiteStore` data type access")
     base.VERSION.changed("1.5.3", "`store.SqlLiteStore` changelog uses markdown for code elements")
 
-    def __init__(self, file_path, observer, create=True):
+    def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         self._observer = observer
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         self._connection = sqlite3.connect(file_path)
@@ -55,23 +56,22 @@ class SqlLiteStore(base.Store):
                 )""")
             self._connection.execute("INSERT INTO scales VALUES ('global', '(1,)')")
             self._connection.commit()
-        return
 
     def set_values(
             self,
-            name,
-            values,
-            scales=None,
-            shape=None,
-            data_type=None,
-            create=True,
-            slices=None,
-            default=None,
-            foreign_keys=None,
-            unit=None,
-            chunks=None,
+            name: str,
+            values: typing.Any,
+            scales: typing.Optional[str] = None,
+            shape: typing.Optional[typing.Sequence[int]] = None,
+            data_type: typing.Optional[type] = None,
+            create: bool = True,
+            slices: typing.Optional[typing.Sequence[slice]] = None,
+            default: typing.Any = None,
+            foreign_keys: typing.Sequence[str] = None,
+            unit: typing.Optional[str] = None,
+            chunks: typing.Optional[typing.Sequence[slice]] = None,
             **keywords
-    ):
+    ) -> None:
         """
         Writes values into the SqlLite database.
         :param name: The name of the value.
@@ -256,9 +256,8 @@ class SqlLiteStore(base.Store):
             self._connection.execute(
                 "INSERT INTO data_attributes VALUES(?, ?, ?, ?, ?)", (name, scale, original_type, unit, str(chunks)))
         self._connection.commit()
-        return
 
-    def get_values(self, name, slices=None, **keywords):
+    def get_values(self, name: str, slices: typing.Optional[typing.Sequence[slice]] = None, **keywords) -> typing.Any:
         """
         Retrieves values from the SqlLite database.
         :param name: The name of the value.
@@ -316,7 +315,7 @@ class SqlLiteStore(base.Store):
         raise TypeError("Stored type cannot be interpreted: " + data_info[1])
 
     @staticmethod
-    def _cartesian_product(*arrays):
+    def _cartesian_product(*arrays: np.ndarray) -> np.ndarray:
         # adapted from https://stackoveflow.com/questions/11144513
         la = len(arrays)
         data_type = np.result_type(*arrays)
@@ -325,7 +324,7 @@ class SqlLiteStore(base.Store):
             arr[..., i] = a
         return arr.reshape(-1, la), arr.shape[:-1]
 
-    def describe(self, name):
+    def describe(self, name: str) -> dict[str, typing.Any]:
         """
         Describes a data set.
         :param name: The name of the data set.
@@ -341,10 +340,10 @@ class SqlLiteStore(base.Store):
         return {"shape": eval(scale_info[0]), "data_type": type_mappings[data_type], "chunks": None, "unit": unit[0]}
 
     @staticmethod
-    def _slices_to_range_limits(slices):
+    def _slices_to_range_limits(slices: typing.Sequence[slice]) -> list[int]:
         ranges = [(0, 0)] * len(slices)
         for i, dimension_slice in enumerate(slices):
-            if isinstance(dimension_slice, slices):
+            if isinstance(dimension_slice, slice):
                 if dimension_slice.step is not None and dimension_slice.step != 1:
                     raise ValueError("Steps in slices are not supported")
                 ranges[i] = (dimension_slice.start or 0, dimension_slice.stop)
@@ -354,15 +353,14 @@ class SqlLiteStore(base.Store):
                 raise ValueError("Unsupported slice type: {}".format(dimension_slice))
         return functools.reduce(operator.iconcat, ranges, [])
 
-    def close(self):
+    def close(self) -> None:
         """
         Closes the database connection.
         :return: Nothing.
         """
         self._connection.close()
-        return
 
-    def has_dataset(self, name, partial=False):
+    def has_dataset(self, name: str, partial: bool = False) -> bool:
         """
         Indicates whether the store contains a data set.
         :param name: The name of the dataset.
@@ -377,11 +375,10 @@ class SqlLiteStore(base.Store):
                 "SELECT data_name FROM data_attributes WHERE data_name = ?", (name,)).rowcount
         return hits > 0
 
-    def execute(self, sql):
+    def execute(self, sql: str) -> None:
         """
         Executes a SQL query within the SqlLite store.
         :param sql: The SQL query to execute
         :return: Nothing.
         """
         self._connection.execute(sql)
-        return

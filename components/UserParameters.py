@@ -1,6 +1,8 @@
 """
 Class definition for the Landscape Model UserParameters component.
 """
+import typing
+
 import base
 
 
@@ -24,17 +26,21 @@ class UserParameters(base.Component):
     base.VERSION.changed("1.4.1", "`components.UserParameters` class documentation")
     base.VERSION.changed("1.5.3", "`components.UserParameters` changelog uses markdown for code elements")
 
-    def __init__(self, name, values, observer, store):
-        super(UserParameters, self).__init__(name, observer, store)
+    def __init__(
+            self, name: str,
+            values: typing.Sequence["UserParameter"],
+            default_observer: base.Observer,
+            default_store: typing.Optional[base.Store]
+    ) -> None:
+        super(UserParameters, self).__init__(name, default_observer, default_store)
         outputs = []
         for parameter in values:
-            output = base.Output(parameter.name, store)
+            output = base.Output(parameter.name, default_store)
             output.set_values(parameter.values, scales=parameter.scales, unit=parameter.unit)
             outputs.append(output)
         self._outputs = base.OutputContainer(self, outputs)
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -46,15 +52,20 @@ class UserParameter:
     """
     A single user-defined parameter.
     """
-    def __init__(self, name, values, scales=None, unit=None):
+    def __init__(
+            self,
+            name: str,
+            values: str,
+            scales: typing.Optional[str] = None,
+            unit: typing.Optional[str] = None
+    ) -> None:
         self._name = name
         self._values = values
         self._scales = scales
         self._unit = unit
-        return
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         The name of the parameter.
         :return: The parameter name.
@@ -62,7 +73,7 @@ class UserParameter:
         return self._name
 
     @property
-    def values(self):
+    def values(self) -> str:
         """
         The values of the parameter.
         :return: The parameter values.
@@ -70,7 +81,7 @@ class UserParameter:
         return self._values
 
     @property
-    def scales(self):
+    def scales(self) -> typing.Optional[str]:
         """
         The scales of the parameter.
         :return: The parameter scales.
@@ -78,7 +89,7 @@ class UserParameter:
         return self._scales
 
     @property
-    def unit(self):
+    def unit(self) -> typing.Optional[str]:
         """
         The physical unit of the parameter.
         :return: A string representing the physical unit of the parameter.

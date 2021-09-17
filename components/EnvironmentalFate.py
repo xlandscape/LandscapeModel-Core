@@ -5,6 +5,7 @@ import math
 import numpy as np
 import base
 import attrib
+import typing
 
 
 class EnvironmentalFate(base.Component):
@@ -30,8 +31,8 @@ class EnvironmentalFate(base.Component):
     base.VERSION.changed("1.4.9", "renamed `components.EnvironmentalFate` component")
     base.VERSION.changed("1.4.14", "added semantic descriptions to `EnvironmentalFate` component")
 
-    def __init__(self, name, observer, store):
-        super(EnvironmentalFate, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(EnvironmentalFate, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, (
             base.Input(
                 "SprayDriftExposure",
@@ -45,10 +46,9 @@ class EnvironmentalFate(base.Component):
             base.Input(
                 "SoilDT50", (attrib.Class(float), attrib.Scales("global"), attrib.Unit("d")), self.default_observer)
         ))
-        self._outputs = base.OutputContainer(self, [base.Output("Pec", store, self)])
-        return
+        self._outputs = base.OutputContainer(self, [base.Output("Pec", default_store, self)])
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -79,4 +79,3 @@ class EnvironmentalFate(base.Component):
             for exposureInput in enabled_exposure_inputs:
                 pec_current_day += exposureInput.read(slices=current_slice).values
             self.outputs["Pec"].set_values(pec_current_day, create=False, slices=current_slice, calculate_max=True)
-        return

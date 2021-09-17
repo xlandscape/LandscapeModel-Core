@@ -2,9 +2,10 @@
 Class definition of the Landscape Model Class attribute.
 """
 import base
+import types
 
 
-class Class:
+class Class(base.DataAttribute):
     """
     Checks whether values are instances of a specific Python class.
     """
@@ -17,22 +18,21 @@ class Class:
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Class` changelog uses markdown for code elements")
 
-    def __init__(self, expected_type, severity=2):
+    def __init__(self, expected_type: type, severity: int = 2) -> None:
         self._type = expected_type
         self._severity = severity
-        return
 
-    def check(self, values):
+    def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values of class compliance.
         :param values: The values to check.
         :return: A tuple representing the result of the check.
         """
-        if isinstance(self._type, str):
-            return base.CheckResult(self.check_str_type(values), values)
+        if isinstance(self._type, types.GenericAlias):
+            return base.CheckResult(self.check_generic_type(values), values)
         return base.CheckResult(self.check_type(values), values)
 
-    def check_list_type(self, values, element_type):
+    def check_list_type(self, values: base.Values, element_type: type) -> tuple[int, str]:
         """
         Checks whether all elements in a list of values are of a specific type.
         :param values: The values to check.
@@ -43,27 +43,27 @@ class Class:
             if all(isinstance(x, element_type) for x in values.values):
                 return 4, "Values are of type " + str(self.type)
             else:
-                return self.severity, "Values are not of type " + self.type
+                return self.severity, "Values are not of type " + str(self.type)
         else:
             return self._severity, "Values are not a list"
 
-    def check_str_type(self, values):
+    def check_generic_type(self, values: base.Values) -> tuple[int, str]:
         """
-        Checks values if the type to check is string.
+        Checks values if the type to check is a generic alias.
         :param values: The values to check.
         :return: A tuple representing the result of the check.
         """
-        if self.type == "list[int]":
+        if self.type == list[int]:
             return self.check_list_type(values, int)
-        elif self.type == "list[bytes]":
+        elif self.type == list[bytes]:
             return self.check_list_type(values, bytes)
-        elif self.type in ["tuple[float]", "list[float]"]:
+        elif self.type in [tuple[float], list[float]]:
             return self.check_list_type(values, float)
-        elif self.type == "list[str]":
+        elif self.type == list[str]:
             return self.check_list_type(values, str)
-        return self.severity, "Check for unknown type " + self.type
+        return self.severity, "Check for unknown type " + str(self.type)
 
-    def check_type(self, values):
+    def check_type(self, values: base.Values) -> tuple[int, str]:
         """
         Checks the type of a scalar value.
         :param values: The value to check.
@@ -78,7 +78,7 @@ class Class:
             )
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         Gets the name of the attribute checker.
         :return: A string containing the name of the attribute checker.
@@ -86,7 +86,7 @@ class Class:
         return "ClassChecker"
 
     @property
-    def severity(self):
+    def severity(self) -> int:
         """
         Gets the severity of violations.
         :return: A number representing the severity of violations.
@@ -94,7 +94,7 @@ class Class:
         return self._severity
 
     @property
-    def type(self):
+    def type(self) -> type:
         """
         Gets the type to check for.
         :return: A class or string specifying the type.

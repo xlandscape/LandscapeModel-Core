@@ -3,6 +3,7 @@ Class definition of the DepositionToPecSoil Landscape Model component.
 """
 import numpy as np
 import base
+import typing
 
 
 class DepositionToPecSoil(base.Component):
@@ -33,17 +34,16 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.changed("1.5.3", "`components.DepositionToPecSoil` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.4", "`components.DepositionToPecSoil` retrieval of output data type")
 
-    def __init__(self, name, observer, store):
-        super(DepositionToPecSoil, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(DepositionToPecSoil, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input("Deposition", (), self.default_observer),
             base.Input("SoilBulkDensity", (), self.default_observer),
             base.Input("Depth", (), self.default_observer)
         ])
-        self._outputs = base.OutputContainer(self, [base.Output("PecSoil", store, self)])
-        return
+        self._outputs = base.OutputContainer(self, [base.Output("PecSoil", default_store, self)])
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -65,4 +65,3 @@ class DepositionToPecSoil(base.Component):
             deposition = self.inputs["Deposition"].read(slices=chunkSlice).values
             pec_soil = deposition / quotient
             self.outputs["PecSoil"].set_values(pec_soil, slices=chunkSlice, create=False, calculate_max=True)
-        return

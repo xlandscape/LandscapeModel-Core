@@ -4,7 +4,7 @@ Class definition of the Landscape Model Scales attribute.
 import base
 
 
-class Scales:
+class Scales(base.DataAttribute):
     """
     Checks whether values have specific scales.
     """
@@ -14,12 +14,11 @@ class Scales:
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Scales` changelog uses markdown for code elements")
 
-    def __init__(self, expected_scales, severity=2):
+    def __init__(self, expected_scales: str, severity: int = 2) -> None:
         self._scales = expected_scales
         self._severity = severity
-        return
 
-    def check(self, values):
+    def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values for scales compliance.
         :param values: The values to check.
@@ -33,7 +32,7 @@ class Scales:
             (self._severity, "Values have scales " + values.scales + ", not " + str(self._scales)), values)
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
         Gets the name of the attribute checker.
         :return: A string containing the name of the attribute checker.
@@ -41,7 +40,7 @@ class Scales:
         return "ScalesChecker"
 
     @property
-    def severity(self):
+    def severity(self) -> int:
         """
         Gets the default severity of violations.
         :return: A number representing the default severity of violations.
@@ -49,7 +48,7 @@ class Scales:
         return self._severity
 
     @property
-    def scales(self):
+    def scales(self) -> str:
         """
         Gets the scales to check for.
         :return: A string specifying the scales.

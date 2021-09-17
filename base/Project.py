@@ -4,6 +4,7 @@ Class definition of a Landscape Module project.
 import os
 import xml.etree.ElementTree
 import base
+import typing
 
 
 class Project:
@@ -17,7 +18,7 @@ class Project:
     base.VERSION.added("1.4.1", "`base.Project.version` ")
     base.VERSION.changed("1.5.3", "`base.Project` changelog uses markdown for code elements")
 
-    def __init__(self, project, project_dir, prefix=":"):
+    def __init__(self, project: str, project_dir: str, prefix: str = ":") -> None:
         self._content = {}
         self._path = os.path.join(project_dir, project)
         # noinspection SpellCheckingInspection
@@ -27,10 +28,9 @@ class Project:
                 project_dir, project, entry.attrib["target"]
             )
         self._version = config.find("Version").text
-        return
 
     @property
-    def content(self):
+    def content(self) -> dict[str, typing.Any]:
         """
         The content of the project.
         :return: A dictionary of named items that are part of the project.
@@ -38,14 +38,14 @@ class Project:
         return self._content
 
     @property
-    def path(self):
+    def path(self) -> str:
         """
         The path where the scenario is located.
         """
         return self._path
 
     @property
-    def version(self):
+    def version(self) -> typing.Optional[str]:
         """
         The version of the scenario.
         """

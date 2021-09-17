@@ -25,13 +25,12 @@ class UncertaintyAndSensitivityAnalysis:
     base.VERSION.changed("1.4.9", "`base.UncertaintyAndSensitivityAnalysis` renamed")
     base.VERSION.changed("1.4.9", "`base.UncertaintyAndSensitivityAnalysis` renamed local variables")
 
-    def __init__(self, parameters):
+    def __init__(self, parameters: base.UserParameters) -> None:
         if parameters.uncertainty_sensitivity_analysis is None:
             raise ValueError("No uncertainty/sensitivity analysis runs specified in user parameters")
         self._params = parameters
-        return
 
-    def create(self):
+    def create(self) -> None:
         """
         Creates a set of uncertainty or sensitivity analysis runs.
         :return: Nothing.
@@ -72,4 +71,3 @@ class UncertaintyAndSensitivityAnalysis:
                 encoding="utf-8",
                 xml_declaration=True
             )
-        return

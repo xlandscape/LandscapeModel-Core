@@ -4,6 +4,7 @@ Class definition of the LogFileObserver.
 
 import base
 import os
+import typing
 
 
 class LogFileObserver(base.Observer):
@@ -24,13 +25,11 @@ class LogFileObserver(base.Observer):
         super(LogFileObserver, self).__init__()
         os.makedirs(os.path.dirname(keywords["logfile"]), exist_ok=True)
         self._file = open(keywords["logfile"], "a", encoding="utf-8")
-        return
 
-    def __del__(self):
+    def __del__(self) -> None:
         self._file.close()
-        return
 
-    def experiment_finished(self, detail=""):
+    def experiment_finished(self, detail: str = "") -> None:
         """
         Reacts when an experiment is completed.
         :param detail: Additional details to report.
@@ -38,9 +37,8 @@ class LogFileObserver(base.Observer):
         """
         self.write_message(4, "Experiment finished")
         self.write_message(5, detail)
-        return
 
-    def input_get_values(self, component_input):
+    def input_get_values(self, component_input: base.Input) -> None:
         """
         Reacts when values are requested from a component input.
         :param component_input: The input being requested.
@@ -48,9 +46,8 @@ class LogFileObserver(base.Observer):
         """
         for message in component_input.messages:
             self.write_message(message[0], component_input.name + ":" + message[1] + ":GetValues", message[2])
-        return
 
-    def mc_run_finished(self, detail=""):
+    def mc_run_finished(self, detail: str = "") -> None:
         """
         Reacts when a Monte Carlo run is finished.
         :param detail: Additional details to report.
@@ -58,9 +55,8 @@ class LogFileObserver(base.Observer):
         """
         self.write_message(4, "MC run finished")
         self.write_message(5, detail)
-        return
 
-    def store_set_values(self, level, store_name, message):
+    def store_set_values(self, level: int, store_name: str, message: str) -> None:
         """
         Reacts when values are stored.
         :param level: The severity of the message.
@@ -69,9 +65,8 @@ class LogFileObserver(base.Observer):
         :return: Nothing.
         """
         self.write_message(level, store_name + ":SetValues", message)
-        return
 
-    def write_message(self, level, message, detail=""):
+    def write_message(self, level: int, message: str, detail: str = "") -> None:
         """
         Sends a message to the reporter.
         :param level: The severity of the message.
@@ -96,30 +91,26 @@ class LogFileObserver(base.Observer):
         else:
             self.write("{:6s}{}\n".format(severity, message))
             self.write(" " * 6 + detail + "\n")
-        return
 
-    def mc_run_started(self, composition):
+    def mc_run_started(self, composition: typing.Mapping[str, base.Component]) -> None:
         """
         Reacts when a Monte Carlo run has started.
         :param composition: The composition of the Monte Carlo run.
         :return: Nothing.
         """
         self.write_message(5, "MC run start")
-        return
 
-    def flush(self):
+    def flush(self) -> None:
         """
         Flushes the buffer of the reporter.
         :return: Nothing.
         """
         self._file.flush()
-        return
 
-    def write(self, text):
+    def write(self, text: str) -> None:
         """
         Requests the reporter to write text.
         :param text: The text to write.
         :return: Nothing.
         """
         self._file.write(text)
-        return

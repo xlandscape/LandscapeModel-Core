@@ -3,6 +3,7 @@ Class definition of the In-Memory Landscape Model store.
 """
 import base
 import numpy
+import typing
 
 
 class InMemoryStore(base.Store):
@@ -22,13 +23,12 @@ class InMemoryStore(base.Store):
     base.VERSION.changed("1.4.9", "`store.InMemoryStore` data type access")
     base.VERSION.changed("1.5.3", "`store.InMemoryStore` changelog uses markdown for code elements")
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._data = {}
         self._scales = {}
         self._unit = {}
-        return
 
-    def describe(self, name):
+    def describe(self, name: str) -> dict[str, typing.Any]:
         """
         Describes a data set in the store.
         :param name: The name of the data set.
@@ -36,7 +36,7 @@ class InMemoryStore(base.Store):
         """
         return {"scales": self._scales[name], "unit": self._unit[name]}
 
-    def get_values(self, name, **keywords):
+    def get_values(self, name: str, **keywords) -> typing.Any:
         """
         Gets the values of a data set from the store.
         :param name: The name of the data set.
@@ -51,16 +51,16 @@ class InMemoryStore(base.Store):
 
     def set_values(
             self,
-            name,
-            values,
-            scales=None,
-            unit=None,
-            shape=None,
-            data_type=None,
-            chunks=None,
-            create=True,
-            slices=None
-    ):
+            name: str,
+            values: typing.Any,
+            scales: typing.Optional[str] = None,
+            unit: typing.Optional[str] = None,
+            shape: typing.Optional[typing.Sequence[int]] = None,
+            data_type: typing.Optional[type] = None,
+            chunks: typing.Optional[typing.Sequence[slice]] = None,
+            create: bool = True,
+            slices: typing.Optional[typing.Sequence[slice]] = None
+    ) -> None:
         """
         Stores a data set in the store.
         :param name: The name of the data set.
@@ -87,9 +87,8 @@ class InMemoryStore(base.Store):
             self._data[name] = values
         self._scales[name] = scales
         self._unit[name] = unit
-        return
 
-    def has_dataset(self, name, partial=False):
+    def has_dataset(self, name: str, partial: bool = False) -> bool:
         """
         Checks whether a dataset exists in the store or not.
         :param name: The name of the dataset.

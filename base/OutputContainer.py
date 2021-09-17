@@ -2,6 +2,7 @@
 Class definition of Landscape Model output containers.
 """
 import base
+import typing
 
 
 class OutputContainer:
@@ -17,15 +18,18 @@ class OutputContainer:
         "1.5.0", "Iteration over `base.OutputContainer` now returns `Output` objects instead of their names")
     base.VERSION.changed("1.5.3", "`base.OutputContainer` changelog uses markdown for code elements")
 
-    def __init__(self, component=None, outputs=None):
+    def __init__(
+            self,
+            component: typing.Optional["base.Component"] = None,
+            outputs: typing.Optional[typing.Sequence[base.Output]] = None
+    ) -> None:
         self._items = {}
         self._component = component
         if outputs is not None:
             for output in outputs:
                 self._items[output.name] = output
-        return
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> base.Output:
         try:
             output = self._items[key]
         except KeyError:
@@ -35,20 +39,19 @@ class OutputContainer:
                 raise KeyError("There is no output named '" + str(key) + "'")
         return output
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[base.Output]:
         return self._items.values().__iter__()
 
-    def append(self, output):
+    def append(self, output: base.Output) -> None:
         """
         Adds an output to the output container.
         :param output: The output to add.
         :return: Nothing.
         """
         self._items[output.name] = output
-        return
 
     @property
-    def component(self):
+    def component(self) -> typing.Optional["base.Component"]:
         """
         Gets the component to which the output belongs.
         :return: The output's component.
@@ -60,11 +63,10 @@ class ProvisionalOutputs(OutputContainer):
     """
     A output container that generates outputs with every linked input.
     """
-    def __init__(self, component, store):
+    def __init__(self, component: "base.Component", store: base.Store) -> None:
         super(ProvisionalOutputs, self).__init__(component)
         self._store = store
-        return
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> base.Output:
         self._items.setdefault(key, base.Output(key, self._store, self.component))
         return self._items[key]

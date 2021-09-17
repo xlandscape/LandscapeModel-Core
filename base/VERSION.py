@@ -4,7 +4,7 @@ The changelog of the Landscape Model base module.
 import base.VersionInfo
 
 # RELEASES
-VERSION = base.VersionCollection(
+VERSION: base.VersionCollection = base.VersionCollection(
     base.VersionInfo("1.6.5", "2021-09-14"),
     base.VersionInfo("1.6.4", "2021-09-13"),
     base.VersionInfo("1.6.3", "2021-09-09"),

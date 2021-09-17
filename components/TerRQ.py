@@ -4,6 +4,7 @@ Class definition of the TER-RQ Landscape Model component.
 import numpy as np
 import base
 import attrib
+import typing
 
 
 class TerRQ(base.Component):
@@ -27,8 +28,8 @@ class TerRQ(base.Component):
     base.VERSION.changed("1.4.9", "`components.TerRQ` data type access")
     base.VERSION.changed("1.5.3", "`components.TerRQ` changelog uses markdown for code elements")
 
-    def __init__(self, name, observer, store):
-        super(TerRQ, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(TerRQ, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
             self,
             [
@@ -48,10 +49,10 @@ class TerRQ(base.Component):
                 )
             ]
         )
-        self._outputs = base.OutputContainer(self, [base.Output("TER", store, self), base.Output("RQ", store, self)])
-        return
+        self._outputs = base.OutputContainer(
+            self, [base.Output("TER", default_store, self), base.Output("RQ", default_store, self)])
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -81,4 +82,3 @@ class TerRQ(base.Component):
             self.outputs["TER"].set_values(ter, slices=chunkSlice, create=False, calculate_max=True)
             rq = exposure / threshold
             self.outputs["RQ"].set_values(rq, slices=chunkSlice, create=False, calculate_max=True)
-        return

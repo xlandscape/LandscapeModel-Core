@@ -9,6 +9,7 @@ import base
 import xml.etree.ElementTree
 import attrib
 import numpy as np
+import typing
 
 
 class LandscapeScenario(base.Component):
@@ -51,8 +52,8 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.6.1", "Renamed to `components.LandscapeScenario`")
     base.VERSION.changed("1.6.4", "`components.LandscapeScenario` reads physical units from package metadata")
 
-    def __init__(self, name, observer, store):
-        super(LandscapeScenario, self).__init__(name, observer, store)
+    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        super(LandscapeScenario, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "BaseLandscapeGeometries",
@@ -64,12 +65,11 @@ class LandscapeScenario(base.Component):
                 ),
                 self.default_observer)
         ])
-        self._outputs = base.ProvisionalOutputs(self, store)
+        self._outputs = base.ProvisionalOutputs(self, default_store)
         self._spatial_reference = None
         self._base_geometries_extent = None
-        return
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the component.
         :return: Nothing.
@@ -209,9 +209,15 @@ class LandscapeScenario(base.Component):
                 geometry_output=entry.tag + "_geom",
                 units=units
             )
-        return
 
-    def import_shapefile(self, file_name, attributes, is_base=False, geometry_output="Geometries", units=None):
+    def import_shapefile(
+            self,
+            file_name: str,
+            attributes: typing.Mapping[str, str],
+            is_base: bool = False,
+            geometry_output: str = "Geometries",
+            units: typing.Optional[typing.Mapping[str, str]] = None
+    ) -> None:
         """
         Imports a shapefile into the Landscape Model by storing its geometries and attributes.
         :param: file_name: The path and file name of the shapefile.
@@ -261,4 +267,3 @@ class LandscapeScenario(base.Component):
             if units is not None and value[0] in units:
                 unit = units[value[0]]
             self.outputs[value[0]].set_values(value[1], scales="space/base_geometry", unit=unit)
-        return

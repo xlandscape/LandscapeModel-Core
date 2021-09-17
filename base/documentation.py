@@ -33,6 +33,7 @@ base.VERSION.added(
 )
 base.VERSION.added(
     "1.5.10", "`base.documentation.document_component()` support for documentation of unit attribute hint")
+base.VERSION.added("1.7.0", "Type hints to `base.documentation` ")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:

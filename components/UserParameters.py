@@ -25,6 +25,9 @@ class UserParameters(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.UserParameters` ")
     base.VERSION.changed("1.4.1", "`components.UserParameters` class documentation")
     base.VERSION.changed("1.5.3", "`components.UserParameters` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `components.UserParameters` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.UserParameter` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.UserParameters` with base class")
 
     def __init__(
             self, name: str,

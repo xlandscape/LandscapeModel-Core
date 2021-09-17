@@ -14,6 +14,7 @@ class Component:
     base.VERSION.changed("1.3.33", "`base.Component` refactored")
     base.VERSION.added("1.4.1", "Changelog in `base.Component`")
     base.VERSION.changed("1.5.3", "`base.Component` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `base.Component` ")
 
     VERSION: base.VersionCollection
 

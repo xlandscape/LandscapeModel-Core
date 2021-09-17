@@ -1,5 +1,101 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-09-14.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-09-17.
+
+## [1.7] - 2021-09-17
+
+### Added
+- Type hints to `base.VERSION` 
+- Type hints to `base.VersionCollection` 
+- Type hints to `base.VersionInfo` 
+- Type hints to `init.py` 
+- `base.Extension` class
+- Type hints to `base.Extensions` 
+- Type hints to `base.Values` 
+- Type hints to `base.CheckResults` 
+- `base.DataAttribute` class
+- Type hints to `base.DataAttributes` 
+- Type hints to `base.Store` 
+- Type hints to `base.Output` 
+- Type hints to `base.OutputContainer` 
+- Type hints to `base.DataProvider` 
+- Type hints to `base.Input` 
+- Type hints to `base.InputContainer` 
+- Type hints to `base.Observer` 
+- Type hints to `base.Module` 
+- Type hints to `base.Component` 
+- Type hints to `base.UserParameters` 
+- Type hints to `base.Experiment` 
+- Type hints to `base.functions` 
+- Type hints to `components.CsvReader` 
+- Type hints to `components.DeleteFolder` 
+- Type hints to `components.DepositionToPecSoil` 
+- Type hints to `attrib.Class` 
+- Type hints to `attrib.Equals` 
+- Type hints to `attrib.InList` 
+- Type hints to `attrib.Ontology` 
+- Type hints to `attrib.Scales` 
+- Type hints to `attrib.Transformable` 
+- Type hints to `attrib.Unit` 
+- Type hints to `components.DepositionToReach` 
+- Type hints to `components.DoseResponse` 
+- Type hints to `components.EnvironmentalFate` 
+- Type hints to `stores.InMemoryStore` 
+- Type hints to `stores.SqlLiteStore` 
+- Type hints to `stores.X3dfStore` 
+- Type hints to `components.ExportData` 
+- Type hints to `components.ReportingDistribution` 
+- Type hints to `components.ReportingHydrographicMap` 
+- Type hints to `components.HydrologyFromTimeSeries` 
+- Type hints to `components.LandscapeScenarioPreparation` 
+- Type hints to `components.LandscapeScenario` 
+- Type hints to `components.MarsWeather` 
+- Type hints to `components.PpmCalendar` 
+- Type hints to `components.SprayApplication` 
+- Type hints to `components.TerRQ` 
+- Type hints to `components.UserParameters` 
+- Type hints to `components.UserParameter` 
+- Type hints to `base.MCRun` 
+- Type hints to `base.Project` 
+- Type hints to `base.UncertaintyAnsSensitivityAnalysis` 
+- Import of new classes in `base.__init__` 
+- Type hints to `base.documentation` 
+- Type hints to `observer.ConsoleObserver` 
+- Type hints to `observer.GraphMLObserver` 
+- Type hints to `observer.LogFileObserver` 
+
+### Changed
+- None-return instead of NotImplementedError in `base.Observer` methods
+- Harmonized init signature of `components.CsvReader` with base class
+- Harmonized init signature of `components.DeleteFolder` with base class
+- Harmonized init signature of `components.DepositionToPecSoil` with base class
+- `attrib.Class` got new base class `base.DataAttribute` 
+- Removed support of string-based type definitions in `attrib.Class` in favor for generic types introduced in Python 3.9
+- `attrib.Equals` got new base class `base.DataAttribute` 
+- `attrib.InList` got new base class `base.DataAttribute` 
+- `attrib.Ontology` got new base class `base.DataAttribute` 
+- Removed deactivated code in `attrib.Ontology` 
+- `attrib.Scales` got new base class `base.DataAttribute` 
+- `attrib.Transformable` got new base class `base.DataAttribute` 
+- `attrib.Unit` got new base class `base.DataAttribute` 
+- Harmonized init signature of `components.DepositionToReach` with base class
+- Harmonized init signature of `components.DoseResponse` with base class
+- Harmonized init signature of `components.EnvironmentalFate` with base class
+- Harmonized init signature of `components.ExportData` with base class
+- Harmonized init signature of `components.ReportingDistribution` with base class
+- Harmonized init signature of `components.ReportingHydrographicMap` with base class
+- Harmonized init signature of `components.HydrologyFromTimeSeries` with base class
+- Harmonized init signature of `components.LandscapeScenarioPreparation` with base class
+- Harmonized init signature of `components.LandscapeScenario` with base class
+- Harmonized init signature of `components.MarsWeather` with base class
+- Harmonized init signature of `components.PpmCalendar` with base class
+- Harmonized init signature of `components.TerRQ` with base class
+- Harmonized init signature of `components.UserParameters` with base class
+- Order of imports in `base.__init__` 
+- Removed unused methods in `observer.GraphMLObserver` 
+
+### Fixed
+- Check for slices containing steps in `stores.SqlLiteStore` 
+
 
 ## [1.6.5] - 2021-09-14
 
@@ -50,7 +146,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - updated Python packages
 - Updated `components.LandscapeScenarioPreparation` to new metadata format
 - Renamed to `components.LandscapeScenario`
-- Renamed some parameters in `components.PpmCalendar`
+- Renamed some parameters in `components.PpmCalendar` 
 - `components` imports updated to reflect renamed components
 
 ### Fixed
@@ -156,19 +252,21 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `base.documentation.write_changelog()` no longer escapes underscores
 
 ### Changed
-- `base.CheckResult` changelog uses markdown for code elements
-- `base.Component` changelog uses markdown for code elements
-- `base.DataAttributes` changelog uses markdown for code elements
-- `base.DataProvider` changelog uses markdown for code elements
 - `base.Extensions` changelog uses markdown for code elements
-- `base.Input` changelog uses markdown for code elements
-- `base.InputContainer` changelog uses markdown for code elements
-- `base.Module` changelog uses markdown for code elements
-- `base.Observer` changelog uses markdown for code elements
+- `base.Values` changelog uses markdown for code elements
+- `base.CheckResult` changelog uses markdown for code elements
+- `base.DataAttributes` changelog uses markdown for code elements
+- `base.Store` changelog uses markdown for code elements
 - `base.Output` changelog uses markdown for code elements
 - `base.OutputContainer` changelog uses markdown for code elements
-- `base.Store` changelog uses markdown for code elements
-- `base.Values` changelog uses markdown for code elements
+- `base.DataProvider` changelog uses markdown for code elements
+- `base.Input` changelog uses markdown for code elements
+- `base.InputContainer` changelog uses markdown for code elements
+- `base.Observer` changelog uses markdown for code elements
+- `base.Module` changelog uses markdown for code elements
+- `base.Component` changelog uses markdown for code elements
+- `base.UserParameters` changelog uses markdown for code elements
+- `base.Experiment` changelog uses markdown for code elements
 - `components.CsvReader` changelog uses markdown for code elements
 - `components.DeleteFolder` changelog uses markdown for code elements
 - `components.DepositionToPecSoil` changelog uses markdown for code elements
@@ -179,7 +277,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `store.SqlLiteStore` changelog uses markdown for code elements
 - `store.X3fdStore` changelog uses markdown for code elements
 - `components.ExportData` changelog uses markdown for code elements
-- `components.ReportingHydrographicMap` changelog uses markdown for code elements
+- `components.ReportingDistribution` changelog uses markdown for code elements
 - `components.ReportingHydrographicMap` markdown usage extended
 - `components.LandscapeScenarioPreparation` changelog uses markdown for code elements
 - `components.MarsWeather` changelog uses markdown for code elements
@@ -188,8 +286,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.UserParameters` changelog uses markdown for code elements
 - `base.MCRun` changelog uses markdown for code elements
 - `base.Project` changelog uses markdown for code elements
-- `base.UserParameters` changelog uses markdown for code elements
-- `base.Experiment` changelog uses markdown for code elements
 - `base` changelog uses markdown for code elements
 - `observer.ConsoleObserver` changelog uses markdown for code elements
 - `observer.GraphMLObserver` changelog uses markdown for code elements
@@ -227,9 +323,9 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 ### Added
 - properties `roadmap`, `authors` and `acknowledgements` to `base.VersionCollection` 
+- `base.Output` properties `default_attributes`, `description` and `attribute_hints` 
 - `base.Input.description` 
 - `base.Module.doc_file` 
-- `base.Output` properties `default_attributes`, `description` and `attribute_hints` 
 - `base.documentation` methods for documenting components
 
 ### Changed
@@ -304,6 +400,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Changed
 - `base` changelog uses markdown for code elements
 - `init.py` spell check exclusions
+- `base.UserParameters` property names
 - `base.functions` changelog uses markdown for code elements
 - `components.DepositionToPecSoil` data type access
 - `attrib.Class` changelog uses markdown for code elements
@@ -326,7 +423,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.LandscapeScenario` changelog uses markdown for code elements
 - `components.TerRQ` data type access
 - `components` imports updated to reflect renamed components
-- `base.UserParameters` property names
 - `base.UncertaintyAndSensitivityAnalysis` renamed
 - `base.UncertaintyAndSensitivityAnalysis` renamed local variables
 - `base` updated imports to changed class names
@@ -359,9 +455,9 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
+- New system macro `_MC_ID_` 
 - `store.X3dfStore` `identifier` argument of initializer
 - `store.X3dfStore` parent run no longer randomly sampled
-- New system macro `_MC_ID_` 
 
 ### Fixed
 
@@ -370,7 +466,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 ### Added
 - `base.functions.reporting()` 
-- `components.ReportingHydrographicMap.draw()` static method
+- `components.ReportingDistribution.draw()` static method
 - `components.ReportingHydrographicMap.draw()` static method
 
 ### Changed
@@ -421,12 +517,12 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Changelog description
 - Changelog description
 - Changelog description
+- Changelog description
 - new `components.HydrologyFromTimeSeries` inputs InflowTimeSeriesPath, ImportInflows
 - new `components.HydrologyFromTimeSeries` outputs InflowReaches and Inflow
 - `components.HydrologyFromTimeSeries` (optionally) reads inflows from fields
 - Changelog description
 - `base.McRun` changelog description
-- Changelog description
 
 ### Fixed
 
@@ -436,20 +532,22 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 - Changelog in `base.VERSION` 
 - `base.VersionCollection` for managing revision history
-- Changelog in `base.CheckResult`
-- Changelog in `base.Component`
-- Changelog in `base.DataAttributes`
-- Changelog in `base.DataProvider`
 - Changelog in `base.Extensions` 
-- Changelog in `base.functions` 
-- Changelog in `base.Input`
-- Changelog in `base.InputContainer` 
-- Changelog in `base.Module` 
-- Changelog in `base.Observer` 
+- Changelog in `base.Values` 
+- Changelog in `base.CheckResult`
+- Changelog in `base.DataAttributes`
+- Changelog in `base.Store` 
 - Changelog in `base.Output` 
 - Changelog in `base.OutputContainer`
-- Changelog in `base.Store` 
-- Changelog in `base.Values` 
+- Changelog in `base.DataProvider`
+- Changelog in `base.Input`
+- Changelog in `base.InputContainer` 
+- Changelog in `base.Observer` 
+- Changelog in `base.Module` 
+- Changelog in `base.Component`
+- Changelog in `base.UserParameters` 
+- Changelog in `base.Experiment` 
+- Changelog in `base.functions` 
 - Changelog in `components.CsvReader` 
 - Changelog in `components.DepositionToPecSoil` 
 - Changelog in class `attrib.Class` 
@@ -482,8 +580,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Changelog in `base.MCRun` 
 - Changelog in `base.Project` 
 - `base.Project.version` 
-- Changelog in `base.UserParameters` 
-- Changelog in `base.Experiment` 
 - Changelog in `base.UncertaintyAndSensitivityAnalysis` 
 - Changelog in `base.__init__`
 - Changelog in `observer.ConsoleObserver` 
@@ -494,6 +590,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Changed
 - Changed `base.VERSION` to a `base.VersionCollection`, tracking changes in classes
 - `base.VersionInfo` completely rewritten to move changelogs nearer to code
+- `base.Experiment.write_info_xml()` uses new `Version` classes
 - `components.CsvReader` class documentation
 - `components.DepositionToPecSoil` class documentation
 - Removed unused output `PecSoil 2` from `components.DepositionToPecSoil` 
@@ -514,7 +611,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.PpmCalendar` class documentation
 - `components.UserParameters` class documentation
 - Removed `components.VERSION` 
-- `base.Experiment.write_info_xml()` uses new `Version` classes
 - `observer.ConsoleObserver` class documentation
 - `observer.GraphMLObserver` class documentation
 - `observer.LogFileObserver` class documentation
@@ -579,18 +675,18 @@ This is the changelog for the Landscape Model core. It was automatically created
 ## [1.3.33] - 2020-07-30
 
 ### Added
-- `base.DataAttributes.append()` for dynamically adding data attributes
 - Quick access to metadata by `base.Values.unit` and `base.Values.scales` 
+- `base.DataAttributes.append()` for dynamically adding data attributes
 - `attrib.Class` support of list[bytes], list[float], list[str] and tuple[float]
 - Scale attribute checker
 - `components.UserParameters.unit` 
 
 ### Changed
-- `base.Component` refactored
-- `base.DataAttributes` refactored
 - `base.Extensions` refactored
+- `base.DataAttributes` refactored
 - `base.Input.read()` passes metadata from provider to `base.Values` object
 - `base.InputContainer` refactored
+- `base.Component` refactored
 - `components.CsvReader` refactored
 - `attrib.Class.check()` returns base.CheckResult instead of tuple
 - `attrib.Equals.check()` returns base.CheckResult instead of tuple
@@ -660,6 +756,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 ### Changed
 - `base.VersionInfo` refactored
+- `base.UserParameters` refactored
 - `components.DepositionToPecSoil` refactored
 - Soil depth is now parameter in `components.DepositionToPecSoil` 
 - `components.DepositionToReach` specifies scales
@@ -675,7 +772,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.UserParameters` specifies scales
 - `components.UserParameters` expects list of `UserParameters` as values
 - `base.MCRun` parses user-defined parameter scales
-- `base.UserParameters` refactored
 - `base.UncertaintyAndSensitivityAnalysis` refactored
 
 ### Fixed
@@ -684,8 +780,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 ## [1.3.24] - 2020-04-02
 
 ### Added
-- `base.functions.run_process()` for invoking system processes
 - Added `base.Observer.flush()` and `base.Observer.write()` to use observers as streams
+- `base.functions.run_process()` for invoking system processes
 - Added `observer.ConsoleObserver.flush()` and `observer.ConsoleObserver.write()` 
 - Added `observer.GraphMLObserver.flush()` and `observer.GraphMLObserver.write()` 
 - `observer.LogFileObserver` 
@@ -735,10 +831,10 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- `base.DataProvider` refactored
-- Option to disable observers in configuration by `base.functions.observers_from_xml()` 
-- `base.Input` refactored
 - `base.Output` refactored
+- `base.DataProvider` refactored
+- `base.Input` refactored
+- Option to disable observers in configuration by `base.functions.observers_from_xml()` 
 
 ### Fixed
 
@@ -748,17 +844,17 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
-- `base.CheckResult` refactored
-- `base.functions.replaceTokens()` replaces $$-tokens before $-tokens
-- `base.functions `refactored
-- `base.Module` refactored
-- `base.Observer` refactored
-- `base.OutputContainer` refactored
 - `base.Values` refactored
-- `base.MCRun` refactored
-- `base.Project` refactored
+- `base.CheckResult` refactored
+- `base.OutputContainer` refactored
+- `base.Observer` refactored
+- `base.Module` refactored
 - `base.Experiment` refactored
 - `base.Experiment` project encapsulation and support of versions
+- `base.functions.replaceTokens()` replaces $$-tokens before $-tokens
+- `base.functions `refactored
+- `base.MCRun` refactored
+- `base.Project` refactored
 - `base.__init__` refactored
 
 ### Fixed
@@ -924,10 +1020,10 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `base.UncertaintyAndSensitivityAnalysis` class for managing uncertainty and sensitivity analyses
 
 ### Changed
-- `base.functions.replaceTokens()` accepts non-string values
 - `base.UserParameters` understand uncertainty / sensitivity analysis XML attribute
 - `base.Experiment` has new macro `_PARAM_DIR_` 
 - `base.Experiment` is more flexible in parameter directory
+- `base.functions.replaceTokens()` accepts non-string values
 
 ### Fixed
 
@@ -1044,9 +1140,9 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `base.Project` class for representing Landscape Model scenarios
 
 ### Changed
-- `base.functions.replaceTokens()` allows macros in source path
 - `base.Experiment` expects a global section in the Monte Carlo run configuration
 - `base.Experiment` has new macro `_X3DIR_` 
+- `base.functions.replaceTokens()` allows macros in source path
 
 ### Fixed
 
@@ -1056,11 +1152,11 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 - `base.VERSION` for describing code changes
 - `base.VersionInfo` for describing individual revisions
+- `base.Experiment.write_info_xml()` for saving runtime information of the experiment
 - Value equality checker
 - Changelog through `VersionInfo` class in `attrib` namespace
 - Changelog through `VersionInfo` class in `stores` namespace
 - Changelog through `VersionInfo` class in `components` namespace
-- `base.Experiment.write_info_xml()` for saving runtime information of the experiment
 - Changelog through `VersionInfo` class in `base` namespace
 - Changelog through `VersionInfo` class in `observer` namespace
 
@@ -1098,19 +1194,21 @@ This is the changelog for the Landscape Model core. It was automatically created
 ## [1.1.1]
 
 ### Added
-- `base.CheckResult` class for exchanging observer messages
-- `base.Component` class representing Landscape Model components
-- `base.DataAttributes` class as a data attribute container
-- `base.DataProvider` class for data providers
 - `base.Extensions` class as a container for data extensions
-- `base.functions` providing helper functions
-- `base.Input` class for representing component inputs
-- `base.InputContainer` class for collecting the inputs of a component
-- `base.Module` class for describing Landscape Model modules
-- `base.Observer` class for representing Landscape Model observers
+- `base.Values class` for exchanged data values
+- `base.CheckResult` class for exchanging observer messages
+- `base.DataAttributes` class as a data attribute container
 - `base.Output` class for representing component outputs
 - `base.OutputContainer` class for collecting outputs of a component
-- `base.Values class` for exchanged data values
+- `base.DataProvider` class for data providers
+- `base.Input` class for representing component inputs
+- `base.InputContainer` class for collecting the inputs of a component
+- `base.Observer` class for representing Landscape Model observers
+- `base.Module` class for describing Landscape Model modules
+- `base.Component` class representing Landscape Model components
+- `base.UserParameters` class for user-defined parameters
+- `base.Experiment` class for managing individual experiments
+- `base.functions` providing helper functions
 - `components.CsvReader` component
 - `components.DepositionToPecSoil` component
 - `attrib.Class` 
@@ -1125,8 +1223,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.UserParameters` component
 - `components` namespace
 - `base.MCRun` class for managing individual Monte Carlo runs
-- `base.UserParameters` class for user-defined parameters
-- `base.Experiment` class for managing individual experiments
 - `base` namespace
 - `observer.ConsoleObserver` 
 - `observer` namespace

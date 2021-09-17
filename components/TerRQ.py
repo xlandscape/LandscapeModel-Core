@@ -27,6 +27,8 @@ class TerRQ(base.Component):
     base.VERSION.fixed("1.4.1", "`components.TerRQ` attrib namespace reference")
     base.VERSION.changed("1.4.9", "`components.TerRQ` data type access")
     base.VERSION.changed("1.5.3", "`components.TerRQ` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `components.TerRQ` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.TerRQ` with base class")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(TerRQ, self).__init__(name, default_observer, default_store)

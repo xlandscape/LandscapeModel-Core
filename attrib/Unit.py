@@ -19,6 +19,8 @@ class Unit(base.DataAttribute):
     base.VERSION.changed("1.4.9", "`attrib.Unit` changelog uses markdown for code elements")
     base.VERSION.added("1.6.4", "`attrib.Unit` support for lists")
     base.VERSION.added("1.6.4", "Further unit conversion to `attrib.Unit` ")
+    base.VERSION.changed("1.7.0", "`attrib.Unit` got new base class `base.DataAttribute` ")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Unit` ")
 
     def __init__(self, expected_unit: typing.Optional[str], severity: int = 2) -> None:
         self._unit = expected_unit

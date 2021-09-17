@@ -35,6 +35,8 @@ class SqlLiteStore(base.Store):
     base.VERSION.changed("1.4.4", "`store.SqlLiteStore` manages chunks")
     base.VERSION.changed("1.4.9", "`store.SqlLiteStore` data type access")
     base.VERSION.changed("1.5.3", "`store.SqlLiteStore` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `stores.SqlLiteStore` ")
+    base.VERSION.fixed("1.7.0", "Check for slices containing steps in `stores.SqlLiteStore` ")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         self._observer = observer

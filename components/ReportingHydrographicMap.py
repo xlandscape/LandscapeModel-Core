@@ -46,6 +46,8 @@ class ReportingHydrographicMap(base.Component):
     base.VERSION.changed("1.4.5", "`components.ReportingHydrographicMap.__init__` `observer` argument renamed")
     base.VERSION.changed("1.4.9", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` markdown usage extended")
+    base.VERSION.added("1.7.0", "Type hints to `components.ReportingHydrographicMap` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingHydrographicMap` with base class")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(ReportingHydrographicMap, self).__init__(name, default_observer, default_store)

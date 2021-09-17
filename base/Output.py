@@ -21,6 +21,7 @@ class Output:
     base.VERSION.changed("1.5.1", "small changes in `base.Output` changelog")
     base.VERSION.changed("1.5.3", "`base.Output` changelog uses markdown for code elements")
     base.VERSION.fixed("1.5.6", "Handling of omitted `base.Output` attribute hints")
+    base.VERSION.added("1.7.0", "Type hints to `base.Output` ")
 
     def __init__(
             self,

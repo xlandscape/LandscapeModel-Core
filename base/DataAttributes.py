@@ -15,6 +15,7 @@ class DataAttributes:
     base.VERSION.added("1.3.33", "`base.DataAttributes.append()` for dynamically adding data attributes")
     base.VERSION.added("1.4.1", "Changelog in `base.DataAttributes`")
     base.VERSION.changed("1.5.3", "`base.DataAttributes` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `base.DataAttributes` ")
 
     def __init__(self, attributes: typing.Sequence[base.DataAttribute]) -> None:
         self._attributes = list(attributes)

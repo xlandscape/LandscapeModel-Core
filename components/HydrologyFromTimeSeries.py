@@ -53,6 +53,8 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "renamed `components.HydrologyFromTimeSeries` component")
     base.VERSION.changed("1.6.0", "`components.HydrologyFromTimeSeries` casts exported WKB geometries to bytes")
+    base.VERSION.added("1.7.0", "Type hints to `components.HydrologyFromTimeSeries` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.HydrologyFromTimeSeries` with base class")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(HydrologyFromTimeSeries, self).__init__(name, default_observer, default_store)

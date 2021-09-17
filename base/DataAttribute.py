@@ -8,6 +8,9 @@ class DataAttribute:
     """
     Checks whether values comply to a specification regarding a specific data attribute and potentially transforms them.
     """
+    # CHANGELOG
+    base.VERSION.added("1.7.0", "`base.DataAttribute` class")
+
     def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values regarding a specific data attribute.

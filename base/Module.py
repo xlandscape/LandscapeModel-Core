@@ -15,6 +15,7 @@ class Module:
     base.VERSION.added("1.4.1", "Changelog in `base.Module` ")
     base.VERSION.added("1.5.0", "`base.Module.doc_file` ")
     base.VERSION.changed("1.5.3", "`base.Module` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `base.Module` ")
 
     def __init__(self, name: str, version: str, doc_file: typing.Optional[str] = None) -> None:
         self._name = name

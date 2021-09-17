@@ -30,6 +30,8 @@ class ExportData(base.Component):
     base.VERSION.changed("1.4.9", "`components.ExportData` data type access")
     base.VERSION.changed("1.5.3", "`components.ExportData` changelog uses markdown for code elements")
     base.VERSION.fixed("1.5.4", "`components.ExportData` data type access")
+    base.VERSION.added("1.7.0", "Type hints to `components.ExportData` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ExportData` with base class")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(ExportData, self).__init__(name, default_observer, default_store)

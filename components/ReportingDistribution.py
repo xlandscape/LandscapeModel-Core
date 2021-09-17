@@ -29,8 +29,10 @@ class ReportingDistribution(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.ReportingDistribution` ")
     base.VERSION.added("1.4.1", "`components.ReportingDistribution` class documentation")
     base.VERSION.fixed("1.4.5", "`components.ReportingDistribution` spelling error in documentation")
-    base.VERSION.added("1.4.5", "`components.ReportingHydrographicMap.draw()` static method")
-    base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
+    base.VERSION.added("1.4.5", "`components.ReportingDistribution.draw()` static method")
+    base.VERSION.changed("1.5.3", "`components.ReportingDistribution` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `components.ReportingDistribution` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingDistribution` with base class")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(ReportingDistribution, self).__init__(name, default_observer, default_store)

@@ -17,6 +17,13 @@ class Class(base.DataAttribute):
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Class` ")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Class` changelog uses markdown for code elements")
+    base.VERSION.changed("1.7.0", "`attrib.Class` got new base class `base.DataAttribute` ")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Class` ")
+    base.VERSION.changed(
+        "1.7.0",
+        "Removed support of string-based type definitions in `attrib.Class` in favor for generic types introduced in "
+        "Python 3.9"
+    )
 
     def __init__(self, expected_type: type, severity: int = 2) -> None:
         self._type = expected_type

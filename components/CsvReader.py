@@ -25,6 +25,8 @@ class CsvReader(base.Component):
     base.VERSION.changed("1.5.0", "`components.CsvReader` iterates over output objects instead of names")
     base.VERSION.changed("1.5.1", "small changes in `components.CsvReader` changelog")
     base.VERSION.changed("1.5.3", "`components.CsvReader` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `components.CsvReader` ")
+    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.CsvReader` with base class")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(CsvReader, self).__init__(name, default_observer, default_store)

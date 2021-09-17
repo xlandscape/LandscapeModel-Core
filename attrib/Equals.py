@@ -16,6 +16,8 @@ class Equals(base.DataAttribute):
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Equals` ")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Equals` changelog uses markdown for code elements")
+    base.VERSION.changed("1.7.0", "`attrib.Equals` got new base class `base.DataAttribute` ")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Equals` ")
 
     def __init__(self, value: typing.Any, severity: int = 1) -> None:
         self._value = value

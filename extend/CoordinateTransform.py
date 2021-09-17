@@ -14,6 +14,7 @@ class CoordinateTransform(base.Extension):
     base.VERSION.changed("1.3.33", "`extend.CoordinateTransform` refactored")
     base.VERSION.added("1.4.1", "Changelog in `extend.CoordinateTransform`")
     base.VERSION.changed("1.5.3", "`extend.CoordinateTransform` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `extend.CoordinateTransform` ")
 
     def __init__(self, transformation_type: str, offset: str) -> None:
         if transformation_type == "date":

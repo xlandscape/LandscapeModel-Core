@@ -16,6 +16,7 @@ class Input:
     base.VERSION.added("1.4.1", "Changelog in `base.Input`")
     base.VERSION.added("1.5.0", "`base.Input.description` ")
     base.VERSION.changed("1.5.3", "`base.Input` changelog uses markdown for code elements")
+    base.VERSION.added("1.7.0", "Type hints to `base.Input` ")
 
     def __init__(
             self,

@@ -15,6 +15,7 @@ class Scales(base.DataAttribute):
     base.VERSION.changed("1.4.9", "`attrib.Scales` changelog uses markdown for code elements")
     base.VERSION.changed("1.7.0", "`attrib.Scales` got new base class `base.DataAttribute` ")
     base.VERSION.added("1.7.0", "Type hints to `attrib.Scales` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Scales` ")
 
     def __init__(self, expected_scales: str, severity: int = 2) -> None:
         self._scales = expected_scales

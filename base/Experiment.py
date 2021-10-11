@@ -36,6 +36,7 @@ class Experiment:
     base.VERSION.changed("1.4.6", "New system macro `_MC_ID_` ")
     base.VERSION.changed("1.5.3", "`base.Experiment` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Experiment` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment` ")
 
     def __init__(
             self,

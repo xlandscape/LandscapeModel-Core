@@ -25,6 +25,8 @@ class UncertaintyAndSensitivityAnalysis:
     base.VERSION.changed("1.4.9", "`base.UncertaintyAndSensitivityAnalysis` renamed")
     base.VERSION.changed("1.4.9", "`base.UncertaintyAndSensitivityAnalysis` renamed local variables")
     base.VERSION.added("1.7.0", "Type hints to `base.UncertaintyAnsSensitivityAnalysis` ")
+    base.VERSION.changed(
+        "1.8.0", "Replaced Legacy format strings by f-strings in `base.UncertaintyAndSensitivityAnalysis` ")
 
     def __init__(self, parameters: base.UserParameters) -> None:
         if parameters.uncertainty_sensitivity_analysis is None:

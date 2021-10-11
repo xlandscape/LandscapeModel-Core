@@ -27,6 +27,7 @@ class ConsoleObserver(base.Observer):
     base.VERSION.changed("1.4.1", "`observer.ConsoleObserver` class documentation")
     base.VERSION.changed("1.5.3", "`observer.ConsoleObserver` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `observer.ConsoleObserver` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.ConsoleObserver` ")
 
     def __init__(self, lock: typing.Optional[multiprocessing.Lock] = None, print_output: bool = False) -> None:
         super(ConsoleObserver, self).__init__()

@@ -17,6 +17,7 @@ class Input:
     base.VERSION.added("1.5.0", "`base.Input.description` ")
     base.VERSION.changed("1.5.3", "`base.Input` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Input` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Input` ")
 
     def __init__(
             self,

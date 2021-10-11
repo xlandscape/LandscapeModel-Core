@@ -53,6 +53,7 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.6.4", "`components.LandscapeScenario` reads physical units from package metadata")
     base.VERSION.added("1.7.0", "Type hints to `components.LandscapeScenario` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.LandscapeScenario` with base class")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenario` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(LandscapeScenario, self).__init__(name, default_observer, default_store)

@@ -36,6 +36,7 @@ class Experiment:
     base.VERSION.changed("1.4.6", "New system macro `_MC_ID_` ")
     base.VERSION.changed("1.5.3", "`base.Experiment` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Experiment` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment` ")
 
     def __init__(
             self,
@@ -45,8 +46,8 @@ class Experiment:
             project_dir: typing.Optional[str] = None
     ) -> None:
         basedir = os.path.abspath(work_dir)
-        experiment_temporary_xml = os.path.join(basedir, ''.join(
-            random.choice(string.ascii_uppercase + string.digits) for _ in range(16)) + ".xml")
+        experiment_temporary_xml = os.path.join(
+            basedir, f"{''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))}.xml")
         replace_tokens = {}
         if parameters is not None:
             replace_tokens = dict(parameters.params)
@@ -86,8 +87,8 @@ class Experiment:
             for globalParameter in global_parameters:
                 replace_tokens[globalParameter.tag] = globalParameter.text
         for mc in range(self._numberMC):
-            replace_tokens["_MC_NAME_"] = "X3" + ''.join(
-                random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
+            mc_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
+            replace_tokens["_MC_NAME_"] = f"X3{mc_name}"
             replace_tokens["_MC_ID_"] = str(mc)
             mc_configuration = os.path.join(replace_tokens["_MCS_BASE_DIR_"], replace_tokens["_MC_NAME_"], "mc.xml")
             os.makedirs(os.path.dirname(mc_configuration))
@@ -96,11 +97,11 @@ class Experiment:
         self._observer = base.MultiObserver(base.observers_from_xml(config.find("Observers")))
         sys.stdout = sys.stderr = self._observer
         self._observer.write_message(5, "Startup initialization")
-        self._observer.write_message(5, "Parameters: " + parameters.xml)
-        self._observer.write_message(5, "Project: " + replace_tokens["Project"])
-        self._observer.write_message(5, "Project directory: " + replace_tokens["_PROJECT_DIR_"])
-        self._observer.write_message(5, "Runtime directory: " + replace_tokens["_X3DIR_"])
-        self._observer.write_message(5, "Working directory: " + replace_tokens["_EXP_BASE_DIR_"])
+        self._observer.write_message(5, f"Parameters: {parameters.xml}")
+        self._observer.write_message(5, f"Project: {replace_tokens['Project']}")
+        self._observer.write_message(5, f"Project directory: {replace_tokens['_PROJECT_DIR_']}")
+        self._observer.write_message(5, f"Runtime directory: {replace_tokens['_X3DIR_']}")
+        self._observer.write_message(5, f"Working directory: {replace_tokens['_EXP_BASE_DIR_']}")
         self.write_info_xml(
             os.path.join(replace_tokens["_EXP_DIR_"], "info.xml"), config.find("Parts"), project.version)
 
@@ -112,18 +113,18 @@ class Experiment:
         experiment_start_time = datetime.datetime.now()
         self._observer.write_message(5, "Experiment started")
         if self.number_mc_runs > 1 and self.number_parallel_processes > 1:
-            self._observer.write_message(5, "Parallel mode with " + str(
-                self.number_parallel_processes) + " processes, " + str(self.number_mc_runs) + " MC(s)")
+            self._observer.write_message(
+                5, f"Parallel mode with {self.number_parallel_processes} processes, {self.number_mc_runs} MC(s)")
             lock = multiprocessing.Lock()
             with multiprocessing.Pool(self.number_parallel_processes, initializer=pool_init, initargs=(lock,)) as pool:
                 pool.map(run_mc, self.mc_run_configurations, 1)
                 pool.close()
                 pool.join()
         else:
-            self._observer.write_message(5, "Serial mode, " + str(self.number_mc_runs) + " MC(s)")
+            self._observer.write_message(5, f"Serial mode, {self.number_mc_runs} MC(s)")
             for mcConfig in self.mc_run_configurations:
                 base.MCRun(mcConfig).run()
-        self._observer.experiment_finished("Elapsed time: " + str(datetime.datetime.now() - experiment_start_time))
+        self._observer.experiment_finished(f"Elapsed time: {datetime.datetime.now() - experiment_start_time}")
 
     @staticmethod
     def write_info_xml(path: str, model_parts: xml.etree.ElementTree.Element, scenario_version: str) -> None:
@@ -136,7 +137,8 @@ class Experiment:
         """
         info_xml = xml.etree.ElementTree.Element("info")
         xml.etree.ElementTree.SubElement(info_xml, "start_date").text = str(datetime.datetime.now().date())
-        xml.etree.ElementTree.SubElement(info_xml, "computer").text = os.environ["COMPUTER" + "NAME"]
+        # noinspection SpellCheckingInspection
+        xml.etree.ElementTree.SubElement(info_xml, "computer").text = os.environ["COMPUTERNAME"]
         versions = xml.etree.ElementTree.SubElement(info_xml, "versions")
         xml.etree.ElementTree.SubElement(versions, "core").text = str(base.VERSION.latest)
         parts = xml.etree.ElementTree.SubElement(versions, "parts")

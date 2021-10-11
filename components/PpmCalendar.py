@@ -69,6 +69,7 @@ class PpmCalendar(base.Component):
     base.VERSION.added("1.7.0", "Type hints to `components.PpmCalendar` ")
     base.VERSION.added("1.7.0", "Type hints to `components.SprayApplication` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.PpmCalendar` with base class")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.PpmCalendar` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(PpmCalendar, self).__init__(name, default_observer, default_store)
@@ -188,10 +189,9 @@ class PpmCalendar(base.Component):
                         random.uniform(0, 1) <= probability_field_applied:
                     for year in range(simulation_start_year, simulation_end_year + 1):
                         for applicationWindow in application_windows:
-                            window_start = datetime.datetime.strptime(str(year) + "-" + applicationWindow[0],
-                                                                      "%Y-%m-%d").date()
-                            window_end = datetime.datetime.strptime(str(year) + "-" + applicationWindow[1],
-                                                                    "%Y-%m-%d").date()
+                            window_start = datetime.datetime.strptime(
+                                f"{year}-{applicationWindow[0]}", "%Y-%m-%d").date()
+                            window_end = datetime.datetime.strptime(f"{year}-{applicationWindow[1]}", "%Y-%m-%d").date()
                             application_date = datetime.datetime.fromordinal(
                                 random.randint(window_start.toordinal(), window_end.toordinal()))
                             spray_application = SprayApplication(field, application_date, "PPP", application_rate,

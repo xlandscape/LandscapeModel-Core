@@ -1,5 +1,44 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-09-17.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-11.
+
+## [1.8] - 2021-10-11
+
+### Added
+
+### Changed
+- Replaced Legacy format strings by f-strings in `base.VersionCollection` 
+- Replaced Legacy format strings by f-strings in `init.py` 
+- Replaced Legacy format strings by f-strings in `base.Output` 
+- Replaced Legacy format strings by f-strings in `base.OutputContainer` 
+- Replaced Legacy format strings by f-strings in `base.Input` 
+- Replaced Legacy format strings by f-strings in `base.InputContainer` 
+- Replaced Legacy format strings by f-strings in `base.Experiment` 
+- Replaced Legacy format strings by f-strings in `base.functions` 
+- Replaced Legacy format strings by f-strings in `attrib.Class` 
+- Replaced Legacy format strings by f-strings in `attrib.Equals` 
+- Replaced Legacy format strings by f-strings in `attrib.InList` 
+- Replaced Legacy format strings by f-strings in `attrib.Scales` 
+- Replaced Legacy format strings by f-strings in `attrib.Unit` 
+- Replaced Legacy format strings by f-strings in `components.DepositionToReach` 
+- Replaced Legacy format strings by f-strings in `stores.InMemoryStore` 
+- Replaced Legacy format strings by f-strings in `stores.SqlLiteStore` 
+- Replaced Legacy format strings by f-strings in `stores.X3dfStore` 
+- Replaced Legacy format strings by f-strings in `components.ExportData` 
+- Replaced Legacy format strings by f-strings in `components.ReportingHydrographicMap` 
+- Replaced Legacy format strings by f-strings in `components.HydrologyFromTimeSeries` 
+- Replaced Legacy format strings by f-strings in `components.LandscapeScenarioPreparation` 
+- Replaced Legacy format strings by f-strings in `components.LandscapeScenario` 
+- Replaced Legacy format strings by f-strings in `components.MarsWeather` 
+- Replaced Legacy format strings by f-strings in `components.PpmCalendar` 
+- Replaced Legacy format strings by f-strings in `base.MCRun` 
+- Replaced Legacy format strings by f-strings in `base.UncertaintyAndSensitivityAnalysis` 
+- Replaced Legacy format strings by f-strings in `base.documentation` 
+- Replaced Legacy format strings by f-strings in `observer.ConsoleObserver` 
+- Replaced Legacy format strings by f-strings in `observer.GraphMLObserver` 
+- Replaced Legacy format strings by f-strings in `observer.LogFileObserver` 
+
+### Fixed
+
 
 ## [1.7] - 2021-09-17
 

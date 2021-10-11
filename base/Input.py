@@ -17,6 +17,7 @@ class Input:
     base.VERSION.added("1.5.0", "`base.Input.description` ")
     base.VERSION.changed("1.5.3", "`base.Input` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Input` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Input` ")
 
     def __init__(
             self,
@@ -56,7 +57,7 @@ class Input:
         :return: The data values in their respective format.
         """
         if self._provider is None:
-            raise ValueError("Input '" + self._name + "' has no provider")
+            raise ValueError(f"Input '{self.name}' has no provider")
         values = base.Values(self.provider.get_values(**keywords), self._extensions, **self.provider.describe())
         self._messages = []
         for attrib in self._attributes:

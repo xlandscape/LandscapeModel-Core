@@ -55,6 +55,8 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.6.0", "`components.HydrologyFromTimeSeries` casts exported WKB geometries to bytes")
     base.VERSION.added("1.7.0", "Type hints to `components.HydrologyFromTimeSeries` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.HydrologyFromTimeSeries` with base class")
+    base.VERSION.changed(
+        "1.8.0", "Replaced Legacy format strings by f-strings in `components.HydrologyFromTimeSeries` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(HydrologyFromTimeSeries, self).__init__(name, default_observer, default_store)
@@ -118,12 +120,14 @@ class HydrologyFromTimeSeries(base.Component):
         offset_hours = int((datetime.datetime.combine(from_time, datetime.time(1)) - time_series_start).days * 24)
         if offset_hours < 0:
             raise ValueError(
-                "Requested {} too early values; values available for {} to {}".format(-offset_hours, time_series_start,
-                                                                                      time_series_end))
+                f"Requested {-offset_hours} too early values; values available for {time_series_start} to "
+                f"{time_series_end}"
+            )
         if number_hours - flow.shape[0] > 0:
             raise ValueError(
-                "Requested {} too late values; values available for {} to {}".format(
-                    number_hours - flow.shape[0], time_series_start, time_series_end))
+                f"Requested {number_hours - flow.shape[0]} too late values; values available for {time_series_start} "
+                f"to {time_series_end}"
+            )
         self.outputs["Flow"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
@@ -182,18 +186,18 @@ class HydrologyFromTimeSeries(base.Component):
                 unit="m³/d"
             )
             for reach_index, inflow_file in enumerate(inflow_files):
-                self.default_observer.write_message(5, "Importing reach inflows from " + inflow_file + "...")
+                self.default_observer.write_message(5, f"Importing reach inflows from {inflow_file}...")
                 inflows = np.full((number_hours,), np.inf)
                 with open(os.path.join(inflow_path, inflow_file)) as f:
                     lines = f.readlines()
                     data = [line[:-1].split(",") for line in lines[1:]]
                     for record in data:
                         if record[0] != inflow_file[:-4]:
-                            raise ValueError("Unexpected reach in file: " + inflow_file)
+                            raise ValueError(f"Unexpected reach in file: {inflow_file}")
                         time_index = int((datetime.datetime.strptime(
                             record[1], "%Y-%m-%dT%H:%M") - time_series_start).total_seconds() / 3600) - offset_hours
                         if 0 <= time_index < number_hours:
                             inflows[time_index] = float(record[2])
                     if np.any(np.isinf(inflows)):
-                        raise ValueError("Unexpected temporal layout in file: " + inflow_file)
+                        raise ValueError(f"Unexpected temporal layout in file: {inflow_file}")
                     self.outputs["Inflow"].set_values(inflows, slices=(slice(number_hours), reach_index), create=False)

@@ -42,7 +42,7 @@ class VersionCollection:
         parsed_version = distutils.version.StrictVersion(version)
         result = [x for x in self._versions if x == parsed_version]
         if len(result) != 1:
-            raise IndexError("Version number not found: " + version)
+            raise IndexError(f"Version number not found: {version}")
         result[0].added(message)
 
     def changed(self, version: str, message: str) -> None:
@@ -55,7 +55,7 @@ class VersionCollection:
         parsed_version = distutils.version.StrictVersion(version)
         result = [x for x in self._versions if x == parsed_version]
         if len(result) != 1:
-            raise IndexError("Version number not found: " + version)
+            raise IndexError(f"Version number not found: {version}")
         result[0].changed(message)
 
     def fixed(self, version: str, message: str) -> None:
@@ -68,7 +68,7 @@ class VersionCollection:
         parsed_version = distutils.version.StrictVersion(version)
         result = [x for x in self._versions if x == parsed_version]
         if len(result) != 1:
-            raise IndexError("Version number not found: " + version)
+            raise IndexError(f"Version number not found: {version}")
         result[0].fixed(message)
 
     @property

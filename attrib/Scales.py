@@ -15,6 +15,7 @@ class Scales(base.DataAttribute):
     base.VERSION.changed("1.4.9", "`attrib.Scales` changelog uses markdown for code elements")
     base.VERSION.changed("1.7.0", "`attrib.Scales` got new base class `base.DataAttribute` ")
     base.VERSION.added("1.7.0", "Type hints to `attrib.Scales` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Scales` ")
 
     def __init__(self, expected_scales: str, severity: int = 2) -> None:
         self._scales = expected_scales
@@ -29,9 +30,9 @@ class Scales(base.DataAttribute):
         if values.scales is None:
             return base.CheckResult((self._severity, "Values have unknown scale, requested scale ignored"), values)
         if values.scales == self._scales:
-            return base.CheckResult((4, "Values have scales " + str(self._scales)), values)
+            return base.CheckResult((4, f"Values have scales {self.scales}"), values)
         return base.CheckResult(
-            (self._severity, "Values have scales " + values.scales + ", not " + str(self._scales)), values)
+            (self._severity, f"Values have scales {values.scales}, not {self.scales}"), values)
 
     @property
     def name(self) -> str:

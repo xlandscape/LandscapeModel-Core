@@ -16,6 +16,7 @@ class InputContainer:
     base.VERSION.added("1.4.1", "Changelog in `base.InputContainer` ")
     base.VERSION.changed("1.5.3", "`base.InputContainer` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.InputContainer` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.InputContainer` ")
 
     def __init__(
             self,
@@ -36,9 +37,9 @@ class InputContainer:
             component_input = self._items[key]
         except KeyError:
             if isinstance(self._component, base.Component):
-                raise KeyError("Component '" + self._component.name + "' has no input named '" + key + "'")
+                raise KeyError(f"Component '{self.component.name}' has no input named '{key}'")
             else:
-                raise KeyError("There is no output named '" + key + "'")
+                raise KeyError(f"There is no output named '{key}'")
         return component_input
 
     def __setitem__(self, key: str, value: base.Output) -> None:

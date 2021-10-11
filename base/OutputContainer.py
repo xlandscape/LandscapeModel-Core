@@ -18,6 +18,7 @@ class OutputContainer:
         "1.5.0", "Iteration over `base.OutputContainer` now returns `Output` objects instead of their names")
     base.VERSION.changed("1.5.3", "`base.OutputContainer` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.OutputContainer` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.OutputContainer` ")
 
     def __init__(
             self,
@@ -35,9 +36,9 @@ class OutputContainer:
             output = self._items[key]
         except KeyError:
             if isinstance(self._component, base.Component):
-                raise KeyError("Component '" + self._component.name + "' has no output named '" + str(key) + "'")
+                raise KeyError(f"Component '{self.component.name}' has no output named '{key}'")
             else:
-                raise KeyError("There is no output named '" + str(key) + "'")
+                raise KeyError(f"There is no output named '{key}'")
         return output
 
     def __iter__(self) -> typing.Iterator[base.Output]:

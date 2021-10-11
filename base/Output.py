@@ -22,6 +22,7 @@ class Output:
     base.VERSION.changed("1.5.3", "`base.Output` changelog uses markdown for code elements")
     base.VERSION.fixed("1.5.6", "Handling of omitted `base.Output` attribute hints")
     base.VERSION.added("1.7.0", "Type hints to `base.Output` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Output` ")
 
     def __init__(
             self,
@@ -38,7 +39,7 @@ class Output:
         if component is None:
             self._storeName = name
         else:
-            self._storeName = component.name + "/" + name
+            self._storeName = f"{component.name}/{name}"
         self._default_attributes = {} if default_attributes is None else default_attributes
         self._description = description
         self._attribute_hints = {} if attribute_hints is None else attribute_hints

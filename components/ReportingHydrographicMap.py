@@ -48,6 +48,8 @@ class ReportingHydrographicMap(base.Component):
     base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` markdown usage extended")
     base.VERSION.added("1.7.0", "Type hints to `components.ReportingHydrographicMap` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingHydrographicMap` with base class")
+    base.VERSION.changed(
+        "1.8.0", "Replaced Legacy format strings by f-strings in `components.ReportingHydrographicMap` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(ReportingHydrographicMap, self).__init__(name, default_observer, default_store)
@@ -136,7 +138,7 @@ class ReportingHydrographicMap(base.Component):
                 normalization = matplotlib.colors.LogNorm(vmin=min_value, vmax=max_value, clip=True)
                 na_value = 0
             else:
-                raise ValueError("Unknown normalization option " + values_normalization)
+                raise ValueError(f"Unknown normalization option {values_normalization}")
         color_map = self._inputs["ColorMap"].read().values \
             if self._inputs["ColorMap"].has_provider \
             else ("green", "yellow", "red")

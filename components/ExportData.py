@@ -32,6 +32,7 @@ class ExportData(base.Component):
     base.VERSION.fixed("1.5.4", "`components.ExportData` data type access")
     base.VERSION.added("1.7.0", "Type hints to `components.ExportData` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ExportData` with base class")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.ExportData` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(ExportData, self).__init__(name, default_observer, default_store)
@@ -71,7 +72,7 @@ class ExportData(base.Component):
             store = stores.SqlLiteStore(
                 self._inputs["FilePath"].read().values, self.default_observer, self._inputs["Create"].read().values)
         else:
-            raise ValueError("Store type not supported: " + store_type)
+            raise ValueError(f"Store type not supported: {store_type}")
         source_description = self._inputs["Values"].describe()
         output = base.Output(self._inputs["Values"].provider.output.name.split("/")[-1], store, self)
         foreign_keys = self._inputs["ForeignKey"].read().values if self._inputs["ForeignKey"].has_provider else None

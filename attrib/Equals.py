@@ -18,6 +18,7 @@ class Equals(base.DataAttribute):
     base.VERSION.changed("1.4.9", "`attrib.Equals` changelog uses markdown for code elements")
     base.VERSION.changed("1.7.0", "`attrib.Equals` got new base class `base.DataAttribute` ")
     base.VERSION.added("1.7.0", "Type hints to `attrib.Equals` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Equals` ")
 
     def __init__(self, value: typing.Any, severity: int = 1) -> None:
         self._value = value
@@ -30,10 +31,10 @@ class Equals(base.DataAttribute):
         :return: A CheckResults object.
         """
         if self._value == values.values:
-            return base.CheckResult((4, "Equals " + str(self.value)), values)
+            return base.CheckResult((4, f"Equals {self.value}"), values)
         else:
             return base.CheckResult(
-                (self._severity, "Value " + str(values.values) + " does not equal " + str(self.value)),
+                (self._severity, f"Value {values.values} does not equal {self.value}"),
                 values
             )
 

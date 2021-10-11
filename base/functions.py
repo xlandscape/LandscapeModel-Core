@@ -44,6 +44,7 @@ base.VERSION.changed("1.5.4", "parsing of raw parameters in `base.functions` ")
 base.VERSION.added("1.5.9", "`base.functions.run_process()` option to run external processes minimized")
 base.VERSION.added("1.6.5", "`base.functions.run_process()` makes use of new Python dict union operator")
 base.VERSION.added("1.7.0", "Type hints to `base.functions` ")
+base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.functions` ")
 
 
 def cartesian_product(*arrays: np.ndarray) -> np.ndarray:
@@ -134,7 +135,7 @@ def convert(input_config: xml.etree.ElementTree.Element) -> typing.Optional[
         elif input_config.attrib["type"] == "datetime":
             value = datetime.datetime.strptime(raw_value, "%Y-%m-%d %H:%M")
         else:
-            raise ValueError("Unsupported type of input '" + input_config.tag + "': " + input_config.attrib["type"])
+            raise ValueError(f"Unsupported type of input '{input_config.tag}': {input_config.attrib['type']}")
     else:
         value = raw_value
     return value
@@ -175,13 +176,13 @@ def replace_tokens(tokens: typing.Mapping[str, str], source: str, destination: s
     """
     parsed_source = source
     for key, value in tokens.items():
-        parsed_source = parsed_source.replace("$(" + key + ")", str(value or ""))
+        parsed_source = parsed_source.replace(f"$({key})", str(value or ""))
     with open(parsed_source) as file:
         configuration = file.read()
         for key, value in tokens.items():
-            configuration = configuration.replace("$$(" + key + ")", str(value or ""))
+            configuration = configuration.replace(f"$$({key})", str(value or ""))
         for key, value in tokens.items():
-            configuration = configuration.replace("$(" + key + ")", str(value or ""))
+            configuration = configuration.replace(f"$({key})", str(value or ""))
         with open(destination, "w") as f:
             f.write(configuration)
 

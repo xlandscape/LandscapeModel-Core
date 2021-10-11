@@ -24,6 +24,7 @@ class Class(base.DataAttribute):
         "Removed support of string-based type definitions in `attrib.Class` in favor for generic types introduced in "
         "Python 3.9"
     )
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Class` ")
 
     def __init__(self, expected_type: type, severity: int = 2) -> None:
         self._type = expected_type
@@ -48,9 +49,9 @@ class Class(base.DataAttribute):
         """
         if isinstance(values.values, (list, tuple)):
             if all(isinstance(x, element_type) for x in values.values):
-                return 4, "Values are of type " + str(self.type)
+                return 4, f"Values are of type {self.type}"
             else:
-                return self.severity, "Values are not of type " + str(self.type)
+                return self.severity, f"Values are not of type {self.type}"
         else:
             return self._severity, "Values are not a list"
 
@@ -68,7 +69,7 @@ class Class(base.DataAttribute):
             return self.check_list_type(values, float)
         elif self.type == list[str]:
             return self.check_list_type(values, str)
-        return self.severity, "Check for unknown type " + str(self.type)
+        return self.severity, f"Check for unknown type {self.type}"
 
     def check_type(self, values: base.Values) -> tuple[int, str]:
         """
@@ -77,11 +78,11 @@ class Class(base.DataAttribute):
         :return: A tuple representing the result of the check.
         """
         if isinstance(values.values, self._type):
-            return 4, "Values are of type " + str(self._type)
+            return 4, f"Values are of type {self.type}"
         else:
             return (
                 self._severity,
-                "Values are of type " + str(type(values.values)) + ", not of type " + str(self._type)
+                f"Values are of type {type(values.values)}, not of type {self.type}"
             )
 
     @property

@@ -21,6 +21,7 @@ class LogFileObserver(base.Observer):
     base.VERSION.changed("1.5.3", "`observer.LogFileObserver` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.3", "`observer.LogFileObserver` uses utf-8 encoding for logfiles")
     base.VERSION.added("1.7.0", "Type hints to `observer.LogFileObserver` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.LogFileObserver` ")
 
     def __init__(self, **keywords):
         super(LogFileObserver, self).__init__()
@@ -46,7 +47,7 @@ class LogFileObserver(base.Observer):
         :return: Nothing.
         """
         for message in component_input.messages:
-            self.write_message(message[0], component_input.name + ":" + message[1] + ":GetValues", message[2])
+            self.write_message(message[0], f"{component_input.name}:{message[1]}:GetValues", message[2])
 
     def mc_run_finished(self, detail: str = "") -> None:
         """
@@ -65,7 +66,7 @@ class LogFileObserver(base.Observer):
         :param message: The message to report.
         :return: Nothing.
         """
-        self.write_message(level, store_name + ":SetValues", message)
+        self.write_message(level, f"{store_name}:SetValues", message)
 
     def write_message(self, level: int, message: str, detail: str = "") -> None:
         """
@@ -88,10 +89,10 @@ class LogFileObserver(base.Observer):
         else:
             severity = ""
         if detail == "":
-            self.write("{:6s}{}\n".format(severity, message))
+            self.write(f"{severity.ljust(6)}{message}\n")
         else:
-            self.write("{:6s}{}\n".format(severity, message))
-            self.write(" " * 6 + detail + "\n")
+            self.write(f"{severity.ljust(6)}{message}\n")
+            self.write(f"      {detail}\n")
 
     def mc_run_started(self, composition: typing.Mapping[str, base.Component]) -> None:
         """

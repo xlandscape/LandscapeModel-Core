@@ -37,6 +37,7 @@ class SqlLiteStore(base.Store):
     base.VERSION.changed("1.5.3", "`store.SqlLiteStore` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `stores.SqlLiteStore` ")
     base.VERSION.fixed("1.7.0", "Check for slices containing steps in `stores.SqlLiteStore` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.SqlLiteStore` ")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         self._observer = observer
@@ -91,12 +92,11 @@ class SqlLiteStore(base.Store):
         :return: Nothing.
         """
         if len(keywords) > 0:
-            self._observer.write_message(2, "Ignoring keywords: {}".format(keywords))
+            self._observer.write_message(2, f"Ignoring keywords: {keywords}")
         numpy_mappings = {float: "REAL", np.dtype("<f8"): "REAL", np.dtype("int32"): "INTEGER", np.dtype("<f4"): "REAL"}
         if create:
             if scales is None:
-                self._observer.store_set_values(3, "SqlLiteStore",
-                                                "No scale given for {}: assuming global".format(name))
+                self._observer.store_set_values(3, "SqlLiteStore", f"No scale given for {name}: assuming global")
             scale = scales if scales else "global"
         else:
             scale = self._connection.execute(
@@ -105,17 +105,17 @@ class SqlLiteStore(base.Store):
         scale_info = self._connection.execute("SELECT shape FROM scales WHERE scale = ?", (scale,)).fetchone()
         if isinstance(values, str):
             data_type = "TEXT"
-            encoded_values = ("'{}'".format(values))
+            encoded_values = f"'{values}'"
             original_type = "str"
             stored_shape = (1,)
         elif isinstance(values, datetime.datetime):
             data_type = "TIMESTAMP"
-            encoded_values = "'{}'".format(values)
+            encoded_values = f"'{values}'"
             original_type = "datetime.datetime"
             stored_shape = (1,)
         elif isinstance(values, datetime.date):
             data_type = "DATE"
-            encoded_values = "'{}'".format(values)
+            encoded_values = f"'{values}'"
             original_type = "datetime.date"
             stored_shape = (1,)
         elif isinstance(values, float):
@@ -147,7 +147,7 @@ class SqlLiteStore(base.Store):
                 data_type = "REAL"
                 original_type = "list[float]"
             else:
-                raise ValueError("Cannot store list: {}".format(values))
+                raise ValueError(f"Cannot store list: {values}")
             encoded_values = [(x, i) for i, x in enumerate(values)]
             stored_shape = (len(values),)
         elif isinstance(values, tuple):
@@ -155,18 +155,18 @@ class SqlLiteStore(base.Store):
                 data_type = "REAL"
                 original_type = "tuple[float]"
             else:
-                raise ValueError("Cannot store tuple: {}".format(values))
+                raise ValueError(f"Cannot store tuple: {values}")
             encoded_values = [(x, i) for i, x in enumerate(values)]
             stored_shape = (len(values),)
         elif isinstance(values, type):
-            type_name = values.__module__ + "." + values.__qualname__
+            type_name = f"{values.__module__}.{values.__qualname__}"
             if type_name == "numpy.ndarray":
                 data_type = numpy_mappings[data_type]
                 original_type = "numpy.ndarray"
                 encoded_values = []
                 stored_shape = shape
             else:
-                raise ValueError("Cannot store type: {}".format(type_name))
+                raise ValueError(f"Cannot store type: {type_name}")
         elif isinstance(values, np.ndarray):
             data_type = numpy_mappings[values.dtype]
             original_type = "numpy.ndarray"
@@ -179,7 +179,7 @@ class SqlLiteStore(base.Store):
                     elif isinstance(dimension_slice, int):
                         indices[i] = np.full(1, dimension_slice, np.int)
                     else:
-                        raise ValueError("Unsupported slice type: {}, dimension {}".format(dimension_slice, i))
+                        raise ValueError(f"Unsupported slice type: {dimension_slice}, dimension {i}")
                 indices, stored_shape = self._cartesian_product(*indices)
                 flattened_values = values.flatten()
                 encoded_values = [[flattened_values[i]] + indices[i].tolist() for i in range(flattened_values.size)]
@@ -193,34 +193,35 @@ class SqlLiteStore(base.Store):
                 for i in range(len(encoded_values)):
                     encoded_values[i][0] = float(encoded_values[i][0])
             else:
-                raise ValueError("Cannot store numpy array values of type {}".format(values.dtype))
+                raise ValueError(f"Cannot store numpy array values of type {values.dtype}")
         else:
-            raise ValueError("Cannot store values of type {} as {}: {}".format(type(values), name, values))
+            raise ValueError(f"Cannot store values of type {type(values)} as {name}: {values}")
         if foreign_keys is None:
             fk_string = ""
         else:
             fk_string = "".join(
-                [", FOREIGN KEY ({}) REFERENCES {}".format(["i", "j", "k"][x[0]], x[1]) for
-                 x in enumerate(foreign_keys) if x[1]])
+                [f", FOREIGN KEY ({['i', 'j', 'k'][x[0]]}) REFERENCES {x[1]}" for x in enumerate(foreign_keys) if x[1]])
         if scale_info is None:
             if len(stored_shape) == 1:
-                self._connection.execute("CREATE TABLE `{}` (i INTEGER, PRIMARY KEY (i){})".format(scale, fk_string))
-                self._connection.executemany("INSERT INTO `{}` VALUES (?)".format(scale),
-                                             [(i,) for i in range(stored_shape[0])])
+                self._connection.execute(f"CREATE TABLE `{scale}` (i INTEGER, PRIMARY KEY (i){fk_string})")
+                self._connection.executemany(
+                    f"INSERT INTO `{scale}` VALUES (?)", [(i,) for i in range(stored_shape[0])])
             elif len(stored_shape) == 2:
-                self._connection.execute("CREATE TABLE `{}` (i INTEGER, j INTEGER, PRIMARY KEY (i, j){})".format(
-                    scale, fk_string))
-                self._connection.executemany("INSERT INTO `{}` VALUES (?, ?)".format(scale),
-                                             [(i, j) for i in range(stored_shape[0]) for j in range(stored_shape[1])])
+                self._connection.execute(
+                    f"CREATE TABLE `{scale}` (i INTEGER, j INTEGER, PRIMARY KEY (i, j){fk_string})")
+                self._connection.executemany(
+                    f"INSERT INTO `{scale}` VALUES (?, ?)",
+                    [(i, j) for i in range(stored_shape[0]) for j in range(stored_shape[1])]
+                )
             elif len(stored_shape) == 3:
                 self._connection.execute(
-                    "CREATE TABLE `{}` (i INTEGER, j INTEGER, k INTEGER, PRIMARY KEY (i, j, k){})".format(
-                        scale, fk_string))
-                self._connection.executemany("INSERT INTO `{}` VALUES (?, ?, ?)".format(scale),
-                                             [(i, j, k) for i in range(stored_shape[0]) for j in range(stored_shape[1])
-                                              for k in range(stored_shape[2])])
+                    f"CREATE TABLE `{scale}` (i INTEGER, j INTEGER, k INTEGER, PRIMARY KEY (i, j, k){fk_string})")
+                self._connection.executemany(
+                    f"INSERT INTO `{scale}` VALUES (?, ?, ?)",
+                    [(i, j, k) for i in range(stored_shape[0]) for j in range(stored_shape[1]) for k in range(
+                        stored_shape[2])])
             else:
-                raise ValueError("Unsupported number of dimensions: {}".format(stored_shape))
+                raise ValueError(f"Unsupported number of dimensions: {stored_shape}")
             self._connection.execute("INSERT INTO scales VALUES (?, ?)", (scale, str(stored_shape)))
             self._connection.commit()
             target_shape = stored_shape
@@ -228,32 +229,27 @@ class SqlLiteStore(base.Store):
             target_shape = eval(scale_info[0])
         if slices:
             if len(slices) != len(target_shape):
-                raise ValueError(
-                    "Wrong number of dimensions of {} slice: {}; expected: {}".format(name, slices, len(target_shape)))
+                raise ValueError(f"Wrong number of dimensions of {name} slice: {slices}; expected: {len(target_shape)}")
         else:
             if stored_shape != target_shape:
-                raise ValueError(
-                    "Wrong target shape of value {}: {}; expected: {}".format(name, stored_shape, target_shape))
+                raise ValueError(f"Wrong target shape of value {name}: {stored_shape}; expected: {target_shape}")
         if stored_shape == (1,) and create:
-            self._connection.execute(
-                "ALTER TABLE {} ADD COLUMN `{}` {} DEFAULT {}".format(scale, name, data_type, encoded_values))
+            self._connection.execute(f"ALTER TABLE {scale} ADD COLUMN `{name}` {data_type} DEFAULT {encoded_values}")
         else:
             if create:
                 if default is None:
-                    self._connection.execute("ALTER TABLE `{}` ADD COLUMN `{}` {}".format(scale, name, data_type))
+                    self._connection.execute(f"ALTER TABLE `{scale}` ADD COLUMN `{name}` {data_type}")
                 else:
-                    self._connection.execute(
-                        "ALTER TABLE `{}` ADD COLUMN `{}` {} DEFAULT {}".format(scale, name, data_type, default))
+                    self._connection.execute(f"ALTER TABLE `{scale}` ADD COLUMN `{name}` {data_type} DEFAULT {default}")
             if len(stored_shape) == 1:
-                self._connection.executemany("UPDATE `{}` SET `{}` = ? WHERE i = ?".format(scale, name), encoded_values)
+                self._connection.executemany(f"UPDATE `{scale}` SET `{name}` = ? WHERE i = ?", encoded_values)
             elif len(stored_shape) == 2:
-                self._connection.executemany("UPDATE `{}` SET `{}` = ? WHERE i = ? AND j = ?".format(scale, name),
-                                             encoded_values)
+                self._connection.executemany(f"UPDATE `{scale}` SET `{name}` = ? WHERE i = ? AND j = ?", encoded_values)
             elif len(stored_shape) == 3:
                 self._connection.executemany(
-                    "UPDATE `{}` SET `{}` = ? WHERE i = ? AND j = ? AND k = ?".format(scale, name), encoded_values)
+                    f"UPDATE `{scale}` SET `{name}` = ? WHERE i = ? AND j = ? AND k = ?", encoded_values)
             else:
-                raise ValueError("Cannot handle shape: {}".format(stored_shape))
+                raise ValueError(f"Cannot handle shape: {stored_shape}")
         if create:
             self._connection.execute(
                 "INSERT INTO data_attributes VALUES(?, ?, ?, ?, ?)", (name, scale, original_type, unit, str(chunks)))
@@ -268,24 +264,23 @@ class SqlLiteStore(base.Store):
         :return: The values in their original representation.
         """
         if len(keywords) > 0:
-            raise ValueError("Unknown keywords: {}".format(keywords))
+            raise ValueError(f"Unknown keywords: {keywords}")
         data_info = self._connection.execute("SELECT scale, x3_type FROM data_attributes WHERE data_name = ?",
                                              (name,)).fetchone()
         if slices:
             ranges = self._slices_to_range_limits(slices)
             if len(slices) == 1:
                 cursor = self._connection.execute(
-                    "SELECT `{}` FROM `{}` WHERE i >= ? AND i < ? ORDER BY i".format(name, data_info[0]), ranges)
+                    f"SELECT `{name}` FROM `{data_info[0]}` WHERE i >= ? AND i < ? ORDER BY i", ranges)
             elif len(slices) == 2:
                 cursor = self._connection.execute(
-                    "SELECT `{}` FROM `{}` WHERE i >= ? AND i < ? AND j >= ? AND j < ? ORDER BY i, j".format(name,
-                                                                                                             data_info[
-                                                                                                                 0]),
-                    ranges)
+                    f"SELECT `{name}` FROM `{data_info[0]}` WHERE i >= ? AND i < ? AND j >= ? AND j < ? ORDER BY i, j",
+                    ranges
+                )
             else:
-                raise ValueError("Unsupported length of slice for value {}: {}".format(name, slices))
+                raise ValueError(f"Unsupported length of slice for value {name}: {slices}")
         else:
-            cursor = self._connection.execute("SELECT `{}` FROM `{}`".format(name, data_info[0]))
+            cursor = self._connection.execute(f"SELECT `{name}` FROM `{data_info[0]}`")
         if data_info[1] in ["str", "float"]:
             return cursor.fetchone()[0]
         elif data_info[1] == "datetime.date":
@@ -306,15 +301,15 @@ class SqlLiteStore(base.Store):
             else:
                 target_shape = eval(
                     self._connection.execute("SELECT shape FROM scales WHERE scale = ?", (data_info[0],)).fetchone()[0])
-            table_info = self._connection.execute("PRAGMA table_info(`{}`)".format(data_info[0])).fetchall()
+            table_info = self._connection.execute(f"PRAGMA table_info(`{data_info[0]}`)").fetchall()
             data_type = [x[2] for x in table_info if x[1] == name][0]
             if data_type in ["INTEGER", "REAL"]:
                 return np.asarray([x[0] for x in cursor.fetchall()]).reshape(target_shape)
             else:
-                raise ValueError("Data type {} cannot be converted into a NumPy array".format(data_type))
+                raise ValueError(f"Data type {data_type} cannot be converted into a NumPy array")
         elif data_info[1] == "datetime.datetime":
             return datetime.datetime.strptime(cursor.fetchone()[0], "%Y-%m-%d %H:%M:%S")
-        raise TypeError("Stored type cannot be interpreted: " + data_info[1])
+        raise TypeError(f"Stored type cannot be interpreted: {data_info[1]}")
 
     @staticmethod
     def _cartesian_product(*arrays: np.ndarray) -> np.ndarray:
@@ -336,7 +331,7 @@ class SqlLiteStore(base.Store):
         data_info = self._connection.execute("SELECT scale FROM data_attributes WHERE data_name = ?",
                                              (name,)).fetchone()
         scale_info = self._connection.execute("SELECT shape FROM scales WHERE scale = ?", (data_info[0],)).fetchone()
-        table_info = self._connection.execute("PRAGMA table_info(`{}`)".format(data_info[0])).fetchall()
+        table_info = self._connection.execute(f"PRAGMA table_info(`{data_info[0]}`)").fetchall()
         data_type = [x[2] for x in table_info if x[1] == name][0]
         unit = self._connection.execute("SELECT unit FROM data_attributes WHERE data_name = ?", (name,)).fetchone()
         return {"shape": eval(scale_info[0]), "data_type": type_mappings[data_type], "chunks": None, "unit": unit[0]}
@@ -352,7 +347,7 @@ class SqlLiteStore(base.Store):
             elif isinstance(dimension_slice, int):
                 ranges[i] = (dimension_slice, dimension_slice + 1)
             else:
-                raise ValueError("Unsupported slice type: {}".format(dimension_slice))
+                raise ValueError(f"Unsupported slice type: {dimension_slice}")
         return functools.reduce(operator.iconcat, ranges, [])
 
     def close(self) -> None:
@@ -371,7 +366,7 @@ class SqlLiteStore(base.Store):
         """
         if partial:
             hits = self._connection.execute(
-                "SELECT data_name FROM data_attributes WHERE data_name LIKE ?", ("%" + name + "%",)).rowcount
+                "SELECT data_name FROM data_attributes WHERE data_name LIKE ?", (f"%{name}%",)).rowcount
         else:
             hits = self._connection.execute(
                 "SELECT data_name FROM data_attributes WHERE data_name = ?", (name,)).rowcount

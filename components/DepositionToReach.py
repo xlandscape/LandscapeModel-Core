@@ -92,5 +92,5 @@ class DepositionToReach(base.Component):
                 self.outputs["Deposition"].set_values(deposition, slices=(slice(data_set_info["shape"][0]), i),
                                                       create=False)
             else:
-                self.default_observer.write_message(2, "Could not map reach #" + str(reachId))
+                self.default_observer.write_message(2, f"Could not map reach #{reachId}")
         self.outputs["Reaches"].set_values(reaches, scales="space/reach")

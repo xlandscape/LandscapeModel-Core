@@ -71,7 +71,7 @@ class ExportData(base.Component):
             store = stores.SqlLiteStore(
                 self._inputs["FilePath"].read().values, self.default_observer, self._inputs["Create"].read().values)
         else:
-            raise ValueError("Store type not supported: " + store_type)
+            raise ValueError(f"Store type not supported: {store_type}")
         source_description = self._inputs["Values"].describe()
         output = base.Output(self._inputs["Values"].provider.output.name.split("/")[-1], store, self)
         foreign_keys = self._inputs["ForeignKey"].read().values if self._inputs["ForeignKey"].has_provider else None

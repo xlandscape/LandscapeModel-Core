@@ -188,10 +188,9 @@ class PpmCalendar(base.Component):
                         random.uniform(0, 1) <= probability_field_applied:
                     for year in range(simulation_start_year, simulation_end_year + 1):
                         for applicationWindow in application_windows:
-                            window_start = datetime.datetime.strptime(str(year) + "-" + applicationWindow[0],
-                                                                      "%Y-%m-%d").date()
-                            window_end = datetime.datetime.strptime(str(year) + "-" + applicationWindow[1],
-                                                                    "%Y-%m-%d").date()
+                            window_start = datetime.datetime.strptime(
+                                f"{year}-{applicationWindow[0]}", "%Y-%m-%d").date()
+                            window_end = datetime.datetime.strptime(f"{year}-{applicationWindow[1]}", "%Y-%m-%d").date()
                             application_date = datetime.datetime.fromordinal(
                                 random.randint(window_start.toordinal(), window_end.toordinal()))
                             spray_application = SprayApplication(field, application_date, "PPP", application_rate,

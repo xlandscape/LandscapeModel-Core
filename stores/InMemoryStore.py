@@ -47,7 +47,7 @@ class InMemoryStore(base.Store):
         try:
             values = self._data[name]
         except KeyError:
-            raise KeyError("InMemoryStore does not contain data for '" + name + "'")
+            raise KeyError(f"InMemoryStore does not contain data for '{name}'")
         return values
 
     def set_values(
@@ -76,12 +76,12 @@ class InMemoryStore(base.Store):
         :return: Nothing.
         """
         if isinstance(values, type):
-            type_name = values.__module__ + "." + values.__qualname__
+            type_name = f"{values.__module__}.{values.__qualname__}"
             # noinspection SpellCheckingInspection
             if type_name == "numpy.ndarray" and create:
                 self._data[name] = numpy.zeros(shape, data_type)
             else:
-                raise TypeError("Unsupported type: " + str(type(values)))
+                raise TypeError(f"Unsupported type: {type(values)}")
         elif isinstance(values, numpy.ndarray) and slices is not None:
             self._data[name][slices] = values
         else:

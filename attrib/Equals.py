@@ -30,10 +30,10 @@ class Equals(base.DataAttribute):
         :return: A CheckResults object.
         """
         if self._value == values.values:
-            return base.CheckResult((4, "Equals " + str(self.value)), values)
+            return base.CheckResult((4, f"Equals {self.value}"), values)
         else:
             return base.CheckResult(
-                (self._severity, "Value " + str(values.values) + " does not equal " + str(self.value)),
+                (self._severity, f"Value {values.values} does not equal {self.value}"),
                 values
             )
 

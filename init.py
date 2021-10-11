@@ -38,7 +38,7 @@ def run(argument: str, basedir: typing.Optional[str] = None) -> None:
         for elem in os.listdir(argument):
             run(os.path.join(argument, elem), basedir)
     else:
-        print("ERROR: Unknown file extension of " + argument)
+        print(f"ERROR: Unknown file extension of {argument}")
 
 
 def start_notebook() -> None:
@@ -52,7 +52,7 @@ def start_notebook() -> None:
     os.environ["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__)))
     app = notebook.notebookapp.NotebookApp()
     app.initialize([
-        r'--notebook-dir={}'.format(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "analysis")))
+        f"--notebook-dir={os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'analysis'))}"
     ])
     app.start()
 

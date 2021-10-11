@@ -38,13 +38,14 @@ class UncertaintyAndSensitivityAnalysis:
         """
         output_dir = os.path.dirname(self._params.xml)
         for uncertaintyAndSensitivityAnalysis in range(self._params.uncertainty_sensitivity_analysis):
-            uncertainty_analysis_name = self._params.params["SimID"] + "-" + str(uncertaintyAndSensitivityAnalysis + 1)
+            uncertainty_analysis_name = f"{self._params.params['SimID']}-{uncertaintyAndSensitivityAnalysis + 1}"
             # noinspection SpellCheckingInspection
-            destination = os.path.join(output_dir, self._params.subdir, uncertainty_analysis_name + ".xrun")
+            destination = os.path.join(output_dir, self._params.subdir, f"{uncertainty_analysis_name}.xrun")
             if os.path.exists(destination):
                 raise FileExistsError(
-                    "Cannot create uncertainty/sensitivity analysis parameterization: file " +
-                    destination + " already exists")
+                    f"Cannot create uncertainty/sensitivity analysis parameterization: file {destination} already "
+                    "exists"
+                )
             if not os.path.exists(os.path.dirname(destination)):
                 os.makedirs(os.path.dirname(destination))
             parameters_element = xml.etree.ElementTree.Element("Parameters")
@@ -64,7 +65,7 @@ class UncertaintyAndSensitivityAnalysis:
                                 round(np.random.normal(float(p[0]), float(p[1]), 1)[0], 4)
                             )
                         else:
-                            raise ValueError("Unknown function: " + f)                        
+                            raise ValueError(f"Unknown function: {f}")
                     else:
                         xml.etree.ElementTree.SubElement(parameters_element, param).text = str(value)
             xml.etree.ElementTree.ElementTree(parameters_element).write(

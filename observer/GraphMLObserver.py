@@ -44,8 +44,8 @@ class GraphMLObserver(base.Observer):
             {
                 "xmlns": "http://graphml.graphdrawing.org/xmlns",
                 "xmlns:xsi": "http://www.w3org/2001/XMLSchema-instance",
-                "xsi:schemaLocation": "http://graphml.graphdrawing.org/xmlns " +
-                                      "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"
+                "xsi:schemaLocation":
+                    "http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"
             }
         )
         graph_ml.append(xml.etree.ElementTree.Element(
@@ -70,7 +70,7 @@ class GraphMLObserver(base.Observer):
                 edge = xml.etree.ElementTree.Element("edge", {"source": providing_component, "target": component.name})
                 graph.append(edge)
             if self._include_modules and component.module:
-                module_label = component.module.name + " " + component.module.version
+                module_label = f"{component.module.name} {component.module.version}"
                 modules.add(module_label)
                 edge = xml.etree.ElementTree.Element("edge", {"source": component.name, "target": module_label})
                 graph.append(edge)

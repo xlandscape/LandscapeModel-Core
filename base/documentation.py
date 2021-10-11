@@ -46,22 +46,21 @@ def write_changelog(name: str, version_history: base.VersionCollection, file_pat
     """
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Changelog\n")
-        f.write("This is the changelog for the {}. It was automatically created on {}.".format(
-            name,
-            datetime.date.today()
-        ))
+        f.write(f"This is the changelog for the {name}. It was automatically created on {datetime.date.today()}.")
         for version in version_history:
-            f.write(
-                "\n\n## [{}]{}\n\n".format(version, "" if version.date is None else " - {}".format(version.date)))
+            if version.date is None:
+                f.write(f"\n\n## [{version}]\n\n")
+            else:
+                f.write(f"\n\n## [{version}] - {version.date}\n\n")
             f.write("### Added\n")
             for message in version.additions:
-                f.write("- {}\n".format(message))
+                f.write(f"- {message}\n")
             f.write("\n### Changed\n")
             for message in version.changes:
-                f.write("- {}\n".format(message))
+                f.write(f"- {message}\n")
             f.write("\n### Fixed\n")
             for message in version.fixes:
-                f.write("- {}\n".format(message))
+                f.write(f"- {message}\n")
 
 
 def document_components(components_module: types.ModuleType, file_path: str) -> None:
@@ -74,10 +73,10 @@ def document_components(components_module: types.ModuleType, file_path: str) -> 
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Components\n")
         f.write("This file lists all components that are currently included in the Landscape Model core.\n")
-        f.write("It was automatically created on {}.\n".format(datetime.date.today()))
+        f.write(f"It was automatically created on {datetime.date.today()}.\n")
         for name, member in components_module.__dict__.items():
             if inspect.isclass(member) and issubclass(member, base.Component):
-                f.write("\n\n## {}".format(name))
+                f.write(f"\n\n## {name}")
                 f.write(member.__doc__)
 
 
@@ -91,10 +90,10 @@ def document_observers(observers_module: types.ModuleType, file_path: str) -> No
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Observers\n")
         f.write("This file lists all observers that are currently included in the Landscape Model core.\n")
-        f.write("It was automatically created on {}.\n".format(datetime.date.today()))
+        f.write(f"It was automatically created on {datetime.date.today()}.\n")
         for name, member in observers_module.__dict__.items():
             if inspect.isclass(member) and issubclass(member, base.Observer):
-                f.write("\n\n## {}".format(name))
+                f.write(f"\n\n## {name}")
                 f.write(member.__doc__)
 
 
@@ -108,10 +107,10 @@ def document_stores(stores_module: types.ModuleType, file_path: str) -> None:
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Stores\n")
         f.write("This file lists all stores that are currently included in the Landscape Model core.\n")
-        f.write("It was automatically created on {}.\n".format(datetime.date.today()))
+        f.write(f"It was automatically created on {datetime.date.today()}.\n")
         for name, member in stores_module.__dict__.items():
             if inspect.isclass(member) and issubclass(member, base.Store):
-                f.write("\n\n## {}".format(name))
+                f.write(f"\n\n## {name}")
                 f.write(member.__doc__)
 
 
@@ -130,11 +129,20 @@ def document_component(
     component name.
     :return: Nothing.
     """
-    module_doc = "" if component.module.doc_file is None else "(see `" + component.module.doc_file + "` for details)"
+    module_doc = "" if component.module.doc_file is None else f"(see `{component.module.doc_file}` for details)"
     configuration_xml = xml.etree.ElementTree.parse(sample_configuration)
     component_name = component.name if sample_component_name is None else sample_component_name
+    sample_configuration = "\n".join(
+        textwrap.wrap(
+            inspect.cleandoc(
+                xml.etree.ElementTree.tostring(
+                    configuration_xml.getroot().find("Composition").find(component_name)).decode("utf-8")),
+            120,
+            replace_whitespace=False
+        )
+    )
     with open(file_path, "w", encoding="utf-8") as f:
-        f.write("""## Table of Contents
+        f.write(f"""## Table of Contents
 * [About the project](#about-the-project)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
@@ -151,27 +159,27 @@ def document_component(
 
 
 ## About the project
-{about}  
+{inspect.cleandoc(component.__doc__)}  
 This is an automatically generated documentation based on the available code and in-line documentation. The current
-version of this document is from {current_date}.  
+version of this document is from {datetime.date.today()}.  
 
 ### Built with
-* Landscape Model core version {core_version}
-* {module_name} version {module_version} {module_doc_file}
+* Landscape Model core version {base.VERSION.latest}
+* {component.module.name} version {component.module.version} {module_doc}
 
 
 ## Getting Started
-The component can be used in any Landscape Model based on core version {core_version} or newer. See the Landscape Model
-core's `README` for general tips on how to add a component to a Landscape Model.
+The component can be used in any Landscape Model based on core version {base.VERSION.latest} or newer. See the Landscape
+Model core's `README` for general tips on how to add a component to a Landscape Model.
 
 ### Prerequisites
 A model developer that wants to add the `{component_name}` component to a Landscape Model needs to set up the general 
 structure for a Landscape Model first. See the Landscape Model core's `README` for details on how to do so.
 
 ### Installation
-1. Copy the `{component_name}` component into the `model\\variant` sub-folder.
-2. Make use of the component by including it into the model composition using `module={component_module}` and 
-   `class={component_class}`. 
+1. Copy the `{component.name}` component into the `model\\variant` sub-folder.
+2. Make use of the component by including it into the model composition using `module={component.__module__}` and 
+   `class={type(component).__name__}`. 
 
 
 ## Usage
@@ -182,94 +190,74 @@ The following gives a sample configuration of the `{component_name}` component. 
 ```
 
 ### Inputs
-""".format(
-            about=inspect.cleandoc(component.__doc__),
-            current_date=datetime.date.today(),
-            core_version=base.VERSION.latest,
-            module_name=component.module.name,
-            module_version=component.module.version,
-            module_doc_file=module_doc,
-            component_name=component.name,
-            component_module=component.__module__,
-            component_class=type(component).__name__,
-            sample_configuration="\n".join(
-                textwrap.wrap(
-                    inspect.cleandoc(
-                        xml.etree.ElementTree.tostring(
-                            configuration_xml.getroot().find("Composition").find(component_name)).decode("utf-8")),
-                    120,
-                    replace_whitespace=False
-                ))
-        ))
+""")
         for component_input in component.inputs:
-            f.write("#### {}\n".format(component_input.name))
+            f.write(f"#### {component_input.name}\n")
             if component_input.description:
-                f.write("{}  \n".format(inspect.cleandoc(component_input.description)))
+                f.write(f"{inspect.cleandoc(component_input.description)}  \n")
             for attribute in component_input.attributes:
                 if isinstance(attribute, attrib.Class):
-                    f.write("`{}` expects its values to be of type `{}`.\n".format(
-                        component_input.name,
-                        attribute.type if isinstance(attribute.type, str) else attribute.type.__name__
-                    ))
+                    f.write(
+                        f"`{component_input.name}` expects its values to be of type `"
+                        f"{attribute.type if isinstance(attribute.type, str) else attribute.type.__name__}`.\n")
                 elif isinstance(attribute, attrib.Scales):
-                    f.write("Values have to refer to the `{}` scale.\n".format(attribute.scales))
+                    f.write(f"Values have to refer to the `{attribute.scales}` scale.\n")
                 elif isinstance(attribute, attrib.Unit):
                     if attribute.unit is None:
-                        f.write("Values of the `{}` input may not have a physical unit.\n".format(component_input.name))
+                        f.write(f"Values of the `{component_input.name}` input may not have a physical unit.\n")
                     else:
-                        f.write("The physical unit of the `{}` input values is `{}`.\n".format(
-                            component_input.name, attribute.unit))
+                        f.write(
+                            f"The physical unit of the `{component_input.name}` input values is `{attribute.unit}`.\n")
                 elif isinstance(attribute, attrib.InList):
-                    f.write("Allowed values are: {}.\n".format(
-                        ", ".join(["`" + str(x) + "`" for x in attribute.values])))
+                    allowed_values = ", ".join([f"`{x}`" for x in attribute.values])
+                    f.write(f"Allowed values are: {allowed_values}.\n")
                 elif isinstance(attribute, attrib.Equals):
-                    f.write("The currently only allowed value is {}.\n".format(attribute.value))
+                    f.write(f"The currently only allowed value is {attribute.value}.\n")
                 else:
-                    raise TypeError("Unsupported attribute type: " + str(type(attribute)))
+                    raise TypeError(f"Unsupported attribute type: {type(attribute)}")
             f.write("\n")
         f.write("### Outputs\n")
         for component_output in component.outputs:
-            f.write("#### {}\n".format(component_output.name))
+            f.write(f"#### {component_output.name}\n")
             if component_output.description:
-                f.write("{}  \n".format(inspect.cleandoc(component_output.description)))
+                f.write(f"{inspect.cleandoc(component_output.description)}  \n")
             for attribute, value in component_output.attribute_hints.items():
                 if attribute == "type":
-                    f.write("Values are expectedly of type `{}`.\n".format(
-                        value if isinstance(value, str) else value.__name__))
+                    f.write(f"Values are expectedly of type `{value if isinstance(value, str) else value.__name__}`.\n")
                 elif attribute == "shape":
-                    f.write("Value representation is in a {}-dimensional array.\n".format(len(value)))
+                    f.write(f"Value representation is in a {len(value)}-dimensional array.\n")
                     for i in range(len(value)):
-                        f.write("Dimension {} spans {}.\n".format(i + 1, value[i]))
+                        f.write(f"Dimension {i + 1} spans {value[i]}.\n")
                 elif attribute == "chunks":
-                    f.write("Chunking of the array is {}.\n".format(value))
+                    f.write(f"Chunking of the array is {value}.\n")
                 elif attribute == "data_type":
-                    f.write("Individual array elements have a type of `{}`.\n".format(value.__name__))
+                    f.write(f"Individual array elements have a type of `{value.__name__}`.\n")
                 elif attribute == "unit":
-                    f.write("Values expectedly have a unit of `{}`.\n".format(value))
+                    f.write(f"Values expectedly have a unit of `{value}`.\n")
                 else:
-                    raise ValueError("Unsupported default attribute: " + attribute)
+                    raise ValueError(f"Unsupported default attribute: {attribute}")
             for attribute, value in component_output.default_attributes.items():
                 if attribute == "data_type":
-                    f.write("Individual array elements have a type of `{}`.\n".format(value.__name__))
+                    f.write(f"Individual array elements have a type of `{value.__name__}`.\n")
                 elif attribute == "scales":
-                    f.write("The values apply to the following scale: `{}`.\n".format(value))
+                    f.write(f"The values apply to the following scale: `{value}`.\n")
                 elif attribute == "unit":
                     if value is None:
                         f.write("Values have no physical unit.\n")
                     else:
-                        f.write("The physical unit of the values is `{}`.\n".format(value))
+                        f.write(f"The physical unit of the values is `{value}`.\n")
                 elif attribute == "default":
-                    f.write("The default value of the output is `{}`.\n".format(value))
+                    f.write(f"The default value of the output is `{value}`.\n")
                 else:
-                    raise ValueError("Unsupported default attribute: " + attribute)
+                    raise ValueError(f"Unsupported default attribute: {attribute}")
         f.write("\n\n## Roadmap\n")
         if len(component.VERSION.roadmap) == 0:
-            f.write("The `{}` component is stable. No further development takes place at the moment.\n".format(
-                component.name))
+            f.write(f"The `{component.name}` component is stable. No further development takes place at the moment.\n")
         else:
-            f.write("The following changes will be part of future `{}` versions:\n".format(component.name))
+            f.write(f"The following changes will be part of future `{component.name}` versions:\n")
             for item in component.VERSION.roadmap:
-                f.write(inspect.cleandoc("* " + item) + "\n")
+                clean_doc = inspect.cleandoc(f"* {item}")
+                f.write(f"{clean_doc}\n")
         f.write("""
 
 ## Contributing
@@ -284,10 +272,10 @@ Distributed under the CC0 License. See `LICENSE` for more information.
 ## Contact
 """)
         for author in component.VERSION.authors:
-            f.write(author + "  \n")
+            f.write(f"{author}  \n")
         f.write("\n\n## Acknowledgements\n")
         for acknowledgement in component.VERSION.acknowledgements:
-            f.write("* " + acknowledgement + "  \n")
+            f.write(f"* {acknowledgement}  \n")
 
 
 def write_contribution_notes(file_path: str) -> None:
@@ -297,10 +285,10 @@ def write_contribution_notes(file_path: str) -> None:
     :return: Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
-        f.write("""# Contributing
-Contributions to the project are welcome. Please contact the authors.  
-These contribution notes refer to the general Landscape Model contribution guidelines and were written on {}. 
-""".format(datetime.date.today()))
+        f.write(f"""# Contributing
+Contributions to the project are welcome. Please contact the authors. These contribution notes refer to the general 
+Landscape Model contribution guidelines and were written on {datetime.date.today()}. 
+""")
 
 
 def document_scenario(info_file: str, file_path: str) -> None:
@@ -311,7 +299,7 @@ def document_scenario(info_file: str, file_path: str) -> None:
     """
     scenario_info = xml.etree.ElementTree.parse(info_file)
     with open(file_path, "w", encoding="utf-8") as f:
-        f.write("""## Table of Contents
+        f.write(f"""## Table of Contents
 * [About the project](#about-the-project)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
@@ -326,15 +314,15 @@ def document_scenario(info_file: str, file_path: str) -> None:
 
 
 ## About the project
-{about}
+{inspect.cleandoc(scenario_info.find('Description').text)}
 This is an automatically generated documentation based on the available scenario metadata. The current version of this 
-document is from {current_date}.
+document is from {datetime.date.today()}.
 
 ### Built with
 The scenario can be used in the following Landscape Models:
-""".format(about=inspect.cleandoc(scenario_info.find("Description").text), current_date=datetime.date.today()))
+""")
         for version in scenario_info.findall("SupportedRuntimeVersions/Version"):
-            f.write("* {} version {} and higher\n\n\n".format(version.attrib["variant"], version.attrib["number"]))
+            f.write(f"* {version.attrib['variant']} version {version.attrib['number']} and higher\n\n\n")
         f.write("""## Getting Started
 ### Prerequisites
 Make sure you use the latest version of the Landscape Model.
@@ -349,7 +337,7 @@ from the model parameterization. For details how to reference the scenario from 
 The scenario adds the following macros to the Landscape Model:
 """)
         for item in scenario_info.findall("Content/Item"):
-            f.write("* `:{}` (version {})\n".format(item.attrib["name"], item.attrib["version"]))
+            f.write(f"* `:{item.attrib['name']}` (version {item.attrib['version']})\n")
         f.write("""
 ### Roadmap
 The scenario is final and not further developed. It will be, however, updated to reflect new requirements by the 
@@ -367,10 +355,10 @@ Distributed under the CC0 License. See `LICENSE` for more information.
 ## Contact
 """)
         for contact in scenario_info.findall("Contacts/Contact"):
-            f.write("* " + contact.text + "\n")
+            f.write(f"* {contact.text}\n")
         f.write("\n\n## Acknowledgements\n")
         for acknowledgement in scenario_info.findall("Acknowledgements/Acknowledgement"):
-            f.write("* {}\n".format(acknowledgement.text))
+            f.write(f"* {acknowledgement.text}\n")
 
 
 def write_scenario_changelog(info_file: str, file_path: str) -> None:
@@ -383,14 +371,14 @@ def write_scenario_changelog(info_file: str, file_path: str) -> None:
     scenario_info = xml.etree.ElementTree.parse(info_file)
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Changelog\nThis list contains all additions, changes and fixes for the scenario.\n")
-        f.write("It was automatically created on {}".format(datetime.date.today()))
+        f.write(f"It was automatically created on {datetime.date.today()}")
         for version in scenario_info.findall("Changelog/Version"):
-            f.write("\n\n## [{}] - {}\n### Added\n".format(version.attrib["number"], version.attrib["date"]))
+            f.write(f"\n\n## [{version.attrib['number']}] - {version.attrib['date']}\n### Added\n")
             for addition in version.findall("Addition"):
-                f.write("- {}\n".format(addition.text))
+                f.write(f"- {addition.text}\n")
             f.write("\n###Changed\n")
             for change in version.findall("Change"):
-                f.write("- {}\n".format(change.text))
+                f.write(f"- {change.text}\n")
             f.write("\n###Fixed\n")
             for fix in version.findall("Fix"):
-                f.write("- {}\n".format(fix.text))
+                f.write(f"- {fix.text}\n")

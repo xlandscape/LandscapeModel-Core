@@ -29,9 +29,9 @@ class Scales(base.DataAttribute):
         if values.scales is None:
             return base.CheckResult((self._severity, "Values have unknown scale, requested scale ignored"), values)
         if values.scales == self._scales:
-            return base.CheckResult((4, "Values have scales " + str(self._scales)), values)
+            return base.CheckResult((4, f"Values have scales {self.scales}"), values)
         return base.CheckResult(
-            (self._severity, "Values have scales " + values.scales + ", not " + str(self._scales)), values)
+            (self._severity, f"Values have scales {values.scales}, not {self.scales}"), values)
 
     @property
     def name(self) -> str:

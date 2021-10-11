@@ -28,7 +28,7 @@ class InList(base.DataAttribute):
             return base.CheckResult((4, "Within allowed values",), values)
         else:
             return base.CheckResult(
-                (self._severity, "Value " + str(values.values) + " is not one of the allowed " + str(self.values)),
+                (self._severity, f"Value {values.values} is not one of the allowed {self.values}"),
                 values
             )
 

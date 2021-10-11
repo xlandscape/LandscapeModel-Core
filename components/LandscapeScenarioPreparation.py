@@ -149,8 +149,12 @@ class LandscapeScenarioPreparation(base.Component):
             os.path.join(output_path, "land_use.tif"), raster_cols, raster_rows, 1, gdal.GDT_UInt16, ["COMPRESS=LZW"])
         land_use_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
         land_use_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
-        gdal.RasterizeLayer(land_use_raster, [1], ogr_layer, burn_values=[1],
-                            options=["ATTRIBUTE=" + self.inputs["FeatureLandUseLandCoverTypeAttribute"].read().values])
+        gdal.RasterizeLayer(
+            land_use_raster,
+            [1],
+            ogr_layer,
+            burn_values=[1],
+            options=[f"ATTRIBUTE={self.inputs['FeatureLandUseLandCoverTypeAttribute'].read().values}"])
         xml.etree.ElementTree.SubElement(supplementary, "land_use_raster").text = "land_use.tif"
         analysis_buffer_raster = raster_driver.Create(os.path.join(output_path, "AnalysisBuffer.tif"), raster_cols,
                                                       raster_rows, 1, gdal.GDT_Byte, ["COMPRESS=LZW"])
@@ -159,8 +163,10 @@ class LandscapeScenarioPreparation(base.Component):
         gdal.RasterizeLayer(analysis_buffer_raster, [1], ogr_layer, burn_values=[255])
         memory_driver = ogr.GetDriverByName("MEMORY")
         memory_data_set = memory_driver.CreateDataSource("analysisBuffers")
-        ogr_layer.SetAttributeFilter("{}={}".format(self.inputs["FeatureLandUseLandCoverTypeAttribute"].read().values,
-                                                    self.inputs["TargetFieldLandUseLandCoverType"].read().values))
+        ogr_layer.SetAttributeFilter(
+            f"{self.inputs['FeatureLandUseLandCoverTypeAttribute'].read().values}="
+            f"{self.inputs['TargetFieldLandUseLandCoverType'].read().values}"
+        )
         for buffer_distance in [100, 50, 20, 5, 2, 1]:
             memory_layer = memory_data_set.CreateLayer("analysisBuffer.shp", ogr_layer.GetSpatialRef(),
                                                        ogr.wkbPolygon)

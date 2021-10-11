@@ -119,11 +119,11 @@ class LandscapeScenario(base.Component):
                 raster_spatial_reference = osr.SpatialReference()
                 raster_spatial_reference.ImportFromWkt(raster_crs)
                 if not self._spatial_reference.IsSame(raster_spatial_reference):
-                    self.default_observer.write_message(1, "Base CRS and CRS of " + entry.tag + " do not match")
+                    self.default_observer.write_message(1, f"Base CRS and CRS of {entry.tag} do not match")
                     raise ValueError
                 raster_geo_transform = r.GetGeoTransform()
                 if raster_geo_transform[2] != 0 or raster_geo_transform[4] != 0:
-                    self.default_observer.write_message(1, "Raster " + entry.tag + " is skewed")
+                    self.default_observer.write_message(1, f"Raster {entry.tag} is skewed")
                     raise ValueError
                 raster_extent = (raster_geo_transform[0],
                                  raster_geo_transform[0] + raster_geo_transform[1] * r.RasterXSize,
@@ -136,51 +136,49 @@ class LandscapeScenario(base.Component):
                     if entry.attrib.setdefault("deviatingExtent", "") == "confirmed":
                         self.default_observer.write_message(
                             3,
-                            "ROI and " + entry.tag + " have different extents (confirmed)")
-                        self.default_observer.write_message(3, "1: " + str(extent))
-                        self.default_observer.write_message(3, "2: " + str(raster_extent))
+                            f"ROI and {entry.tag} have different extents (confirmed)")
+                        self.default_observer.write_message(3, f"1: {extent}")
+                        self.default_observer.write_message(3, f"2: {raster_extent}")
                     else:
-                        self.default_observer.write_message(1, "ROI and " + entry.tag + " have different extents")
-                        self.default_observer.write_message(3, "1: " + str(extent))
-                        self.default_observer.write_message(3, "2: " + str(raster_extent))
+                        self.default_observer.write_message(1, f"ROI and {entry.tag} have different extents")
+                        self.default_observer.write_message(3, f"1: {extent}")
+                        self.default_observer.write_message(3, f"2: {raster_extent}")
                         raise ValueError
                 if r.RasterXSize != int(round(extent[1] - extent[0])) or r.RasterYSize != int(
                         round(extent[3] - extent[2])):
                     if entry.attrib.setdefault("deviatingExtent", "") == "confirmed":
                         self.default_observer.write_message(
                             3,
-                            "1sqm ROI and " + entry.tag + " differ in size (confirmed)"
+                            f"1sqm ROI and {entry.tag} differ in size (confirmed)"
                         )
                         self.default_observer.write_message(
                             3,
-                            "1: " + str(int(round(extent[1] - extent[0]))) + " x " +
-                            str(int(round(extent[3] - extent[2])))
+                            f"1: {int(round(extent[1] - extent[0]))} x {int(round(extent[3] - extent[2]))}"
                         )
-                        self.default_observer.write_message(3, "2: " + str(r.RasterXSize) + " x " + str(r.RasterYSize))
+                        self.default_observer.write_message(3, f"2: {r.RasterXSize} x {r.RasterYSize}")
                     else:
-                        self.default_observer.write_message(1, "1sqm ROI and " + entry.tag + " differ in size")
+                        self.default_observer.write_message(1, f"1sqm ROI and {entry.tag} differ in size")
                         self.default_observer.write_message(
                             3,
-                            "1: " + str(int(round(extent[1] - extent[0]))) + " x " +
-                            str(int(round(extent[3] - extent[2])))
+                            f"1: {int(round(extent[1] - extent[0]))} x {int(round(extent[3] - extent[2]))}"
                         )
                         self.default_observer.write_message(1, "Raster does not contain exactly one band")
                         raise ValueError
                 if r.RasterCount != 1:
-                    self.default_observer.write_message(3, "2: " + str(r.RasterXSize) + " x " + str(r.RasterYSize))
+                    self.default_observer.write_message(3, f"2: {r.RasterYSize} x {r.RasterYSize}")
                     raise ValueError
-                self.default_observer.write_message(5, "Importing " + raster_path)
+                self.default_observer.write_message(5, f"Importing {raster_path}")
                 self.outputs[entry.tag].set_values(raster_path)
                 raster_band = r.GetRasterBand(1)
                 block_size_x, block_size_y = raster_band.GetBlockSize()
                 cell_area = str(int(raster_geo_transform[1] * -raster_geo_transform[5]))
-                dataset_name = entry.tag + "_values"
+                dataset_name = f"{entry.tag}_values"
                 self.outputs[dataset_name].set_values(
                     np.ndarray,
                     shape=(r.RasterXSize, r.RasterYSize),
                     data_type=np.int,
                     chunks=(min(block_size_x, r.RasterXSize), min(block_size_y, r.RasterYSize)),
-                    scales="space_x/" + cell_area + "sqm, space_y/" + cell_area + "sqm"
+                    scales=f"space_x/{cell_area}sqm, space_y/{cell_area}sqm"
                 )
                 for y_offset in range(0, r.RasterYSize, block_size_y):
                     number_rows = block_size_y if y_offset + block_size_y < r.RasterYSize else r.RasterYSize - y_offset
@@ -202,13 +200,13 @@ class LandscapeScenario(base.Component):
             attributes = {}
             units = {}
             for attribute in entry.find("attributes"):
-                attributes[attribute.attrib["column"]] = entry.tag + "_" + attribute.tag
-                units[entry.tag + "_" + attribute.tag] = \
+                attributes[attribute.attrib["column"]] = f"{entry.tag}_{attribute.tag}"
+                units[f"{entry.tag}_{attribute.tag}"] = \
                     attribute.attrib["unit"] if "unit" in attribute.attrib else None
             self.import_shapefile(
                 os.path.join(landscape_path, entry.find("file_name").text),
                 attributes,
-                geometry_output=entry.tag + "_geom",
+                geometry_output=f"{entry.tag}_geom",
                 units=units
             )
 
@@ -246,7 +244,7 @@ class LandscapeScenario(base.Component):
                 self.default_observer.write_message(1, "Cannot override already set spatial base reference")
                 raise ValueError
         elif not spatial_reference.IsSame(self._spatial_reference):
-            self.default_observer.write_message(1, "Base CRS and CRS of " + file_name + " do not match")
+            self.default_observer.write_message(1, f"Base CRS and CRS of {file_name} do not match")
             raise ValueError
         geometries = []
         values = {}
@@ -255,13 +253,13 @@ class LandscapeScenario(base.Component):
         for i, feature in enumerate(ogr_layer):
             geom = feature.GetGeometryRef()
             if geom is None:
-                raise ValueError("Feature number " + str(i) + " has no geometry")
+                raise ValueError(f"Feature number {i} has no geometry")
             geometries.append(bytes(geom.ExportToWkb()))
             for attribute in attributes.items():
                 value = feature[attribute[0]]
                 if value is None:
-                    raise ValueError("NULL values in feature attributes are not supported ({}: {})".format(
-                        file_name, attribute[0]))
+                    raise ValueError(
+                        f"NULL values in feature attributes are not supported ({file_name}: {attribute[0]})")
                 values[attribute[1]].append(value)
         self.outputs[geometry_output].set_values(geometries, scales="space/base_geometry")
         for value in values.items():

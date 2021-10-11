@@ -48,7 +48,7 @@ class MCRun:
             if self._store.has_dataset(componentConfig.tag):
                 self._observer.write_message(
                     2,
-                    "Component " + componentConfig.tag + " already present in data store",
+                    f"Component {componentConfig.tag} already present in data store",
                     "Configuration and parameterization ignored"
                 )
             elif ("enabled" not in componentConfig.attrib or componentConfig.attrib["enabled"] == "true") and \
@@ -60,8 +60,9 @@ class MCRun:
                         componentConfig.tag, self._observer, self._store)
                 except AttributeError:
                     raise AttributeError(
-                        "Module '" + str(componentConfig.attrib["module"]) + "' does not contain a component '" +
-                        componentConfig.attrib["class"] + "'")
+                        f"Module '{componentConfig.attrib['module']}' does not contain a component "
+                        f"'{componentConfig.attrib['class']}'"
+                    )
                 for inputConfig in componentConfig:
                     from_output = inputConfig.find("FromOutput")
                     if from_output is not None:
@@ -72,23 +73,23 @@ class MCRun:
                                     from_output.attrib["output"]
                                 ]
                             elif self._store.has_dataset(from_output.attrib["component"]):
-                                output_name = from_output.attrib["component"] + "/" + from_output.attrib["output"]
+                                output_name = f"{from_output.attrib['component']}/{from_output.attrib['output']}"
                                 component.inputs[inputConfig.tag] = base.Output(
                                     output_name,
                                     self._store
                                 )
                                 self._observer.write_message(
                                     3,
-                                    "Using stored data of " + output_name + " to satisfy",
-                                    "input " + inputConfig.tag + " of component " + componentConfig.tag
+                                    f"Using stored data of {output_name} to satisfy",
+                                    f"input {inputConfig.tag} of component {componentConfig.tag}"
                                 )
                             else:
-                                raise KeyError("No component '" + from_output.attrib["component"] + "' in composition")
+                                raise KeyError(f"No component '{from_output.attrib['component']}' in composition")
                     else:
                         value = base.convert(inputConfig)
                         user_parameters.append(
                             components.UserParameter(
-                                componentConfig.tag + "/" + inputConfig.tag,
+                                f"{componentConfig.tag}/{inputConfig.tag}",
                                 value,
                                 inputConfig.attrib["scales"] if "scales" in inputConfig.attrib else None,
                                 inputConfig.attrib["unit"] if "unit" in inputConfig.attrib else None
@@ -118,9 +119,9 @@ class MCRun:
         self._observer.mc_run_started(self._composition)
         for component in self._composition.values():
             component_start_time = datetime.datetime.now()
-            self._observer.write_message(5, "Running component " + component.name)
+            self._observer.write_message(5, f"Running component {component.name}")
             component.run()
-            self._observer.write_message(5, "Component " + component.name + " finished")
-            self._observer.write_message(5, "Elapsed time: " + str(datetime.datetime.now() - component_start_time))
+            self._observer.write_message(5, f"Component {component.name} finished")
+            self._observer.write_message(5, f"Elapsed time: {datetime.datetime.now() - component_start_time}")
         self._store.close()
-        self._observer.mc_run_finished("Elapsed time: " + str(datetime.datetime.now() - mc_start_time))
+        self._observer.mc_run_finished(f"Elapsed time: {datetime.datetime.now() - mc_start_time}")

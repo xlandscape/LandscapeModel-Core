@@ -36,9 +36,9 @@ class InputContainer:
             component_input = self._items[key]
         except KeyError:
             if isinstance(self._component, base.Component):
-                raise KeyError("Component '" + self._component.name + "' has no input named '" + key + "'")
+                raise KeyError(f"Component '{self.component.name}' has no input named '{key}'")
             else:
-                raise KeyError("There is no output named '" + key + "'")
+                raise KeyError(f"There is no output named '{key}'")
         return component_input
 
     def __setitem__(self, key: str, value: base.Output) -> None:

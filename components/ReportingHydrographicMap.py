@@ -136,7 +136,7 @@ class ReportingHydrographicMap(base.Component):
                 normalization = matplotlib.colors.LogNorm(vmin=min_value, vmax=max_value, clip=True)
                 na_value = 0
             else:
-                raise ValueError("Unknown normalization option " + values_normalization)
+                raise ValueError(f"Unknown normalization option {values_normalization}")
         color_map = self._inputs["ColorMap"].read().values \
             if self._inputs["ColorMap"].has_provider \
             else ("green", "yellow", "red")

@@ -94,4 +94,4 @@ class MarsWeather(base.Component):
                 output = self.outputs[component_output.name]
                 output.set_values(output_data, scales="time/day", unit=self._units[component_output.name])
             else:
-                self.default_observer.write_message(2, "Weather file does not contain field " + component_output.name)
+                self.default_observer.write_message(2, f"Weather file does not contain field {component_output.name}")

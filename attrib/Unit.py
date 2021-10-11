@@ -33,7 +33,7 @@ class Unit(base.DataAttribute):
         :return: A tuple representing the result of the check.
         """
         if values.unit == self._unit:
-            return base.CheckResult((4, "Values have unit " + str(self._unit)), values)
+            return base.CheckResult((4, f"Values have unit {self.unit}"), values)
         original_unit = str(values.unit)
         if isinstance(values.values, float) or isinstance(values.values, numpy.ndarray):
             adapted_values = self.try_convert(values.values, original_unit)
@@ -45,17 +45,17 @@ class Unit(base.DataAttribute):
             return base.CheckResult(
                 (
                     self._severity,
-                    "Cannot convert values with unit " + original_unit + ", of " + str(type(values.values))
+                    f"Cannot convert values with unit {original_unit} of {type(values.values)}"
                 ),
                 values
             )
         if adapted_values is not None:
             return base.CheckResult(
-                (3, "Values of unit " + original_unit + " have been converted to " + str(self.unit)),
+                (3, f"Values of unit {original_unit} have been converted to {self.unit}"),
                 base.Values(adapted_values, values.extension, self._unit, values.scales)
             )
         return base.CheckResult(
-            (self._severity, "Values have unit " + original_unit + ", not " + str(self._unit)),
+            (self._severity, f"Values have unit {original_unit}, not {self.unit}"),
             values
         )
 

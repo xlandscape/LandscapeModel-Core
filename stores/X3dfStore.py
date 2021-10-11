@@ -67,12 +67,12 @@ class X3dfStore(base.Store):
             try:
                 os.makedirs(file_path)
             except FileExistsError:
-                raise FileExistsError("Cannot create store if it already exists: " + file_path)
+                raise FileExistsError(f"Cannot create store if it already exists: {file_path}")
             observer.write_message(4, "Creating new X3dfStore at", file_path)
         if initialization is not None:
             available_runs = glob.glob(initialization)
             if len(available_runs) < 1:
-                raise ValueError("No runs found at " + initialization)
+                raise ValueError(f"No runs found at {initialization}")
             selected_source_run = available_runs[int(identifier) % len(available_runs)]
             observer.write_message(4, "Initializing data store from", selected_source_run)
             shutil.copyfile(selected_source_run, hdf5_file)
@@ -148,7 +148,7 @@ class X3dfStore(base.Store):
         elif original_type == "list[str]":
             values = [s.decode() for s in data_set[()].tolist()]
         else:
-            raise TypeError("Stored type cannot be interpreted: " + original_type)
+            raise TypeError(f"Stored type cannot be interpreted: {original_type}")
         return values
 
     def set_values(
@@ -228,16 +228,16 @@ class X3dfStore(base.Store):
                 self._f[name] = values
                 self._f[name].attrs["_type"] = "tuple[float]"
             else:
-                raise TypeError("Unsupported type of tuple: " + str(values))
+                raise TypeError(f"Unsupported type of tuple: {values}")
         elif isinstance(values, type):
-            type_name = values.__module__ + "." + values.__qualname__
+            type_name = f"{values.__module__}.{values.__qualname__}"
             # noinspection SpellCheckingInspection
             if type_name == "numpy.ndarray":
                 data_set = self._f.create_dataset(name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks)
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"
             else:
-                raise TypeError("Unsupported type: " + str(type(values)))
+                raise TypeError(f"Unsupported type: {type(values)}")
         elif isinstance(values, datetime.datetime):
             self._f[name] = str(values)
             self._f[name].attrs["_type"] = "datetime.datetime"
@@ -267,7 +267,7 @@ class X3dfStore(base.Store):
             self._f[name] = numpy.zeros((0,))
             self._f[name].attrs["_type"] = "None"
         else:
-            raise TypeError("Cannot store objects of type " + str(type(values)) + " in X3df")
+            raise TypeError(f"Cannot store objects of type {type(values)} in X3df")
         if scales is not None:
             self._f[name].attrs["scales"] = scales
         if unit is not None:

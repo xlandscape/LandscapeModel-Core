@@ -35,9 +35,9 @@ class OutputContainer:
             output = self._items[key]
         except KeyError:
             if isinstance(self._component, base.Component):
-                raise KeyError("Component '" + self._component.name + "' has no output named '" + str(key) + "'")
+                raise KeyError(f"Component '{self.component.name}' has no output named '{key}'")
             else:
-                raise KeyError("There is no output named '" + str(key) + "'")
+                raise KeyError(f"There is no output named '{key}'")
         return output
 
     def __iter__(self) -> typing.Iterator[base.Output]:

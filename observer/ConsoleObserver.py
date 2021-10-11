@@ -50,7 +50,7 @@ class ConsoleObserver(base.Observer):
         :return: Nothing.
         """
         for message in component_input.messages:
-            self.write_message(message[0], component_input.name + ":" + message[1] + ":GetValues", message[2])
+            self.write_message(message[0], f"{component_input.name}:{message[1]}:GetValues", message[2])
 
     def mc_run_finished(self, detail: str = "") -> None:
         """
@@ -69,7 +69,7 @@ class ConsoleObserver(base.Observer):
         :param message: The message to report.
         :return: Nothing.
         """
-        self.write_message(level, store_name + ":SetValues", message)
+        self.write_message(level, f"{store_name}:SetValues", message)
 
     def write_message(self, level: int, message: str, detail: str = "") -> None:
         """
@@ -100,10 +100,10 @@ class ConsoleObserver(base.Observer):
         if self._lock is not None:
             self._lock.acquire()
         if detail == "":
-            self.write("{}{:6s}{}\n".format(color, severity, message) + colorama.Style.RESET_ALL)
+            self.write(f"{color}{severity.ljust(6)}{message}\n{colorama.Style.RESET_ALL}")
         else:
-            self.write("{}{:6s}{}\n".format(color, severity, message))
-            self.write(" " * 6 + detail + "\n" + colorama.Style.RESET_ALL)
+            self.write(f"{color}{severity.ljust(6)}{message}\n")
+            self.write(f"      {detail}\n{colorama.Style.RESET_ALL}")
 
         if self._lock is not None:
             self._lock.release()

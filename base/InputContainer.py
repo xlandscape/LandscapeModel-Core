@@ -16,6 +16,7 @@ class InputContainer:
     base.VERSION.added("1.4.1", "Changelog in `base.InputContainer` ")
     base.VERSION.changed("1.5.3", "`base.InputContainer` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.InputContainer` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.InputContainer` ")
 
     def __init__(
             self,

@@ -21,6 +21,7 @@ class Unit(base.DataAttribute):
     base.VERSION.added("1.6.4", "Further unit conversion to `attrib.Unit` ")
     base.VERSION.changed("1.7.0", "`attrib.Unit` got new base class `base.DataAttribute` ")
     base.VERSION.added("1.7.0", "Type hints to `attrib.Unit` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Unit` ")
 
     def __init__(self, expected_unit: typing.Optional[str], severity: int = 2) -> None:
         self._unit = expected_unit

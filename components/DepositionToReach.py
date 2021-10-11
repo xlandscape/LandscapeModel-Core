@@ -37,6 +37,7 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.5.3", "`components.DepositionToReach` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `components.DepositionToReach` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DepositionToReach` with base class")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.DepositionToReach` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(DepositionToReach, self).__init__(name, default_observer, default_store)

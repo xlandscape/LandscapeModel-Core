@@ -24,6 +24,7 @@ class Class(base.DataAttribute):
         "Removed support of string-based type definitions in `attrib.Class` in favor for generic types introduced in "
         "Python 3.9"
     )
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Class` ")
 
     def __init__(self, expected_type: type, severity: int = 2) -> None:
         self._type = expected_type

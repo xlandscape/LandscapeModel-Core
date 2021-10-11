@@ -44,6 +44,7 @@ base.VERSION.changed("1.5.4", "parsing of raw parameters in `base.functions` ")
 base.VERSION.added("1.5.9", "`base.functions.run_process()` option to run external processes minimized")
 base.VERSION.added("1.6.5", "`base.functions.run_process()` makes use of new Python dict union operator")
 base.VERSION.added("1.7.0", "Type hints to `base.functions` ")
+base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.functions` ")
 
 
 def cartesian_product(*arrays: np.ndarray) -> np.ndarray:

@@ -21,6 +21,7 @@ class LogFileObserver(base.Observer):
     base.VERSION.changed("1.5.3", "`observer.LogFileObserver` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.3", "`observer.LogFileObserver` uses utf-8 encoding for logfiles")
     base.VERSION.added("1.7.0", "Type hints to `observer.LogFileObserver` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.LogFileObserver` ")
 
     def __init__(self, **keywords):
         super(LogFileObserver, self).__init__()

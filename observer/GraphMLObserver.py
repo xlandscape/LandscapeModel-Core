@@ -24,6 +24,7 @@ class GraphMLObserver(base.Observer):
     base.VERSION.added("1.7.0", "Type hints to `observer.GraphMLObserver` ")
     base.VERSION.changed("1.7.0", "Removed unused methods in `observer.GraphMLObserver` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.GraphMLObserver` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.GraphMLObserver` ")
 
     def __init__(self, output_file: str, include_modules: str) -> None:
         """

@@ -15,6 +15,7 @@ class Observer:
     base.VERSION.changed("1.5.3", "`base.Observer` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Observer` ")
     base.VERSION.changed("1.7.0", "None-return instead of NotImplementedError in `base.Observer` methods")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Observer` ")
 
     def __init__(self) -> None:
         """Initializes an Observer."""

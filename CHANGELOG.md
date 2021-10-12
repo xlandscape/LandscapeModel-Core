@@ -1,5 +1,54 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-11.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-12.
+
+## [1.9] - 2021-10-12
+
+### Added
+
+### Changed
+- Switched to Google docstring style in `base.VersionCollection` 
+- Switched to Google docstring style in `base.VersionInfo` 
+- Switched to Google docstring style in `init.py` 
+- Switched to Google docstring style in `base.Extension` 
+- Switched to Google docstring style in `base.DataAttribute` 
+- Switched to Google docstring style in `base.DataAttributes` 
+- Switched to Google docstring style in `base.Store` 
+- Switched to Google docstring style in `base.Output` 
+- Switched to Google docstring style in `base.OutputContainer` 
+- Switched to Google docstring style in `base.DataProvider` 
+- Switched to Google docstring style in `base.Input` 
+- Switched to Google docstring style in `base.InputContainer` 
+- Switched to Google docstring style in `base.Observer` 
+- Switched to Google docstring style in `base.Component` 
+- Switched to Google docstring style in `base.Experiment` 
+- Switched to Google docstring style in `base.functions` 
+- Switched to Google docstring style in `component.CsvReader` 
+- Switched to Google docstring style in `component.DepositionToPecSoil` 
+- Switched to Google docstring style in `attrib.Class` 
+- Switched to Google docstring style in `attrib.Equals` 
+- Switched to Google docstring style in `attrib.InList` 
+- Switched to Google docstring style in `attrib.Ontology` 
+- Switched to Google docstring style in `attrib.Scales` 
+- Switched to Google docstring style in `attrib.Transformable` 
+- Switched to Google docstring style in `attrib.Unit` 
+- Switched to Google docstring style in `stores.InMemoryStore` 
+- Switched to Google docstring style in `stores.SqlLiteStore` 
+- Switched to Google docstring style in `stores.X3dfStore` 
+- Switched to Google docstring style in `stores.__init__` 
+- Switched to Google docstring style in `component.ReportingDistribution` 
+- Switched to Google docstring style in `component.ReportingHydrographicMap` 
+- Switched to Google docstring style in `component.HydrologyFromTimeSeries` 
+- Switched to Google docstring style in `component.LandscapeScenario` 
+- Switched to Google docstring style in `component.MarsWeather` 
+- Switched to Google docstring style in `component.PpmCalendar` 
+- Switched to Google docstring style in `component.__init__` 
+- Switched to Google docstring style in `base.documentation` 
+- Switched to Google docstring style in `observer.ConsoleObserver` 
+- Switched to Google docstring style in `observer.GraphMLObserver` 
+- Switched to Google docstring style in `observer.LogFileObserver` 
+
+### Fixed
+
 
 ## [1.8] - 2021-10-11
 
@@ -209,7 +258,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ## [1.5.10] - 2021-08-27
 
 ### Added
-- `base.documentation.document_component()` support for documentation of unit attribute hint
+- `base.documentation.document_component()` support for the documentation of unit attribute hints
 
 ### Changed
 

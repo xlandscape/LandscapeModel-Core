@@ -33,6 +33,7 @@ class Experiment:
     base.VERSION.changed("1.5.3", "`base.Experiment` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Experiment` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Experiment` ")
 
     def __init__(
             self,

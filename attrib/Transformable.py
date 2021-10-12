@@ -11,6 +11,7 @@ class Transformable(base.DataAttribute):
     base.VERSION.changed("1.5.3", "`attrib.Transformable` changelog uses markdown for code elements")
     base.VERSION.changed("1.7.0", "`attrib.Transformable` got new base class `base.DataAttribute` ")
     base.VERSION.added("1.7.0", "Type hints to `attrib.Transformable` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Transformable` ")
 
     def __init__(self, severity: int = 2) -> None:
         """

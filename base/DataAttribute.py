@@ -7,6 +7,7 @@ class DataAttribute:
     them."""
     # CHANGELOG
     base.VERSION.added("1.7.0", "`base.DataAttribute` class")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.DataAttribute` ")
 
     def check(self, values: base.Values) -> base.CheckResult:
         """

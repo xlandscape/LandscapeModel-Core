@@ -12,6 +12,7 @@ class DataAttributes:
     base.VERSION.added("1.4.1", "Changelog in `base.DataAttributes`")
     base.VERSION.changed("1.5.3", "`base.DataAttributes` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.DataAttributes` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.DataAttributes` ")
 
     def __init__(self, attributes: typing.Sequence[base.DataAttribute]) -> None:
         """

@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.9.0", "2021-10-12"),
     base.VersionInfo("1.8.0", "2021-10-11"),
     base.VersionInfo("1.7.0", "2021-09-17"),
     base.VersionInfo("1.6.5", "2021-09-14"),
@@ -111,17 +112,20 @@ VERSION.changed("1.5.0", "fixed spelling in `base.VersionCollection` ")
 VERSION.added("1.5.0", "properties `roadmap`, `authors` and `acknowledgements` to `base.VersionCollection` ")
 VERSION.added("1.7.0", "Type hints to `base.VersionCollection` ")
 VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.VersionCollection` ")
+VERSION.changed("1.9.0", "Switched to Google docstring style in `base.VersionCollection` ")
 
 # CHANGELOG VersionInfo.py
 VERSION.added("1.1.6", "`base.VersionInfo` for describing individual revisions")
 VERSION.changed("1.3.27", "`base.VersionInfo` refactored")
 VERSION.changed("1.4.1", "`base.VersionInfo` completely rewritten to move changelogs nearer to code")
 VERSION.added("1.7.0", "Type hints to `base.VersionInfo` ")
+VERSION.changed("1.9.0", "Switched to Google docstring style in `base.VersionInfo` ")
 
 # CHANGELOG init.py
 VERSION.changed("1.4.9", "`init.py` spell check exclusions")
 VERSION.added("1.7.0", "Type hints to `init.py` ")
 VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `init.py` ")
+VERSION.changed("1.9.0", "Switched to Google docstring style in `init.py` ")
 
 # CHANGELOG document.py
 VERSION.added("1.4.9", "`document.py` ")

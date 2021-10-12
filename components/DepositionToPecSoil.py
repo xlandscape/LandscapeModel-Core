@@ -33,6 +33,7 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.changed("1.5.4", "`components.DepositionToPecSoil` retrieval of output data type")
     base.VERSION.added("1.7.0", "Type hints to `components.DepositionToPecSoil` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DepositionToPecSoil` with base class")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.DepositionToPecSoil` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

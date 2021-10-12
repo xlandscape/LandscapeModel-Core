@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2021-10-11.
+It was automatically created on 2021-10-12.
 
 
 ## CsvReader
@@ -10,7 +10,7 @@ It was automatically created on 2021-10-11.
     FilePath: A valid path to a CSV file having a header line and commas as separators.
 
     OUTPUTS
-    Outputs of this components are provisional, i.e., they are defined by links from inputs and have to be satisfied
+    The outputs of this component are provisional, i.e., they are defined by links from inputs and have to be satisfied
     by data in the CSV file. Output names equal column names in the file.
     
 
@@ -25,7 +25,7 @@ It was automatically created on 2021-10-11.
     
 
 ## DepositionToPecSoil
-    Calculates the PEC soil from surface deposition by a simple homogeneous distribution of mass in the top soil layer.
+    Calculates the PEC soil from surface deposition by a simple homogeneous distribution of mass in the topsoil layer.
 
     INPUTS
     Deposition: The deposition on the soil surface.
@@ -33,7 +33,7 @@ It was automatically created on 2021-10-11.
     Depth: The depth of the soil layer in which the deposition is distributed equally.
 
     OUTPUTS
-    PecSoil: The homogenous concentration of substance in soil. A NumPy array with scales time/day, space_x/1sqm,
+    PecSoil: The homogeneous concentration of substance in soil. A NumPy array with scales time/day, space_x/1sqm,
     space_y/1sqm.
     
 
@@ -116,8 +116,8 @@ It was automatically created on 2021-10-11.
     Hydrography: The hydrographic network geometries. A list[bytes] of scale space/base_geometry.
     HydrographicReachIds: The identifiers of reaches according to the hydrography. A list[int] of scale
     space/base_geometry.
-    SimulationStart: The first day of the simulation. A datetime.date of global scale.
-    DisplayedTime: The time displayed in the map. A datetime.date of global scale.
+    SimulationStart: The first day of the simulation. A `datetime.date` of global scale.
+    DisplayedTime: The time displayed in the map. A `datetime.date` of global scale.
     Values: The values to map onto the hydrographic network. A NumPy array.
     ValuesReachIds: The reach identifiers according to the values. A list[int] of scale space/reach.
     Title: The title of the plot. A string of global scale.
@@ -137,8 +137,8 @@ It was automatically created on 2021-10-11.
 
     INPUTS
     TimeSeries: A valid file path to the input HDF5 data. A string of global scale. Value has no unit.
-    FromTime: The start time of the requested hydrology. A datetime.date of global scale. Value has no unit.
-    ToTime: The end time of the requested hydrology. A datetime.date of global scale. Value has no unit.
+    FromTime: The start time of the requested hydrology. A `datetime.date` of global scale. Value has no unit.
+    ToTime: The end time of the requested hydrology. A `datetime.date` of global scale. Value has no unit.
     InflowTimeSeriesPath: The path where reach-inflows are stored. A string of global scale. Value has no unit.
     ImportInflows: Specifies whether reach inflows from fields are imported. A bool of global scale. Value has no unit.
 
@@ -180,7 +180,7 @@ It was automatically created on 2021-10-11.
     No ontological description is associated with the input.
 
     OUTPUTS
-    Outputs of this components are provisional, i.e., they are defined by links from inputs and have to be satisfied
+    The outputs of this component are provisional, i.e., they are defined by links from inputs and have to be satisfied
     by data in the CSV file. Outputs are Crs, Extent, and information specified in the package information file of the
     landscape scenario.
     
@@ -190,9 +190,9 @@ It was automatically created on 2021-10-11.
 
     INPUTS
     FilePath: A valid file path to a CSV file containing MARS weather data. A string of global scale. Value has no unit.
-    FirstDate: The first date of the requested weather information. A datetime.date of global scale. The value has no
+    FirstDate: The first date of the requested weather information. A `datetime.date` of global scale. The value has no
     unit.
-    LastDate: The last date of the requested weather information. A datetime.date of global scale. The value has no
+    LastDate: The last date of the requested weather information. A `datetime.date` of global scale. The value has no
     unit.
 
     OUTPUTS
@@ -203,8 +203,8 @@ It was automatically created on 2021-10-11.
     Encapsulates the PpmCalendar as a Landscape Model component.
 
     INPUTS
-    SimulationStart: The first day of the simulation. A datetime.date of global scale. Value has no unit.
-    SimulationEnd: The last day of the simulation. A datetime.date of global scale. Value has no unit.
+    SimulationStart: The first day of the simulation. A `datetime.date` of global scale. Value has no unit.
+    SimulationEnd: The last day of the simulation. A `datetime.date` of global scale. Value has no unit.
     ApplicationWindows: A definition of application windows. A string of global scale. Value has no unit.
     Fields: A list of identifiers of individual geometries. A list[int] of scale space/base_geometry. Values have no
     unit.
@@ -231,7 +231,8 @@ It was automatically created on 2021-10-11.
     input application rate.
     TechnologyDriftReductions: The technological drift reductions. A NumPy array of scale other/application. Values have
     the same unit as the input drift reductions.
-    AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. Th values have no unit.
+    AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. The values have no
+    unit.
     
 
 ## TerRQ

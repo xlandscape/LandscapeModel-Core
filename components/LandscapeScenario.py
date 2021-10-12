@@ -52,6 +52,7 @@ class LandscapeScenario(base.Component):
     base.VERSION.added("1.7.0", "Type hints to `components.LandscapeScenario` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.LandscapeScenario` with base class")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenario` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.LandscapeScenario` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

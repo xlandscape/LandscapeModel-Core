@@ -1,6 +1,6 @@
 # Stores
 This file lists all stores that are currently included in the Landscape Model core.
-It was automatically created on 2021-10-11.
+It was automatically created on 2021-10-12.
 
 
 ## InMemoryStore
@@ -19,7 +19,7 @@ It was automatically created on 2021-10-11.
     
 
 ## X3dfStore
-    Encapsulates an X3df data store for usage in the Landscape Model.
+    Encapsulates a X3df data store for usage in the Landscape Model.
 
     PARAMETERS
     file_path: The file path and name for the HDF5 tom use.

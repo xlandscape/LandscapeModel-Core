@@ -1,14 +1,10 @@
-"""
-Class definition of a Landscape Model component output.
-"""
+"""Class definition of a Landscape Model component output."""
 import base
 import typing
 
 
 class Output:
-    """
-    A Landscape Model component output.
-    """
+    """A Landscape Model component output."""
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.Output` class for representing component outputs")
     base.VERSION.changed("1.3.13", "`base.Output` refactored")
@@ -23,6 +19,7 @@ class Output:
     base.VERSION.fixed("1.5.6", "Handling of omitted `base.Output` attribute hints")
     base.VERSION.added("1.7.0", "Type hints to `base.Output` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Output` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Output` ")
 
     def __init__(
             self,
@@ -33,6 +30,17 @@ class Output:
             description: typing.Optional[str] = None,
             attribute_hints: typing.Optional[typing.Mapping[str, typing.Any]] = None
     ) -> None:
+        """
+        Initializes an output.
+
+        Args:
+            name: The name of the output.
+            store: The store associated with the output.
+            component: The component to which the output belongs.
+            default_attributes: The default attributes of the output.
+            description: A description of the output.
+            attribute_hints: Documentation hints of the output.
+        """
         self._name = name
         self._store = store
         self._component = component
@@ -47,15 +55,21 @@ class Output:
     def describe(self) -> dict[str, typing.Any]:
         """
         Describes the data provided by the output.
-        :return:
+
+        Returns:
+            Nothing.
         """
         return self.store.describe(self.store_name)
 
     def get_values(self, **keywords) -> typing.Any:
         """
         Gets the values from te output.
-        :param keywords: Additional keywords controlling the data retrieval.
-        :return: The values in their respective format.
+
+        Args:
+            **keywords: Additional keywords controlling the data retrieval.
+
+        Returns:
+            The values in their respective format.
         """
         values = self.store.get_values(self.store_name, **keywords)
         return values
@@ -63,9 +77,13 @@ class Output:
     def set_values(self, values: typing.Any, **keywords) -> None:
         """
         Sets the values of the output.
-        :param values: The new vales for the output.
-        :param keywords: Additional keywords controlling the data storage.
-        :return: Nothing.
+
+        Args:
+            values: The new vales for the output.
+            **keywords: Additional keywords controlling the data storage.
+
+        Returns:
+            Nothing.
         """
         for attribute, value in self._default_attributes.items():
             if attribute not in keywords:
@@ -75,8 +93,10 @@ class Output:
     @property
     def component(self) -> typing.Optional["base.Component"]:
         """
-        Th component to which the output belongs.
-        :return: A Landscape Model component.
+        The component to which the output belongs.
+
+        Returns:
+            A Landscape Model component.
         """
         return self._component
 
@@ -84,7 +104,9 @@ class Output:
     def name(self) -> str:
         """
         The name of the output.
-        :return: A string of the output name.
+
+        Returns:
+            A string of the output name.
         """
         return self._name
 
@@ -92,7 +114,9 @@ class Output:
     def store(self) -> base.Store:
         """
         The store that is used by the output to store data.
-        :return: A Landscape model data store.
+
+        Returns:
+            A Landscape model data store.
         """
         return self._store
 
@@ -100,7 +124,9 @@ class Output:
     def store_name(self) -> str:
         """
         The name of the data store that is used by the output.
-        :return: A string of the data store name.
+
+        Returns:
+            A string of the data store name.
         """
         return self._storeName
 
@@ -108,7 +134,9 @@ class Output:
     def default_attributes(self) -> dict[str, typing.Any]:
         """
         A set of default attributes associated with the output.
-        :return: A dictionary of attribute names and their default value.
+
+        Returns:
+            A dictionary of attribute names and their default value.
         """
         return self._default_attributes
 
@@ -116,14 +144,18 @@ class Output:
     def description(self) -> str:
         """
         A textual description of the input.
-        :return: A string containing the textual description of the input.
+
+        Returns:
+            A string containing the textual description of the input.
         """
         return self._description
 
     @property
     def attribute_hints(self) -> dict[str, typing.Any]:
         """
-        Contains hints about data attributes useful for documentation.
-        :return: A dictionary of attribute types and textual or object hints.
+        Contains hints about data attributes useful for the documentation of the output.
+
+        Returns:
+            A dictionary of attribute types and textual or object hints.
         """
         return self._attribute_hints

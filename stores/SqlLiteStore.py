@@ -1,6 +1,4 @@
-"""
-Class definition of a Landscape Model SqlLite store.
-"""
+"""Class definition of a Landscape Model SqlLite store."""
 
 import sqlite3
 import os
@@ -38,12 +36,22 @@ class SqlLiteStore(base.Store):
     base.VERSION.added("1.7.0", "Type hints to `stores.SqlLiteStore` ")
     base.VERSION.fixed("1.7.0", "Check for slices containing steps in `stores.SqlLiteStore` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.SqlLiteStore` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.SqlLiteStore` ")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
+        """
+        Initializes a SqlLiteStore.
+
+        Args:
+            file_path: The file path of the SQLite database.
+            observer: The observer used by the store.
+            create: Specifies whether a database should be created if not existing.
+        """
         self._observer = observer
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         self._connection = sqlite3.connect(file_path)
         if create:
+            # noinspection GrazieInspection
             self._connection.execute("CREATE TABLE global(store_version)")
             self._connection.execute("INSERT INTO global VALUES (?)", (str(base.VERSION.latest),))
             self._connection.execute("CREATE TABLE scales(scale, shape, PRIMARY KEY (scale))")
@@ -76,20 +84,25 @@ class SqlLiteStore(base.Store):
             **keywords
     ) -> None:
         """
-        Writes values into the SqlLite database.
-        :param name: The name of the value.
-        :param values: The actual values.
-        :param scales: The scales the values apply to.
-        :param shape: The shape of the values if not obvious from the values.
-        :param data_type: The type of the value if not obvious from the values.
-        :param create: A boolean defining whether an entry in the database should be created or not (for appending).
-        :param slices: Specifies a slice for partial updates of values.
-        :param default: The default value if no actual value is given.
-        :param foreign_keys: A list of foreign keys to add to the new dataset.
-        :param unit: The unit of the values.
-        :param chunks: The chunks defined for the dataset.
-        :param keywords: Additional keywords.
-        :return: Nothing.
+        Stores a data set in the store.
+
+        Args:
+
+            name: The name of the data set.
+            values: The values of the data set.
+            scales: The scales to which the values of the data set apply.
+            shape: The shape of the values if not obvious from the values.
+            data_type: The type of the value if not obvious from the values.
+            create: A boolean defining whether an entry in the database should be created or not (for appending).
+            slices: Specifies a slice for partial updates of values.
+            default: The default value if no actual value is given.
+            foreign_keys: A list of foreign keys to add to the new dataset.
+            unit: The unit of the values.
+            chunks: The chunks defined for the dataset.
+            keywords: Additional keywords.
+
+        Returns:
+            Nothing.
         """
         if len(keywords) > 0:
             self._observer.write_message(2, f"Ignoring keywords: {keywords}")
@@ -257,11 +270,15 @@ class SqlLiteStore(base.Store):
 
     def get_values(self, name: str, slices: typing.Optional[typing.Sequence[slice]] = None, **keywords) -> typing.Any:
         """
-        Retrieves values from the SqlLite database.
-        :param name: The name of the value.
-        :param slices: A slice for partial retrievals.
-        :param keywords: Additional keywords.
-        :return: The values in their original representation.
+        Gets the values of a data set from the store.
+
+        Args:
+            name: The name of the data set.
+            slices: A slice for partial retrievals.
+            keywords: Additional keywords.
+
+        Returns:
+            The values of the data set in their original representation.
         """
         if len(keywords) > 0:
             raise ValueError(f"Unknown keywords: {keywords}")
@@ -313,6 +330,15 @@ class SqlLiteStore(base.Store):
 
     @staticmethod
     def _cartesian_product(*arrays: np.ndarray) -> np.ndarray:
+        """
+        Calculates a cartesian product.
+
+        Args:
+            *arrays: The arrays from which the cartesian product is build.
+
+        Returns:
+            An array representing the cartesian product of the input arrays.
+        """
         # adapted from https://stackoveflow.com/questions/11144513
         la = len(arrays)
         data_type = np.result_type(*arrays)
@@ -323,9 +349,13 @@ class SqlLiteStore(base.Store):
 
     def describe(self, name: str) -> dict[str, typing.Any]:
         """
-        Describes a data set.
-        :param name: The name of the data set.
-        :return: A dictionary containing information about the data set.
+        Describes a dataset in the store.
+
+        Args:
+            name: The name of the dataset.
+
+        Returns:
+            A dictionary describing the dataset.
         """
         type_mappings = {"REAL": np.float}
         data_info = self._connection.execute("SELECT scale FROM data_attributes WHERE data_name = ?",
@@ -338,6 +368,15 @@ class SqlLiteStore(base.Store):
 
     @staticmethod
     def _slices_to_range_limits(slices: typing.Sequence[slice]) -> list[int]:
+        """
+        Converts slices into range limits.
+
+        Args:
+            slices: The slices to convert.
+
+        Returns:
+            A list of range limits.
+        """
         ranges = [(0, 0)] * len(slices)
         for i, dimension_slice in enumerate(slices):
             if isinstance(dimension_slice, slice):
@@ -352,17 +391,23 @@ class SqlLiteStore(base.Store):
 
     def close(self) -> None:
         """
-        Closes the database connection.
-        :return: Nothing.
+        Closes the store.
+
+        Returns:
+            Nothing.
         """
         self._connection.close()
 
     def has_dataset(self, name: str, partial: bool = False) -> bool:
         """
-        Indicates whether the store contains a data set.
-        :param name: The name of the dataset.
-        :param partial: Indicates whether a partial match should be performed or not.
-        :return: A boolean value indicating whether the dataset was found within the store.
+        Checks whether a dataset exists in the store or not.
+
+        Args:
+            name: The name of the dataset.
+            partial: Specifies whether to also check partial dataset paths or not.
+
+        Returns:
+            A boolean value indicating whether the dataset exists or not.
         """
         if partial:
             hits = self._connection.execute(
@@ -374,8 +419,12 @@ class SqlLiteStore(base.Store):
 
     def execute(self, sql: str) -> None:
         """
-        Executes a SQL query within the SqlLite store.
-        :param sql: The SQL query to execute
-        :return: Nothing.
+        Executes an SQL query within the SqlLite store.
+
+        Args:
+            sql: The SQL query to execute.
+
+        Returns:
+            Nothing.
         """
         self._connection.execute(sql)

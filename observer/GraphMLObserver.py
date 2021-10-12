@@ -1,6 +1,4 @@
-"""
-Class definition of a GraphML observer.
-"""
+"""Class definition of a GraphML observer."""
 
 import base
 import xml.etree.ElementTree
@@ -26,8 +24,16 @@ class GraphMLObserver(base.Observer):
     base.VERSION.added("1.7.0", "Type hints to `observer.GraphMLObserver` ")
     base.VERSION.changed("1.7.0", "Removed unused methods in `observer.GraphMLObserver` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.GraphMLObserver` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.GraphMLObserver` ")
 
     def __init__(self, output_file: str, include_modules: str) -> None:
+        """
+        Initializes a GraphMLObserver.
+
+        Args:
+            output_file: The file path of the output GraphML file.
+            include_modules: Specifies whether to include modules in the GraphML file.
+        """
         super(GraphMLObserver, self).__init__()
         self._outputFile = output_file
         self._include_modules = str.lower(include_modules) == "true"
@@ -35,10 +41,13 @@ class GraphMLObserver(base.Observer):
     def mc_run_started(self, composition: typing.Mapping[str, base.Component]) -> None:
         """
         Reacts when a Monte Carlo run has started.
-        :param composition: The composition of the Monte Carlo run.
-        :return: Nothing.
-        """
 
+        Args:
+            composition: The composition of the Monte Carlo run.
+
+        Returns:
+             Nothing.
+        """
         # noinspection SpellCheckingInspection
         graph_ml = xml.etree.ElementTree.Element(
             "graphml",
@@ -81,6 +90,16 @@ class GraphMLObserver(base.Observer):
 
     @staticmethod
     def _create_node(name, entity_type):
+        """
+        Creates a GraphML element node.
+
+        Args:
+            name: The name of the element.
+            entity_type: The type of element.
+
+        Returns:
+            The created node.
+        """
         node = xml.etree.ElementTree.Element("node", {"id": name})
         name_sub_node = xml.etree.ElementTree.Element("data", {"key": "name"})
         name_sub_node.text = name

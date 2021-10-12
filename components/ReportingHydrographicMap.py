@@ -1,6 +1,4 @@
-"""
-Class definition of a Landscape Model component generating hydrographic maps.
-"""
+"""Class definition of a Landscape Model component generating hydrographic maps."""
 import base
 import attrib
 import osgeo.ogr
@@ -23,8 +21,8 @@ class ReportingHydrographicMap(base.Component):
     Hydrography: The hydrographic network geometries. A list[bytes] of scale space/base_geometry.
     HydrographicReachIds: The identifiers of reaches according to the hydrography. A list[int] of scale
     space/base_geometry.
-    SimulationStart: The first day of the simulation. A datetime.date of global scale.
-    DisplayedTime: The time displayed in the map. A datetime.date of global scale.
+    SimulationStart: The first day of the simulation. A `datetime.date` of global scale.
+    DisplayedTime: The time displayed in the map. A `datetime.date` of global scale.
     Values: The values to map onto the hydrographic network. A NumPy array.
     ValuesReachIds: The reach identifiers according to the values. A list[int] of scale space/reach.
     Title: The title of the plot. A string of global scale.
@@ -50,8 +48,17 @@ class ReportingHydrographicMap(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingHydrographicMap` with base class")
     base.VERSION.changed(
         "1.8.0", "Replaced Legacy format strings by f-strings in `components.ReportingHydrographicMap` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingHydrographicMap` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        """
+        Initializes a ReportingHydrographicMap component.
+
+        Args:
+            name: The name of the component.
+            default_observer: The default observer of the component.
+            default_store: The default store of the component.
+        """
         super(ReportingHydrographicMap, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
             self,
@@ -100,7 +107,9 @@ class ReportingHydrographicMap(base.Component):
     def run(self) -> None:
         """
         Runs the component.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         if self._inputs["DisplayedUnit"].has_provider:
             self._inputs["Values"].attributes.append(attrib.Unit(self._inputs["DisplayedUnit"].read().values, 1))
@@ -197,21 +206,25 @@ class ReportingHydrographicMap(base.Component):
     ) -> None:
         """
         Draws a map displaying the distribution of values in a hydrographic network.
-        :param data_store: The file path where the X3df store is located.
-        :param hydrography: The name of the dataset containing the hydrographic network geometries.
-        :param hydrographic_reach_ids: The name of the dataset containing the identifiers of reaches.
-        :param simulation_start: The name of the dataset containing the first day of the simulation.
-        :param displayed_time: The time displayed in the map as a datetime.date.
-        :param values: The name of the dataset containing the values to map onto the hydrographic network.
-        :param values_reach_ids: The name of the dataset containing the reach identifiers according to the values.
-        :param title: The title of the plot.
-        :param output_file: A valid path to a file where the plot is written to.
-        :param displayed_unit: The unit in which values should be displayed.
-        :param scale_max_value: The maximum value to which the legend is scaled.
-        :param scale_min_value: The minimum value to which the legend is scaled.
-        :param values_normalization: The normalization applied to the values.
-        :param color_map: The color map used for displaying the values as a list of strings.
-        :returns: Nothing.
+
+        Args:
+            data_store: The file path where the X3df store is located.
+            hydrography: The name of the dataset containing the hydrographic network geometries.
+            hydrographic_reach_ids: The name of the dataset containing the identifiers of reaches.
+            simulation_start: The name of the dataset containing the first day of the simulation.
+            displayed_time: The time displayed in the map as a datetime.date.
+            values: The name of the dataset containing the values to map onto the hydrographic network.
+            values_reach_ids: The name of the dataset containing the reach identifiers according to the values.
+            title: The title of the plot.
+            output_file: A valid path to a file where the plot is written to.
+            displayed_unit: The unit in which values should be displayed.
+            scale_max_value: The maximum value to which the legend is scaled.
+            scale_min_value: The minimum value to which the legend is scaled.
+            values_normalization: The normalization applied to the values.
+            color_map: The color map used for displaying the values as a list of strings.
+
+        Returns:
+            Nothing.
         """
         base.reporting(
             data_store,

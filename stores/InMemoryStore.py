@@ -1,6 +1,4 @@
-"""
-Class definition of the In-Memory Landscape Model store.
-"""
+"""Class definition of the In-Memory Landscape Model store."""
 import base
 import numpy
 import typing
@@ -24,26 +22,36 @@ class InMemoryStore(base.Store):
     base.VERSION.changed("1.5.3", "`store.InMemoryStore` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `stores.InMemoryStore` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.InMemoryStore` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.InMemoryStore` ")
 
     def __init__(self) -> None:
+        """Initializes an InMemoryStore."""
         self._data = {}
         self._scales = {}
         self._unit = {}
 
     def describe(self, name: str) -> dict[str, typing.Any]:
         """
-        Describes a data set in the store.
-        :param name: The name of the data set.
-        :return: A dictionary describing the data set.
+        Describes a dataset in the store.
+
+        Args:
+            name: The name of the dataset.
+
+        Returns:
+            A dictionary describing the dataset.
         """
         return {"scales": self._scales[name], "unit": self._unit[name]}
 
     def get_values(self, name: str, **keywords) -> typing.Any:
         """
         Gets the values of a data set from the store.
-        :param name: The name of the data set.
-        :param keywords: Additional keywords.
-        :return: The values of the data set in their original representation.
+
+        Args:
+            name: The name of the data set.
+            keywords: Additional keywords.
+
+        Returns:
+            The values of the data set in their original representation.
         """
         try:
             values = self._data[name]
@@ -65,16 +73,21 @@ class InMemoryStore(base.Store):
     ) -> None:
         """
         Stores a data set in the store.
-        :param name: The name of the data set.
-        :param values: The values of the data set.
-        :param scales: The scales to which the values of the data set apply.
-        :param unit: The physical unit of the values.
-        :param shape: The shape of a newly created empty array.
-        :param data_type: The data type of a newly created empty array.
-        :param chunks: The chunk size for a newly created empty array.
-        :param create: Specifies whether a data set should be created or not.
-        :param slices: Defines the portion of the data set that was passed to the function.
-        :return: Nothing.
+
+        Args:
+
+            name: The name of the data set.
+            values: The values of the data set.
+            scales: The scales to which the values of the data set apply.
+            unit: The physical unit of the values.
+            shape: The shape of a newly created empty array.
+            data_type: The datatype of a newly created empty array.
+            chunks: The chunk size for a newly created empty array.
+            create: Specifies whether a data set should be created or not.
+            slices: Defines the portion of the data set that was passed to the function.
+
+        Returns:
+            Nothing.
         """
         if isinstance(values, type):
             type_name = f"{values.__module__}.{values.__qualname__}"
@@ -93,8 +106,12 @@ class InMemoryStore(base.Store):
     def has_dataset(self, name: str, partial: bool = False) -> bool:
         """
         Checks whether a dataset exists in the store or not.
-        :param name: The name of the dataset.
-        :param partial: Specifies whether to also check partial dataset paths or not.
-        :return: A boolean value indicating whether the dataset exists or not.
+
+        Args:
+            name: The name of the dataset.
+            partial: Specifies whether to also check partial dataset paths or not.
+
+        Returns:
+            A boolean value indicating whether the dataset exists or not.
         """
         return name in self._data

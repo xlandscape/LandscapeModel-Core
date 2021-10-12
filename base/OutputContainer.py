@@ -1,14 +1,10 @@
-"""
-Class definition of Landscape Model output containers.
-"""
+"""Class definition of Landscape Model output containers."""
 import base
 import typing
 
 
 class OutputContainer:
-    """
-    A container of Landscape Model component outputs.
-    """
+    """A container of Landscape Model component outputs."""
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.OutputContainer` class for collecting outputs of a component")
     base.VERSION.changed("1.3.5", "`base.OutputContainer` refactored")
@@ -19,12 +15,20 @@ class OutputContainer:
     base.VERSION.changed("1.5.3", "`base.OutputContainer` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.OutputContainer` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.OutputContainer` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.OutputContainer` ")
 
     def __init__(
             self,
             component: typing.Optional["base.Component"] = None,
             outputs: typing.Optional[typing.Sequence[base.Output]] = None
     ) -> None:
+        """
+        Initializes an OutputContainer.
+
+        Args:
+            component: The component to which the container belongs.
+            outputs: The outputs that are initially part of the container.
+        """
         self._items = {}
         self._component = component
         if outputs is not None:
@@ -32,6 +36,15 @@ class OutputContainer:
                 self._items[output.name] = output
 
     def __getitem__(self, key: str) -> base.Output:
+        """
+        Gets an output from the container by name.
+
+        Args:
+            key: The name of the output.
+
+        Returns:
+            The output with the given name.
+        """
         try:
             output = self._items[key]
         except KeyError:
@@ -47,8 +60,12 @@ class OutputContainer:
     def append(self, output: base.Output) -> None:
         """
         Adds an output to the output container.
-        :param output: The output to add.
-        :return: Nothing.
+
+        Args:
+            output: The output to add.
+
+        Returns:
+            Nothing.
         """
         self._items[output.name] = output
 
@@ -56,19 +73,35 @@ class OutputContainer:
     def component(self) -> typing.Optional["base.Component"]:
         """
         Gets the component to which the output belongs.
-        :return: The output's component.
+
+        Returns:
+            The output's component.
         """
         return self._component
 
 
 class ProvisionalOutputs(OutputContainer):
-    """
-    A output container that generates outputs with every linked input.
-    """
+    """An output container that generates outputs with every linked input."""
     def __init__(self, component: "base.Component", store: base.Store) -> None:
+        """
+        Initializes an ProvisionalOutputContainer.
+
+        Args:
+            component: The component to which the container belongs.
+            store: The store used by the individual outputs.
+        """
         super(ProvisionalOutputs, self).__init__(component)
         self._store = store
 
     def __getitem__(self, key: str) -> base.Output:
+        """
+        Gets an output from the container by name.
+
+        Args:
+            key: The name of the output.
+
+        Returns:
+            The output with the given name.
+        """
         self._items.setdefault(key, base.Output(key, self._store, self.component))
         return self._items[key]

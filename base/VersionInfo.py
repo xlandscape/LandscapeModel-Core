@@ -1,18 +1,21 @@
-"""
-Class definition of the Landscape Model VersionInfo class.
-"""
+"""Class definition of the Landscape Model VersionInfo class."""
 import distutils.version
 import datetime
 import typing
 
 
 class VersionInfo(distutils.version.StrictVersion):
-    """
-    A version number plus release date and changelog.
-    """
-    # CHANGELOG can be found in VERSION.py to avoid circular references
+    """A version number plus release date and changelog."""
+    # CHANGELOG can be found in `VERSION.py` to avoid circular references
 
     def __init__(self, version: str, date: typing.Optional[str]) -> None:
+        """
+        Initializes a VersionInfo.
+
+        Args:
+            version: The version number.
+            date: The release date of the version.
+        """
         super(VersionInfo, self).__init__(version)
         self._date = datetime.datetime.strptime(date, "%Y-%m-%d").date() if date else None
         self._additions = []
@@ -22,24 +25,36 @@ class VersionInfo(distutils.version.StrictVersion):
     def added(self, message: str) -> None:
         """
         Adds an addition to this version.
-        :param message: A message describing the addition.
-        :return: Nothing.
+
+        Args:
+            message: A message describing the addition.
+
+        Returns:
+            Nothing.
         """
         self._additions.append(message)
 
     def changed(self, message: str) -> None:
         """
         Adds a change to this version.
-        :param message: A message describing the change.
-        :return: Nothing.
+
+        Args:
+            message: A message describing the change.
+
+        Returns:
+            Nothing.
         """
         self._changes.append(message)
 
     def fixed(self, message: str) -> None:
         """
         Adds a fix to this version.
-        :param message: A message describing the fix.
-        :return: Nothing.
+
+        Args:
+            message: A message describing the fix.
+
+        Returns:
+            Nothing.
         """
         self._fixes.append(message)
 
@@ -47,7 +62,9 @@ class VersionInfo(distutils.version.StrictVersion):
     def date(self) -> typing.Optional[datetime.date]:
         """
         The release date of the version.
-        :return: A date.
+
+        Returns:
+            A date.
         """
         return self._date
 
@@ -55,7 +72,9 @@ class VersionInfo(distutils.version.StrictVersion):
     def additions(self) -> list[str]:
         """
         The additions of this version.
-        :return: A list of messages.
+
+        Returns:
+            A list of messages.
         """
         return self._additions
 
@@ -63,7 +82,9 @@ class VersionInfo(distutils.version.StrictVersion):
     def changes(self) -> list[str]:
         """
         The changes of this version.
-        :return: A list of messages.
+
+        Returns:
+            A list of messages.
         """
         return self._changes
 
@@ -71,6 +92,8 @@ class VersionInfo(distutils.version.StrictVersion):
     def fixes(self) -> list[str]:
         """
         The fixes of this version.
-        :return: A list of messages.
+
+        Returns:
+            A list of messages.
         """
         return self._fixes

@@ -1,6 +1,4 @@
-"""
-This file contains various helper functions used throughout Landscape Model code.
-"""
+"""This file contains various helper functions used throughout Landscape Model code."""
 import xml.etree.ElementTree
 
 import datetime
@@ -45,13 +43,18 @@ base.VERSION.added("1.5.9", "`base.functions.run_process()` option to run extern
 base.VERSION.added("1.6.5", "`base.functions.run_process()` makes use of new Python dict union operator")
 base.VERSION.added("1.7.0", "Type hints to `base.functions` ")
 base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.functions` ")
+base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.functions` ")
 
 
 def cartesian_product(*arrays: np.ndarray) -> np.ndarray:
     """
     Returns the Cartesian product of two or more arrays.
-    :param arrays: The arrays from which the Cartesian product is calculated.
-    :return: The Cartesian product of the input arrays.
+
+    Args:
+        arrays: The arrays from which the Cartesian product is calculated.
+
+    Returns:
+        The Cartesian product of the input arrays.
     """
     number_arrays = len(arrays)
     data_type = np.result_type(*arrays)
@@ -63,10 +66,14 @@ def cartesian_product(*arrays: np.ndarray) -> np.ndarray:
 
 def chunk_slices(shape: typing.Sequence[int], chunks: typing.Sequence[int]) -> list[tuple[slice]]:
     """
-    Returns an array of tuples specifying chunks of an multidimensional array.
-    :param shape: The shape of the array to be sliced into chunks.
-    :param chunks: The required chunk size.
-    :return: An array of ranges that specify the chunks within the provided shape.
+    Returns an array of tuples specifying chunks of a multidimensional array.
+
+    Args:
+        shape: The shape of the array to be sliced into chunks.
+        chunks: The required chunk size.
+
+    Returns:
+        An array of ranges that specify the chunks within the provided shape.
     """
     arrays = []
     for i in range(len(shape)):
@@ -83,10 +90,14 @@ def chunk_slices(shape: typing.Sequence[int], chunks: typing.Sequence[int]) -> l
 
 def chunk_size(chunk: typing.Sequence[int], shape: typing.Sequence[int]) -> tuple[int]:
     """
-    Calculates a chunk size for an multidimensional array.
-    :param chunk: The requested chunk size.
-    :param shape: The shape of the multidimensional array.
-    :return: The calculated chunk size.
+    Calculates a chunk size for a multidimensional array.
+
+    Args:
+        chunk: The requested chunk size.
+        shape: The shape of the multidimensional array.
+
+    Returns:
+        The calculated chunk size.
     """
     result = [0] * 3
     divisor = [1] * 3
@@ -111,8 +122,12 @@ def convert(input_config: xml.etree.ElementTree.Element) -> typing.Optional[
 ]:
     """
     Converts a configuration value into a Python value.
-    :param input_config: The input type configuration.
-    :return: A Python value of the configured type.
+
+    Args:
+        input_config: The input type configuration.
+
+    Returns:
+        A Python value of the configured type.
     """
     text_value = None if input_config.text is None else input_config.text.strip()
     raw_value = eval(text_value) if "eval" in input_config.attrib \
@@ -144,9 +159,13 @@ def convert(input_config: xml.etree.ElementTree.Element) -> typing.Optional[
 def observers_from_xml(observers_xml: xml.etree.ElementTree.Element, **keywords) -> list[base.Observer]:
     """
     Instantiates Landscape Model observers according to an XML configuration.
-    :param observers_xml: The observer configuration XML.
-    :param keywords: Additional passed to the observer constructors.
-    :return: A list of observer instances.
+
+    Args:
+        observers_xml: The observer configuration XML.
+        **keywords: Additional passed to the observer constructors.
+
+    Returns:
+        A list of observer instances.
     """
     observers = []
     for observerConfig in observers_xml.findall("Observer"):
@@ -169,10 +188,14 @@ def observers_from_xml(observers_xml: xml.etree.ElementTree.Element, **keywords)
 def replace_tokens(tokens: typing.Mapping[str, str], source: str, destination: str) -> None:
     """
     Replaces tokens in a text file and writes the resulting text to another file.
-    :param tokens: The recognized tokens and their values.
-    :param source: The source file.
-    :param destination: The destination file.
-    :return: Nothing.
+
+    Args:
+        tokens: The recognized tokens and their values.
+        source: The source file.
+        destination: The destination file.
+
+    Returns:
+        Nothing.
     """
     parsed_source = source
     for key, value in tokens.items():
@@ -196,12 +219,16 @@ def run_process(
 ) -> None:
     """
     Runs a separate process.
-    :param command: A list describing the process call.
-    :param working_directory: The working directory for the process.
-    :param observer: The observer used for the process.
-    :param env: A dictionary of environment variables available to the new process.
-    :param minimized: Specifies whether to start the process minimized.
-    :return: Nothing.
+
+    Args:
+        command: A list describing the process call.
+        working_directory: The working directory for the process.
+        observer: The observer used for the process.
+        env: A dictionary of environment variables available to the new process.
+        minimized: Specifies whether to start the process minimized.
+
+    Returns:
+        Nothing.
     """
     if env is None:
         env = {}
@@ -233,11 +260,15 @@ def reporting(
 ) -> None:
     """
     Runs a reporting element in a default reporting environment.
-    :param data_store: The file path where the X3df store is located.
-    :param reporting_element_class: The class of the reporting element.
-    :param parameters: A list of name-value tuples defining parameters.
-    :param links: A list of name-dataset tuples defining links.
-    :returns: Nothing
+
+    Args:
+        data_store: The file path where the X3df store is located.
+        reporting_element_class: The class of the reporting element.
+        parameters: A list of name-value tuples defining parameters.
+        links: A list of name-dataset tuples defining links.
+
+    Returns:
+        Nothing.
     """
     import observer
     import stores

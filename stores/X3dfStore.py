@@ -1,6 +1,4 @@
-"""
-A class encapsulating an X3df data store.
-"""
+"""A class encapsulating an X3df data store."""
 import datetime
 import h5py
 import numpy
@@ -14,7 +12,7 @@ import typing
 
 class X3dfStore(base.Store):
     """
-    Encapsulates an X3df data store for usage in the Landscape Model.
+    Encapsulates a X3df data store for usage in the Landscape Model.
 
     PARAMETERS
     file_path: The file path and name for the HDF5 tom use.
@@ -54,6 +52,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.6.0", "`store.X3dfStore` acknowledges that HDF-stored strings are now returned as bytes")
     base.VERSION.added("1.7.0", "Type hints to `stores.X3dfStore` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.X3dfStore` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.X3dfStore` ")
 
     def __init__(
             self,
@@ -63,6 +62,16 @@ class X3dfStore(base.Store):
             initialization: typing.Optional[str] = None,
             identifier: int = 0
     ) -> None:
+        """
+        Initializes a X3df data store.
+
+        Args:
+            file_path: The path of the X3df file.
+            observer: The observer used by the store.
+            mode: The file mode in which the X3df file is opened.
+            initialization: An existing store with which the new X3df store is initialized.
+            identifier: The identifier of the initialized run.
+        """
         hdf5_file = os.path.join(file_path, "arr.dat")
         if mode != "r":
             try:
@@ -82,16 +91,22 @@ class X3dfStore(base.Store):
 
     def close(self) -> None:
         """
-        Closes the data store.
-        :return:
+        Closes the store.
+
+        Returns:
+            Nothing.
         """
         self._f.close()
 
     def describe(self, name: str) -> dict[str, typing.Any]:
         """
-        Returns metadata about a data set.
-        :param name: The name of the data set.
-        :return: A dictionary containing metadata about the data set.
+        Describes a dataset in the store.
+
+        Args:
+            name: The name of the dataset.
+
+        Returns:
+            A dictionary describing the dataset.
         """
         data_set = self._f[name]
         return {
@@ -104,10 +119,14 @@ class X3dfStore(base.Store):
 
     def get_values(self, name: str, **keywords) -> typing.Any:
         """
-        Retrieves values from a data set.
-        :param name: The name of the data set.
-        :param keywords: Additional keywords controlling how to retrieve values.
-        :return: The values of the data set in their corresponding type.
+        Gets the values of a data set from the store.
+
+        Args:
+            name: The name of the data set.
+            keywords: Additional keywords.
+
+        Returns:
+            The values of the data set in their original representation.
         """
         data_set = self._f[name]
         original_type = data_set.attrs["_type"]
@@ -167,19 +186,24 @@ class X3dfStore(base.Store):
             calculate_max: bool = False
     ) -> None:
         """
-        Sets the values of a data set.
-        :param name: The name of the data set.
-        :param values: The new values of the data set.
-        :param scales: The scales to which the values apply.
-        :param default: The default value for a new value array.
-        :param unit: The physical unit of the values.
-        :param shape: The shape of a newly created empty array.
-        :param data_type: The data type of a newly created empty array.
-        :param chunks: The chunk size for a newly created empty array.
-        :param create: Specifies whether a data set should be created or not.
-        :param slices: Defines the portion of the data set that was passed to the function.
-        :param calculate_max: Specifies whether the data set should keep track of the maximum value.
-        :return: Nothing.
+        Stores a data set in the store.
+
+        Args:
+
+            name: The name of the data set.
+            values: The values of the data set.
+            scales: The scales to which the values of the data set apply.
+            default: The default value for a new value array.
+            unit: The physical unit of the values.
+            shape: The shape of a newly created empty array.
+            data_type: The datatype of a newly created empty array.
+            chunks: The chunk size for a newly created empty array.
+            create: Specifies whether a data set should be created or not.
+            slices: Defines the portion of the data set that was passed to the function.
+            calculate_max: Specifies whether the data set should keep track of the maximum value.
+
+        Returns:
+            Nothing.
         """
         if default is not None and default != 0:
             self._observer.write_message(2, "Default value not supported by X3dfStore")
@@ -278,9 +302,13 @@ class X3dfStore(base.Store):
     def has_dataset(self, name: str, partial: bool = False) -> bool:
         """
         Checks whether a dataset exists in the store or not.
-        :param name: The name of the dataset.
-        :param partial: Specifies whether to also check partial dataset paths or not.
-        :return: A boolean value indicating whether the dataset exists or not.
+
+        Args:
+            name: The name of the dataset.
+            partial: Specifies whether to also check partial dataset paths or not.
+
+        Returns:
+            A boolean value indicating whether the dataset exists or not.
         """
         if partial:
             return name.split("/")[0] in self._f

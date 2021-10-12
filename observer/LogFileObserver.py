@@ -1,6 +1,4 @@
-"""
-Class definition of the LogFileObserver.
-"""
+"""Class definition of the LogFileObserver."""
 
 import base
 import os
@@ -22,20 +20,37 @@ class LogFileObserver(base.Observer):
     base.VERSION.changed("1.6.3", "`observer.LogFileObserver` uses utf-8 encoding for logfiles")
     base.VERSION.added("1.7.0", "Type hints to `observer.LogFileObserver` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.LogFileObserver` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.LogFileObserver` ")
 
     def __init__(self, **keywords):
+        """
+        Initializes a LogFileObserver.
+
+        Args:
+            **keywords: Additional keywords for the observer.
+        """
         super(LogFileObserver, self).__init__()
         os.makedirs(os.path.dirname(keywords["logfile"]), exist_ok=True)
         self._file = open(keywords["logfile"], "a", encoding="utf-8")
 
     def __del__(self) -> None:
+        """
+        Destroys the observer.
+
+        Returns:
+            Nothing.
+        """
         self._file.close()
 
     def experiment_finished(self, detail: str = "") -> None:
         """
         Reacts when an experiment is completed.
-        :param detail: Additional details to report.
-        :return: Nothing.
+
+        Args:
+            detail: Additional details to report.
+
+        Returns:
+             Nothing.
         """
         self.write_message(4, "Experiment finished")
         self.write_message(5, detail)
@@ -43,8 +58,12 @@ class LogFileObserver(base.Observer):
     def input_get_values(self, component_input: base.Input) -> None:
         """
         Reacts when values are requested from a component input.
-        :param component_input: The input being requested.
-        :return: Nothing.
+
+        Args:
+            component_input: The input being requested.
+
+        Returns:
+            Nothing.
         """
         for message in component_input.messages:
             self.write_message(message[0], f"{component_input.name}:{message[1]}:GetValues", message[2])
@@ -52,8 +71,12 @@ class LogFileObserver(base.Observer):
     def mc_run_finished(self, detail: str = "") -> None:
         """
         Reacts when a Monte Carlo run is finished.
-        :param detail: Additional details to report.
-        :return: Nothing.
+
+        Args:
+            detail: Additional details to report.
+
+        Returns:
+             Nothing.
         """
         self.write_message(4, "MC run finished")
         self.write_message(5, detail)
@@ -61,20 +84,28 @@ class LogFileObserver(base.Observer):
     def store_set_values(self, level: int, store_name: str, message: str) -> None:
         """
         Reacts when values are stored.
-        :param level: The severity of the message.
-        :param store_name: The storage name.
-        :param message: The message to report.
-        :return: Nothing.
+
+        Args:
+            level: The severity of the message.
+            store_name: The storage name.
+            message: The message to report.
+
+        Returns:
+            Nothing.
         """
         self.write_message(level, f"{store_name}:SetValues", message)
 
     def write_message(self, level: int, message: str, detail: str = "") -> None:
         """
         Sends a message to the reporter.
-        :param level: The severity of the message.
-        :param message: The message to report.
-        :param detail: Additional details to report.
-        :return: Nothing.
+
+        Args:
+            level: The severity of the message.
+            message: The message to report.
+            detail: Additional details to report.
+
+        Returns:
+             Nothing.
         """
         if level == 1:
             severity = "ERROR"
@@ -97,22 +128,32 @@ class LogFileObserver(base.Observer):
     def mc_run_started(self, composition: typing.Mapping[str, base.Component]) -> None:
         """
         Reacts when a Monte Carlo run has started.
-        :param composition: The composition of the Monte Carlo run.
-        :return: Nothing.
+
+        Args:
+            composition: The composition of the Monte Carlo run.
+
+        Returns:
+             Nothing.
         """
         self.write_message(5, "MC run start")
 
     def flush(self) -> None:
         """
         Flushes the buffer of the reporter.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         self._file.flush()
 
     def write(self, text: str) -> None:
         """
         Requests the reporter to write text.
-        :param text: The text to write.
-        :return: Nothing.
+
+        Args:
+            text: The text to write.
+
+        Returns:
+             Nothing.
         """
         self._file.write(text)

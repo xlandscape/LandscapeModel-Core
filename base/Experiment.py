@@ -1,6 +1,4 @@
-"""
-An individual experiment prepared for the Landscape Model.
-"""
+"""An individual experiment prepared for the Landscape Model."""
 import datetime
 import multiprocessing
 import os
@@ -17,9 +15,7 @@ global globalLock
 
 
 class Experiment:
-    """
-    An individual experiment prepared for the Landscape Model.
-    """
+    """An individual experiment prepared for the Landscape Model."""
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.Experiment` class for managing individual experiments")
     base.VERSION.added("1.1.6", "`base.Experiment.write_info_xml()` for saving runtime information of the experiment")
@@ -37,6 +33,7 @@ class Experiment:
     base.VERSION.changed("1.5.3", "`base.Experiment` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Experiment` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Experiment` ")
 
     def __init__(
             self,
@@ -45,6 +42,15 @@ class Experiment:
             param_dir: typing.Optional[str] = None,
             project_dir: typing.Optional[str] = None
     ) -> None:
+        """
+        Initializes an Experiment.
+
+        Args:
+            parameters: The user parameters defining the experiment.
+            work_dir: The working directory of the experiment.
+            param_dir: The parameterization directory of the experiment.
+            project_dir: The project directory of the experiment.
+        """
         basedir = os.path.abspath(work_dir)
         experiment_temporary_xml = os.path.join(
             basedir, f"{''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))}.xml")
@@ -108,7 +114,9 @@ class Experiment:
     def run(self) -> None:
         """
         Runs the experiment.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         experiment_start_time = datetime.datetime.now()
         self._observer.write_message(5, "Experiment started")
@@ -130,10 +138,14 @@ class Experiment:
     def write_info_xml(path: str, model_parts: xml.etree.ElementTree.Element, scenario_version: str) -> None:
         """
         Writes version information into an XML file.
-        :param path: The file name of the XML file to write to.
-        :param model_parts: The XML element describing the parts of the model.
-        :param scenario_version: The version number of the scenario.
-        :return: Nothing.
+
+        Args:
+            path: The file name of the XML file to write to.
+            model_parts: The XML element describing the parts of the model.
+            scenario_version: The version number of the scenario.
+
+        Returns:
+            Nothing.
         """
         info_xml = xml.etree.ElementTree.Element("info")
         xml.etree.ElementTree.SubElement(info_xml, "start_date").text = str(datetime.datetime.now().date())
@@ -153,7 +165,9 @@ class Experiment:
     def mc_run_configurations(self) -> list[str]:
         """
         The Monte Carlo run configurations prepared for this experiment.
-        :return: A list of Monte Carlo run configurations.
+
+        Returns:
+            A list of Monte Carlo run configurations.
         """
         return self._mcRunConfigurations
 
@@ -161,7 +175,9 @@ class Experiment:
     def number_mc_runs(self) -> int:
         """
         The total number of Monte Carlo runs of this experiment.
-        :return: The total number of Monte Carlo runs of this experiment.
+
+        Returns:
+            The total number of Monte Carlo runs of this experiment.
         """
         return self._numberMC
 
@@ -169,16 +185,22 @@ class Experiment:
     def number_parallel_processes(self) -> int:
         """
         The number of parallel processes planned for this experiment.
-        :return: The number of parallel processes planned for this experiment.
+
+        Returns:
+            The number of parallel processes planned for this experiment.
         """
         return self._numberParallelProcesses
 
 
 def run_mc(mc_config: str) -> None:
     """
-    Runs an individual Monte Carlo run of the experiment.
-    :param mc_config: The configuration of the Monte Carlo run.
-    :return: The return value of the Monte Carlo run.
+    Runs an individual Monte Carlo run.
+
+    Args:
+        mc_config: The configuration of the Monte Carlo run.
+
+    Returns:
+        The return value of the Monte Carlo run.
     """
     return base.MCRun(mc_config, lock=globalLock).run()
 
@@ -186,8 +208,12 @@ def run_mc(mc_config: str) -> None:
 def pool_init(lock: multiprocessing.Lock) -> None:
     """
     Initializes a pool for parallel processing.
-    :param lock: The lock shared among processes.
-    :return: Nothing.
+
+    Args:
+        lock: The lock shared among processes.
+
+    Returns:
+        Nothing.
     """
     global globalLock
     globalLock = lock

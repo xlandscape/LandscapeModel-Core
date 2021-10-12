@@ -1,5 +1,5 @@
 """
-Imports of the components module.
+Imports of the `components` module.
 """
 from .CsvReader import *
 from .DeleteFolder import *

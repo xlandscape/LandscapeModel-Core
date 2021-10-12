@@ -1,6 +1,4 @@
-"""
-Class definition of the PpmCalendar Landscape Model component.
-"""
+"""Class definition of the PpmCalendar Landscape Model component."""
 from osgeo import ogr
 import datetime
 import numpy as np
@@ -15,8 +13,8 @@ class PpmCalendar(base.Component):
     Encapsulates the PpmCalendar as a Landscape Model component.
 
     INPUTS
-    SimulationStart: The first day of the simulation. A datetime.date of global scale. Value has no unit.
-    SimulationEnd: The last day of the simulation. A datetime.date of global scale. Value has no unit.
+    SimulationStart: The first day of the simulation. A `datetime.date` of global scale. Value has no unit.
+    SimulationEnd: The last day of the simulation. A `datetime.date` of global scale. Value has no unit.
     ApplicationWindows: A definition of application windows. A string of global scale. Value has no unit.
     Fields: A list of identifiers of individual geometries. A list[int] of scale space/base_geometry. Values have no
     unit.
@@ -43,7 +41,8 @@ class PpmCalendar(base.Component):
     input application rate.
     TechnologyDriftReductions: The technological drift reductions. A NumPy array of scale other/application. Values have
     the same unit as the input drift reductions.
-    AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. Th values have no unit.
+    AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. The values have no
+    unit.
     """
     # CHANGELOG
     base.VERSION.added("1.1.1", "`components.PpmCalendar` component")
@@ -72,6 +71,14 @@ class PpmCalendar(base.Component):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.PpmCalendar` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        """
+        Initializes a PpmCalendar.
+
+        Args:
+            name: The name of the component.
+            default_observer: The default observer of the component.
+            default_store: The default store of the component.
+        """
         super(PpmCalendar, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
@@ -160,7 +167,9 @@ class PpmCalendar(base.Component):
     def run(self) -> None:
         """
         Runs the component.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         simulation_start_year = self.inputs["SimulationStart"].read().values.year
         simulation_end_year = self.inputs["SimulationEnd"].read().values.year
@@ -223,9 +232,7 @@ class PpmCalendar(base.Component):
 
 
 class SprayApplication:
-    """
-    Describes an individual spray-application.
-    """
+    """Describes an individual spray-application."""
     def __init__(
             self,
             field: int,
@@ -235,6 +242,17 @@ class SprayApplication:
             technology_drift_reduction: base.Values,
             in_crop_buffer: float
     ) -> None:
+        """
+        Initializes a spray application.
+
+        Args:
+            field: The applied field.
+            date: The date of application.
+            ppp: The product used during application.
+            application_rate: The application rate.
+            technology_drift_reduction: The rate of drift reduction due to used equipment.
+            in_crop_buffer: The in-crop buffer considered during application.
+        """
         self._field = field
         self._date = date
         self._ppp = ppp
@@ -246,7 +264,9 @@ class SprayApplication:
     def application_rate(self) -> base.Values:
         """
         The rate by which a substance is sprayed.
-        :return: The application rate.
+
+        Returns:
+            The application rate.
         """
         return self._applicationRate
 
@@ -254,7 +274,9 @@ class SprayApplication:
     def date(self) -> datetime.date:
         """
         The date when application takes place.
-        :return: The application date.
+
+        Returns:
+            The application date.
         """
         return self._date
 
@@ -262,7 +284,9 @@ class SprayApplication:
     def field(self) -> int:
         """
         The field that is applied
-        :return: The field identifier.
+
+        Returns:
+            The field identifier.
         """
         return self._field
 
@@ -270,7 +294,9 @@ class SprayApplication:
     def in_crop_buffer(self) -> float:
         """
         The in-crop buffer that is applied during application.
-        :return: The buffer width in meters.
+
+        Returns:
+            The buffer width in meters.
         """
         return self._inCropBuffer
 
@@ -278,7 +304,9 @@ class SprayApplication:
     def ppp(self) -> str:
         """
         The plant production product that is applied.
-        :return: The identifier of the plant protection product.
+
+        Returns:
+            The identifier of the plant protection product.
         """
         return self._ppp
 
@@ -286,6 +314,8 @@ class SprayApplication:
     def technology_drift_reduction(self) -> base.Values:
         """
         The drift-reducing technology that is used.
-        :return: The fraction of spray-drift that is reduced by applying drift-reducing technology.
+
+        Returns:
+            The fraction of spray-drift that is reduced by applying drift-reducing technology.
         """
         return self._technologyDriftReduction

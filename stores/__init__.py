@@ -1,5 +1,5 @@
 """
-Imports for the stores namespace.
+Imports for the `stores` namespace.
 """
 from .InMemoryStore import *
 from .SqlLiteStore import *

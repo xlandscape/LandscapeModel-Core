@@ -1,6 +1,4 @@
-"""
-Class definition for the HydrologyFromTimeSeries Landscape Model component.
-"""
+"""Class definition for the HydrologyFromTimeSeries Landscape Model component."""
 import datetime
 import h5py
 import numpy as np
@@ -16,8 +14,8 @@ class HydrologyFromTimeSeries(base.Component):
 
     INPUTS
     TimeSeries: A valid file path to the input HDF5 data. A string of global scale. Value has no unit.
-    FromTime: The start time of the requested hydrology. A datetime.date of global scale. Value has no unit.
-    ToTime: The end time of the requested hydrology. A datetime.date of global scale. Value has no unit.
+    FromTime: The start time of the requested hydrology. A `datetime.date` of global scale. Value has no unit.
+    ToTime: The end time of the requested hydrology. A `datetime.date` of global scale. Value has no unit.
     InflowTimeSeriesPath: The path where reach-inflows are stored. A string of global scale. Value has no unit.
     ImportInflows: Specifies whether reach inflows from fields are imported. A bool of global scale. Value has no unit.
 
@@ -59,6 +57,14 @@ class HydrologyFromTimeSeries(base.Component):
         "1.8.0", "Replaced Legacy format strings by f-strings in `components.HydrologyFromTimeSeries` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        """
+        Initializes a HydrologyFromTimeSeries component.
+
+        Args:
+            name: The name of the component.
+            default_observer: The default observer of the component.
+            default_store: The default store of the component.
+        """
         super(HydrologyFromTimeSeries, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
@@ -102,7 +108,9 @@ class HydrologyFromTimeSeries(base.Component):
     def run(self) -> None:
         """
         Runs the component.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         time_series = self.inputs["TimeSeries"].read().values
         h5 = h5py.File(time_series)

@@ -1,6 +1,4 @@
-"""
-A collection of version information.
-"""
+"""A collection of version information."""
 import typing
 
 import distutils.version
@@ -8,23 +6,39 @@ import base
 
 
 class VersionCollection:
-    """
-    Collects version changes to compile a changelog.
-    """
-    # CHANGELOG can be found in VERSION.py to avoid circular references
+    """Collects version changes to compile a changelog."""
+    # CHANGELOG can be found in `VERSION.py` to avoid circular references
 
     def __init__(self, *versions: base.VersionInfo) -> None:
+        """
+        Initializes a VersionCollection.
+
+        Args:
+            *versions: The versions of the collection.
+        """
         self._versions = versions
         self._roadmap = []
         self._authors = []
         self._acknowledgements = []
 
     def __iter__(self) -> typing.Iterator[base.VersionInfo]:
+        """
+        Provides an iterator over the versions of the collection.
+
+        Returns:
+            An iterator over the versions of the collection.
+        """
         self._sorted_versions = sorted(self._versions, reverse=True)
         self._idx = 0
         return self
 
     def __next__(self) -> base.VersionInfo:
+        """
+        The next version within the collection.
+
+        Returns:
+            The next version within the collection.
+        """
         if self._idx < len(self._sorted_versions):
             version = self._sorted_versions[self._idx]
             self._idx += 1
@@ -35,9 +49,13 @@ class VersionCollection:
     def added(self, version: str, message: str) -> None:
         """
         Adds a message to the additions of a version.
-        :param version: The version to which an element was added.
-        :param message: A message describing the addition.
-        :return: Nothing.
+
+        Args:
+            version: The version to which an element was added.
+            message: A message describing the addition.
+
+        Returns:
+            Nothing.
         """
         parsed_version = distutils.version.StrictVersion(version)
         result = [x for x in self._versions if x == parsed_version]
@@ -48,9 +66,13 @@ class VersionCollection:
     def changed(self, version: str, message: str) -> None:
         """
         Adds a message to the changes of a version.
-        :param version: The version in which an element was changed.
-        :param message: A message describing the change.
-        :return: Nothing.
+
+        Args:
+            version: The version in which an element was changed.
+            message: A message describing the change.
+
+        Returns:
+            Nothing.
         """
         parsed_version = distutils.version.StrictVersion(version)
         result = [x for x in self._versions if x == parsed_version]
@@ -61,9 +83,13 @@ class VersionCollection:
     def fixed(self, version: str, message: str) -> None:
         """
         Adds a message to the fixes of a version.
-        :param version: The version in which an element was fixed.
-        :param message: A message describing the fix.
-        :return: Nothing.
+
+        Args:
+            version: The version in which an element was fixed.
+            message: A message describing the fix.
+
+        Returns:
+            Nothing.
         """
         parsed_version = distutils.version.StrictVersion(version)
         result = [x for x in self._versions if x == parsed_version]
@@ -75,7 +101,9 @@ class VersionCollection:
     def latest(self) -> base.VersionInfo:
         """
         The latest version in the collection.
-        :return: The highest version number found in the collection.
+
+        Returns:
+            The highest version number found in the collection.
         """
         return max(self._versions)
 
@@ -83,7 +111,9 @@ class VersionCollection:
     def roadmap(self) -> list[str]:
         """
         Planned changes to current version.
-        :return: A list of changes planned for future versions.
+
+        Returns:
+            A list of changes planned for future versions.
         """
         return self._roadmap
 
@@ -91,7 +121,9 @@ class VersionCollection:
     def authors(self) -> list[str]:
         """
         The authors that contributed to the project.
-        :return: A list of contributing authors.
+
+        Returns:
+            A list of contributing authors.
         """
         return self._authors
 
@@ -99,6 +131,8 @@ class VersionCollection:
     def acknowledgements(self) -> list[str]:
         """
         Persons or project of special mention.
-        :return: A list of acknowledged persons and projects.
+
+        Returns:
+            A list of acknowledged persons and projects.
         """
         return self._acknowledgements

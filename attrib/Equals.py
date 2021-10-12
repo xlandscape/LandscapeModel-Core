@@ -1,14 +1,10 @@
-"""
-Class definition for the Landscape Model Equals attribute.
-"""
+"""Class definition for the Landscape Model Equals attribute."""
 import base
 import typing
 
 
 class Equals(base.DataAttribute):
-    """
-    Checks whether two values are equal.
-    """
+    """Checks whether two values are equal."""
     # CHANGELOG
     base.VERSION.added("1.1.6", "Value equality checker")
     base.VERSION.changed("1.3.33", "`attrib.Equals.check()` returns base.CheckResult instead of tuple")
@@ -21,14 +17,25 @@ class Equals(base.DataAttribute):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Equals` ")
 
     def __init__(self, value: typing.Any, severity: int = 1) -> None:
+        """
+        Initializes an Equals attribute.
+
+        Args:
+            value: The value to check.
+            severity: The severity if expected and actual values are unequal.
+        """
         self._value = value
         self._severity = severity
 
     def check(self, values: base.Values) -> base.CheckResult:
         """
-        Checks the values.
-        :param values: The values to check.
-        :return: A CheckResults object.
+        Checks values regarding a specific data attribute.
+
+        Args:
+            values: The values to check.
+
+        Returns:
+            A tuple representing the result of the check.
         """
         if self._value == values.values:
             return base.CheckResult((4, f"Equals {self.value}"), values)
@@ -42,7 +49,9 @@ class Equals(base.DataAttribute):
     def name(self) -> str:
         """
         Gets the name of the attribute checker.
-        :return: A string containing the name.
+
+        Returns:
+            A string containing the name of the attribute checker.
         """
         return "EqualsChecker"
 
@@ -50,7 +59,9 @@ class Equals(base.DataAttribute):
     def severity(self) -> int:
         """
         Gets the default severity of violations.
-        :return: An integer representing the default severity.
+
+        Returns:
+            An integer representing the default severity.
         """
         return self._severity
 
@@ -58,6 +69,8 @@ class Equals(base.DataAttribute):
     def value(self) -> typing.Any:
         """
         Gets the value to compare with.
-        :return: The value to compare with.
+
+        Returns:
+            The value to compare with.
         """
         return self._value

@@ -1,13 +1,9 @@
-"""
-Class definition of the Landscape Model Ontology checker.
-"""
+"""Class definition of the Landscape Model Ontology checker."""
 import base
 
 
 class Ontology(base.DataAttribute):
-    """
-    Checks for semantic relationships between values.
-    """
+    """Checks for semantic relationships between values."""
     # CHANGELOG
     base.VERSION.added("1.2.37", "Ontology attribute checker")
     base.VERSION.changed("1.3.33", "`attrib.Ontology.check()` returns base.CheckResult instead of tuple")
@@ -19,13 +15,23 @@ class Ontology(base.DataAttribute):
     base.VERSION.changed("1.7.0", "Removed deactivated code in `attrib.Ontology` ")
 
     def __init__(self, iri: str) -> None:
+        """
+        Initializes an Ontology attribute.
+
+        Args:
+            iri: The IRI of the ontology.
+        """
         self._iri = iri
 
     def check(self, values: base.Values) -> base.CheckResult:
         """
-        Checks whether values apply to an ontological definition.
-        :param values: The values to check.
-        :return: A CheckResult object.
+        Checks values regarding a specific data attribute.
+
+        Args:
+            values: The values to check.
+
+        Returns:
+            A tuple representing the result of the check.
         """
         return base.CheckResult((4, "Ontology checked"), values)
 
@@ -33,6 +39,8 @@ class Ontology(base.DataAttribute):
     def name(self) -> str:
         """
         Gets the name of the attribute checker.
-        :return: A string containing the name of the attribute checker.
+
+        Returns:
+            A string containing the name of the attribute checker.
         """
         return "OntologyChecker"

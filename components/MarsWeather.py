@@ -1,6 +1,4 @@
-"""
-Class definition for the Landscape Model MarsWeather component.
-"""
+"""Class definition for the Landscape Model MarsWeather component."""
 import datetime
 import numpy as np
 import base
@@ -14,9 +12,9 @@ class MarsWeather(base.Component):
 
     INPUTS
     FilePath: A valid file path to a CSV file containing MARS weather data. A string of global scale. Value has no unit.
-    FirstDate: The first date of the requested weather information. A datetime.date of global scale. The value has no
+    FirstDate: The first date of the requested weather information. A `datetime.date` of global scale. The value has no
     unit.
-    LastDate: The last date of the requested weather information. A datetime.date of global scale. The value has no
+    LastDate: The last date of the requested weather information. A `datetime.date` of global scale. The value has no
     unit.
 
     OUTPUTS
@@ -43,6 +41,14 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.MarsWeather` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        """
+        Initializes a MarsWeather component.
+
+        Args:
+            name: The name of the component.
+            default_observer: The default observer of the component.
+            default_store: The default store of the component.
+        """
         super(MarsWeather, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer),
@@ -78,7 +84,9 @@ class MarsWeather(base.Component):
     def run(self) -> None:
         """
         Runs the component.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         with open(self.inputs["FilePath"].read().values) as f:
             data = f.readlines()

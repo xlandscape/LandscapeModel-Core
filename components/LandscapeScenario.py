@@ -1,6 +1,4 @@
-"""
-Class definition for the Landscape Model LandscapeScenario component.
-"""
+"""Class definition for the Landscape Model LandscapeScenario component."""
 from osgeo import gdal
 from osgeo import ogr
 from osgeo import osr
@@ -21,7 +19,7 @@ class LandscapeScenario(base.Component):
     No ontological description is associated with the input.
 
     OUTPUTS
-    Outputs of this components are provisional, i.e., they are defined by links from inputs and have to be satisfied
+    The outputs of this component are provisional, i.e., they are defined by links from inputs and have to be satisfied
     by data in the CSV file. Outputs are Crs, Extent, and information specified in the package information file of the
     landscape scenario.
     """
@@ -56,6 +54,14 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenario` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        """
+        Initializes a LandscapeScenario component.
+
+        Args:
+            name: The name of the component.
+            default_observer: The default observer of the component.
+            default_store: The default store of the component.
+        """
         super(LandscapeScenario, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
@@ -75,7 +81,9 @@ class LandscapeScenario(base.Component):
     def run(self) -> None:
         """
         Runs the component.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         os.environ["PROJ_LIB"] = os.path.abspath(
             os.path.join(
@@ -221,11 +229,16 @@ class LandscapeScenario(base.Component):
     ) -> None:
         """
         Imports a shapefile into the Landscape Model by storing its geometries and attributes.
-        :param: file_name: The path and file name of the shapefile.
-        :param: attributes: The attributes to be imported from the shapefile.
-        :param: is_base: Indicates whether the imported shapefile contains the base geometries or is supplementary.
-        :param: geometry_output: The name of the dataset where the geometries of the shapefile are stored.
-        :return: Nothing.
+
+        Args:
+            file_name: The path and file name of the shapefile.
+            attributes: The attributes to be imported from the shapefile.
+            is_base: Indicates whether the imported shapefile contains the base geometries or is supplementary.
+            geometry_output: The name of the dataset where the geometries of the shapefile are stored.
+            units: The physical units associated with the shapefile attributes.
+
+        Returns:
+            Nothing.
         """
         ogr_driver = ogr.GetDriverByName("ESRI Shapefile")
         ogr_data_set = ogr_driver.Open(file_name, 0)

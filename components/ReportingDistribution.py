@@ -1,6 +1,4 @@
-"""
-Class definition of a Landscape Model component generating distribution plots.
-"""
+"""Class definition of a Landscape Model component generating distribution plots."""
 import base
 import attrib
 import matplotlib.pyplot
@@ -35,6 +33,14 @@ class ReportingDistribution(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingDistribution` with base class")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        """
+        Initializes a ReportingDistribution component.
+
+        Args:
+            name: The name of the component.
+            default_observer: The default observer of the component.
+            default_store: The default store of the component.
+        """
         super(ReportingDistribution, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
             self,
@@ -52,7 +58,9 @@ class ReportingDistribution(base.Component):
     def run(self) -> None:
         """
         Runs the component.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         values = self._inputs["Values"].read().values
         fig = matplotlib.pyplot.figure(figsize=(10, 10))
@@ -78,14 +86,18 @@ class ReportingDistribution(base.Component):
     ) -> None:
         """
         Plots the distribution of values.
-        :param data_store: The file path where the X3df store is located.
-        :param values: The name of the dataset containing the values to plot.
-        :param x_label: The label of the x-axis.
-        :param title: The title of the plot.
-        :param x_min: The minimum x-value to display.
-        :param x_max: The maximum x-value to display.
-        :param output_file: A valid path to a file where the plot is written to.
-        :returns: Nothing.
+
+        Args:
+            data_store: The file path where the X3df store is located.
+            values: The name of the dataset containing the values to plot.
+            x_label: The label of the x-axis.
+            title: The title of the plot.
+            x_min: The minimum x-value to display.
+            x_max: The maximum x-value to display.
+            output_file: A valid path to a file where the plot is written to.
+
+        Returns:
+            Nothing.
         """
         base.reporting(
             data_store,

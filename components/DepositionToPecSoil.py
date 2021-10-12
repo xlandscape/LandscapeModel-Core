@@ -1,6 +1,4 @@
-"""
-Class definition of the DepositionToPecSoil Landscape Model component.
-"""
+"""Class definition of the DepositionToPecSoil Landscape Model component."""
 import numpy as np
 import base
 import typing
@@ -8,7 +6,7 @@ import typing
 
 class DepositionToPecSoil(base.Component):
     """
-    Calculates the PEC soil from surface deposition by a simple homogeneous distribution of mass in the top soil layer.
+    Calculates the PEC soil from surface deposition by a simple homogeneous distribution of mass in the topsoil layer.
 
     INPUTS
     Deposition: The deposition on the soil surface.
@@ -16,7 +14,7 @@ class DepositionToPecSoil(base.Component):
     Depth: The depth of the soil layer in which the deposition is distributed equally.
 
     OUTPUTS
-    PecSoil: The homogenous concentration of substance in soil. A NumPy array with scales time/day, space_x/1sqm,
+    PecSoil: The homogeneous concentration of substance in soil. A NumPy array with scales time/day, space_x/1sqm,
     space_y/1sqm.
     """
     # CHANGELOG
@@ -37,6 +35,14 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DepositionToPecSoil` with base class")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        """
+        Initializes a DepositionToPecSoil component.
+
+        Args:
+            name: The name of the component.
+            default_observer: The default observer of the component.
+            default_store: The default store of the component.
+        """
         super(DepositionToPecSoil, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input("Deposition", (), self.default_observer),
@@ -48,7 +54,9 @@ class DepositionToPecSoil(base.Component):
     def run(self) -> None:
         """
         Runs the component.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         data_set_info = self._inputs["Deposition"].describe()
         soil_bulk_density = self.inputs["SoilBulkDensity"].read().values

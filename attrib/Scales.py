@@ -1,13 +1,9 @@
-"""
-Class definition of the Landscape Model Scales attribute.
-"""
+"""Class definition of the Landscape Model Scales attribute."""
 import base
 
 
 class Scales(base.DataAttribute):
-    """
-    Checks whether values have specific scales.
-    """
+    """Checks whether values have specific scales."""
     # CHANGELOG
     base.VERSION.added("1.3.33", "Scale attribute checker")
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Scales` ")
@@ -18,14 +14,25 @@ class Scales(base.DataAttribute):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Scales` ")
 
     def __init__(self, expected_scales: str, severity: int = 2) -> None:
+        """
+        Initializes the Scales attribute.
+
+        Args:
+            expected_scales: The expected scales.
+            severity: The severity if actual scales differ from the expected scales.
+        """
         self._scales = expected_scales
         self._severity = severity
 
     def check(self, values: base.Values) -> base.CheckResult:
         """
-        Checks values for scales compliance.
-        :param values: The values to check.
-        :return: A tuple representing the result of the check.
+        Checks values regarding a specific data attribute.
+
+        Args:
+            values: The values to check.
+
+        Returns:
+            A tuple representing the result of the check.
         """
         if values.scales is None:
             return base.CheckResult((self._severity, "Values have unknown scale, requested scale ignored"), values)
@@ -38,7 +45,9 @@ class Scales(base.DataAttribute):
     def name(self) -> str:
         """
         Gets the name of the attribute checker.
-        :return: A string containing the name of the attribute checker.
+
+        Returns:
+            A string containing the name of the attribute checker.
         """
         return "ScalesChecker"
 
@@ -46,7 +55,9 @@ class Scales(base.DataAttribute):
     def severity(self) -> int:
         """
         Gets the default severity of violations.
-        :return: A number representing the default severity of violations.
+
+        Returns:
+            A number representing the default severity of violations.
         """
         return self._severity
 
@@ -54,6 +65,8 @@ class Scales(base.DataAttribute):
     def scales(self) -> str:
         """
         Gets the scales to check for.
-        :return: A string specifying the scales.
+
+        Returns:
+            A string specifying the scales.
         """
         return self._scales

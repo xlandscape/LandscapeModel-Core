@@ -1,6 +1,4 @@
-"""
-The Landscape Model startup script.
-"""
+"""The Landscape Model startup script."""
 import os
 import sys
 import typing
@@ -11,9 +9,13 @@ import typing
 def run(argument: str, basedir: typing.Optional[str] = None) -> None:
     """
     Runs the Landscape Model.
-    :param argument: The startup argument.
-    :param basedir: The base directory to resolve relative paths from.
-    :return: Nothing.
+
+    Args:
+        argument: The startup argument.
+        basedir: The base directory to resolve relative paths from.
+
+    Returns:
+        Nothing.
     """
     import base
     sys.path.extend([os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "variant"))])
@@ -44,7 +46,9 @@ def run(argument: str, basedir: typing.Optional[str] = None) -> None:
 def start_notebook() -> None:
     """
     Starts a Jupyter notebook for the current Landscape Model variant.
-    :return: Nothing.
+
+    Returns:
+        Nothing.
     """
     import notebook.notebookapp
     os.environ["JUPYTER_PATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "variant", "jupyter"))
@@ -58,6 +62,7 @@ def start_notebook() -> None:
 
 
 if __name__ == "__main__":
+    """The main entry point for the Landscape Model."""
     for arg in sys.argv[1:]:
         if arg == "notebook":
             start_notebook()

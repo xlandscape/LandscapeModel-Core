@@ -1,15 +1,11 @@
-"""
-Class definition of the Landscape Model Unit attribute.
-"""
+"""Class definition of the Landscape Model Unit attribute."""
 import base
 import numpy
 import typing
 
 
 class Unit(base.DataAttribute):
-    """
-    Checks whether values have a specific physical unit.
-    """
+    """Checks whether values have a specific physical unit."""
     # CHANGELOG
     base.VERSION.added("1.3.3", "Unit attribute class to check and convert physical units (currently hard-coded)")
     base.VERSION.changed("1.3.33", "`attrib.Unit.check()` returns base.CheckResult instead of tuple")
@@ -24,14 +20,25 @@ class Unit(base.DataAttribute):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Unit` ")
 
     def __init__(self, expected_unit: typing.Optional[str], severity: int = 2) -> None:
+        """
+        Initializes a Unit attribute.
+
+        Args:
+            expected_unit: The expected unit.
+            severity: The severity if the actual unit differs from the expected unit.
+        """
         self._unit = expected_unit
         self._severity = severity
 
     def check(self, values: base.Values) -> base.CheckResult:
         """
-        Checks values of class compliance.
-        :param values: The values to check.
-        :return: A tuple representing the result of the check.
+        Checks values regarding a specific data attribute.
+
+        Args:
+            values: The values to check.
+
+        Returns:
+            A tuple representing the result of the check.
         """
         if values.unit == self._unit:
             return base.CheckResult((4, f"Values have unit {self.unit}"), values)
@@ -63,9 +70,13 @@ class Unit(base.DataAttribute):
     def try_convert(self, value: float, unit: str) -> typing.Optional[float]:
         """
         Tries to convert a value with one physical unit to another physical unit.
-        :param value: The value to convert.
-        :param unit: The unit the value to convert currently is in.
-        :return: The converted values or None if no conversion is possible.
+
+        Args:
+            value: The value to convert.
+            unit: The unit the value to convert currently is in.
+
+        Returns:
+            The converted values or None if no conversion is possible.
         """
         if unit == "g/ha" and self._unit == "mg/m²":
             return value * .1
@@ -89,7 +100,9 @@ class Unit(base.DataAttribute):
     def name(self) -> str:
         """
         Gets the name of the attribute checker.
-        :return: A string containing the name of the attribute checker.
+
+        Returns:
+            A string containing the name of the attribute checker.
         """
         return "UnitChecker"
 
@@ -97,7 +110,9 @@ class Unit(base.DataAttribute):
     def severity(self) -> int:
         """
         Gets the severity of violations.
-        :return: A number representing the severity of violations.
+
+        Returns:
+            A number representing the severity of violations.
         """
         return self._severity
 
@@ -105,6 +120,8 @@ class Unit(base.DataAttribute):
     def unit(self) -> str:
         """
         Gets the unit to check for.
-        :return: A string specifying the unit.
+
+        Returns:
+            A string specifying the unit.
         """
         return self._unit

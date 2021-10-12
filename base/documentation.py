@@ -1,6 +1,4 @@
-"""
-This file contains functions for automatically documenting parts Landscape Model code.
-"""
+"""This file contains functions for automatically documenting parts Landscape Model code."""
 import datetime
 import inspect
 import base
@@ -32,7 +30,7 @@ base.VERSION.added(
     "`base.documentation.document_component()` documentation of data_type attribute hint and default attribute"
 )
 base.VERSION.added(
-    "1.5.10", "`base.documentation.document_component()` support for documentation of unit attribute hint")
+    "1.5.10", "`base.documentation.document_component()` support for the documentation of unit attribute hints")
 base.VERSION.added("1.7.0", "Type hints to `base.documentation` ")
 base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.documentation` ")
 
@@ -40,10 +38,14 @@ base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `b
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
     """
     Writes an updated changelog according to the version history stored along with the code.
-    :param name: The name of the documented Landscape Model part.
-    :param version_history: The version history containing the individual changes per version.
-    :param file_path: The path of file where the changelog is written to.
-    :return: Nothing.
+
+    Args:
+        name: The name of the documented Landscape Model part.
+        version_history: The version history containing the individual changes for each version.
+        file_path: The path of file where the changelog is written to.
+
+    Returns:
+        Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Changelog\n")
@@ -67,9 +69,13 @@ def write_changelog(name: str, version_history: base.VersionCollection, file_pat
 def document_components(components_module: types.ModuleType, file_path: str) -> None:
     """
     Documents the components included in the Landscape Model core.
-    :param components_module: The module containing the components.
-    :param file_path: The path of the output documentation file.
-    :return: Nothing.
+
+    Args:
+        components_module: The module containing the components.
+        file_path: The path of the output documentation file.
+
+    Returns:
+        Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Components\n")
@@ -84,9 +90,13 @@ def document_components(components_module: types.ModuleType, file_path: str) -> 
 def document_observers(observers_module: types.ModuleType, file_path: str) -> None:
     """
     Documents the observers included in the Landscape Model core.
-    :param observers_module: The module containing the components.
-    :param file_path: The path of the output documentation file.
-    :return: Nothing.
+
+    Args:
+        observers_module: The module containing the components.
+        file_path: The path of the output documentation file.
+
+    Returns:
+        Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Observers\n")
@@ -101,9 +111,13 @@ def document_observers(observers_module: types.ModuleType, file_path: str) -> No
 def document_stores(stores_module: types.ModuleType, file_path: str) -> None:
     """
     Documents the stores included in the Landscape Model core.
-    :param stores_module: The module containing the stores.
-    :param file_path: The path of the output documentation file.
-    :return: Nothing.
+
+    Args:
+        stores_module: The module containing the stores.
+        file_path: The path of the output documentation file.
+
+    Returns:
+        Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Stores\n")
@@ -123,12 +137,17 @@ def document_component(
         typing.Optional[str] = None
 ) -> None:
     """
-    :param component: The component to document.
-    :param file_path: The path of file where the readme is written to.
-    :param sample_configuration: The path to a configuration file where the component is configured.
-    :param sample_component_name: The name of the component in the sample configuration if it does not equal the
-    component name.
-    :return: Nothing.
+    Documents an individual Landscape Model component.
+    
+    Args:
+        component: The component to document.
+        file_path: The path of file where the readme is written to.
+        sample_configuration: The path to a configuration file where the component is configured.
+        sample_component_name: The name of the component in the sample configuration if it does not equal the component
+            name.
+    
+    Returns:
+        Nothing.
     """
     module_doc = "" if component.module.doc_file is None else f"(see `{component.module.doc_file}` for details)"
     configuration_xml = xml.etree.ElementTree.parse(sample_configuration)
@@ -174,7 +193,7 @@ The component can be used in any Landscape Model based on core version {base.VER
 Model core's `README` for general tips on how to add a component to a Landscape Model.
 
 ### Prerequisites
-A model developer that wants to add the `{component_name}` component to a Landscape Model needs to set up the general 
+A model developer that wants to add the `{component.name}` component to a Landscape Model needs to set up the general 
 structure for a Landscape Model first. See the Landscape Model core's `README` for details on how to do so.
 
 ### Installation
@@ -184,7 +203,7 @@ structure for a Landscape Model first. See the Landscape Model core's `README` f
 
 
 ## Usage
-The following gives a sample configuration of the `{component_name}` component. See [inputs](#inputs) and 
+The following gives a sample configuration of the `{component.name}` component. See [inputs](#inputs) and 
 [outputs](#outputs) for further details on the component's interface.
 ```xml
 {sample_configuration}
@@ -282,8 +301,12 @@ Distributed under the CC0 License. See `LICENSE` for more information.
 def write_contribution_notes(file_path: str) -> None:
     """
     Writes contribution notes for a software project.
-    :param file_path: The path of file where the contribution notes are written to.
-    :return: Nothing.
+
+    Args:
+        file_path: The path of file where the contribution notes are written to.
+
+    Returns:
+        Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(f"""# Contributing
@@ -294,9 +317,14 @@ Landscape Model contribution guidelines and were written on {datetime.date.today
 
 def document_scenario(info_file: str, file_path: str) -> None:
     """
-    :param info_file: The path of scenario information file.
-    :param file_path: The path where the readme file is written to.
-    :return: Nothing.
+    Documents a Landscape Model scenario.
+
+    Args:
+        info_file: The path of scenario information file.
+        file_path: The path where the readme file is written to.
+
+    Returns:
+        Nothing.
     """
     scenario_info = xml.etree.ElementTree.parse(info_file)
     with open(file_path, "w", encoding="utf-8") as f:
@@ -365,9 +393,13 @@ Distributed under the CC0 License. See `LICENSE` for more information.
 def write_scenario_changelog(info_file: str, file_path: str) -> None:
     """
     Writes an updated scenario changelog according to the version history stored in the scenario info file.
-    :param info_file: The path of scenario information file.
-    :param file_path: The path of file where the changelog is written to.
-    :return: Nothing.
+
+    Args:
+        info_file: The path of scenario information file.
+        file_path: The path of file where the changelog is written to.
+
+   Returns:
+       Nothing.
     """
     scenario_info = xml.etree.ElementTree.parse(info_file)
     with open(file_path, "w", encoding="utf-8") as f:

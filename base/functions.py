@@ -44,6 +44,8 @@ base.VERSION.added("1.6.5", "`base.functions.run_process()` makes use of new Pyt
 base.VERSION.added("1.7.0", "Type hints to `base.functions` ")
 base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.functions` ")
 base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.functions` ")
+base.VERSION.changed(
+    "1.9.1", "Check if module R instances are sufficiently encapsulated in `base.functions.run_process()` ")
 
 
 def cartesian_product(*arrays: np.ndarray) -> np.ndarray:

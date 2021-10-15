@@ -148,7 +148,7 @@ additional observers.
 <?xml version="1.0" encoding="utf-8"?>
 <Experiment>
   <General>
-    <MCRunTemplate>$(_X3DIR_)/../../variant/mc.xml</MCRunTemplate>
+    <MCRunTemplate>$(_MODEL_DIR_)/variant/mc.xml</MCRunTemplate>
     <MCBaseDir>$(_EXP_DIR_)\mcs</MCBaseDir>
     <NumberMC>1</NumberMC>
     <NumberParallelProcesses>1</NumberParallelProcesses>
@@ -319,7 +319,9 @@ The following list gives an overview of the system macros set by the Landscape M
 * `_MCS_BASE_DIR_` - The base working directory of the individual Monte Carlo runs for an experiment, e.g., 
   `%VARIANT_PATH%\run\Test Run\mcs`. `<MCBaseDir>` under `<General>` in the experiment configuration defines this path.
   A usual definition is `$(_EXP_DIR_)\mcs`, that is, a sub-folder `mcs` in the working directory of the experiment (see 
-  above). 
+  above).
+* `_MODEL_DIR_` - The base directory containing the model code. This includes the model core as well as the additional
+  parts for the model variant. The `_MODEL_DIR_` is usually the `model` sub-folder of the `%VARIANT_PATH%`.
 * `_PARAM_DIR_` - The directory where the parameterization file resides, e.g., `%VARIANT_PATH%`. This path depends on
   the parameterization file that the user passes to the `__start__.bat`, if this is the process of invoking the model. 
 * `_PROJECT_DIR_` - The root directory of the project. By default, this is the same as the `_PARAM_DIR_`, but it can be

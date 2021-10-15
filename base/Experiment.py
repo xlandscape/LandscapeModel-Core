@@ -34,6 +34,7 @@ class Experiment:
     base.VERSION.added("1.7.0", "Type hints to `base.Experiment` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Experiment` ")
+    base.VERSION.changed("1.9.1", "New macro `_MODEL_DIR_` in `base.Experiment` ")
 
     def __init__(
             self,
@@ -66,6 +67,7 @@ class Experiment:
             replace_tokens["_X3DIR_"] = x3dir
         else:
             replace_tokens["_X3DIR_"] = os.path.dirname(__file__)
+        replace_tokens["_MODEL_DIR_"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         replace_tokens["_EXP_BASE_DIR_"] = basedir
         if project_dir is None:
             replace_tokens["_PROJECT_DIR_"] = replace_tokens["_PARAM_DIR_"]

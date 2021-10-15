@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-12.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-15.
+
+## [1.9.1] - 2021-10-15
+
+### Added
+
+### Changed
+- New macro `_MODEL_DIR_` in `base.Experiment` 
+- Check if module R instances are sufficiently encapsulated in `base.functions.run_process()` 
+
+### Fixed
+
 
 ## [1.9] - 2021-10-12
 

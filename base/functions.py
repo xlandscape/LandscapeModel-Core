@@ -212,7 +212,7 @@ def replace_tokens(tokens: typing.Mapping[str, str], source: str, destination: s
 
 def run_process(
         command: typing.Sequence[str],
-        working_directory: typing.Optional[str],
+        working_directory: str,
         observer: base.Observer,
         env: typing.Optional[typing.Mapping[str, str]] = None,
         minimized: bool = True
@@ -232,6 +232,10 @@ def run_process(
     """
     if env is None:
         env = {}
+    if os.path.basename(command[0]).lower() in ("r.exe", "rscript.exe", ):
+        env = {"HOME": working_directory, "R_USER": working_directory} | env
+        if "R_LIBS_USER" not in env:
+            observer.write_message(2, f"Presumably starting R instance, but R_LIBS_USER not set")
     startupinfo = subprocess.STARTUPINFO()
     if minimized:
         startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW

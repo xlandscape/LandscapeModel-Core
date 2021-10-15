@@ -66,6 +66,7 @@ class Experiment:
             replace_tokens["_X3DIR_"] = x3dir
         else:
             replace_tokens["_X3DIR_"] = os.path.dirname(__file__)
+        replace_tokens["_MODEL_DIR_"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         replace_tokens["_EXP_BASE_DIR_"] = basedir
         if project_dir is None:
             replace_tokens["_PROJECT_DIR_"] = replace_tokens["_PARAM_DIR_"]

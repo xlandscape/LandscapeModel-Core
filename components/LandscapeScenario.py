@@ -53,6 +53,7 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.LandscapeScenario` with base class")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenario` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.LandscapeScenario` ")
+    base.VERSION.added("1.9.2", "`components.LandscapeScenario` output of base layer EPSG code")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -255,6 +256,12 @@ class LandscapeScenario(base.Component):
                 crs_unit = ogr_layer_spatial_reference.GetLinearUnitsName()
                 self.outputs["Extent"].set_values(self._base_geometries_extent, scales="space/extent", unit=crs_unit)
                 self.outputs["Crs"].set_values(crs)
+                spatial_reference.AutoIdentifyEPSG()
+                epsg = int(spatial_reference.GetAuthorityCode(None))
+                if epsg is None:
+                    self.default_observer.write_message(1, "Base coordinate system has no EPSG code")
+                    raise ValueError
+                self.outputs["EPSG"].set_values(epsg)
             else:
                 self.default_observer.write_message(1, "Cannot override already set spatial base reference")
                 raise ValueError

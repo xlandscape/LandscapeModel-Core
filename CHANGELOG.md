@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-15.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-18.
+
+## [1.9.2] - 2021-10-18
+
+### Added
+- `components.LandscapeScenario` output of base layer EPSG code
+
+### Changed
+
+### Fixed
+
 
 ## [1.9.1] - 2021-10-15
 

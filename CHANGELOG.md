@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-18.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-19.
+
+## [1.9.3] - 2021-10-19
+
+### Added
+
+### Changed
+
+### Fixed
+- Formatting of generated scenario documentation in `base.documentation` 
+
 
 ## [1.9.2] - 2021-10-18
 

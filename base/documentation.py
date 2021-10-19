@@ -34,6 +34,7 @@ base.VERSION.added(
 base.VERSION.added("1.7.0", "Type hints to `base.documentation` ")
 base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.documentation` ")
 base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.documentation` ")
+base.VERSION.fixed("1.9.3", "Formatting of generated scenario documentation in `base.documentation` ")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -388,7 +389,7 @@ Distributed under the CC0 License. See `LICENSE` for more information.
             f.write(f"* {contact.text}\n")
         f.write("\n\n## Acknowledgements\n")
         for acknowledgement in scenario_info.findall("Acknowledgements/Acknowledgement"):
-            f.write(f"* {acknowledgement.text}\n")
+            f.write(f"* {inspect.cleandoc(acknowledgement.text)}\n")
 
 
 def write_scenario_changelog(info_file: str, file_path: str) -> None:
@@ -409,10 +410,10 @@ def write_scenario_changelog(info_file: str, file_path: str) -> None:
         for version in scenario_info.findall("Changelog/Version"):
             f.write(f"\n\n## [{version.attrib['number']}] - {version.attrib['date']}\n### Added\n")
             for addition in version.findall("Addition"):
-                f.write(f"- {addition.text}\n")
+                f.write(f"- {inspect.cleandoc(addition.text)}\n")
             f.write("\n###Changed\n")
             for change in version.findall("Change"):
-                f.write(f"- {change.text}\n")
+                f.write(f"- {inspect.cleandoc(change.text)}\n")
             f.write("\n###Fixed\n")
             for fix in version.findall("Fix"):
-                f.write(f"- {fix.text}\n")
+                f.write(f"- {inspect.cleandoc(fix.text)}\n")

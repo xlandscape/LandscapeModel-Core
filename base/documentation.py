@@ -34,6 +34,7 @@ base.VERSION.added(
 base.VERSION.added("1.7.0", "Type hints to `base.documentation` ")
 base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.documentation` ")
 base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.documentation` ")
+base.VERSION.fixed("1.9.3", "Formatting of generated scenario documentation in `base.documentation` ")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:

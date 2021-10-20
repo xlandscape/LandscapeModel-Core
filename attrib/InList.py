@@ -33,6 +33,14 @@ class InList(base.DataAttribute):
         Returns:
             A tuple representing the result of the check.
         """
+        if isinstance(values.values, list):
+            if all([x in self._values for x in values.values]):
+                return base.CheckResult((4, "All values within allowed values",), values)
+            else:
+                return base.CheckResult(
+                    (self._severity, f"Some values are not allowed: {values.values} (allowed: {self.values})"),
+                    values
+                )
         if values.values in self._values:
             return base.CheckResult((4, "Within allowed values",), values)
         else:

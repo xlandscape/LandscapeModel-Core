@@ -11,6 +11,7 @@ class InList(base.DataAttribute):
     base.VERSION.added("1.7.0", "Type hints to `attrib.InList` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.InList` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.InList` ")
+    base.VERSION.changed("1.9.4", "`attrib.InList` can now check all items in a sequence")
 
     def __init__(self, values: typing.Sequence, severity: int = 1) -> None:
         """
@@ -33,6 +34,14 @@ class InList(base.DataAttribute):
         Returns:
             A tuple representing the result of the check.
         """
+        if isinstance(values.values, list):
+            if all([x in self._values for x in values.values]):
+                return base.CheckResult((4, "All values within allowed values",), values)
+            else:
+                return base.CheckResult(
+                    (self._severity, f"Some values are not allowed: {values.values} (allowed: {self.values})"),
+                    values
+                )
         if values.values in self._values:
             return base.CheckResult((4, "Within allowed values",), values)
         else:

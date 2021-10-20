@@ -11,6 +11,7 @@ class InList(base.DataAttribute):
     base.VERSION.added("1.7.0", "Type hints to `attrib.InList` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.InList` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.InList` ")
+    base.VERSION.changed("1.9.4", "`attrib.InList` can now check all items in a sequence")
 
     def __init__(self, values: typing.Sequence, severity: int = 1) -> None:
         """

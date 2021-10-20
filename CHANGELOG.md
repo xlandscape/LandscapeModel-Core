@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-19.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-20.
+
+## [1.9.4] - 2021-10-20
+
+### Added
+- Some runtime environment files
+
+### Changed
+- `attrib.InList` can now check all items in a sequence
+
+### Fixed
+
 
 ## [1.9.3] - 2021-10-19
 

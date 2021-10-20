@@ -10,6 +10,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `attrib.InList` can now check all items in a sequence
 
 ### Fixed
+- Corrupted runtime environment files
 
 
 ## [1.9.3] - 2021-10-19

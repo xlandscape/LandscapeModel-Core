@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-20.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-21.
+
+## [1.9.5] - 2021-10-21
+
+### Added
+- `observer.ConsoleObserver` parameter for less verbose output
+- `observer.LogFileObserver` parameter for less verbose output
+
+### Changed
+
+### Fixed
+
 
 ## [1.9.4] - 2021-10-20
 

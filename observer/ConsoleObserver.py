@@ -28,7 +28,12 @@ class ConsoleObserver(base.Observer):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.ConsoleObserver` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.ConsoleObserver` ")
 
-    def __init__(self, lock: typing.Optional[multiprocessing.Lock] = None, print_output: bool = False) -> None:
+    def __init__(
+            self,
+            lock: typing.Optional[multiprocessing.Lock] = None,
+            print_output: bool = False,
+            show_messages_get_values_ok: typing.Union[bool, str] = True
+    ) -> None:
         """
         Initializes a ConsoleObserver.
 
@@ -36,11 +41,14 @@ class ConsoleObserver(base.Observer):
             lock: Allows to lock the console in multi-threaded runs.
             print_output: A bool tht defines that the print() method is used instead of the `write()` method of the
                 standard output. Setting it to True is useful when using the observer within a Jupyter notebook.
+            show_messages_get_values_ok: Specifies whether messages regarding the retrieval of values are shown if they have a
+                severity of 4.
         """
         super(ConsoleObserver, self).__init__()
         colorama.init()
         self._lock = lock
         self._print_output = print_output
+        self._show_messages_get_values_ok = str(show_messages_get_values_ok).lower() == "true"
 
     def experiment_finished(self, detail: str = "") -> None:
         """
@@ -66,7 +74,8 @@ class ConsoleObserver(base.Observer):
             Nothing.
         """
         for message in component_input.messages:
-            self.write_message(message[0], f"{component_input.name}:{message[1]}:GetValues", message[2])
+            if message[0] not in (3, 4) or self._show_messages_get_values_ok:
+                self.write_message(message[0], f"{component_input.name}:{message[1]}:GetValues", message[2])
 
     def mc_run_finished(self, detail: str = "") -> None:
         """

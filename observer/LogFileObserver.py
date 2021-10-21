@@ -21,6 +21,7 @@ class LogFileObserver(base.Observer):
     base.VERSION.added("1.7.0", "Type hints to `observer.LogFileObserver` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.LogFileObserver` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.LogFileObserver` ")
+    base.VERSION.added("1.9.5", "`observer.LogFileObserver` parameter for less verbose output")
 
     def __init__(self, logfile: str, show_messages_get_values_ok: typing.Union[bool, str] = True):
         """

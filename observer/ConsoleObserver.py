@@ -28,6 +28,7 @@ class ConsoleObserver(base.Observer):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.ConsoleObserver` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.ConsoleObserver` ")
     base.VERSION.added("1.9.5", "`observer.ConsoleObserver` parameter for less verbose output")
+    base.VERSION.changed("1.9.6", "updated docstring of `ConsoleObserver.__init__` ")
 
     def __init__(
             self,

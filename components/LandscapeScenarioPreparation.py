@@ -121,7 +121,7 @@ class LandscapeScenarioPreparation(base.Component):
                 flow_dir.shape[1],
                 flow_dir.shape[0],
                 1,
-                gdal.GDT_Byte,
+                1,
                 ["COMPRESS=LZW"]
             )
             flow_dir_data_set.SetGeoTransform([
@@ -137,8 +137,8 @@ class LandscapeScenarioPreparation(base.Component):
             output_band.WriteArray(flow_dir, 0, 0)
         else:
             self.default_observer.write_message(2, "No DEM provided - generating generic flow from West to East")
-            flow_raster = raster_driver.Create(os.path.join(output_path, "flow.tif"), raster_cols, raster_rows, 1,
-                                               gdal.GDT_Byte, ["COMPRESS=LZW"])
+            flow_raster = raster_driver.Create(
+                os.path.join(output_path, "flow.tif"), raster_cols, raster_rows, 1, 1, ["COMPRESS=LZW"])
             flow_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
             flow_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
             gdal.RasterizeLayer(flow_raster, [1], ogr_layer, burn_values=[1])
@@ -148,7 +148,7 @@ class LandscapeScenarioPreparation(base.Component):
             {"deviatingExtent": "confirmed"}
         ).text = "flow.tif"
         land_use_raster = raster_driver.Create(
-            os.path.join(output_path, "land_use.tif"), raster_cols, raster_rows, 1, gdal.GDT_UInt16, ["COMPRESS=LZW"])
+            os.path.join(output_path, "land_use.tif"), raster_cols, raster_rows, 1, 2, ["COMPRESS=LZW"])
         land_use_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
         land_use_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
         gdal.RasterizeLayer(
@@ -158,8 +158,8 @@ class LandscapeScenarioPreparation(base.Component):
             burn_values=[1],
             options=[f"ATTRIBUTE={self.inputs['FeatureLandUseLandCoverTypeAttribute'].read().values}"])
         xml.etree.ElementTree.SubElement(supplementary, "land_use_raster").text = "land_use.tif"
-        analysis_buffer_raster = raster_driver.Create(os.path.join(output_path, "AnalysisBuffer.tif"), raster_cols,
-                                                      raster_rows, 1, gdal.GDT_Byte, ["COMPRESS=LZW"])
+        analysis_buffer_raster = raster_driver.Create(os.path.join(
+            output_path, "AnalysisBuffer.tif"), raster_cols, raster_rows, 1, 1, ["COMPRESS=LZW"])
         analysis_buffer_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
         analysis_buffer_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
         gdal.RasterizeLayer(analysis_buffer_raster, [1], ogr_layer, burn_values=[255])

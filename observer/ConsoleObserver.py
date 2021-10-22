@@ -42,8 +42,8 @@ class ConsoleObserver(base.Observer):
             lock: Allows to lock the console in multi-threaded runs.
             print_output: A bool tht defines that the print() method is used instead of the `write()` method of the
                 standard output. Setting it to True is useful when using the observer within a Jupyter notebook.
-            show_messages_get_values_ok: Specifies whether messages regarding the retrieval of values are shown if they have a
-                severity of 4.
+            show_messages_get_values_ok: Specifies whether messages regarding the retrieval of values are shown if they
+                have a severity of 3 or 4.
         """
         super(ConsoleObserver, self).__init__()
         colorama.init()

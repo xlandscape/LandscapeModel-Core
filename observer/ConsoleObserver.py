@@ -28,6 +28,7 @@ class ConsoleObserver(base.Observer):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.ConsoleObserver` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.ConsoleObserver` ")
     base.VERSION.added("1.9.5", "`observer.ConsoleObserver` parameter for less verbose output")
+    base.VERSION.changed("1.9.6", "updated docstring of `ConsoleObserver.__init__` ")
 
     def __init__(
             self,
@@ -42,8 +43,8 @@ class ConsoleObserver(base.Observer):
             lock: Allows to lock the console in multi-threaded runs.
             print_output: A bool tht defines that the print() method is used instead of the `write()` method of the
                 standard output. Setting it to True is useful when using the observer within a Jupyter notebook.
-            show_messages_get_values_ok: Specifies whether messages regarding the retrieval of values are shown if they have a
-                severity of 4.
+            show_messages_get_values_ok: Specifies whether messages regarding the retrieval of values are shown if they
+                have a severity of 3 or 4.
         """
         super(ConsoleObserver, self).__init__()
         colorama.init()

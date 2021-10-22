@@ -1,5 +1,17 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-21.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-22.
+
+## [1.9.6] - 2021-10-22
+
+### Added
+- Function for template-based documentation of model variants to `base.documentation` 
+
+### Changed
+- Replaced GDAL constants by numerical values in `components.LandscapeScenarioPreparation` 
+- updated docstring of `ConsoleObserver.__init__` 
+
+### Fixed
+
 
 ## [1.9.5] - 2021-10-21
 

@@ -420,13 +420,15 @@ def write_scenario_changelog(info_file: str, file_path: str) -> None:
                 f.write(f"- {inspect.cleandoc(fix.text)}\n")
 
 
-def document_variant(template_file: str, file_path: str) -> None:
+def document_variant(template_file: str, file_path: str, variant_name: str, repository_endpoint: str) -> None:
     """
     Documents a Landscape Model variant based on a template README.
 
     Args:
         template_file: The file path to the README template, containing macros.
         file_path: The file path for the final README with resolved macros.
+        variant_name: The name of the model variant.
+        repository_endpoint: The URI of the main code repository for the variant
 
     Returns:
         Nothing.
@@ -435,16 +437,16 @@ def document_variant(template_file: str, file_path: str) -> None:
         {
             "current_date": str(datetime.date.today()),
             "installation_notes": """#### From zipfile
-If someone provides you with a zipped version of xNTP-US, simply extract the archive into a folder on your hard drive.
-Simulation data and temporary files will be written to a sub-folder of this folder, so a fast hard-drive with lots of
-available space is preferable.
+If someone provides you with a zipped version of $(variant_name), simply extract the archive into a folder on your 
+hard drive. Simulation data and temporary files will be written to a sub-folder of this folder, so a fast hard-drive 
+with lots of available space is preferable.
 
 #### From Bayer GitLab using Sourcetree
-The newest stable version of xNTP-US can always be found at the Bayer Gitlab. You can access the git repository with any
-git client, including command-line and graphical clients. The following is a step-by-step guide on how to retrieve a
-copy of xNTP-US using the graphical git client *Sourcetree*.
+The newest stable version of $(variant_name) can always be found at the Bayer Gitlab. You can access the git 
+repository with any git client, including command-line and graphical clients. The following is a step-by-step guide 
+copy of $(variant_name) using the graphical git client *Sourcetree*.
 
-1. You need access to the Bayer GitLab xNTP-US repository. Please contact 
+1. You need access to the Bayer GitLab $(variant_name) repository. Please contact 
    [Thorsten Schad](mailto:thorsten.schad@bayer.com) for a respective account.
 2. Login to the Bayer GitLab and navigate to *User Settings* > *Access Token*
    ([direct link](https://gitlab.bayer.com/-/profile/personal_access_tokens)).
@@ -468,10 +470,11 @@ copy of xNTP-US using the graphical git client *Sourcetree*.
    on the *Refresh Personal Access Token* button. Specify your GitLab login username as username, but **use the 
    previously generated api token** as password. Do not use your GitLab login password here. After specifying your 
    credentials, the open dialog should indicate *Authentication OK*. In this case, you can close the dialog.
-9. You can now switch to the *Clone* tab to finally clone the repository. Under *Source Path / URL*, type in the xNTP-US
-   endpoint which is *https://gitlab.bayer.com/aqrisk-landscape/xntp-us*. After the input field looses focus, you might
-   be asked to select a credential helper. You can select any option here. Maybe you have to provide your username and
-   api token as in the previous step, again. *Sourcetree* should now indicate that *This is a Git repository*.
+9. You can now switch to the *Clone* tab to finally clone the repository. Under *Source Path / URL*, type in the
+   $(variant_name) endpoint which is *$(repository_endpoint)*. 
+   After the input field looses focus, you might be asked to select a credential helper. You can select any option 
+   here. Maybe you have to provide your username and api token as in the previous step, again. *Sourcetree* should now
+   indicate that *This is a Git repository*.
 10. Under *Destination Path*, specify the folder on your computer where the repository should be cloned into. The *Name*
     field should be automatically filled out and equal the name of the folder where the repository is cloned into. The
     *Local Folder* is fixed to *[Root]*. Under *Advanced Options* make sure that the *Checkout branch* is set to
@@ -480,7 +483,9 @@ copy of xNTP-US using the graphical git client *Sourcetree*.
     *Clone* button.
 11. After cloning is finished, you can find your copy of the Landscape Model variant in the specified folder and can 
     start using it.
-            """
+            """,
+            "variant_name": variant_name,
+            "repository_endpoint": repository_endpoint
         },
         template_file,
         file_path

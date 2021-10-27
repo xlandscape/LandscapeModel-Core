@@ -1,5 +1,14 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-22.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-26.
+
+## [1.9.7] - 2021-10-26
+
+### Added
+
+### Changed
+
+### Fixed
+
 
 ## [1.9.6] - 2021-10-22
 
@@ -59,6 +68,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 ## [1.9.1] - 2021-10-15
 
 ### Added
+- Arguments to `documentation.document_variant` to specify variant name and endpoint flexibly
 
 ### Changed
 - New macro `_MODEL_DIR_` in `base.Experiment` 

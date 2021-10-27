@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-26.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-10-27.
+
+## [1.9.8] - 2021-10-27
+
+### Added
+
+### Changed
+- Switching of buffering of Python instances called by `functions.run_process` 
+
+### Fixed
+
 
 ## [1.9.7] - 2021-10-26
 

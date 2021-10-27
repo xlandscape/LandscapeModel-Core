@@ -238,6 +238,9 @@ def run_process(
         env = {"HOME": working_directory, "R_USER": working_directory} | env
         if "R_LIBS_USER" not in env:
             observer.write_message(2, f"Presumably starting R instance, but R_LIBS_USER not set")
+    if os.path.basename(command[0]).lower() == "python.exe":
+        # noinspection SpellCheckingInspection
+        env = {"PYTHONUNBUFFERED": "1"} | env
     startupinfo = subprocess.STARTUPINFO()
     if minimized:
         startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW
@@ -254,8 +257,6 @@ def run_process(
     )
     for text in iter(result.stdout.readline, ''):
         observer.write(text)
-    result.stdout.close()
-    result.wait()
 
 
 def reporting(

@@ -46,6 +46,7 @@ base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `b
 base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.functions` ")
 base.VERSION.changed(
     "1.9.1", "Check if module R instances are sufficiently encapsulated in `base.functions.run_process()` ")
+base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called by `functions.run_process` ")
 
 
 def cartesian_product(*arrays: np.ndarray) -> np.ndarray:

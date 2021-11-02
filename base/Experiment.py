@@ -10,6 +10,8 @@ import base
 import xml.etree.ElementTree
 import importlib
 import typing
+import time
+import psutil
 
 global globalLock
 
@@ -35,6 +37,7 @@ class Experiment:
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Experiment` ")
     base.VERSION.changed("1.9.1", "New macro `_MODEL_DIR_` in `base.Experiment` ")
+    base.VERSION.added("1.9.9", "Option to profile performance of simulation runs in `base.Experiment` ")
 
     def __init__(
             self,
@@ -88,6 +91,9 @@ class Experiment:
         self._numberMC = int(config.find("General/NumberMC").text)
         self._numberParallelProcesses = int(config.find("General/NumberParallelProcesses").text)
         self._mcRunConfigurations = []
+        self._enable_profiling = config.find("General/EnableProfiling").text.lower() == "true"
+        self._profiling_waiting_time = float(config.find("General/ProfilingWaitingTime").text)
+        self._profiling_polling_duration = float(config.find("General/ProfilingPollingDuration").text)
         mc_xml = config.find("General/MCRunTemplate").text
         mc_config = xml.etree.ElementTree.parse(mc_xml)
         global_parameters = mc_config.find("Global")
@@ -126,15 +132,57 @@ class Experiment:
             self._observer.write_message(
                 5, f"Parallel mode with {self.number_parallel_processes} processes, {self.number_mc_runs} MC(s)")
             lock = multiprocessing.Lock()
-            with multiprocessing.Pool(self.number_parallel_processes, initializer=pool_init, initargs=(lock,)) as pool:
-                pool.map(run_mc, self.mc_run_configurations, 1)
-                pool.close()
-                pool.join()
+            if self._enable_profiling:
+                self._observer.write_message(5, f"Profiling enabled, using non-blocking parallelization")
+                manager = multiprocessing.Manager().list()
+                with multiprocessing.Pool(
+                        self.number_parallel_processes, initializer=pool_init, initargs=(lock, manager)) as pool:
+                    result = pool.map_async(run_mc, self.mc_run_configurations, 1)
+                    processes_dict = {}
+                    while not result.ready():
+                        for pid in manager:
+                            processes_dict.setdefault(pid, psutil.Process(pid))
+                        for process in processes_dict.values():
+                            self.profile_process(process)
+                            time.sleep(self._profiling_waiting_time)
+            else:
+                self._observer.write_message(5, f"Profiling not enabled, using blocking parallelization")
+                with multiprocessing.Pool(
+                        self.number_parallel_processes, initializer=pool_init, initargs=(lock,)) as pool:
+                    pool.map(run_mc, self.mc_run_configurations, 1)
+                    pool.close()
+                    pool.join()
         else:
             self._observer.write_message(5, f"Serial mode, {self.number_mc_runs} MC(s)")
             for mcConfig in self.mc_run_configurations:
                 base.MCRun(mcConfig).run()
         self._observer.experiment_finished(f"Elapsed time: {datetime.datetime.now() - experiment_start_time}")
+
+    def profile_process(self, process: psutil.Process) -> None:
+        """
+        Profiles a running process and reports it to the experiment's observer.
+
+        Args:
+            process: The process to profile.
+
+        Returns:
+            Nothing.
+        """
+        try:
+            with process.oneshot():
+                process_io = process.io_counters()
+                self._observer.write_message(
+                    5,
+                    f"profile {datetime.datetime.now()} - process {process.pid}, parent {process.ppid()}: "
+                    f"{process.name()}, {round(process.cpu_percent(self._profiling_polling_duration))}% CPU (logical), "
+                    f"{round(process.memory_info()[0] / 1048576)}MB memory usage, "
+                    f"{round(process_io[2] / 1048576)}MB read, "
+                    f"{round(process_io[3] / 1048576)}MB written"
+                )
+                for child in process.children():
+                    self.profile_process(child)
+        except psutil.NoSuchProcess:
+            pass
 
     @staticmethod
     def write_info_xml(path: str, model_parts: xml.etree.ElementTree.Element, scenario_version: str) -> None:
@@ -207,15 +255,19 @@ def run_mc(mc_config: str) -> None:
     return base.MCRun(mc_config, lock=globalLock).run()
 
 
-def pool_init(lock: multiprocessing.Lock) -> None:
+def pool_init(lock: multiprocessing.Lock, running_processes: typing.Optional[list[int]] = None) -> None:
     """
     Initializes a pool for parallel processing.
 
     Args:
         lock: The lock shared among processes.
+        running_processes: A list of identifiers of currently running process conducting Monte Carlo runs of the
+            experiment.
 
     Returns:
         Nothing.
     """
     global globalLock
     globalLock = lock
+    if running_processes is not None:
+        running_processes.append(multiprocessing.current_process().pid)

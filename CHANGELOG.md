@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-10-27.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-11-02.
+
+## [1.9.9] - 2021-11-02
+
+### Added
+- Option to profile performance of simulation runs in `base.Experiment` 
+
+### Changed
+- `observer.LogFileObserver` now uses line-end buffering
+
+### Fixed
+
 
 ## [1.9.8] - 2021-10-27
 

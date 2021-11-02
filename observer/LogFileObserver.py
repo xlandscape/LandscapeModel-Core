@@ -34,7 +34,7 @@ class LogFileObserver(base.Observer):
         """
         super(LogFileObserver, self).__init__()
         os.makedirs(os.path.dirname(logfile), exist_ok=True)
-        self._file = open(logfile, "a", encoding="utf-8")
+        self._file = open(logfile, "a", encoding="utf-8", buffering=1)
         self._show_messages_get_values_ok = str(show_messages_get_values_ok).lower() == "true"
 
     def __del__(self) -> None:

@@ -37,6 +37,7 @@ class Experiment:
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Experiment` ")
     base.VERSION.changed("1.9.1", "New macro `_MODEL_DIR_` in `base.Experiment` ")
+    base.VERSION.added("1.9.9", "Option to profile performance of simulation runs in `base.Experiment` ")
 
     def __init__(
             self,

@@ -18,6 +18,7 @@ class Project:
     base.VERSION.added("1.4.1", "`base.Project.version` ")
     base.VERSION.changed("1.5.3", "`base.Project` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Project` ")
+    base.VERSION.changed("1.9.10", "`base.Project` can handle outsourced package parts")
 
     def __init__(self, project: str, project_dir: str, prefix: str = ":") -> None:
         self._content = {}
@@ -25,9 +26,17 @@ class Project:
         # noinspection SpellCheckingInspection
         config = xml.etree.ElementTree.parse(os.path.join(self._path,  "scenario.xproject")).getroot()
         for entry in config.find("Content").findall("Item"):
-            self._content[prefix + entry.attrib["name"]] = os.path.join(
-                project_dir, project, entry.attrib["target"]
-            )
+            file_path = os.path.join(project_dir, project, entry.attrib["target"])
+            if "outsourced" in entry.attrib and entry.attrib["outsourced"].lower() == "true":
+                if not os.path.exists(file_path):
+                    raise FileNotFoundError(
+                        f"A part of the scenario '{project}', '{entry.attrib['name']}', is not included in this "
+                        f"distribution. You have to download this part separately and place it within the scenario "
+                        f"folder, so that {file_path} can be resolved. Make sure that the version number of the "
+                        f"missing part is {entry.attrib['version']}, as this is the version with which the scenario "
+                        f"was build. Other versions of the part might not work as expected."
+                    )
+            self._content[prefix + entry.attrib["name"]] = file_path
         self._version = config.find("Version").text
 
     @property

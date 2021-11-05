@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.9.10", "2021-11-05"),
     base.VersionInfo("1.9.9", "2021-11-02"),
     base.VersionInfo("1.9.8", "2021-10-27"),
     base.VersionInfo("1.9.7", "2021-10-26"),
@@ -144,3 +145,5 @@ VERSION.changed("1.6.0", "updated runtime environment to Python 3.9.7")
 VERSION.changed("1.6.1", "updated Python packages")
 VERSION.added("1.9.4", "Some runtime environment files")
 VERSION.fixed("1.9.4", "Corrupted runtime environment files")
+# noinspection SpellCheckingInspection
+VERSION.fixed("1.9.10", "`mistune` package downgraded to make Jupyter notebook accessible again")

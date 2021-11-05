@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-11-02.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-11-05.
+
+## [1.9.10] - 2021-11-05
+
+### Added
+
+### Changed
+- `base.Project` can handle outsourced package parts
+
+### Fixed
+- `mistune` package downgraded to make Jupyter notebook accessible again
+
 
 ## [1.9.9] - 2021-11-02
 

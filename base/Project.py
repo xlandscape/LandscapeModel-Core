@@ -18,6 +18,7 @@ class Project:
     base.VERSION.added("1.4.1", "`base.Project.version` ")
     base.VERSION.changed("1.5.3", "`base.Project` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Project` ")
+    base.VERSION.changed("1.9.10", "`base.Project` can handle outsourced package parts")
 
     def __init__(self, project: str, project_dir: str, prefix: str = ":") -> None:
         self._content = {}

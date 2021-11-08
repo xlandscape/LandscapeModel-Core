@@ -145,6 +145,7 @@ class Experiment:
                         for process in processes_dict.values():
                             self.profile_process(process)
                             time.sleep(self._profiling_waiting_time)
+                    result.get()
             else:
                 self._observer.write_message(5, f"Profiling not enabled, using blocking parallelization")
                 with multiprocessing.Pool(

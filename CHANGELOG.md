@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-11-05.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-11-08.
+
+## [1.9.11] - 2021-11-08
+
+### Added
+
+### Changed
+
+### Fixed
+- Processing of exceptions thrown in non-blocking mode in `base.Experiment` 
+
 
 ## [1.9.10] - 2021-11-05
 

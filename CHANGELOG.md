@@ -1,11 +1,22 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-11-08.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-11-16.
+
+## [1.9.12] - 2021-11-16
+
+### Added
+
+### Changed
+
+### Fixed
+
 
 ## [1.9.11] - 2021-11-08
 
 ### Added
 
 ### Changed
+- `observer.ConsoleObserver` flushes buffer after every write
+- `observer.LogFileObserver` flushes buffer after every write
 
 ### Fixed
 - Processing of exceptions thrown in non-blocking mode in `base.Experiment` 

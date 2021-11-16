@@ -182,3 +182,4 @@ class ConsoleObserver(base.Observer):
             print(text)
         else:
             sys.__stdout__.write(text)
+            self.flush()

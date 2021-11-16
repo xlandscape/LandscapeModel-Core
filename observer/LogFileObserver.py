@@ -163,3 +163,4 @@ class LogFileObserver(base.Observer):
              Nothing.
         """
         self._file.write(text)
+        self.flush()

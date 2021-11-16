@@ -29,6 +29,7 @@ class ConsoleObserver(base.Observer):
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.ConsoleObserver` ")
     base.VERSION.added("1.9.5", "`observer.ConsoleObserver` parameter for less verbose output")
     base.VERSION.changed("1.9.6", "updated docstring of `ConsoleObserver.__init__` ")
+    base.VERSION.changed("1.9.11", "`observer.ConsoleObserver` flushes buffer after every write")
 
     def __init__(
             self,

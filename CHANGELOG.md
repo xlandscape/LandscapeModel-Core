@@ -1,5 +1,27 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-11-16.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-11-18.
+
+## [1.10] - 2021-11-18
+
+### Added
+- `base.Values` have element names now
+- `components.UserParameters` have element names now
+- XML-tag for element names in `base.MCRun` configurations
+
+### Changed
+- `base.Values` switched to Google-style docstrings
+- `attrib.Unit` keeps element names for converted values
+- `components.DepositionToReach` reports element names of `Deposition` output
+- `components.DepositionToReach` switched to Google-style docstrings
+- `stores.X3dfStore` now manages element names for some scales
+- `components.HydrologyFromTimeSeries` reports global scale of time span outputs
+- `components.HydrologyFromTimeSeries` reports element names of outputs
+- `components.LandscapeScenario` reports global scale of metadata outputs
+- `components.LandscapeScenario` gained semantics for element identifier attribute
+- `components.UserParameters` switched to Google-style docstrings
+
+### Fixed
+
 
 ## [1.9.12] - 2021-11-16
 

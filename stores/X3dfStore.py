@@ -53,6 +53,7 @@ class X3dfStore(base.Store):
     base.VERSION.added("1.7.0", "Type hints to `stores.X3dfStore` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.X3dfStore` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.X3dfStore` ")
+    base.VERSION.changed("1.10.0", "`stores.X3dfStore` now manages element names for some scales")
 
     def __init__(
             self,

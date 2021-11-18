@@ -16,6 +16,8 @@ class Values:
     base.VERSION.added("1.4.1", "Changelog in `base.Values` ")
     base.VERSION.changed("1.5.3", "`base.Values` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Values` ")
+    base.VERSION.added("1.10.0", "`base.Values` have element names now")
+    base.VERSION.changed("1.10.0", "`base.Values` switched to Google-style docstrings")
 
     # noinspection PyUnusedLocal
     def __init__(

@@ -28,6 +28,8 @@ class UserParameters(base.Component):
     base.VERSION.added("1.7.0", "Type hints to `components.UserParameters` ")
     base.VERSION.added("1.7.0", "Type hints to `components.UserParameter` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.UserParameters` with base class")
+    base.VERSION.added("1.10.0", "`components.UserParameters` have element names now")
+    base.VERSION.changed("1.10.0", "`components.UserParameters` switched to Google-style docstrings")
 
     def __init__(
             self, name: str,

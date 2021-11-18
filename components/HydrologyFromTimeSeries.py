@@ -98,8 +98,8 @@ class HydrologyFromTimeSeries(base.Component):
             base.Output("Flow", default_store, self),
             base.Output("Depth", default_store, self),
             base.Output("Reaches", default_store, self),
-            base.Output("TimeSeriesStart", default_store, self),
-            base.Output("TimeSeriesEnd", default_store, self),
+            base.Output("TimeSeriesStart", default_store, self, {"scales": "global"}),
+            base.Output("TimeSeriesEnd", default_store, self, {"scales": "global"}),
             base.Output("Volume", default_store, self),
             base.Output("Area", default_store, self),
             base.Output("InflowReaches", default_store, self),
@@ -137,13 +137,15 @@ class HydrologyFromTimeSeries(base.Component):
                 f"Requested {number_hours - flow.shape[0]} too late values; values available for {time_series_start} "
                 f"to {time_series_end}"
             )
+        self.outputs["Reaches"].set_values(reaches, scales="space/reach", element_names=(self.outputs["Reaches"],))
         self.outputs["Flow"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
             data_type=np.float,
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
-            unit="m³/d"
+            unit="m³/d",
+            element_names=(None, self.outputs["Reaches"])
         )
         self.outputs["Depth"].set_values(
             np.ndarray,
@@ -151,7 +153,8 @@ class HydrologyFromTimeSeries(base.Component):
             data_type=np.float,
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
-            unit="m"
+            unit="m",
+            element_names=(None, self.outputs["Reaches"])
         )
         self.outputs["Volume"].set_values(
             np.ndarray,
@@ -159,7 +162,8 @@ class HydrologyFromTimeSeries(base.Component):
             data_type=np.float,
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
-            unit="m³"
+            unit="m³",
+            element_names=(None, self.outputs["Reaches"])
         )
         self.outputs["Area"].set_values(
             np.ndarray,
@@ -167,7 +171,8 @@ class HydrologyFromTimeSeries(base.Component):
             data_type=np.float,
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
-            unit="m²"
+            unit="m²",
+            element_names=(None, self.outputs["Reaches"])
         )
         for i in range(number_reaches):
             self.outputs["Flow"].set_values(flow[(slice(offset_hours, offset_hours + number_hours, 1), i)],
@@ -178,21 +183,22 @@ class HydrologyFromTimeSeries(base.Component):
                                               slices=(slice(number_hours), i), create=False)
             self.outputs["Area"].set_values(area[(slice(offset_hours, offset_hours + number_hours, 1), i)],
                                             slices=(slice(number_hours), i), create=False)
-        self.outputs["Reaches"].set_values(reaches, scales="space/reach")
         self.outputs["TimeSeriesStart"].set_values(datetime.datetime.combine(from_time, datetime.time(1)))
         self.outputs["TimeSeriesEnd"].set_values(datetime.datetime.combine(to_time, datetime.time()))
         if self._inputs["ImportInflows"].read().values:
             inflow_path = self._inputs["InflowTimeSeriesPath"].read().values
             inflow_files = os.listdir(inflow_path)
             inflow_reaches = [int(f[1:-4]) for f in inflow_files]
-            self._outputs["InflowReaches"].set_values(inflow_reaches, scales="space/reach2")
+            self.outputs["InflowReaches"].set_values(
+                inflow_reaches, scales="space/reach2", element_names=(self.outputs["InflowReaches"],))
             self.outputs["Inflow"].set_values(
                 np.ndarray,
                 shape=(number_hours, len(inflow_reaches)),
                 data_type=np.float,
                 chunks=(number_hours, 1),
                 scales="time/hour, space/reach2",
-                unit="m³/d"
+                unit="m³/d",
+                element_names=(None, self.outputs["InflowReaches"])
             )
             for reach_index, inflow_file in enumerate(inflow_files):
                 self.default_observer.write_message(5, f"Importing reach inflows from {inflow_file}...")

@@ -93,7 +93,8 @@ class MCRun:
                                 f"{componentConfig.tag}/{inputConfig.tag}",
                                 value,
                                 inputConfig.attrib["scales"] if "scales" in inputConfig.attrib else None,
-                                inputConfig.attrib["unit"] if "unit" in inputConfig.attrib else None
+                                inputConfig.attrib["unit"] if "unit" in inputConfig.attrib else None,
+                                inputConfig.attrib["element_names"] if "element_names" in inputConfig.attrib else None
                             )
                         )
                     for extensionConfig in inputConfig.findall("Extension"):

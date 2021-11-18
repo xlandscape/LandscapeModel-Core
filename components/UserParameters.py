@@ -39,7 +39,12 @@ class UserParameters(base.Component):
         outputs = []
         for parameter in values:
             output = base.Output(parameter.name, default_store)
-            output.set_values(parameter.values, scales=parameter.scales, unit=parameter.unit)
+            output.set_values(
+                parameter.values,
+                scales=parameter.scales,
+                unit=parameter.unit,
+                element_names=(parameter.element_names,)
+            )
             outputs.append(output)
         self._outputs = base.OutputContainer(self, outputs)
 
@@ -52,26 +57,37 @@ class UserParameters(base.Component):
 
 
 class UserParameter:
-    """
-    A single user-defined parameter.
-    """
+    """A single user-defined parameter."""
     def __init__(
             self,
             name: str,
             values: str,
             scales: typing.Optional[str] = None,
-            unit: typing.Optional[str] = None
+            unit: typing.Optional[str] = None,
+            element_names: typing.Optional[str] = None
     ) -> None:
+        """Initializes a UserParameter.
+
+        Args:
+            name: The name of the parameter.
+            values: The value of the parameter in its string representation.
+            scales: A string identifier of the scale to which the user parameter applies.
+            unit: The physical unit of the parameter value.
+            element_names: The name of the dataset containing the names of the individual elements.
+        """
         self._name = name
         self._values = values
         self._scales = scales
         self._unit = unit
+        self._element_names = element_names
 
     @property
     def name(self) -> str:
         """
         The name of the parameter.
-        :return: The parameter name.
+
+        Returns:
+            The parameter name.
         """
         return self._name
 
@@ -79,7 +95,9 @@ class UserParameter:
     def values(self) -> str:
         """
         The values of the parameter.
-        :return: The parameter values.
+
+        Returns:
+            The parameter values.
         """
         return self._values
 
@@ -87,7 +105,9 @@ class UserParameter:
     def scales(self) -> typing.Optional[str]:
         """
         The scales of the parameter.
-        :return: The parameter scales.
+
+        Returns:
+            The parameter scales.
         """
         return self._scales
 
@@ -95,6 +115,18 @@ class UserParameter:
     def unit(self) -> typing.Optional[str]:
         """
         The physical unit of the parameter.
-        :return: A string representing the physical unit of the parameter.
+
+        Returns:
+            A string representing the physical unit of the parameter.
         """
         return self._unit
+
+    @property
+    def element_names(self) -> typing.Optional[str]:
+        """
+        The name of the dataset containing the names of the individual elements.
+
+        Returns:
+            The name of the dataset containing the names of the individual elements.
+        """
+        return self._element_names

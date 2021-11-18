@@ -121,7 +121,7 @@ class LandscapeScenario(base.Component):
         else:
             extent = self._base_geometries_extent
         for entry in meta:
-            self.outputs[entry.tag].set_values(entry.text)
+            self.outputs[entry.tag].set_values(entry.text, scales="global")
         for entry in landscape_info_xml.find("supplementary"):
             if entry.text[-4:] == ".tif":
                 raster_path = os.path.join(landscape_path, entry.text)
@@ -179,7 +179,7 @@ class LandscapeScenario(base.Component):
                     self.default_observer.write_message(3, f"2: {r.RasterYSize} x {r.RasterYSize}")
                     raise ValueError
                 self.default_observer.write_message(5, f"Importing {raster_path}")
-                self.outputs[entry.tag].set_values(raster_path)
+                self.outputs[entry.tag].set_values(raster_path, scales="global")
                 raster_band = r.GetRasterBand(1)
                 block_size_x, block_size_y = raster_band.GetBlockSize()
                 cell_area = str(int(raster_geo_transform[1] * -raster_geo_transform[5]))
@@ -204,21 +204,26 @@ class LandscapeScenario(base.Component):
                         )
             elif entry.text[-4:] == ".shp":
                 shapefile_path = os.path.join(landscape_path, entry.text)
-                self.outputs[entry.tag].set_values(shapefile_path)
+                self.outputs[entry.tag].set_values(shapefile_path, scales="global")
             else:
-                self.outputs[entry.tag].set_values(entry.text)
+                self.outputs[entry.tag].set_values(entry.text, scales="global")
         for entry in landscape_info_xml.find("supplementary_shapefiles"):
             attributes = {}
             units = {}
+            id_attribute = None
             for attribute in entry.find("attributes"):
                 attributes[attribute.attrib["column"]] = f"{entry.tag}_{attribute.tag}"
-                units[f"{entry.tag}_{attribute.tag}"] = \
-                    attribute.attrib["unit"] if "unit" in attribute.attrib else None
+                units[f"{entry.tag}_{attribute.tag}"] = attribute.attrib["unit"] if "unit" in attribute.attrib else None
+                if "role" in attribute.attrib and attribute.attrib["role"] == "id":
+                    id_attribute = f"{entry.tag}_{attribute.tag}"
+            if id_attribute is None:
+                raise ValueError(f"Role of id column for {entry.tag} is not asserted")
             self.import_shapefile(
                 os.path.join(landscape_path, entry.find("file_name").text),
                 attributes,
                 geometry_output=f"{entry.tag}_geom",
-                units=units
+                units=units,
+                id_attribute=id_attribute
             )
 
     def import_shapefile(
@@ -227,7 +232,8 @@ class LandscapeScenario(base.Component):
             attributes: typing.Mapping[str, str],
             is_base: bool = False,
             geometry_output: str = "Geometries",
-            units: typing.Optional[typing.Mapping[str, str]] = None
+            units: typing.Optional[typing.Mapping[str, str]] = None,
+            id_attribute: str = "FeatureIds"
     ) -> None:
         """
         Imports a shapefile into the Landscape Model by storing its geometries and attributes.
@@ -238,6 +244,8 @@ class LandscapeScenario(base.Component):
             is_base: Indicates whether the imported shapefile contains the base geometries or is supplementary.
             geometry_output: The name of the dataset where the geometries of the shapefile are stored.
             units: The physical units associated with the shapefile attributes.
+            id_attribute:
+                The name of the attribute that has the role of uniquely identifying each feature of the shapefile.
 
         Returns:
             Nothing.
@@ -255,13 +263,13 @@ class LandscapeScenario(base.Component):
                 self._base_geometries_extent = ogr_layer.GetExtent()
                 crs_unit = ogr_layer_spatial_reference.GetLinearUnitsName()
                 self.outputs["Extent"].set_values(self._base_geometries_extent, scales="space/extent", unit=crs_unit)
-                self.outputs["Crs"].set_values(crs)
+                self.outputs["Crs"].set_values(crs, scales="global")
                 spatial_reference.AutoIdentifyEPSG()
                 epsg = int(spatial_reference.GetAuthorityCode(None))
                 if epsg is None:
                     self.default_observer.write_message(1, "Base coordinate system has no EPSG code")
                     raise ValueError
-                self.outputs["EPSG"].set_values(epsg)
+                self.outputs["EPSG"].set_values(epsg, scales="global")
             else:
                 self.default_observer.write_message(1, "Cannot override already set spatial base reference")
                 raise ValueError
@@ -283,9 +291,36 @@ class LandscapeScenario(base.Component):
                     raise ValueError(
                         f"NULL values in feature attributes are not supported ({file_name}: {attribute[0]})")
                 values[attribute[1]].append(value)
-        self.outputs[geometry_output].set_values(geometries, scales="space/base_geometry")
-        for value in values.items():
-            unit = None
-            if units is not None and value[0] in units:
-                unit = units[value[0]]
-            self.outputs[value[0]].set_values(value[1], scales="space/base_geometry", unit=unit)
+        for attribute, attribute_values in values.items():
+            if attribute == id_attribute:
+                self._import_attribute_values(attribute, attribute_values, units, self.outputs[id_attribute])
+        for attribute, attribute_values in values.items():
+            if attribute != id_attribute:
+                self._import_attribute_values(attribute, attribute_values, units, self.outputs[id_attribute])
+        self.outputs[geometry_output].set_values(
+            geometries, scales="space/base_geometry", element_names=(self.outputs[id_attribute],))
+
+    def _import_attribute_values(
+            self,
+            attribute: str,
+            attribute_values: list,
+            units: typing.Optional[typing.Mapping[str, str]],
+            element_names: base.Output
+    ):
+        """
+        Imports feature attribute values into the Landscape Model data store.
+
+        Args:
+            attribute: The name of the imported attributes.
+            attribute_values: The values to import.
+            units: The physical units associated with the shapefile attributes.
+            element_names: The output containing the identifiers of individual features.
+
+        Returns:
+            Nothing.
+        """
+        unit = None
+        if units is not None and attribute in units:
+            unit = units[attribute]
+        self.outputs[attribute].set_values(
+            attribute_values, scales="space/base_geometry", unit=unit, element_names=(element_names,))

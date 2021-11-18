@@ -54,6 +54,8 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenario` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.LandscapeScenario` ")
     base.VERSION.added("1.9.2", "`components.LandscapeScenario` output of base layer EPSG code")
+    base.VERSION.changed("1.10.0", "`components.LandscapeScenario` reports global scale of metadata outputs")
+    base.VERSION.changed("1.10.0", "`components.LandscapeScenario` gained semantics for element identifier attribute")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

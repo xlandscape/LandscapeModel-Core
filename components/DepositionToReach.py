@@ -38,6 +38,8 @@ class DepositionToReach(base.Component):
     base.VERSION.added("1.7.0", "Type hints to `components.DepositionToReach` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DepositionToReach` with base class")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.DepositionToReach` ")
+    base.VERSION.changed("1.10.0", "`components.DepositionToReach` reports element names of `Deposition` output")
+    base.VERSION.changed("1.10.0", "`components.DepositionToReach` switched to Google-style docstrings")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

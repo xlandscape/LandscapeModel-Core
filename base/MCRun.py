@@ -28,6 +28,7 @@ class MCRun:
     base.VERSION.changed("1.5.3", "`base.MCRun` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.MCRun` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.MCRun` ")
+    base.VERSION.added("1.10.0", "XML-tag for element names in `base.MCRun` configurations")
 
     def __init__(self, xml_file: str, **keywords) -> None:
         config = xml.etree.ElementTree.parse(xml_file)
@@ -93,7 +94,8 @@ class MCRun:
                                 f"{componentConfig.tag}/{inputConfig.tag}",
                                 value,
                                 inputConfig.attrib["scales"] if "scales" in inputConfig.attrib else None,
-                                inputConfig.attrib["unit"] if "unit" in inputConfig.attrib else None
+                                inputConfig.attrib["unit"] if "unit" in inputConfig.attrib else None,
+                                inputConfig.attrib["element_names"] if "element_names" in inputConfig.attrib else None
                             )
                         )
                     for extensionConfig in inputConfig.findall("Extension"):

@@ -38,8 +38,18 @@ class DepositionToReach(base.Component):
     base.VERSION.added("1.7.0", "Type hints to `components.DepositionToReach` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DepositionToReach` with base class")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.DepositionToReach` ")
+    base.VERSION.changed("1.10.0", "`components.DepositionToReach` reports element names of `Deposition` output")
+    base.VERSION.changed("1.10.0", "`components.DepositionToReach` switched to Google-style docstrings")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
+        """
+        Initializes a Deposition to reach component.
+
+        Args:
+            name: The name of the component.
+            default_observer: The default observer of the component.
+            default_store: The default store of the component.
+        """
         super(DepositionToReach, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
@@ -62,29 +72,28 @@ class DepositionToReach(base.Component):
                 self.default_observer
             )
         ])
-        self._outputs = base.OutputContainer(self, [
-            base.Output("Deposition", default_store, self),
-            base.Output("Reaches", default_store, self)
-        ])
+        self._outputs = base.OutputContainer(self, (base.Output("Deposition", default_store, self),))
 
     def run(self) -> None:
+        """Runs the component.
+
+        Returns:
+            Nothing.
         """
-        Runs the component.
-        :return: Nothing.
-        """
-        reaches = self.inputs["Reaches"].read().values
+        reaches = self.inputs["Reaches"].read()
         mapping = self.inputs["Mapping"].read().values
         data_set_info = self.inputs["Deposition"].describe()
         # noinspection SpellCheckingInspection
         self.outputs["Deposition"].set_values(
             np.ndarray,
-            shape=(data_set_info["shape"][0], reaches.shape[0]),
+            shape=(data_set_info["shape"][0], reaches.values.shape[0]),
             data_type=data_set_info["data_type"],
             chunks=(data_set_info["shape"][0], 1),
             scales="time/day, space/reach",
-            unit=data_set_info["unit"]
+            unit=data_set_info["unit"],
+            element_names=(None, reaches.element_names[0])
         )
-        for i, reachId in enumerate(reaches):
+        for i, reachId in enumerate(reaches.values):
             reach_indexes = np.where(mapping == reachId)[0]
             if len(reach_indexes) == 1:
                 reach_index = int(reach_indexes)
@@ -94,4 +103,3 @@ class DepositionToReach(base.Component):
                                                       create=False)
             else:
                 self.default_observer.write_message(2, f"Could not map reach #{reachId}")
-        self.outputs["Reaches"].set_values(reaches, scales="space/reach")

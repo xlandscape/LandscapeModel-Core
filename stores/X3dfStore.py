@@ -53,6 +53,7 @@ class X3dfStore(base.Store):
     base.VERSION.added("1.7.0", "Type hints to `stores.X3dfStore` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.X3dfStore` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.X3dfStore` ")
+    base.VERSION.changed("1.10.0", "`stores.X3dfStore` now manages element names for some scales")
 
     def __init__(
             self,
@@ -109,12 +110,19 @@ class X3dfStore(base.Store):
             A dictionary describing the dataset.
         """
         data_set = self._f[name]
+        element_names = []
+        for dim in range(len(data_set.shape)):
+            element_names.append(None)
+            element_names_attribute = f"dim{dim}_element_names"
+            if element_names_attribute in data_set.attrs:
+                element_names[dim] = base.Output(self._f[data_set.attrs[element_names_attribute]].name, self)
         return {
             "shape": data_set.shape,
             "data_type": data_set.dtype,
             "chunks": data_set.chunks,
             "unit": data_set.attrs.get("unit", None),
-            "scales": data_set.attrs.get("scales", "global")
+            "scales": ", ".join(data_set.attrs.get("scales", ("global",))),
+            "element_names": element_names
         }
 
     def get_values(self, name: str, **keywords) -> typing.Any:
@@ -183,7 +191,8 @@ class X3dfStore(base.Store):
             chunks: typing.Optional[typing.Sequence[slice]] = None,
             create: bool = True,
             slices: typing.Optional[typing.Sequence[slice]] = None,
-            calculate_max: bool = False
+            calculate_max: bool = False,
+            element_names: typing.Optional[typing.Union[list[str], list[base.Output]]] = None
     ) -> None:
         """
         Stores a data set in the store.
@@ -201,12 +210,14 @@ class X3dfStore(base.Store):
             create: Specifies whether a data set should be created or not.
             slices: Defines the portion of the data set that was passed to the function.
             calculate_max: Specifies whether the data set should keep track of the maximum value.
+            element_names: Specifies datasets by name that contain the identifiers of named elements per scale.
 
         Returns:
             Nothing.
         """
         if default is not None and default != 0:
             self._observer.write_message(2, "Default value not supported by X3dfStore")
+        dimension_count = 1
         if isinstance(values, bool):
             self._f[name] = values
             self._f[name].attrs["_type"] = "bool"
@@ -261,6 +272,7 @@ class X3dfStore(base.Store):
                 data_set = self._f.create_dataset(name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks)
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"
+                dimension_count = len(shape)
             else:
                 raise TypeError(f"Unsupported type: {type(values)}")
         elif isinstance(values, datetime.datetime):
@@ -288,13 +300,58 @@ class X3dfStore(base.Store):
                 data_set[()] = values
             if calculate_max:
                 data_set.attrs["max"] = values.max(initial=data_set.attrs["max"] if "max" in data_set.attrs else 0)
+            dimension_count = len(values.shape)
         elif isinstance(values, type(None)):
             self._f[name] = numpy.zeros((0,))
             self._f[name].attrs["_type"] = "None"
         else:
             raise TypeError(f"Cannot store objects of type {type(values)} in X3df")
-        if scales is not None:
-            self._f[name].attrs["scales"] = scales
+        element_names = None if element_names is None else [
+            x.store_name if isinstance(x, base.Output) else x for x in element_names]
+        if element_names is not None and len(element_names) != dimension_count:
+            self._observer.store_set_values(2, "X3dfStore", f"Element names and dimensionality of {name} do not fit")
+        if "scales" in self._f[name].attrs:
+            if scales is not None and scales != ", ".join(self._f[name].attrs["scales"]):
+                raise ValueError(f"Cannot override existing scales definition for {name}")
+        else:
+            if scales is None:
+                self._observer.store_set_values(3, "X3dfStore", f"No scales provided for {name}")
+            else:
+                scales_list = scales.split(", ")
+                if len(scales_list) != dimension_count:
+                    self._observer.store_set_values(2, "X3dfStore", f"Scales and dimensionality of {name} do not fit")
+                self._f[name].attrs["scales"] = scales_list
+                for dim, scale in enumerate(scales_list):
+                    if scale in ("other/species", "space/base_geometry", "space/reach", "space/reach2", "other/factor"):
+                        if element_names is None or element_names[dim] is None:
+                            self._observer.store_set_values(
+                                2, "X3dfStore", f"{name} did not specify element names for {scale}")
+                        else:
+                            if (self._f[name].shape[dim],) != self._f[element_names[dim]].shape:
+                                self._observer.store_set_values(
+                                    2,
+                                    "X3dfStore",
+                                    f"Number of names in {element_names} and elements in {name} do not fit"
+                                )
+                    elif scale in (
+                            "space/extent",
+                            "time/day",
+                            "time/hour",
+                            "other/application",
+                            "time/year",
+                            "other/runs",
+                            "time/day_of_year",
+                            "space/x_5dm",
+                            "space/y_5dm",
+                            "global"
+                    ):
+                        if element_names is not None and element_names[dim] is not None:
+                            self._observer.store_set_values(
+                                3, "X3dfStore", f"Names provided for {scale} that does not require named elements")
+                    else:
+                        self._observer.store_set_values(2, "X3dfStore", f"Unknown scale: {scale}")
+                    if element_names is not None and element_names[dim] is not None:
+                        self._f[name].attrs[f"dim{dim}_element_names"] = self._f[element_names[dim]].ref
         if unit is not None:
             self._f[name].attrs["unit"] = unit
         return

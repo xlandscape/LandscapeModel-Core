@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-11-18.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-11-29.
+
+## [1.10.1] - 2021-11-29
+
+### Added
+
+### Changed
+- `stores.X3dfStore` recognizes additional scales
+
+### Fixed
+
 
 ## [1.10] - 2021-11-18
 

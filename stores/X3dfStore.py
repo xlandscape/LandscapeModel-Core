@@ -54,6 +54,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.X3dfStore` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.X3dfStore` ")
     base.VERSION.changed("1.10.0", "`stores.X3dfStore` now manages element names for some scales")
+    base.VERSION.changed("1.10.1", "`stores.X3dfStore` recognizes additional scales")
 
     def __init__(
             self,
@@ -322,7 +323,14 @@ class X3dfStore(base.Store):
                     self._observer.store_set_values(2, "X3dfStore", f"Scales and dimensionality of {name} do not fit")
                 self._f[name].attrs["scales"] = scales_list
                 for dim, scale in enumerate(scales_list):
-                    if scale in ("other/species", "space/base_geometry", "space/reach", "space/reach2", "other/factor"):
+                    if scale in (
+                            "other/species",
+                            "space/base_geometry",
+                            "space/reach",
+                            "space/reach2",
+                            "other/factor",
+                            "other/crop"
+                    ):
                         if element_names is None or element_names[dim] is None:
                             self._observer.store_set_values(
                                 2, "X3dfStore", f"{name} did not specify element names for {scale}")
@@ -343,8 +351,9 @@ class X3dfStore(base.Store):
                             "time/day_of_year",
                             "space/x_5dm",
                             "space/y_5dm",
-                            "global"
-                    ):
+                            "global",
+                            "other/soil_horizon"
+                    ) or (scale.startswith("space_x/") or scale.startswith("space_y/")) and scale.endswith("sqm"):
                         if element_names is not None and element_names[dim] is not None:
                             self._observer.store_set_values(
                                 3, "X3dfStore", f"Names provided for {scale} that does not require named elements")

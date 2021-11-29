@@ -1,10 +1,11 @@
-"""Class definition of a Landscape Model component generating distribution plots."""
+"""
+Class definition of a Landscape Model component generating distribution plots.
+"""
 import base
 import attrib
 import matplotlib.pyplot
 import numpy
 import os
-import typing
 
 
 class ReportingDistribution(base.Component):
@@ -27,22 +28,11 @@ class ReportingDistribution(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.ReportingDistribution` ")
     base.VERSION.added("1.4.1", "`components.ReportingDistribution` class documentation")
     base.VERSION.fixed("1.4.5", "`components.ReportingDistribution` spelling error in documentation")
-    base.VERSION.added("1.4.5", "`components.ReportingDistribution.draw()` static method")
-    base.VERSION.changed("1.5.3", "`components.ReportingDistribution` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `components.ReportingDistribution` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingDistribution` with base class")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingDistribution` ")
+    base.VERSION.added("1.4.5", "`components.ReportingHydrographicMap.draw()` static method")
+    base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        """
-        Initializes a ReportingDistribution component.
-
-        Args:
-            name: The name of the component.
-            default_observer: The default observer of the component.
-            default_store: The default store of the component.
-        """
-        super(ReportingDistribution, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, observer, store):
+        super(ReportingDistribution, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(
             self,
             [
@@ -55,13 +45,12 @@ class ReportingDistribution(base.Component):
             ]
         )
         self._outputs = base.OutputContainer(self, [])
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
-
-        Returns:
-            Nothing.
+        :return: Nothing.
         """
         values = self._inputs["Values"].read().values
         fig = matplotlib.pyplot.figure(figsize=(10, 10))
@@ -74,31 +63,20 @@ class ReportingDistribution(base.Component):
         output_file = self._inputs["OutputFile"].read().values
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         matplotlib.pyplot.savefig(output_file)
+        return
 
     @staticmethod
-    def draw(
-            data_store: str,
-            values: str,
-            x_label: str,
-            title: str,
-            x_min: float,
-            x_max: float,
-            output_file: str
-    ) -> None:
+    def draw(data_store, values, x_label, title, x_min, x_max, output_file):
         """
         Plots the distribution of values.
-
-        Args:
-            data_store: The file path where the X3df store is located.
-            values: The name of the dataset containing the values to plot.
-            x_label: The label of the x-axis.
-            title: The title of the plot.
-            x_min: The minimum x-value to display.
-            x_max: The maximum x-value to display.
-            output_file: A valid path to a file where the plot is written to.
-
-        Returns:
-            Nothing.
+        :param data_store: The file path where the X3df store is located.
+        :param values: The name of the dataset containing the values to plot.
+        :param x_label: The label of the x-axis.
+        :param title: The title of the plot.
+        :param x_min: The minimum x-value to display.
+        :param x_max: The maximum x-value to display.
+        :param output_file: A valid path to a file where the plot is written to.
+        :returns: Nothing.
         """
         base.reporting(
             data_store,
@@ -106,3 +84,4 @@ class ReportingDistribution(base.Component):
             (("XLabel", x_label), ("Title", title), ("OutputFile", output_file), ("XMin", x_min), ("XMax", x_max)),
             (("Values", values),)
         )
+        return

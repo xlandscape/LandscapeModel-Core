@@ -5,7 +5,6 @@ import base
 import attrib
 import stores
 import numpy
-import typing
 
 
 class ExportData(base.Component):
@@ -30,12 +29,9 @@ class ExportData(base.Component):
     base.VERSION.changed("1.4.9", "`components.ExportData` data type access")
     base.VERSION.changed("1.5.3", "`components.ExportData` changelog uses markdown for code elements")
     base.VERSION.fixed("1.5.4", "`components.ExportData` data type access")
-    base.VERSION.added("1.7.0", "Type hints to `components.ExportData` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ExportData` with base class")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.ExportData` ")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        super(ExportData, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, observer, store):
+        super(ExportData, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "TargetStoreType",
@@ -55,14 +51,15 @@ class ExportData(base.Component):
             ),
             base.Input(
                 "ForeignKey",
-                (attrib.Class(list[str]), attrib.Scales("global"), attrib.Unit(None)),
+                (attrib.Class("list[str]"), attrib.Scales("global"), attrib.Unit(None)),
                 self.default_observer
             ),
             base.Input("Sql", (attrib.Class(str), attrib.Scales("global"), attrib.Unit(None)), self.default_observer)
         ])
-        self._outputs = base.ProvisionalOutputs(self, default_store)
+        self._outputs = base.ProvisionalOutputs(self, store)
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
         :return: Nothing
@@ -72,7 +69,7 @@ class ExportData(base.Component):
             store = stores.SqlLiteStore(
                 self._inputs["FilePath"].read().values, self.default_observer, self._inputs["Create"].read().values)
         else:
-            raise ValueError(f"Store type not supported: {store_type}")
+            raise ValueError("Store type not supported: " + store_type)
         source_description = self._inputs["Values"].describe()
         output = base.Output(self._inputs["Values"].provider.output.name.split("/")[-1], store, self)
         foreign_keys = self._inputs["ForeignKey"].read().values if self._inputs["ForeignKey"].has_provider else None
@@ -99,3 +96,4 @@ class ExportData(base.Component):
         if self._inputs["Sql"].has_provider:
             store.execute(self._inputs["Sql"].read().values)
         store.close()
+        return

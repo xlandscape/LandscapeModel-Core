@@ -1,9 +1,10 @@
-"""Class definition for the Landscape Model MarsWeather component."""
+"""
+Class definition for the Landscape Model MarsWeather component.
+"""
 import datetime
 import numpy as np
 import base
 import attrib
-import typing
 
 
 class MarsWeather(base.Component):
@@ -12,9 +13,9 @@ class MarsWeather(base.Component):
 
     INPUTS
     FilePath: A valid file path to a CSV file containing MARS weather data. A string of global scale. Value has no unit.
-    FirstDate: The first date of the requested weather information. A `datetime.date` of global scale. The value has no
+    FirstDate: The first date of the requested weather information. A datetime.date of global scale. The value has no
     unit.
-    LastDate: The last date of the requested weather information. A `datetime.date` of global scale. The value has no
+    LastDate: The last date of the requested weather information. A datetime.date of global scale. The value has no
     unit.
 
     OUTPUTS
@@ -36,21 +37,9 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.5.1", "small changes in `components.MarsWeather` changelog")
     base.VERSION.changed("1.5.3", "`components.MarsWeather` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.4", "`components.MarsWeather` warning if weather file misses parameters")
-    base.VERSION.added("1.7.0", "Type hints to `components.MarsWeather` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.MarsWeather` with base class")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.MarsWeather` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.MarsWeather` ")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        """
-        Initializes a MarsWeather component.
-
-        Args:
-            name: The name of the component.
-            default_observer: The default observer of the component.
-            default_store: The default store of the component.
-        """
-        super(MarsWeather, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, observer, store):
+        super(MarsWeather, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer),
             base.Input(
@@ -67,11 +56,11 @@ class MarsWeather(base.Component):
         self._outputs = base.OutputContainer(
             self,
             (
-                base.Output("TEMPERATURE_AVG", default_store, self),
-                base.Output("PRECIPITATION", default_store, self),
-                base.Output("ET0", default_store, self),
-                base.Output("WINDSPEED", default_store, self),
-                base.Output("RADIATION", default_store, self)
+                base.Output("TEMPERATURE_AVG", store, self),
+                base.Output("PRECIPITATION", store, self),
+                base.Output("ET0", store, self),
+                base.Output("WINDSPEED", store, self),
+                base.Output("RADIATION", store, self)
             )
         )
         self._units = {
@@ -81,13 +70,12 @@ class MarsWeather(base.Component):
             "WINDSPEED": "m/s",
             "RADIATION": "kJ/(m²*d)"
         }
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
-
-        Returns:
-            Nothing.
+        :return: Nothing.
         """
         with open(self.inputs["FilePath"].read().values) as f:
             data = f.readlines()
@@ -104,4 +92,5 @@ class MarsWeather(base.Component):
                 output = self.outputs[component_output.name]
                 output.set_values(output_data, scales="time/day", unit=self._units[component_output.name])
             else:
-                self.default_observer.write_message(2, f"Weather file does not contain field {component_output.name}")
+                self.default_observer.write_message(2, "Weather file does not contain field " + component_output.name)
+        return

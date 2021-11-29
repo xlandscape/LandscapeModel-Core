@@ -1,4 +1,6 @@
-"""Class definition for the Landscape Model LandscapeScenario component."""
+"""
+Class definition for the Landscape Model LandscapeScenario component.
+"""
 from osgeo import gdal
 from osgeo import ogr
 from osgeo import osr
@@ -7,7 +9,6 @@ import base
 import xml.etree.ElementTree
 import attrib
 import numpy as np
-import typing
 
 
 class LandscapeScenario(base.Component):
@@ -19,7 +20,7 @@ class LandscapeScenario(base.Component):
     No ontological description is associated with the input.
 
     OUTPUTS
-    The outputs of this component are provisional, i.e., they are defined by links from inputs and have to be satisfied
+    Outputs of this components are provisional, i.e., they are defined by links from inputs and have to be satisfied
     by data in the CSV file. Outputs are Crs, Extent, and information specified in the package information file of the
     landscape scenario.
     """
@@ -49,24 +50,9 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.6.0", "`components.LandscapeScenario` casts exported WKB geometries to bytes")
     base.VERSION.changed("1.6.1", "Renamed to `components.LandscapeScenario`")
     base.VERSION.changed("1.6.4", "`components.LandscapeScenario` reads physical units from package metadata")
-    base.VERSION.added("1.7.0", "Type hints to `components.LandscapeScenario` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.LandscapeScenario` with base class")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenario` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.LandscapeScenario` ")
-    base.VERSION.added("1.9.2", "`components.LandscapeScenario` output of base layer EPSG code")
-    base.VERSION.changed("1.10.0", "`components.LandscapeScenario` reports global scale of metadata outputs")
-    base.VERSION.changed("1.10.0", "`components.LandscapeScenario` gained semantics for element identifier attribute")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        """
-        Initializes a LandscapeScenario component.
-
-        Args:
-            name: The name of the component.
-            default_observer: The default observer of the component.
-            default_store: The default store of the component.
-        """
-        super(LandscapeScenario, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, observer, store):
+        super(LandscapeScenario, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "BaseLandscapeGeometries",
@@ -78,16 +64,15 @@ class LandscapeScenario(base.Component):
                 ),
                 self.default_observer)
         ])
-        self._outputs = base.ProvisionalOutputs(self, default_store)
+        self._outputs = base.ProvisionalOutputs(self, store)
         self._spatial_reference = None
         self._base_geometries_extent = None
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
-
-        Returns:
-            Nothing.
+        :return: Nothing.
         """
         os.environ["PROJ_LIB"] = os.path.abspath(
             os.path.join(
@@ -123,7 +108,7 @@ class LandscapeScenario(base.Component):
         else:
             extent = self._base_geometries_extent
         for entry in meta:
-            self.outputs[entry.tag].set_values(entry.text, scales="global")
+            self.outputs[entry.tag].set_values(entry.text)
         for entry in landscape_info_xml.find("supplementary"):
             if entry.text[-4:] == ".tif":
                 raster_path = os.path.join(landscape_path, entry.text)
@@ -132,11 +117,11 @@ class LandscapeScenario(base.Component):
                 raster_spatial_reference = osr.SpatialReference()
                 raster_spatial_reference.ImportFromWkt(raster_crs)
                 if not self._spatial_reference.IsSame(raster_spatial_reference):
-                    self.default_observer.write_message(1, f"Base CRS and CRS of {entry.tag} do not match")
+                    self.default_observer.write_message(1, "Base CRS and CRS of " + entry.tag + " do not match")
                     raise ValueError
                 raster_geo_transform = r.GetGeoTransform()
                 if raster_geo_transform[2] != 0 or raster_geo_transform[4] != 0:
-                    self.default_observer.write_message(1, f"Raster {entry.tag} is skewed")
+                    self.default_observer.write_message(1, "Raster " + entry.tag + " is skewed")
                     raise ValueError
                 raster_extent = (raster_geo_transform[0],
                                  raster_geo_transform[0] + raster_geo_transform[1] * r.RasterXSize,
@@ -149,49 +134,51 @@ class LandscapeScenario(base.Component):
                     if entry.attrib.setdefault("deviatingExtent", "") == "confirmed":
                         self.default_observer.write_message(
                             3,
-                            f"ROI and {entry.tag} have different extents (confirmed)")
-                        self.default_observer.write_message(3, f"1: {extent}")
-                        self.default_observer.write_message(3, f"2: {raster_extent}")
+                            "ROI and " + entry.tag + " have different extents (confirmed)")
+                        self.default_observer.write_message(3, "1: " + str(extent))
+                        self.default_observer.write_message(3, "2: " + str(raster_extent))
                     else:
-                        self.default_observer.write_message(1, f"ROI and {entry.tag} have different extents")
-                        self.default_observer.write_message(3, f"1: {extent}")
-                        self.default_observer.write_message(3, f"2: {raster_extent}")
+                        self.default_observer.write_message(1, "ROI and " + entry.tag + " have different extents")
+                        self.default_observer.write_message(3, "1: " + str(extent))
+                        self.default_observer.write_message(3, "2: " + str(raster_extent))
                         raise ValueError
                 if r.RasterXSize != int(round(extent[1] - extent[0])) or r.RasterYSize != int(
                         round(extent[3] - extent[2])):
                     if entry.attrib.setdefault("deviatingExtent", "") == "confirmed":
                         self.default_observer.write_message(
                             3,
-                            f"1sqm ROI and {entry.tag} differ in size (confirmed)"
+                            "1sqm ROI and " + entry.tag + " differ in size (confirmed)"
                         )
                         self.default_observer.write_message(
                             3,
-                            f"1: {int(round(extent[1] - extent[0]))} x {int(round(extent[3] - extent[2]))}"
+                            "1: " + str(int(round(extent[1] - extent[0]))) + " x " +
+                            str(int(round(extent[3] - extent[2])))
                         )
-                        self.default_observer.write_message(3, f"2: {r.RasterXSize} x {r.RasterYSize}")
+                        self.default_observer.write_message(3, "2: " + str(r.RasterXSize) + " x " + str(r.RasterYSize))
                     else:
-                        self.default_observer.write_message(1, f"1sqm ROI and {entry.tag} differ in size")
+                        self.default_observer.write_message(1, "1sqm ROI and " + entry.tag + " differ in size")
                         self.default_observer.write_message(
                             3,
-                            f"1: {int(round(extent[1] - extent[0]))} x {int(round(extent[3] - extent[2]))}"
+                            "1: " + str(int(round(extent[1] - extent[0]))) + " x " +
+                            str(int(round(extent[3] - extent[2])))
                         )
                         self.default_observer.write_message(1, "Raster does not contain exactly one band")
                         raise ValueError
                 if r.RasterCount != 1:
-                    self.default_observer.write_message(3, f"2: {r.RasterYSize} x {r.RasterYSize}")
+                    self.default_observer.write_message(3, "2: " + str(r.RasterXSize) + " x " + str(r.RasterYSize))
                     raise ValueError
-                self.default_observer.write_message(5, f"Importing {raster_path}")
-                self.outputs[entry.tag].set_values(raster_path, scales="global")
+                self.default_observer.write_message(5, "Importing " + raster_path)
+                self.outputs[entry.tag].set_values(raster_path)
                 raster_band = r.GetRasterBand(1)
                 block_size_x, block_size_y = raster_band.GetBlockSize()
                 cell_area = str(int(raster_geo_transform[1] * -raster_geo_transform[5]))
-                dataset_name = f"{entry.tag}_values"
+                dataset_name = entry.tag + "_values"
                 self.outputs[dataset_name].set_values(
                     np.ndarray,
                     shape=(r.RasterXSize, r.RasterYSize),
                     data_type=np.int,
                     chunks=(min(block_size_x, r.RasterXSize), min(block_size_y, r.RasterYSize)),
-                    scales=f"space_x/{cell_area}sqm, space_y/{cell_area}sqm"
+                    scales="space_x/" + cell_area + "sqm, space_y/" + cell_area + "sqm"
                 )
                 for y_offset in range(0, r.RasterYSize, block_size_y):
                     number_rows = block_size_y if y_offset + block_size_y < r.RasterYSize else r.RasterYSize - y_offset
@@ -206,51 +193,32 @@ class LandscapeScenario(base.Component):
                         )
             elif entry.text[-4:] == ".shp":
                 shapefile_path = os.path.join(landscape_path, entry.text)
-                self.outputs[entry.tag].set_values(shapefile_path, scales="global")
+                self.outputs[entry.tag].set_values(shapefile_path)
             else:
-                self.outputs[entry.tag].set_values(entry.text, scales="global")
+                self.outputs[entry.tag].set_values(entry.text)
         for entry in landscape_info_xml.find("supplementary_shapefiles"):
             attributes = {}
             units = {}
-            id_attribute = None
             for attribute in entry.find("attributes"):
-                attributes[attribute.attrib["column"]] = f"{entry.tag}_{attribute.tag}"
-                units[f"{entry.tag}_{attribute.tag}"] = attribute.attrib["unit"] if "unit" in attribute.attrib else None
-                if "role" in attribute.attrib and attribute.attrib["role"] == "id":
-                    id_attribute = f"{entry.tag}_{attribute.tag}"
-            if id_attribute is None:
-                raise ValueError(f"Role of id column for {entry.tag} is not asserted")
+                attributes[attribute.attrib["column"]] = entry.tag + "_" + attribute.tag
+                units[entry.tag + "_" + attribute.tag] = \
+                    attribute.attrib["unit"] if "unit" in attribute.attrib else None
             self.import_shapefile(
                 os.path.join(landscape_path, entry.find("file_name").text),
                 attributes,
-                geometry_output=f"{entry.tag}_geom",
-                units=units,
-                id_attribute=id_attribute
+                geometry_output=entry.tag + "_geom",
+                units=units
             )
+        return
 
-    def import_shapefile(
-            self,
-            file_name: str,
-            attributes: typing.Mapping[str, str],
-            is_base: bool = False,
-            geometry_output: str = "Geometries",
-            units: typing.Optional[typing.Mapping[str, str]] = None,
-            id_attribute: str = "FeatureIds"
-    ) -> None:
+    def import_shapefile(self, file_name, attributes, is_base=False, geometry_output="Geometries", units=None):
         """
         Imports a shapefile into the Landscape Model by storing its geometries and attributes.
-
-        Args:
-            file_name: The path and file name of the shapefile.
-            attributes: The attributes to be imported from the shapefile.
-            is_base: Indicates whether the imported shapefile contains the base geometries or is supplementary.
-            geometry_output: The name of the dataset where the geometries of the shapefile are stored.
-            units: The physical units associated with the shapefile attributes.
-            id_attribute:
-                The name of the attribute that has the role of uniquely identifying each feature of the shapefile.
-
-        Returns:
-            Nothing.
+        :param: file_name: The path and file name of the shapefile.
+        :param: attributes: The attributes to be imported from the shapefile.
+        :param: is_base: Indicates whether the imported shapefile contains the base geometries or is supplementary.
+        :param: geometry_output: The name of the dataset where the geometries of the shapefile are stored.
+        :return: Nothing.
         """
         ogr_driver = ogr.GetDriverByName("ESRI Shapefile")
         ogr_data_set = ogr_driver.Open(file_name, 0)
@@ -265,18 +233,12 @@ class LandscapeScenario(base.Component):
                 self._base_geometries_extent = ogr_layer.GetExtent()
                 crs_unit = ogr_layer_spatial_reference.GetLinearUnitsName()
                 self.outputs["Extent"].set_values(self._base_geometries_extent, scales="space/extent", unit=crs_unit)
-                self.outputs["Crs"].set_values(crs, scales="global")
-                spatial_reference.AutoIdentifyEPSG()
-                epsg = int(spatial_reference.GetAuthorityCode(None))
-                if epsg is None:
-                    self.default_observer.write_message(1, "Base coordinate system has no EPSG code")
-                    raise ValueError
-                self.outputs["EPSG"].set_values(epsg, scales="global")
+                self.outputs["Crs"].set_values(crs)
             else:
                 self.default_observer.write_message(1, "Cannot override already set spatial base reference")
                 raise ValueError
         elif not spatial_reference.IsSame(self._spatial_reference):
-            self.default_observer.write_message(1, f"Base CRS and CRS of {file_name} do not match")
+            self.default_observer.write_message(1, "Base CRS and CRS of " + file_name + " do not match")
             raise ValueError
         geometries = []
         values = {}
@@ -285,44 +247,18 @@ class LandscapeScenario(base.Component):
         for i, feature in enumerate(ogr_layer):
             geom = feature.GetGeometryRef()
             if geom is None:
-                raise ValueError(f"Feature number {i} has no geometry")
+                raise ValueError("Feature number " + str(i) + " has no geometry")
             geometries.append(bytes(geom.ExportToWkb()))
             for attribute in attributes.items():
                 value = feature[attribute[0]]
                 if value is None:
-                    raise ValueError(
-                        f"NULL values in feature attributes are not supported ({file_name}: {attribute[0]})")
+                    raise ValueError("NULL values in feature attributes are not supported ({}: {})".format(
+                        file_name, attribute[0]))
                 values[attribute[1]].append(value)
-        for attribute, attribute_values in values.items():
-            if attribute == id_attribute:
-                self._import_attribute_values(attribute, attribute_values, units, self.outputs[id_attribute])
-        for attribute, attribute_values in values.items():
-            if attribute != id_attribute:
-                self._import_attribute_values(attribute, attribute_values, units, self.outputs[id_attribute])
-        self.outputs[geometry_output].set_values(
-            geometries, scales="space/base_geometry", element_names=(self.outputs[id_attribute],))
-
-    def _import_attribute_values(
-            self,
-            attribute: str,
-            attribute_values: list,
-            units: typing.Optional[typing.Mapping[str, str]],
-            element_names: base.Output
-    ):
-        """
-        Imports feature attribute values into the Landscape Model data store.
-
-        Args:
-            attribute: The name of the imported attributes.
-            attribute_values: The values to import.
-            units: The physical units associated with the shapefile attributes.
-            element_names: The output containing the identifiers of individual features.
-
-        Returns:
-            Nothing.
-        """
-        unit = None
-        if units is not None and attribute in units:
-            unit = units[attribute]
-        self.outputs[attribute].set_values(
-            attribute_values, scales="space/base_geometry", unit=unit, element_names=(element_names,))
+        self.outputs[geometry_output].set_values(geometries, scales="space/base_geometry")
+        for value in values.items():
+            unit = None
+            if units is not None and value[0] in units:
+                unit = units[value[0]]
+            self.outputs[value[0]].set_values(value[1], scales="space/base_geometry", unit=unit)
+        return

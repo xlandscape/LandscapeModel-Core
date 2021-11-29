@@ -1,8 +1,6 @@
 """
 Class definition for the Landscape Model UserParameters component.
 """
-import typing
-
 import base
 
 
@@ -25,32 +23,18 @@ class UserParameters(base.Component):
     base.VERSION.added("1.4.1", "Changelog in `components.UserParameters` ")
     base.VERSION.changed("1.4.1", "`components.UserParameters` class documentation")
     base.VERSION.changed("1.5.3", "`components.UserParameters` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `components.UserParameters` ")
-    base.VERSION.added("1.7.0", "Type hints to `components.UserParameter` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.UserParameters` with base class")
-    base.VERSION.added("1.10.0", "`components.UserParameters` have element names now")
-    base.VERSION.changed("1.10.0", "`components.UserParameters` switched to Google-style docstrings")
 
-    def __init__(
-            self, name: str,
-            values: typing.Sequence["UserParameter"],
-            default_observer: base.Observer,
-            default_store: typing.Optional[base.Store]
-    ) -> None:
-        super(UserParameters, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, values, observer, store):
+        super(UserParameters, self).__init__(name, observer, store)
         outputs = []
         for parameter in values:
-            output = base.Output(parameter.name, default_store)
-            output.set_values(
-                parameter.values,
-                scales=parameter.scales,
-                unit=parameter.unit,
-                element_names=(parameter.element_names,)
-            )
+            output = base.Output(parameter.name, store)
+            output.set_values(parameter.values, scales=parameter.scales, unit=parameter.unit)
             outputs.append(output)
         self._outputs = base.OutputContainer(self, outputs)
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
         :return: Nothing.
@@ -59,76 +43,44 @@ class UserParameters(base.Component):
 
 
 class UserParameter:
-    """A single user-defined parameter."""
-    def __init__(
-            self,
-            name: str,
-            values: str,
-            scales: typing.Optional[str] = None,
-            unit: typing.Optional[str] = None,
-            element_names: typing.Optional[str] = None
-    ) -> None:
-        """Initializes a UserParameter.
-
-        Args:
-            name: The name of the parameter.
-            values: The value of the parameter in its string representation.
-            scales: A string identifier of the scale to which the user parameter applies.
-            unit: The physical unit of the parameter value.
-            element_names: The name of the dataset containing the names of the individual elements.
-        """
+    """
+    A single user-defined parameter.
+    """
+    def __init__(self, name, values, scales=None, unit=None):
         self._name = name
         self._values = values
         self._scales = scales
         self._unit = unit
-        self._element_names = element_names
+        return
 
     @property
-    def name(self) -> str:
+    def name(self):
         """
         The name of the parameter.
-
-        Returns:
-            The parameter name.
+        :return: The parameter name.
         """
         return self._name
 
     @property
-    def values(self) -> str:
+    def values(self):
         """
         The values of the parameter.
-
-        Returns:
-            The parameter values.
+        :return: The parameter values.
         """
         return self._values
 
     @property
-    def scales(self) -> typing.Optional[str]:
+    def scales(self):
         """
         The scales of the parameter.
-
-        Returns:
-            The parameter scales.
+        :return: The parameter scales.
         """
         return self._scales
 
     @property
-    def unit(self) -> typing.Optional[str]:
+    def unit(self):
         """
         The physical unit of the parameter.
-
-        Returns:
-            A string representing the physical unit of the parameter.
+        :return: A string representing the physical unit of the parameter.
         """
         return self._unit
-
-    @property
-    def element_names(self) -> typing.Optional[str]:
-        """
-        The name of the dataset containing the names of the individual elements.
-
-        Returns:
-            The name of the dataset containing the names of the individual elements.
-        """
-        return self._element_names

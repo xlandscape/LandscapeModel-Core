@@ -1,12 +1,13 @@
-"""Class definition of the DepositionToPecSoil Landscape Model component."""
+"""
+Class definition of the DepositionToPecSoil Landscape Model component.
+"""
 import numpy as np
 import base
-import typing
 
 
 class DepositionToPecSoil(base.Component):
     """
-    Calculates the PEC soil from surface deposition by a simple homogeneous distribution of mass in the topsoil layer.
+    Calculates the PEC soil from surface deposition by a simple homogeneous distribution of mass in the top soil layer.
 
     INPUTS
     Deposition: The deposition on the soil surface.
@@ -14,7 +15,7 @@ class DepositionToPecSoil(base.Component):
     Depth: The depth of the soil layer in which the deposition is distributed equally.
 
     OUTPUTS
-    PecSoil: The homogeneous concentration of substance in soil. A NumPy array with scales time/day, space_x/1sqm,
+    PecSoil: The homogenous concentration of substance in soil. A NumPy array with scales time/day, space_x/1sqm,
     space_y/1sqm.
     """
     # CHANGELOG
@@ -31,33 +32,21 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.changed("1.4.9", "`components.DepositionToPecSoil` data type access")
     base.VERSION.changed("1.5.3", "`components.DepositionToPecSoil` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.4", "`components.DepositionToPecSoil` retrieval of output data type")
-    base.VERSION.added("1.7.0", "Type hints to `components.DepositionToPecSoil` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DepositionToPecSoil` with base class")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.DepositionToPecSoil` ")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        """
-        Initializes a DepositionToPecSoil component.
-
-        Args:
-            name: The name of the component.
-            default_observer: The default observer of the component.
-            default_store: The default store of the component.
-        """
-        super(DepositionToPecSoil, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, observer, store):
+        super(DepositionToPecSoil, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input("Deposition", (), self.default_observer),
             base.Input("SoilBulkDensity", (), self.default_observer),
             base.Input("Depth", (), self.default_observer)
         ])
-        self._outputs = base.OutputContainer(self, [base.Output("PecSoil", default_store, self)])
+        self._outputs = base.OutputContainer(self, [base.Output("PecSoil", store, self)])
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
-
-        Returns:
-            Nothing.
+        :return: Nothing.
         """
         data_set_info = self._inputs["Deposition"].describe()
         soil_bulk_density = self.inputs["SoilBulkDensity"].read().values
@@ -76,3 +65,4 @@ class DepositionToPecSoil(base.Component):
             deposition = self.inputs["Deposition"].read(slices=chunkSlice).values
             pec_soil = deposition / quotient
             self.outputs["PecSoil"].set_values(pec_soil, slices=chunkSlice, create=False, calculate_max=True)
+        return

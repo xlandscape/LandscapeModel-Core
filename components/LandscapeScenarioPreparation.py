@@ -9,7 +9,6 @@ import shutil
 import math
 import numpy as np
 import scipy.ndimage
-import typing
 
 
 class LandscapeScenarioPreparation(base.Component):
@@ -36,16 +35,9 @@ class LandscapeScenarioPreparation(base.Component):
     base.VERSION.changed("1.4.9", "`components.LandscapeScenarioPreparation` spell check exclusion")
     base.VERSION.changed("1.5.3", "`components.LandscapeScenarioPreparation` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.1", "Updated `components.LandscapeScenarioPreparation` to new metadata format")
-    base.VERSION.added("1.7.0", "Type hints to `components.LandscapeScenarioPreparation` ")
-    base.VERSION.changed(
-        "1.7.0", "Harmonized init signature of `components.LandscapeScenarioPreparation` with base class")
-    base.VERSION.changed(
-        "1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenarioPreparation` ")
-    base.VERSION.changed(
-        "1.9.6", "Replaced GDAL constants by numerical values in `components.LandscapeScenarioPreparation` ")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        super(LandscapeScenarioPreparation, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, observer, store):
+        super(LandscapeScenarioPreparation, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input("OutputPath", (), self.default_observer),
             base.Input("LandscapeScenarioVersion", (), self.default_observer),
@@ -57,8 +49,9 @@ class LandscapeScenarioPreparation(base.Component):
             base.Input("FeatureLandUsLandCoverTypeAttribute", (), self.default_observer),
             base.Input("DEM", (), self.default_observer)
         ])
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
         :return: Nothing.
@@ -123,7 +116,7 @@ class LandscapeScenarioPreparation(base.Component):
                 flow_dir.shape[1],
                 flow_dir.shape[0],
                 1,
-                1,
+                gdal.GDT_Byte,
                 ["COMPRESS=LZW"]
             )
             flow_dir_data_set.SetGeoTransform([
@@ -139,8 +132,8 @@ class LandscapeScenarioPreparation(base.Component):
             output_band.WriteArray(flow_dir, 0, 0)
         else:
             self.default_observer.write_message(2, "No DEM provided - generating generic flow from West to East")
-            flow_raster = raster_driver.Create(
-                os.path.join(output_path, "flow.tif"), raster_cols, raster_rows, 1, 1, ["COMPRESS=LZW"])
+            flow_raster = raster_driver.Create(os.path.join(output_path, "flow.tif"), raster_cols, raster_rows, 1,
+                                               gdal.GDT_Byte, ["COMPRESS=LZW"])
             flow_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
             flow_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
             gdal.RasterizeLayer(flow_raster, [1], ogr_layer, burn_values=[1])
@@ -150,27 +143,21 @@ class LandscapeScenarioPreparation(base.Component):
             {"deviatingExtent": "confirmed"}
         ).text = "flow.tif"
         land_use_raster = raster_driver.Create(
-            os.path.join(output_path, "land_use.tif"), raster_cols, raster_rows, 1, 2, ["COMPRESS=LZW"])
+            os.path.join(output_path, "land_use.tif"), raster_cols, raster_rows, 1, gdal.GDT_UInt16, ["COMPRESS=LZW"])
         land_use_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
         land_use_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
-        gdal.RasterizeLayer(
-            land_use_raster,
-            [1],
-            ogr_layer,
-            burn_values=[1],
-            options=[f"ATTRIBUTE={self.inputs['FeatureLandUseLandCoverTypeAttribute'].read().values}"])
+        gdal.RasterizeLayer(land_use_raster, [1], ogr_layer, burn_values=[1],
+                            options=["ATTRIBUTE=" + self.inputs["FeatureLandUseLandCoverTypeAttribute"].read().values])
         xml.etree.ElementTree.SubElement(supplementary, "land_use_raster").text = "land_use.tif"
-        analysis_buffer_raster = raster_driver.Create(os.path.join(
-            output_path, "AnalysisBuffer.tif"), raster_cols, raster_rows, 1, 1, ["COMPRESS=LZW"])
+        analysis_buffer_raster = raster_driver.Create(os.path.join(output_path, "AnalysisBuffer.tif"), raster_cols,
+                                                      raster_rows, 1, gdal.GDT_Byte, ["COMPRESS=LZW"])
         analysis_buffer_raster.SetGeoTransform((extent[0], 1, 0, extent[3], 0, -1))
         analysis_buffer_raster.SetProjection(ogr_layer.GetSpatialRef().ExportToWkt())
         gdal.RasterizeLayer(analysis_buffer_raster, [1], ogr_layer, burn_values=[255])
         memory_driver = ogr.GetDriverByName("MEMORY")
         memory_data_set = memory_driver.CreateDataSource("analysisBuffers")
-        ogr_layer.SetAttributeFilter(
-            f"{self.inputs['FeatureLandUseLandCoverTypeAttribute'].read().values}="
-            f"{self.inputs['TargetFieldLandUseLandCoverType'].read().values}"
-        )
+        ogr_layer.SetAttributeFilter("{}={}".format(self.inputs["FeatureLandUseLandCoverTypeAttribute"].read().values,
+                                                    self.inputs["TargetFieldLandUseLandCoverType"].read().values))
         for buffer_distance in [100, 50, 20, 5, 2, 1]:
             memory_layer = memory_data_set.CreateLayer("analysisBuffer.shp", ogr_layer.GetSpatialRef(),
                                                        ogr.wkbPolygon)
@@ -189,3 +176,4 @@ class LandscapeScenarioPreparation(base.Component):
         # noinspection SpellCheckingInspection
         xml.etree.ElementTree.ElementTree(landscape_package).write(
             os.path.join(output_path, "package.xinfo"), "utf-8", True)
+        return

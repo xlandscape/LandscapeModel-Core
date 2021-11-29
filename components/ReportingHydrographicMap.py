@@ -1,4 +1,6 @@
-"""Class definition of a Landscape Model component generating hydrographic maps."""
+"""
+Class definition of a Landscape Model component generating hydrographic maps.
+"""
 import base
 import attrib
 import osgeo.ogr
@@ -10,7 +12,6 @@ import matplotlib.cm
 import numpy
 import datetime
 import os
-import typing
 
 
 class ReportingHydrographicMap(base.Component):
@@ -21,8 +22,8 @@ class ReportingHydrographicMap(base.Component):
     Hydrography: The hydrographic network geometries. A list[bytes] of scale space/base_geometry.
     HydrographicReachIds: The identifiers of reaches according to the hydrography. A list[int] of scale
     space/base_geometry.
-    SimulationStart: The first day of the simulation. A `datetime.date` of global scale.
-    DisplayedTime: The time displayed in the map. A `datetime.date` of global scale.
+    SimulationStart: The first day of the simulation. A datetime.date of global scale.
+    DisplayedTime: The time displayed in the map. A datetime.date of global scale.
     Values: The values to map onto the hydrographic network. A NumPy array.
     ValuesReachIds: The reach identifiers according to the values. A list[int] of scale space/reach.
     Title: The title of the plot. A string of global scale.
@@ -44,33 +45,20 @@ class ReportingHydrographicMap(base.Component):
     base.VERSION.changed("1.4.5", "`components.ReportingHydrographicMap.__init__` `observer` argument renamed")
     base.VERSION.changed("1.4.9", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` markdown usage extended")
-    base.VERSION.added("1.7.0", "Type hints to `components.ReportingHydrographicMap` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingHydrographicMap` with base class")
-    base.VERSION.changed(
-        "1.8.0", "Replaced Legacy format strings by f-strings in `components.ReportingHydrographicMap` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingHydrographicMap` ")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        """
-        Initializes a ReportingHydrographicMap component.
-
-        Args:
-            name: The name of the component.
-            default_observer: The default observer of the component.
-            default_store: The default store of the component.
-        """
-        super(ReportingHydrographicMap, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, default_observer, store):
+        super(ReportingHydrographicMap, self).__init__(name, default_observer, store)
         self._inputs = base.InputContainer(
             self,
             [
                 base.Input(
                     "Hydrography",
-                    (attrib.Class(list[bytes], 1),  attrib.Scales("space/base_geometry", 1)),
+                    (attrib.Class("list[bytes]", 1),  attrib.Scales("space/base_geometry", 1)),
                     self.default_observer
                 ),
                 base.Input(
                     "HydrographicReachIds",
-                    (attrib.Class(list[int], 1), attrib.Scales("space/base_geometry", 1)),
+                    (attrib.Class("list[int]", 1), attrib.Scales("space/base_geometry", 1)),
                     self.default_observer
                 ),
                 base.Input(
@@ -86,7 +74,7 @@ class ReportingHydrographicMap(base.Component):
                 base.Input("Values", [attrib.Class(numpy.ndarray, 1)], self.default_observer),
                 base.Input(
                     "ValuesReachIds",
-                    (attrib.Class(list[int], 1), attrib.Scales("space/reach", 1)),
+                    (attrib.Class("list[int]", 1), attrib.Scales("space/reach", 1)),
                     self.default_observer
                 ),
                 base.Input("Title", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
@@ -99,17 +87,16 @@ class ReportingHydrographicMap(base.Component):
                 base.Input(
                    "ValuesNormalization", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
                 base.Input(
-                    "ColorMap", (attrib.Class(list[str], 1), attrib.Scales("global", 1)), self.default_observer)
+                    "ColorMap", (attrib.Class("list[str]", 1), attrib.Scales("global", 1)), self.default_observer)
             ]
         )
         self._outputs = base.OutputContainer(self, [])
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
-
-        Returns:
-            Nothing.
+        :return: Nothing.
         """
         if self._inputs["DisplayedUnit"].has_provider:
             self._inputs["Values"].attributes.append(attrib.Unit(self._inputs["DisplayedUnit"].read().values, 1))
@@ -147,7 +134,7 @@ class ReportingHydrographicMap(base.Component):
                 normalization = matplotlib.colors.LogNorm(vmin=min_value, vmax=max_value, clip=True)
                 na_value = 0
             else:
-                raise ValueError(f"Unknown normalization option {values_normalization}")
+                raise ValueError("Unknown normalization option " + values_normalization)
         color_map = self._inputs["ColorMap"].read().values \
             if self._inputs["ColorMap"].has_provider \
             else ("green", "yellow", "red")
@@ -186,45 +173,42 @@ class ReportingHydrographicMap(base.Component):
         output_file = self._inputs["OutputFile"].read().values
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
         matplotlib.pyplot.savefig(output_file)
+        return
 
     @staticmethod
     def draw(
-            data_store: str,
-            hydrography: str,
-            hydrographic_reach_ids: str,
-            simulation_start: datetime.date,
-            displayed_time: datetime.date,
-            values: str,
-            values_reach_ids: str,
-            title: str,
-            output_file: str,
-            displayed_unit: typing.Optional[str] = None,
-            scale_max_value: typing.Optional[float] = None,
-            scale_min_value: typing.Optional[float] = None,
-            values_normalization: typing.Optional[str] = None,
-            color_map: typing.Optional[typing.Sequence[str]] = None
-    ) -> None:
+            data_store,
+            hydrography,
+            hydrographic_reach_ids,
+            simulation_start,
+            displayed_time,
+            values,
+            values_reach_ids,
+            title,
+            output_file,
+            displayed_unit=None,
+            scale_max_value=None,
+            scale_min_value=None,
+            values_normalization=None,
+            color_map=None
+    ):
         """
         Draws a map displaying the distribution of values in a hydrographic network.
-
-        Args:
-            data_store: The file path where the X3df store is located.
-            hydrography: The name of the dataset containing the hydrographic network geometries.
-            hydrographic_reach_ids: The name of the dataset containing the identifiers of reaches.
-            simulation_start: The name of the dataset containing the first day of the simulation.
-            displayed_time: The time displayed in the map as a datetime.date.
-            values: The name of the dataset containing the values to map onto the hydrographic network.
-            values_reach_ids: The name of the dataset containing the reach identifiers according to the values.
-            title: The title of the plot.
-            output_file: A valid path to a file where the plot is written to.
-            displayed_unit: The unit in which values should be displayed.
-            scale_max_value: The maximum value to which the legend is scaled.
-            scale_min_value: The minimum value to which the legend is scaled.
-            values_normalization: The normalization applied to the values.
-            color_map: The color map used for displaying the values as a list of strings.
-
-        Returns:
-            Nothing.
+        :param data_store: The file path where the X3df store is located.
+        :param hydrography: The name of the dataset containing the hydrographic network geometries.
+        :param hydrographic_reach_ids: The name of the dataset containing the identifiers of reaches.
+        :param simulation_start: The name of the dataset containing the first day of the simulation.
+        :param displayed_time: The time displayed in the map as a datetime.date.
+        :param values: The name of the dataset containing the values to map onto the hydrographic network.
+        :param values_reach_ids: The name of the dataset containing the reach identifiers according to the values.
+        :param title: The title of the plot.
+        :param output_file: A valid path to a file where the plot is written to.
+        :param displayed_unit: The unit in which values should be displayed.
+        :param scale_max_value: The maximum value to which the legend is scaled.
+        :param scale_min_value: The minimum value to which the legend is scaled.
+        :param values_normalization: The normalization applied to the values.
+        :param color_map: The color map used for displaying the values as a list of strings.
+        :returns: Nothing.
         """
         base.reporting(
             data_store,
@@ -247,3 +231,4 @@ class ReportingHydrographicMap(base.Component):
                 ("ValuesReachIds", values_reach_ids)
             )
         )
+        return

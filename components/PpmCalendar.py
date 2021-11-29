@@ -1,11 +1,12 @@
-"""Class definition of the PpmCalendar Landscape Model component."""
+"""
+Class definition of the PpmCalendar Landscape Model component.
+"""
 from osgeo import ogr
 import datetime
 import numpy as np
 import random
 import base
 import attrib
-import typing
 
 
 class PpmCalendar(base.Component):
@@ -13,8 +14,8 @@ class PpmCalendar(base.Component):
     Encapsulates the PpmCalendar as a Landscape Model component.
 
     INPUTS
-    SimulationStart: The first day of the simulation. A `datetime.date` of global scale. Value has no unit.
-    SimulationEnd: The last day of the simulation. A `datetime.date` of global scale. Value has no unit.
+    SimulationStart: The first day of the simulation. A datetime.date of global scale. Value has no unit.
+    SimulationEnd: The last day of the simulation. A datetime.date of global scale. Value has no unit.
     ApplicationWindows: A definition of application windows. A string of global scale. Value has no unit.
     Fields: A list of identifiers of individual geometries. A list[int] of scale space/base_geometry. Values have no
     unit.
@@ -41,8 +42,7 @@ class PpmCalendar(base.Component):
     input application rate.
     TechnologyDriftReductions: The technological drift reductions. A NumPy array of scale other/application. Values have
     the same unit as the input drift reductions.
-    AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. The values have no
-    unit.
+    AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. Th values have no unit.
     """
     # CHANGELOG
     base.VERSION.added("1.1.1", "`components.PpmCalendar` component")
@@ -64,23 +64,10 @@ class PpmCalendar(base.Component):
     base.VERSION.changed("1.4.1", "`components.PpmCalendar` class documentation")
     base.VERSION.changed("1.5.3", "`components.PpmCalendar` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.0", "`components.PpmCalendar` casts exported WKB geometries to bytes")
-    base.VERSION.changed("1.6.1", "Renamed some parameters in `components.PpmCalendar` ")
-    base.VERSION.added("1.7.0", "Type hints to `components.PpmCalendar` ")
-    base.VERSION.added("1.7.0", "Type hints to `components.SprayApplication` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.PpmCalendar` with base class")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.PpmCalendar` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.PpmCalendar` ")
+    base.VERSION.changed("1.6.1", "Renamed some parameters in `components.PpmCalendar`")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        """
-        Initializes a PpmCalendar.
-
-        Args:
-            name: The name of the component.
-            default_observer: The default observer of the component.
-            default_store: The default store of the component.
-        """
-        super(PpmCalendar, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, observer, store):
+        super(PpmCalendar, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "SimulationStart",
@@ -99,12 +86,12 @@ class PpmCalendar(base.Component):
             ),
             base.Input(
                 "Fields",
-                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
+                (attrib.Class("list[int]", 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
                 self.default_observer
             ),
             base.Input(
                 "LandUseLandCoverTypes",
-                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
+                (attrib.Class("list[int]", 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
                 self.default_observer
             ),
             base.Input(
@@ -135,7 +122,7 @@ class PpmCalendar(base.Component):
             base.Input(
                 "FieldGeometries",
                 (
-                    attrib.Class(list[bytes], 1),
+                    attrib.Class("list[bytes]", 1),
                     attrib.Unit(None, 1),
                     attrib.Scales("space/base_geometry", 1)
                 ),
@@ -158,19 +145,18 @@ class PpmCalendar(base.Component):
             )
         ])
         self._outputs = base.OutputContainer(self, [
-            base.Output("AppliedFields", default_store, self),
-            base.Output("ApplicationDates", default_store, self),
-            base.Output("ApplicationRates", default_store, self),
-            base.Output("TechnologyDriftReductions", default_store, self),
-            base.Output("AppliedAreas", default_store, self)
+            base.Output("AppliedFields", store, self),
+            base.Output("ApplicationDates", store, self),
+            base.Output("ApplicationRates", store, self),
+            base.Output("TechnologyDriftReductions", store, self),
+            base.Output("AppliedAreas", store, self)
         ])
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
-
-        Returns:
-            Nothing.
+        :return: Nothing.
         """
         simulation_start_year = self.inputs["SimulationStart"].read().values.year
         simulation_end_year = self.inputs["SimulationEnd"].read().values.year
@@ -199,9 +185,10 @@ class PpmCalendar(base.Component):
                         random.uniform(0, 1) <= probability_field_applied:
                     for year in range(simulation_start_year, simulation_end_year + 1):
                         for applicationWindow in application_windows:
-                            window_start = datetime.datetime.strptime(
-                                f"{year}-{applicationWindow[0]}", "%Y-%m-%d").date()
-                            window_end = datetime.datetime.strptime(f"{year}-{applicationWindow[1]}", "%Y-%m-%d").date()
+                            window_start = datetime.datetime.strptime(str(year) + "-" + applicationWindow[0],
+                                                                      "%Y-%m-%d").date()
+                            window_end = datetime.datetime.strptime(str(year) + "-" + applicationWindow[1],
+                                                                    "%Y-%m-%d").date()
                             application_date = datetime.datetime.fromordinal(
                                 random.randint(window_start.toordinal(), window_end.toordinal()))
                             spray_application = SprayApplication(field, application_date, "PPP", application_rate,
@@ -230,93 +217,66 @@ class PpmCalendar(base.Component):
             unit=technology_drift_reduction.unit
         )
         self.outputs["AppliedAreas"].set_values(applied_areas, scales="other/application")
+        return
 
 
 class SprayApplication:
-    """Describes an individual spray-application."""
-    def __init__(
-            self,
-            field: int,
-            date: datetime.date,
-            ppp: str,
-            application_rate: base.Values,
-            technology_drift_reduction: base.Values,
-            in_crop_buffer: float
-    ) -> None:
-        """
-        Initializes a spray application.
-
-        Args:
-            field: The applied field.
-            date: The date of application.
-            ppp: The product used during application.
-            application_rate: The application rate.
-            technology_drift_reduction: The rate of drift reduction due to used equipment.
-            in_crop_buffer: The in-crop buffer considered during application.
-        """
+    """
+    Describes an individual spray-application.
+    """
+    def __init__(self, field, date, ppp, application_rate, technology_drift_reduction, in_crop_buffer):
         self._field = field
         self._date = date
         self._ppp = ppp
         self._applicationRate = application_rate
         self._technologyDriftReduction = technology_drift_reduction
         self._inCropBuffer = in_crop_buffer
+        return
 
     @property
-    def application_rate(self) -> base.Values:
+    def application_rate(self):
         """
         The rate by which a substance is sprayed.
-
-        Returns:
-            The application rate.
+        :return: The application rate.
         """
         return self._applicationRate
 
     @property
-    def date(self) -> datetime.date:
+    def date(self):
         """
         The date when application takes place.
-
-        Returns:
-            The application date.
+        :return: The application date.
         """
         return self._date
 
     @property
-    def field(self) -> int:
+    def field(self):
         """
         The field that is applied
-
-        Returns:
-            The field identifier.
+        :return: The field identifier.
         """
         return self._field
 
     @property
-    def in_crop_buffer(self) -> float:
+    def in_crop_buffer(self):
         """
         The in-crop buffer that is applied during application.
-
-        Returns:
-            The buffer width in meters.
+        :return: The buffer width in meters.
         """
         return self._inCropBuffer
 
     @property
-    def ppp(self) -> str:
+    def ppp(self):
         """
         The plant production product that is applied.
-
-        Returns:
-            The identifier of the plant protection product.
+        :return: The identifier of the plant protection product.
         """
         return self._ppp
 
     @property
-    def technology_drift_reduction(self) -> base.Values:
+    def technology_drift_reduction(self):
         """
         The drift-reducing technology that is used.
-
-        Returns:
-            The fraction of spray-drift that is reduced by applying drift-reducing technology.
+        :return: The fraction of spray-drift that is reduced by applying drift-reducing technology.
         """
         return self._technologyDriftReduction

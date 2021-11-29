@@ -1,11 +1,12 @@
-"""Class definition for the HydrologyFromTimeSeries Landscape Model component."""
+"""
+Class definition for the HydrologyFromTimeSeries Landscape Model component.
+"""
 import datetime
 import h5py
 import numpy as np
 import base
 import attrib
 import os
-import typing
 
 
 class HydrologyFromTimeSeries(base.Component):
@@ -14,8 +15,8 @@ class HydrologyFromTimeSeries(base.Component):
 
     INPUTS
     TimeSeries: A valid file path to the input HDF5 data. A string of global scale. Value has no unit.
-    FromTime: The start time of the requested hydrology. A `datetime.date` of global scale. Value has no unit.
-    ToTime: The end time of the requested hydrology. A `datetime.date` of global scale. Value has no unit.
+    FromTime: The start time of the requested hydrology. A datetime.date of global scale. Value has no unit.
+    ToTime: The end time of the requested hydrology. A datetime.date of global scale. Value has no unit.
     InflowTimeSeriesPath: The path where reach-inflows are stored. A string of global scale. Value has no unit.
     ImportInflows: Specifies whether reach inflows from fields are imported. A bool of global scale. Value has no unit.
 
@@ -51,24 +52,9 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "renamed `components.HydrologyFromTimeSeries` component")
     base.VERSION.changed("1.6.0", "`components.HydrologyFromTimeSeries` casts exported WKB geometries to bytes")
-    base.VERSION.added("1.7.0", "Type hints to `components.HydrologyFromTimeSeries` ")
-    base.VERSION.changed("1.7.0", "Harmonized init signature of `components.HydrologyFromTimeSeries` with base class")
-    base.VERSION.changed(
-        "1.8.0", "Replaced Legacy format strings by f-strings in `components.HydrologyFromTimeSeries` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.HydrologyFromTimeSeries` ")
-    base.VERSION.changed("1.10.0", "`components.HydrologyFromTimeSeries` reports global scale of time span outputs")
-    base.VERSION.changed("1.10.0", "`components.HydrologyFromTimeSeries` reports element names of outputs")
 
-    def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
-        """
-        Initializes a HydrologyFromTimeSeries component.
-
-        Args:
-            name: The name of the component.
-            default_observer: The default observer of the component.
-            default_store: The default store of the component.
-        """
-        super(HydrologyFromTimeSeries, self).__init__(name, default_observer, default_store)
+    def __init__(self, name, observer, store):
+        super(HydrologyFromTimeSeries, self).__init__(name, observer, store)
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "TimeSeries",
@@ -97,23 +83,22 @@ class HydrologyFromTimeSeries(base.Component):
             )
         ])
         self._outputs = base.OutputContainer(self, [
-            base.Output("Flow", default_store, self),
-            base.Output("Depth", default_store, self),
-            base.Output("Reaches", default_store, self),
-            base.Output("TimeSeriesStart", default_store, self, {"scales": "global"}),
-            base.Output("TimeSeriesEnd", default_store, self, {"scales": "global"}),
-            base.Output("Volume", default_store, self),
-            base.Output("Area", default_store, self),
-            base.Output("InflowReaches", default_store, self),
-            base.Output("Inflow", default_store, self)
+            base.Output("Flow", store, self),
+            base.Output("Depth", store, self),
+            base.Output("Reaches", store, self),
+            base.Output("TimeSeriesStart", store, self),
+            base.Output("TimeSeriesEnd", store, self),
+            base.Output("Volume", store, self),
+            base.Output("Area", store, self),
+            base.Output("InflowReaches", store, self),
+            base.Output("Inflow", store, self)
         ])
+        return
 
-    def run(self) -> None:
+    def run(self):
         """
         Runs the component.
-
-        Returns:
-            Nothing.
+        :return: Nothing.
         """
         time_series = self.inputs["TimeSeries"].read().values
         h5 = h5py.File(time_series)
@@ -131,23 +116,19 @@ class HydrologyFromTimeSeries(base.Component):
         offset_hours = int((datetime.datetime.combine(from_time, datetime.time(1)) - time_series_start).days * 24)
         if offset_hours < 0:
             raise ValueError(
-                f"Requested {-offset_hours} too early values; values available for {time_series_start} to "
-                f"{time_series_end}"
-            )
+                "Requested {} too early values; values available for {} to {}".format(-offset_hours, time_series_start,
+                                                                                      time_series_end))
         if number_hours - flow.shape[0] > 0:
             raise ValueError(
-                f"Requested {number_hours - flow.shape[0]} too late values; values available for {time_series_start} "
-                f"to {time_series_end}"
-            )
-        self.outputs["Reaches"].set_values(reaches, scales="space/reach", element_names=(self.outputs["Reaches"],))
+                "Requested {} too late values; values available for {} to {}".format(
+                    number_hours - flow.shape[0], time_series_start, time_series_end))
         self.outputs["Flow"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
             data_type=np.float,
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
-            unit="m³/d",
-            element_names=(None, self.outputs["Reaches"])
+            unit="m³/d"
         )
         self.outputs["Depth"].set_values(
             np.ndarray,
@@ -155,8 +136,7 @@ class HydrologyFromTimeSeries(base.Component):
             data_type=np.float,
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
-            unit="m",
-            element_names=(None, self.outputs["Reaches"])
+            unit="m"
         )
         self.outputs["Volume"].set_values(
             np.ndarray,
@@ -164,8 +144,7 @@ class HydrologyFromTimeSeries(base.Component):
             data_type=np.float,
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
-            unit="m³",
-            element_names=(None, self.outputs["Reaches"])
+            unit="m³"
         )
         self.outputs["Area"].set_values(
             np.ndarray,
@@ -173,8 +152,7 @@ class HydrologyFromTimeSeries(base.Component):
             data_type=np.float,
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
-            unit="m²",
-            element_names=(None, self.outputs["Reaches"])
+            unit="m²"
         )
         for i in range(number_reaches):
             self.outputs["Flow"].set_values(flow[(slice(offset_hours, offset_hours + number_hours, 1), i)],
@@ -185,36 +163,36 @@ class HydrologyFromTimeSeries(base.Component):
                                               slices=(slice(number_hours), i), create=False)
             self.outputs["Area"].set_values(area[(slice(offset_hours, offset_hours + number_hours, 1), i)],
                                             slices=(slice(number_hours), i), create=False)
+        self.outputs["Reaches"].set_values(reaches, scales="space/reach")
         self.outputs["TimeSeriesStart"].set_values(datetime.datetime.combine(from_time, datetime.time(1)))
         self.outputs["TimeSeriesEnd"].set_values(datetime.datetime.combine(to_time, datetime.time()))
         if self._inputs["ImportInflows"].read().values:
             inflow_path = self._inputs["InflowTimeSeriesPath"].read().values
             inflow_files = os.listdir(inflow_path)
             inflow_reaches = [int(f[1:-4]) for f in inflow_files]
-            self.outputs["InflowReaches"].set_values(
-                inflow_reaches, scales="space/reach2", element_names=(self.outputs["InflowReaches"],))
+            self._outputs["InflowReaches"].set_values(inflow_reaches, scales="space/reach2")
             self.outputs["Inflow"].set_values(
                 np.ndarray,
                 shape=(number_hours, len(inflow_reaches)),
                 data_type=np.float,
                 chunks=(number_hours, 1),
                 scales="time/hour, space/reach2",
-                unit="m³/d",
-                element_names=(None, self.outputs["InflowReaches"])
+                unit="m³/d"
             )
             for reach_index, inflow_file in enumerate(inflow_files):
-                self.default_observer.write_message(5, f"Importing reach inflows from {inflow_file}...")
+                self.default_observer.write_message(5, "Importing reach inflows from " + inflow_file + "...")
                 inflows = np.full((number_hours,), np.inf)
                 with open(os.path.join(inflow_path, inflow_file)) as f:
                     lines = f.readlines()
                     data = [line[:-1].split(",") for line in lines[1:]]
                     for record in data:
                         if record[0] != inflow_file[:-4]:
-                            raise ValueError(f"Unexpected reach in file: {inflow_file}")
+                            raise ValueError("Unexpected reach in file: " + inflow_file)
                         time_index = int((datetime.datetime.strptime(
                             record[1], "%Y-%m-%dT%H:%M") - time_series_start).total_seconds() / 3600) - offset_hours
                         if 0 <= time_index < number_hours:
                             inflows[time_index] = float(record[2])
                     if np.any(np.isinf(inflows)):
-                        raise ValueError(f"Unexpected temporal layout in file: {inflow_file}")
+                        raise ValueError("Unexpected temporal layout in file: " + inflow_file)
                     self.outputs["Inflow"].set_values(inflows, slices=(slice(number_hours), reach_index), create=False)
+        return

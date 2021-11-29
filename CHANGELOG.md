@@ -1,6 +1,16 @@
 # Changelog
 This is the changelog for the Landscape Model core. It was automatically created on 2021-11-29.
 
+## [1.10.2] - 2021-11-29
+
+### Added
+
+### Changed
+- Changed generation of index numbers in `stores.SqlLiteStore` to considerably reduce memory usage
+
+### Fixed
+
+
 ## [1.10.1] - 2021-11-29
 
 ### Added

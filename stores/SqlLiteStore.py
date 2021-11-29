@@ -37,6 +37,8 @@ class SqlLiteStore(base.Store):
     base.VERSION.fixed("1.7.0", "Check for slices containing steps in `stores.SqlLiteStore` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.SqlLiteStore` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.SqlLiteStore` ")
+    base.VERSION.changed(
+        "1.10.2", "Changed generation of index numbers in `stores.SqlLiteStore` to considerably reduce memory usage")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         """
@@ -50,6 +52,8 @@ class SqlLiteStore(base.Store):
         self._observer = observer
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         self._connection = sqlite3.connect(file_path)
+        self._connection.execute("PRAGMA journal_mode = OFF;")
+        self._connection.execute("PRAGMA synchronous = OFF;")
         if create:
             # noinspection GrazieInspection
             self._connection.execute("CREATE TABLE global(store_version)")
@@ -217,22 +221,33 @@ class SqlLiteStore(base.Store):
         if scale_info is None:
             if len(stored_shape) == 1:
                 self._connection.execute(f"CREATE TABLE `{scale}` (i INTEGER, PRIMARY KEY (i){fk_string})")
-                self._connection.executemany(
-                    f"INSERT INTO `{scale}` VALUES (?)", [(i,) for i in range(stored_shape[0])])
+                self._observer.write_message(2, "Using unoptimized version; very memory-consuming")
+                for chunk in base.chunk_slices(stored_shape, (65536,)):
+                    self._connection.executemany(
+                        f"INSERT INTO `{scale}` VALUES (?)", [(i,) for i in range(chunk[0].start, chunk[0].stop)])
             elif len(stored_shape) == 2:
                 self._connection.execute(
                     f"CREATE TABLE `{scale}` (i INTEGER, j INTEGER, PRIMARY KEY (i, j){fk_string})")
-                self._connection.executemany(
-                    f"INSERT INTO `{scale}` VALUES (?, ?)",
-                    [(i, j) for i in range(stored_shape[0]) for j in range(stored_shape[1])]
-                )
+                for chunk in base.chunk_slices(stored_shape, (256, 256)):
+                    self._connection.executemany(
+                        f"INSERT INTO `{scale}` VALUES (?, ?)",
+                        [
+                            (i, j) for i in range(chunk[0].start, chunk[0].stop)
+                            for j in range(chunk[1].start, chunk[1].stop)
+                        ]
+                    )
+                    self._connection.commit()
             elif len(stored_shape) == 3:
                 self._connection.execute(
                     f"CREATE TABLE `{scale}` (i INTEGER, j INTEGER, k INTEGER, PRIMARY KEY (i, j, k){fk_string})")
-                self._connection.executemany(
-                    f"INSERT INTO `{scale}` VALUES (?, ?, ?)",
-                    [(i, j, k) for i in range(stored_shape[0]) for j in range(stored_shape[1]) for k in range(
-                        stored_shape[2])])
+                for chunk in base.chunk_slices(stored_shape, (64, 32, 32)):
+                    self._connection.executemany(
+                        f"INSERT INTO `{scale}` VALUES (?, ?, ?)",
+                        [
+                            (i, j, k) for i in range(chunk[0].start, chunk[0].stop)
+                            for j in range(chunk[1].start, chunk[1].stop)
+                            for k in range(chunk[2].start, chunk[2].stop)
+                        ])
             else:
                 raise ValueError(f"Unsupported number of dimensions: {stored_shape}")
             self._connection.execute("INSERT INTO scales VALUES (?, ?)", (scale, str(stored_shape)))

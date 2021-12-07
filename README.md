@@ -175,8 +175,8 @@ in the configuration and [macros](#macros) to learn about macros in general. See
 the experiment as a whole and for Monte Carlo runs specifically are independent, allowing for a variety of advanced 
 message processing. 
 
-Each Monte Carlo run will, according to the configuration, use its own `X3df` store, an HDF5-based container for multi-
-dimensional arrays. This is the default store used in Landscape Model runs, but you can have a look under 
+Each Monte Carlo run will, according to the configuration, use its own `X3df` store, an HDF5-based container for 
+multidimensional arrays. This is the default store used in Landscape Model runs, but you can have a look under 
 [stores](#available-stores-from-core) for other available options.
 
 The configuration defines two global parameters, `<SimulationStart>` and `<SimulationEnd`. See the section about
@@ -311,7 +311,7 @@ The following list gives an overview of the system macros set by the Landscape M
   Landscape Model core.
 * `_EXP_DIR_` - The working directory of an individual experiment, e.g., `%VARIANT_PATH%\run\Test Run`. The value equals
   the `<ExperimentDir>` in the experiment configuration under `<General>`. Usually, it is  specified there as 
-  `$(_EXP_BASE_DIR_)\$(SimID)`, that is, as a sub-directory of the base working directory (see above) with the
+  `$(_EXP_BASE_DIR_)\$(SimID)`, that is, as a subdirectory of the base working directory (see above) with the
   user-parameterization defined name of the experiment as specified by a macro `SimID`.
 * `_MC_ID_` - The numerical identifier of the Monte Carlo run.
 * `_MC_NAME_` - The name of the individual Monte Carlo run. It is a random combination of 16 uppercase letters and 

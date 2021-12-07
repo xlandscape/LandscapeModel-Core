@@ -12,7 +12,7 @@ class ConsoleObserver(base.Observer):
     Reports to the default standard output.
 
     PARAMETERS
-    lock: Allows to lock the console in multi-threaded runs.
+    lock: Allows to lock the console in parallel runs.
     print_output: A bool tht defines that the print() method is used instead of the `write()` method of the standard
     output. Setting it to True is useful when using the observer within a Jupyter notebook.
     """
@@ -41,7 +41,7 @@ class ConsoleObserver(base.Observer):
         Initializes a ConsoleObserver.
 
         Args:
-            lock: Allows to lock the console in multi-threaded runs.
+            lock: Allows to lock the console in parallel runs.
             print_output: A bool tht defines that the print() method is used instead of the `write()` method of the
                 standard output. Setting it to True is useful when using the observer within a Jupyter notebook.
             show_messages_get_values_ok: Specifies whether messages regarding the retrieval of values are shown if they

@@ -16,7 +16,7 @@ class UncertaintyAndSensitivityAnalysis:
     base.VERSION.added(
         "1.2.17", "`base.UncertaintyAndSensitivityAnalysis` class for managing uncertainty and sensitivity analyses")
     base.VERSION.changed(
-        "1.2.31", "`base.UncertaintyAndSensitivityAnalysis.create()` parameter generation possible in sub-directories")
+        "1.2.31", "`base.UncertaintyAndSensitivityAnalysis.create()` parameter generation possible in subdirectories")
     base.VERSION.changed("1.2.31", "`base.UncertaintyAndSensitivityAnalysis.create()` can process pre-defined lists")
     base.VERSION.fixed("1.2.35", "`base.UncertaintyAndSensitivityAnalysis.create()` function parsing improved")
     base.VERSION.changed("1.3.27", "`base.UncertaintyAndSensitivityAnalysis` refactored")

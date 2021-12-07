@@ -60,7 +60,7 @@ class UserParameters:
     @property
     def subdir(self) -> str:
         """
-        Gets the sub-directory for the uncertainty or sensitivity analysis runs.
-        :return: A string containing the sub-directory for the uncertainty or sensitivity analysis runs.
+        Gets the subdirectory for the uncertainty or sensitivity analysis runs.
+        :return: A string containing the subdirectory for the uncertainty or sensitivity analysis runs.
         """
         return self._subdir

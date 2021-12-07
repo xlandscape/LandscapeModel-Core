@@ -38,6 +38,7 @@ base.VERSION.fixed("1.9.3", "Formatting of generated scenario documentation in `
 base.VERSION.added("1.9.6", "Function for template-based documentation of model variants to `base.documentation` ")
 base.VERSION.added(
     "1.9.1", "Arguments to `documentation.document_variant` to specify variant name and endpoint flexibly")
+base.VERSION.changed("1.10.3", "Spell checking in `base.documentation` ")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:

@@ -58,6 +58,7 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.HydrologyFromTimeSeries` ")
     base.VERSION.changed("1.10.0", "`components.HydrologyFromTimeSeries` reports global scale of time span outputs")
     base.VERSION.changed("1.10.0", "`components.HydrologyFromTimeSeries` reports element names of outputs")
+    base.VERSION.added("1.10.3", "Further consistency checks to `HydrologyFromTimeSeries` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -129,6 +130,11 @@ class HydrologyFromTimeSeries(base.Component):
         time_series_start = datetime.datetime.strptime(h5["time_from"][0].decode("ascii"), "%Y-%m-%dT%H:%M")
         time_series_end = datetime.datetime.strptime(h5["time_to"][0].decode("ascii"), "%Y-%m-%dT%H:%M")
         offset_hours = int((datetime.datetime.combine(from_time, datetime.time(1)) - time_series_start).days * 24)
+        time_series_length = int((time_series_end - time_series_start).total_seconds() / 3600) + 1
+        if time_series_length != flow.shape[0] or time_series_length != depth.shape[0] or \
+                time_series_length != volume.shape[0] or time_series_length != area.shape[0]:
+            self.default_observer.write_message(2, "Temporal inconsistency in hydrological scenario")
+            self.default_observer.write_message(2, "It is highly recommended checking your hydrological scenario")
         if offset_hours < 0:
             raise ValueError(
                 f"Requested {-offset_hours} too early values; values available for {time_series_start} to "

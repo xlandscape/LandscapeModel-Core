@@ -1,13 +1,13 @@
 # Observers
 This file lists all observers that are currently included in the Landscape Model core.
-It was automatically created on 2021-11-29.
+It was automatically created on 2021-12-07.
 
 
 ## ConsoleObserver
     Reports to the default standard output.
 
     PARAMETERS
-    lock: Allows to lock the console in multi-threaded runs.
+    lock: Allows to lock the console in parallel runs.
     print_output: A bool tht defines that the print() method is used instead of the `write()` method of the standard
     output. Setting it to True is useful when using the observer within a Jupyter notebook.
     

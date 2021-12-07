@@ -17,6 +17,7 @@ class UserParameters:
     base.VERSION.changed("1.4.9", "`base.UserParameters` property names")
     base.VERSION.changed("1.5.3", "`base.UserParameters` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.UserParameters` ")
+    base.VERSION.changed("1.10.3", "Spell checking in `base.UserParameters` ")
 
     def __init__(self, xml_file: str) -> None:
         self._params = {}
@@ -60,7 +61,7 @@ class UserParameters:
     @property
     def subdir(self) -> str:
         """
-        Gets the sub-directory for the uncertainty or sensitivity analysis runs.
-        :return: A string containing the sub-directory for the uncertainty or sensitivity analysis runs.
+        Gets the subdirectory for the uncertainty or sensitivity analysis runs.
+        :return: A string containing the subdirectory for the uncertainty or sensitivity analysis runs.
         """
         return self._subdir

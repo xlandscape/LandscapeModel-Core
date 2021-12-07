@@ -38,6 +38,7 @@ base.VERSION.fixed("1.9.3", "Formatting of generated scenario documentation in `
 base.VERSION.added("1.9.6", "Function for template-based documentation of model variants to `base.documentation` ")
 base.VERSION.added(
     "1.9.1", "Arguments to `documentation.document_variant` to specify variant name and endpoint flexibly")
+base.VERSION.changed("1.10.3", "Spell checking in `base.documentation` ")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -362,7 +363,7 @@ The scenario can be used in the following Landscape Models:
 Make sure you use the latest version of the Landscape Model.
 
 ### Installation
-Copy the complete scenario folder unaltered into the `scenario` sub-directory of your model. Reference the scenario
+Copy the complete scenario folder unaltered into the `scenario` subdirectory of your model. Reference the scenario
 from the model parameterization. For details how to reference the scenario from the user parameterization, see the 
 `README` of the model.
 

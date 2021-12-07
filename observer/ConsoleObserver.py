@@ -12,7 +12,7 @@ class ConsoleObserver(base.Observer):
     Reports to the default standard output.
 
     PARAMETERS
-    lock: Allows to lock the console in multi-threaded runs.
+    lock: Allows to lock the console in parallel runs.
     print_output: A bool tht defines that the print() method is used instead of the `write()` method of the standard
     output. Setting it to True is useful when using the observer within a Jupyter notebook.
     """
@@ -30,6 +30,7 @@ class ConsoleObserver(base.Observer):
     base.VERSION.added("1.9.5", "`observer.ConsoleObserver` parameter for less verbose output")
     base.VERSION.changed("1.9.6", "updated docstring of `ConsoleObserver.__init__` ")
     base.VERSION.changed("1.9.11", "`observer.ConsoleObserver` flushes buffer after every write")
+    base.VERSION.changed("1.10.3", "Spell checking in `observer.ConsoleObserver` ")
 
     def __init__(
             self,
@@ -41,7 +42,7 @@ class ConsoleObserver(base.Observer):
         Initializes a ConsoleObserver.
 
         Args:
-            lock: Allows to lock the console in multi-threaded runs.
+            lock: Allows to lock the console in parallel runs.
             print_output: A bool tht defines that the print() method is used instead of the `write()` method of the
                 standard output. Setting it to True is useful when using the observer within a Jupyter notebook.
             show_messages_get_values_ok: Specifies whether messages regarding the retrieval of values are shown if they

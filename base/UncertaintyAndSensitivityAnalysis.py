@@ -16,7 +16,7 @@ class UncertaintyAndSensitivityAnalysis:
     base.VERSION.added(
         "1.2.17", "`base.UncertaintyAndSensitivityAnalysis` class for managing uncertainty and sensitivity analyses")
     base.VERSION.changed(
-        "1.2.31", "`base.UncertaintyAndSensitivityAnalysis.create()` parameter generation possible in sub-directories")
+        "1.2.31", "`base.UncertaintyAndSensitivityAnalysis.create()` parameter generation possible in subdirectories")
     base.VERSION.changed("1.2.31", "`base.UncertaintyAndSensitivityAnalysis.create()` can process pre-defined lists")
     base.VERSION.fixed("1.2.35", "`base.UncertaintyAndSensitivityAnalysis.create()` function parsing improved")
     base.VERSION.changed("1.3.27", "`base.UncertaintyAndSensitivityAnalysis` refactored")
@@ -27,6 +27,7 @@ class UncertaintyAndSensitivityAnalysis:
     base.VERSION.added("1.7.0", "Type hints to `base.UncertaintyAnsSensitivityAnalysis` ")
     base.VERSION.changed(
         "1.8.0", "Replaced Legacy format strings by f-strings in `base.UncertaintyAndSensitivityAnalysis` ")
+    base.VERSION.changed("1.10.3", "Spell checking in `base.UncertaintyAndSensitivityAnalysis` ")
 
     def __init__(self, parameters: base.UserParameters) -> None:
         if parameters.uncertainty_sensitivity_analysis is None:

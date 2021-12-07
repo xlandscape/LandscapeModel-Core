@@ -17,6 +17,7 @@ class UserParameters:
     base.VERSION.changed("1.4.9", "`base.UserParameters` property names")
     base.VERSION.changed("1.5.3", "`base.UserParameters` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.UserParameters` ")
+    base.VERSION.changed("1.10.3", "Spell checking in `base.UserParameters` ")
 
     def __init__(self, xml_file: str) -> None:
         self._params = {}

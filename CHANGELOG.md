@@ -1,5 +1,20 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-11-29.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-12-07.
+
+## [1.10.3] - 2021-12-07
+
+### Added
+- Further consistency checks to `HydrologyFromTimeSeries` component
+
+### Changed
+- Spell checking in `README` 
+- Spell checking in `base.UserParameters` 
+- Spell checking in `base.UncertaintyAndSensitivityAnalysis` 
+- Spell checking in `base.documentation` 
+- Spell checking in `observer.ConsoleObserver` 
+
+### Fixed
+
 
 ## [1.10.2] - 2021-11-29
 
@@ -1200,7 +1215,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 ### Changed
 - init script recursive to run entire folders
-- `base.UncertaintyAndSensitivityAnalysis.create()` parameter generation possible in sub-directories
+- `base.UncertaintyAndSensitivityAnalysis.create()` parameter generation possible in subdirectories
 - `base.UncertaintyAndSensitivityAnalysis.create()` can process pre-defined lists
 
 ### Fixed

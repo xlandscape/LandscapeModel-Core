@@ -254,6 +254,7 @@ class LandscapeScenario(base.Component):
         """
         ogr_driver = ogr.GetDriverByName("ESRI Shapefile")
         ogr_data_set = ogr_driver.Open(file_name, 0)
+        assert ogr_data_set, f"Landscape scenario references a shapefile {file_name} which could not be found"
         ogr_layer = ogr_data_set.GetLayer()
         ogr_layer_spatial_reference = ogr_layer.GetSpatialRef()
         crs = ogr_layer_spatial_reference.ExportToWkt()

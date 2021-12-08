@@ -56,6 +56,7 @@ class LandscapeScenario(base.Component):
     base.VERSION.added("1.9.2", "`components.LandscapeScenario` output of base layer EPSG code")
     base.VERSION.changed("1.10.0", "`components.LandscapeScenario` reports global scale of metadata outputs")
     base.VERSION.changed("1.10.0", "`components.LandscapeScenario` gained semantics for element identifier attribute")
+    base.VERSION.changed("1.10.4", "Added additional consistency check to `components.LandscapeScenario` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-12-07.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-12-08.
+
+## [1.10.4] - 2021-12-08
+
+### Added
+
+### Changed
+- Added additional consistency check to `components.LandscapeScenario` 
+
+### Fixed
+
 
 ## [1.10.3] - 2021-12-07
 

@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-12-08.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-12-09.
+
+## [1.10.5] - 2021-12-09
+
+### Added
+- Handling of covered reaches to `components.DepositionToReach` 
+
+### Changed
+- Removed superfluous warning message from `stores.SqlLiteStore` 
+
+### Fixed
+
 
 ## [1.10.4] - 2021-12-08
 

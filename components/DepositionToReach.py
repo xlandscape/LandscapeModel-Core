@@ -42,6 +42,7 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.DepositionToReach` ")
     base.VERSION.changed("1.10.0", "`components.DepositionToReach` reports element names of `Deposition` output")
     base.VERSION.changed("1.10.0", "`components.DepositionToReach` switched to Google-style docstrings")
+    base.VERSION.added("1.10.5", "Handling of covered reaches to `components.DepositionToReach` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

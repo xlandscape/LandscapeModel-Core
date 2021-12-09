@@ -39,6 +39,7 @@ class SqlLiteStore(base.Store):
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.SqlLiteStore` ")
     base.VERSION.changed(
         "1.10.2", "Changed generation of index numbers in `stores.SqlLiteStore` to considerably reduce memory usage")
+    base.VERSION.changed("1.10.5", "Removed superfluous warning message from `stores.SqlLiteStore` ")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         """
@@ -221,7 +222,6 @@ class SqlLiteStore(base.Store):
         if scale_info is None:
             if len(stored_shape) == 1:
                 self._connection.execute(f"CREATE TABLE `{scale}` (i INTEGER, PRIMARY KEY (i){fk_string})")
-                self._observer.write_message(2, "Using unoptimized version; very memory-consuming")
                 for chunk in base.chunk_slices(stored_shape, (65536,)):
                     self._connection.executemany(
                         f"INSERT INTO `{scale}` VALUES (?)", [(i,) for i in range(chunk[0].start, chunk[0].stop)])

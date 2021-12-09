@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2021-12-08.
+It was automatically created on 2021-12-09.
 
 
 ## CsvReader
@@ -45,6 +45,8 @@ It was automatically created on 2021-12-08.
     Values have a unit of g/ha.
     Reaches: The identifiers of individual reaches. A NumPy array of scale space/reach. Values have no unit.
     Mapping: Maps base geometries to reaches. A list[int] of scale space/base_geometry. Values have no unit.
+    SprayDriftCoverage: The fraction of a reach surface that is not exposed to spray drift. A list[float] of scale
+    space/reach. Values have no unit. Currently, only values of 0 and 1 are supported.
 
     OUTPUTS
     Deposition: The substance deposited at the water surface for reaches. A NumPy array of scales time/day, space/reach.

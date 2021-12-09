@@ -221,7 +221,6 @@ class SqlLiteStore(base.Store):
         if scale_info is None:
             if len(stored_shape) == 1:
                 self._connection.execute(f"CREATE TABLE `{scale}` (i INTEGER, PRIMARY KEY (i){fk_string})")
-                self._observer.write_message(2, "Using unoptimized version; very memory-consuming")
                 for chunk in base.chunk_slices(stored_shape, (65536,)):
                     self._connection.executemany(
                         f"INSERT INTO `{scale}` VALUES (?)", [(i,) for i in range(chunk[0].start, chunk[0].stop)])

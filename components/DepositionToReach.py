@@ -16,6 +16,8 @@ class DepositionToReach(base.Component):
     Values have a unit of g/ha.
     Reaches: The identifiers of individual reaches. A NumPy array of scale space/reach. Values have no unit.
     Mapping: Maps base geometries to reaches. A list[int] of scale space/base_geometry. Values have no unit.
+    SprayDriftCoverage: The fraction of a reach surface that is not exposed to spray drift. A list[float] of scale
+    space/reach. Values have no unit. Currently, only values of 0 and 1 are supported.
 
     OUTPUTS
     Deposition: The substance deposited at the water surface for reaches. A NumPy array of scales time/day, space/reach.
@@ -70,6 +72,16 @@ class DepositionToReach(base.Component):
                 "Mapping",
                 (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
                 self.default_observer
+            ),
+            base.Input(
+                "SprayDriftCoverage",
+                (
+                    attrib.Class(list[float], 1),
+                    attrib.Unit(None, 1),
+                    attrib.Scales("space/reach", 1),
+                    attrib.InList((0, 1))
+                ),
+                self.default_observer
             )
         ])
         self._outputs = base.OutputContainer(self, (base.Output("Deposition", default_store, self),))
@@ -83,7 +95,20 @@ class DepositionToReach(base.Component):
         reaches = self.inputs["Reaches"].read()
         mapping = self.inputs["Mapping"].read().values
         data_set_info = self.inputs["Deposition"].describe()
-        # noinspection SpellCheckingInspection
+        if self.inputs["SprayDriftCoverage"].has_provider:
+            try:
+                coverage = self.inputs["SprayDriftCoverage"].read().values
+            except KeyError:
+                self.default_observer.write_message(
+                    2,
+                    "Scenario does not contain information about spray-drift coverage; assuming no coverage for all "
+                    "reaches"
+                )
+                coverage = [0.] * self.inputs["Reaches"].describe()["shape"][0]
+        else:
+            self.default_observer.write_message(
+                2, "Spray-drift coverage of reaches not provided; assuming no coverage for all reaches")
+            coverage = [0.] * self.inputs["Reaches"].describe()["shape"][0]
         self.outputs["Deposition"].set_values(
             np.ndarray,
             shape=(data_set_info["shape"][0], reaches.values.shape[0]),
@@ -95,11 +120,11 @@ class DepositionToReach(base.Component):
         )
         for i, reachId in enumerate(reaches.values):
             reach_indexes = np.where(mapping == reachId)[0]
-            if len(reach_indexes) == 1:
+            if len(reach_indexes) == 1 and coverage[i] == 0:
                 reach_index = int(reach_indexes)
                 deposition = self.inputs["Deposition"].read(
                     slices=(slice(data_set_info["shape"][0]), reach_index)).values
-                self.outputs["Deposition"].set_values(deposition, slices=(slice(data_set_info["shape"][0]), i),
-                                                      create=False)
-            else:
-                self.default_observer.write_message(2, f"Could not map reach #{reachId}")
+                self.outputs["Deposition"].set_values(
+                    deposition, slices=(slice(data_set_info["shape"][0]), i), create=False)
+            elif coverage[i] != 1:
+                self.default_observer.write_message(2, f"Could not map reach #{reachId}; no deposition placed")

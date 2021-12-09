@@ -39,6 +39,7 @@ class SqlLiteStore(base.Store):
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.SqlLiteStore` ")
     base.VERSION.changed(
         "1.10.2", "Changed generation of index numbers in `stores.SqlLiteStore` to considerably reduce memory usage")
+    base.VERSION.changed("1.10.5", "Removed superfluous warning message from `stores.SqlLiteStore` ")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         """

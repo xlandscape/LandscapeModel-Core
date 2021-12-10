@@ -102,6 +102,11 @@ class MarsWeather(base.Component):
                 idx = data[0].index(component_output.name)
                 output_data = np.array([float(r[idx]) for r in filtered_data], dtype=np.float32)
                 output = self.outputs[component_output.name]
-                output.set_values(output_data, scales="time/day", unit=self._units[component_output.name])
+                output.set_values(
+                    output_data,
+                    scales="time/day",
+                    unit=self._units[component_output.name],
+                    offset=(first_date,)
+                )
             else:
                 self.default_observer.write_message(2, f"Weather file does not contain field {component_output.name}")

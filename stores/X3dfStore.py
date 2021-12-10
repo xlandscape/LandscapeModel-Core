@@ -90,6 +90,25 @@ class X3dfStore(base.Store):
             shutil.copyfile(selected_source_run, hdf5_file)
         self._f = h5py.File(hdf5_file, mode)
         self._observer = observer
+        self._known_scales = {
+            "global": "plain",
+            "space/base_geometry": "named",
+            "space/extent": "plain",
+            "space/reach": "named",
+            "space/reach2": "named",
+            "space/x_5dm": "offset",
+            "space/y_5dm": "offset",
+            "time/day": "offset",
+            "time/day_of_year": "plain",
+            "time/hour": "offset",
+            "time/year": "offset",
+            "other/application": "plain",
+            "other/crop": "named",
+            "other/factor": "named",
+            "other/runs": "plain",
+            "other/soil_horizon": "plain",
+            "other/species": "named"
+        }
 
     def close(self) -> None:
         """
@@ -112,18 +131,34 @@ class X3dfStore(base.Store):
         """
         data_set = self._f[name]
         element_names = []
+        offsets = []
+        scales = data_set.attrs.get("scales", ("global",))
         for dim in range(len(data_set.shape)):
             element_names.append(None)
             element_names_attribute = f"dim{dim}_element_names"
             if element_names_attribute in data_set.attrs:
                 element_names[dim] = base.Output(self._f[data_set.attrs[element_names_attribute]].name, self)
+            offsets.append(None)
+            offset_attribute = f"dim{dim}_offset"
+            if offset_attribute in data_set.attrs:
+                if scales[dim] == "time/hour":
+                    offsets[dim] = datetime.datetime.strptime(
+                        data_set.attrs[offset_attribute], "%Y-%m-%d %H:%M:%S")
+                elif scales[dim] == "time/day":
+                    offsets[dim] = datetime.datetime.strptime(
+                        data_set.attrs[offset_attribute], "%Y-%m-%d").date()
+                else:
+                    offsets[dim] = data_set.attrs[offset_attribute]
+                    if scales[dim] != "time/year":
+                        self._observer.write_message(2, f"Unimplemented description for offset scale {scales[dim]}")
         return {
             "shape": data_set.shape,
             "data_type": data_set.dtype,
             "chunks": data_set.chunks,
             "unit": data_set.attrs.get("unit", None),
-            "scales": ", ".join(data_set.attrs.get("scales", ("global",))),
-            "element_names": element_names
+            "scales": ", ".join(scales),
+            "element_names": element_names,
+            "offsets": offsets
         }
 
     def get_values(self, name: str, **keywords) -> typing.Any:
@@ -193,7 +228,8 @@ class X3dfStore(base.Store):
             create: bool = True,
             slices: typing.Optional[typing.Sequence[slice]] = None,
             calculate_max: bool = False,
-            element_names: typing.Optional[typing.Union[list[str], list[base.Output]]] = None
+            element_names: typing.Optional[typing.Union[list[str], list[base.Output]]] = None,
+            offset: typing.Optional[list] = None
     ) -> None:
         """
         Stores a data set in the store.
@@ -212,6 +248,7 @@ class X3dfStore(base.Store):
             slices: Defines the portion of the data set that was passed to the function.
             calculate_max: Specifies whether the data set should keep track of the maximum value.
             element_names: Specifies datasets by name that contain the identifiers of named elements per scale.
+            offset: Specifies the origin of an axis along the consecutive elements of a scale.
 
         Returns:
             Nothing.
@@ -323,14 +360,8 @@ class X3dfStore(base.Store):
                     self._observer.store_set_values(2, "X3dfStore", f"Scales and dimensionality of {name} do not fit")
                 self._f[name].attrs["scales"] = scales_list
                 for dim, scale in enumerate(scales_list):
-                    if scale in (
-                            "other/species",
-                            "space/base_geometry",
-                            "space/reach",
-                            "space/reach2",
-                            "other/factor",
-                            "other/crop"
-                    ):
+                    element_description = self._known_scales.get(scale)
+                    if element_description == "named":
                         if element_names is None or element_names[dim] is None:
                             self._observer.store_set_values(
                                 2, "X3dfStore", f"{name} did not specify element names for {scale}")
@@ -341,19 +372,21 @@ class X3dfStore(base.Store):
                                     "X3dfStore",
                                     f"Number of names in {element_names} and elements in {name} do not fit"
                                 )
-                    elif scale in (
-                            "space/extent",
-                            "time/day",
-                            "time/hour",
-                            "other/application",
-                            "time/year",
-                            "other/runs",
-                            "time/day_of_year",
-                            "space/x_5dm",
-                            "space/y_5dm",
-                            "global",
-                            "other/soil_horizon"
-                    ) or (scale.startswith("space_x/") or scale.startswith("space_y/")) and scale.endswith("sqm"):
+                        if offset is not None and offset[dim] is not None:
+                            self._observer.store_set_values(
+                                3, "X3dfStore", f"Offset provided for {scale} that does not require an offset")
+                    elif element_description == "plain":
+                        if element_names is not None and element_names[dim] is not None:
+                            self._observer.store_set_values(
+                                3, "X3dfStore", f"Names provided for {scale} that does not require named elements")
+                        if offset is not None and offset[dim] is not None:
+                            self._observer.store_set_values(
+                                3, "X3dfStore", f"Offset provided for {scale} that does not require an offset")
+                    elif element_description == "offset" or (
+                            scale.startswith("space_x/") or scale.startswith("space_y/")) and scale.endswith("sqm"):
+                        if offset is None or offset[dim] is None:
+                            self._observer.store_set_values(
+                                2, "X3dfStore", f"{name} did not specify an offset for {scale}")
                         if element_names is not None and element_names[dim] is not None:
                             self._observer.store_set_values(
                                 3, "X3dfStore", f"Names provided for {scale} that does not require named elements")
@@ -361,6 +394,12 @@ class X3dfStore(base.Store):
                         self._observer.store_set_values(2, "X3dfStore", f"Unknown scale: {scale}")
                     if element_names is not None and element_names[dim] is not None:
                         self._f[name].attrs[f"dim{dim}_element_names"] = self._f[element_names[dim]].ref
+                    if offset is not None and offset[dim] is not None:
+                        if scale in ("time/day", "time/hour"):
+                            stored_offset = str(offset[dim])
+                        else:
+                            stored_offset = offset[dim]
+                        self._f[name].attrs[f"dim{dim}_offset"] = stored_offset
         if unit is not None:
             self._f[name].attrs["unit"] = unit
         return

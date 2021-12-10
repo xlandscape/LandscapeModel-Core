@@ -129,7 +129,8 @@ class HydrologyFromTimeSeries(base.Component):
         number_hours = int(((to_time - from_time).days + 1) * 24)
         time_series_start = datetime.datetime.strptime(h5["time_from"][0].decode("ascii"), "%Y-%m-%dT%H:%M")
         time_series_end = datetime.datetime.strptime(h5["time_to"][0].decode("ascii"), "%Y-%m-%dT%H:%M")
-        offset_hours = int((datetime.datetime.combine(from_time, datetime.time(1)) - time_series_start).days * 24)
+        offset_time = datetime.datetime.combine(from_time, datetime.time(1))
+        offset_hours = int((offset_time - time_series_start).days * 24)
         time_series_length = int((time_series_end - time_series_start).total_seconds() / 3600) + 1
         if time_series_length != flow.shape[0] or time_series_length != depth.shape[0] or \
                 time_series_length != volume.shape[0] or time_series_length != area.shape[0]:
@@ -153,7 +154,8 @@ class HydrologyFromTimeSeries(base.Component):
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
             unit="m³/d",
-            element_names=(None, self.outputs["Reaches"])
+            element_names=(None, self.outputs["Reaches"]),
+            offset=(offset_time, None)
         )
         self.outputs["Depth"].set_values(
             np.ndarray,
@@ -162,7 +164,8 @@ class HydrologyFromTimeSeries(base.Component):
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
             unit="m",
-            element_names=(None, self.outputs["Reaches"])
+            element_names=(None, self.outputs["Reaches"]),
+            offset=(offset_time, None)
         )
         self.outputs["Volume"].set_values(
             np.ndarray,
@@ -171,7 +174,8 @@ class HydrologyFromTimeSeries(base.Component):
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
             unit="m³",
-            element_names=(None, self.outputs["Reaches"])
+            element_names=(None, self.outputs["Reaches"]),
+            offset=(offset_time, None)
         )
         self.outputs["Area"].set_values(
             np.ndarray,
@@ -180,7 +184,8 @@ class HydrologyFromTimeSeries(base.Component):
             chunks=(number_hours, 1),
             scales="time/hour, space/reach",
             unit="m²",
-            element_names=(None, self.outputs["Reaches"])
+            element_names=(None, self.outputs["Reaches"]),
+            offset=(offset_time, None)
         )
         for i in range(number_reaches):
             self.outputs["Flow"].set_values(flow[(slice(offset_hours, offset_hours + number_hours, 1), i)],
@@ -206,7 +211,8 @@ class HydrologyFromTimeSeries(base.Component):
                 chunks=(number_hours, 1),
                 scales="time/hour, space/reach2",
                 unit="m³/d",
-                element_names=(None, self.outputs["InflowReaches"])
+                element_names=(None, self.outputs["InflowReaches"]),
+                offset=(offset_time, None)
             )
             for reach_index, inflow_file in enumerate(inflow_files):
                 self.default_observer.write_message(5, f"Importing reach inflows from {inflow_file}...")

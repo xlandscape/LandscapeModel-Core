@@ -40,6 +40,7 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.MarsWeather` with base class")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.MarsWeather` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.MarsWeather` ")
+    base.VERSION.changed("1.11.0", "`components.MarsWeather` specifies offsets of outputs")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -102,6 +103,11 @@ class MarsWeather(base.Component):
                 idx = data[0].index(component_output.name)
                 output_data = np.array([float(r[idx]) for r in filtered_data], dtype=np.float32)
                 output = self.outputs[component_output.name]
-                output.set_values(output_data, scales="time/day", unit=self._units[component_output.name])
+                output.set_values(
+                    output_data,
+                    scales="time/day",
+                    unit=self._units[component_output.name],
+                    offset=(first_date,)
+                )
             else:
                 self.default_observer.write_message(2, f"Weather file does not contain field {component_output.name}")

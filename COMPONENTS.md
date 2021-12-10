@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2021-12-09.
+It was automatically created on 2021-12-10.
 
 
 ## CsvReader
@@ -47,6 +47,10 @@ It was automatically created on 2021-12-09.
     Mapping: Maps base geometries to reaches. A list[int] of scale space/base_geometry. Values have no unit.
     SprayDriftCoverage: The fraction of a reach surface that is not exposed to spray drift. A list[float] of scale
     space/reach. Values have no unit. Currently, only values of 0 and 1 are supported.
+    DepositionInputSource: Specifies from what source the deposition input is retrieved. A string of global scale.
+    Allowed values are 'DepositionInput' and 'DepositionInputFile' which refer to the inputs of same names.
+    DepositionInputFile: The path to a CSV file containing predefined depositions in g/ha per reach and day. A string
+    of global scale.
 
     OUTPUTS
     Deposition: The substance deposited at the water surface for reaches. A NumPy array of scales time/day, space/reach.

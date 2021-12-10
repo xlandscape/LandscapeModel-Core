@@ -5,6 +5,7 @@ import numpy as np
 import base
 import attrib
 import typing
+import datetime
 
 
 class DepositionToReach(base.Component):
@@ -18,6 +19,10 @@ class DepositionToReach(base.Component):
     Mapping: Maps base geometries to reaches. A list[int] of scale space/base_geometry. Values have no unit.
     SprayDriftCoverage: The fraction of a reach surface that is not exposed to spray drift. A list[float] of scale
     space/reach. Values have no unit. Currently, only values of 0 and 1 are supported.
+    DepositionInputSource: Specifies from what source the deposition input is retrieved. A string of global scale.
+    Allowed values are 'DepositionInput' and 'DepositionInputFile' which refer to the inputs of same names.
+    DepositionInputFile: The path to a CSV file containing predefined depositions in g/ha per reach and day. A string
+    of global scale.
 
     OUTPUTS
     Deposition: The substance deposited at the water surface for reaches. A NumPy array of scales time/day, space/reach.
@@ -43,6 +48,7 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.10.0", "`components.DepositionToReach` reports element names of `Deposition` output")
     base.VERSION.changed("1.10.0", "`components.DepositionToReach` switched to Google-style docstrings")
     base.VERSION.added("1.10.5", "Handling of covered reaches to `components.DepositionToReach` ")
+    base.VERSION.changed("1.11.0", "`components.DepositionToReach` allows predefining deposition in a CSV file")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -77,13 +83,19 @@ class DepositionToReach(base.Component):
             base.Input(
                 "SprayDriftCoverage",
                 (
-                    attrib.Class(list[float], 1),
-                    attrib.Unit(None, 1),
-                    attrib.Scales("space/reach", 1),
+                    attrib.Class(list[float]),
+                    attrib.Unit("1"),
+                    attrib.Scales("space/base_geometry"),
                     attrib.InList((0, 1))
                 ),
                 self.default_observer
-            )
+            ),
+            base.Input(
+                "DepositionInputSource",
+                (attrib.Unit(None), attrib.Scales("global"), attrib.InList(("DepositionInput", "DepositionInputFile"))),
+                self.default_observer
+            ),
+            base.Input("DepositionInputFile", (attrib.Unit(None), attrib.Scales("global")), self.default_observer)
         ])
         self._outputs = base.OutputContainer(self, (base.Output("Deposition", default_store, self),))
 
@@ -117,15 +129,43 @@ class DepositionToReach(base.Component):
             chunks=(data_set_info["shape"][0], 1),
             scales="time/day, space/reach",
             unit=data_set_info["unit"],
-            element_names=(None, reaches.element_names[0])
+            element_names=(None, reaches.element_names[0]),
+            offset=(data_set_info["offsets"])
         )
-        for i, reachId in enumerate(reaches.values):
-            reach_indexes = np.where(mapping == reachId)[0]
-            if len(reach_indexes) == 1 and coverage[i] == 0:
-                reach_index = int(reach_indexes)
-                deposition = self.inputs["Deposition"].read(
-                    slices=(slice(data_set_info["shape"][0]), reach_index)).values
-                self.outputs["Deposition"].set_values(
-                    deposition, slices=(slice(data_set_info["shape"][0]), i), create=False)
-            elif coverage[i] != 1:
-                self.default_observer.write_message(2, f"Could not map reach #{reachId}; no deposition placed")
+        deposition_input_source = self.inputs["DepositionInputSource"].read().values
+        deposition_input_file = self.inputs["DepositionInputFile"].read().values
+        if deposition_input_source == "DepositionInput":
+            if deposition_input_file:
+                self.default_observer.write_message(
+                    2,
+                    "Deposition configured to be taken from input, but deposition file specified; file will be ignored"
+                )
+            for i, reachId in enumerate(reaches.values):
+                reach_indexes = np.where(mapping == reachId)[0]
+                if len(reach_indexes) == 1 and coverage[i] == 0:
+                    reach_index = int(reach_indexes)
+                    deposition = self.inputs["Deposition"].read(
+                        slices=(slice(data_set_info["shape"][0]), reach_index)).values
+                    self.outputs["Deposition"].set_values(
+                        deposition, slices=(slice(data_set_info["shape"][0]), i), create=False)
+                elif coverage[i] != 1:
+                    self.default_observer.write_message(2, f"Could not map reach #{reachId}; no deposition placed")
+        elif deposition_input_source == "DepositionInputFile":
+            self.default_observer.write_message(
+                2, "Input file configured as deposition source; values provided by deposition input are ignored")
+            with open(deposition_input_file) as f:
+                f.readline()
+                for line in f:
+                    data = line[:-1].split(",")
+                    time_index = (
+                            datetime.datetime.strptime(data[0], "%Y-%m-%d").date() - data_set_info["offsets"][0]).days
+                    reach_indexes = np.where(reaches.values == np.array(int(data[1])))[0]
+                    if len(reach_indexes) == 1:
+                        reach_index = int(reach_indexes)
+                        self.outputs["Deposition"].set_values(
+                            np.array(float(data[2])), slices=(time_index, reach_index), create=False)
+                    else:
+                        self.default_observer.write_message(
+                            2, f"Could not map reach #{reach_index}; no deposition placed")
+        else:
+            raise ValueError(f"Unknown deposition source: {deposition_input_source}")

@@ -55,6 +55,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.X3dfStore` ")
     base.VERSION.changed("1.10.0", "`stores.X3dfStore` now manages element names for some scales")
     base.VERSION.changed("1.10.1", "`stores.X3dfStore` recognizes additional scales")
+    base.VERSION.changed("1.11.0", "`stores.X3dfStore` manages storage of offsets")
 
     def __init__(
             self,

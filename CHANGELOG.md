@@ -1,5 +1,18 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-12-09.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-12-10.
+
+## [1.11] - 2021-12-10
+
+### Added
+
+### Changed
+- `components.DepositionToReach` allows predefining deposition in a CSV file
+- `stores.X3dfStore` manages storage of offsets
+- `components.HydrologyFromTimeSeries` specifies offsets of outputs
+- `components.MarsWeather` specifies offsets of outputs
+
+### Fixed
+
 
 ## [1.10.5] - 2021-12-09
 

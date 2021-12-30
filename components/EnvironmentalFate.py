@@ -32,18 +32,20 @@ class EnvironmentalFate(base.Component):
     base.VERSION.changed("1.4.14", "added semantic descriptions to `EnvironmentalFate` component")
     base.VERSION.added("1.7.0", "Type hints to `components.EnvironmentalFate` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.EnvironmentalFate` with base class")
+    base.VERSION.changed("1.12.0", "`components.EnvironmentalFate` output scale order")
+    base.VERSION.changed("1.12.0", "`components.EnvironmentalFate` reports offset")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(EnvironmentalFate, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, (
             base.Input(
                 "SprayDriftExposure",
-                (attrib.Class(np.ndarray), attrib.Scales("time/day, space_x/1sqm, space_y/1sqm"), attrib.Unit("g/ha")),
+                (attrib.Class(np.ndarray), attrib.Scales("space_y/1sqm, space_x/1sqm, time/day"), attrib.Unit("g/ha")),
                 self.default_observer
             ),
             base.Input(
                 "RunOffExposure",
-                (attrib.Class(np.ndarray), attrib.Scales("time/day, space_x/1sqm, space_y/1sqm"), attrib.Unit("g/ha")),
+                (attrib.Class(np.ndarray), attrib.Scales("space_y/1sqm, space_x/1sqm, time/day"), attrib.Unit("g/ha")),
                 self.default_observer),
             base.Input(
                 "SoilDT50", (attrib.Class(float), attrib.Scales("global"), attrib.Unit("d")), self.default_observer)
@@ -66,17 +68,15 @@ class EnvironmentalFate(base.Component):
             np.ndarray,
             shape=data_set_info["shape"],
             data_type=data_set_info["data_type"],
-            chunks=base.chunk_size(
-                (1, None, None),
-                (data_set_info["shape"][0], data_set_info["shape"][1], data_set_info["shape"][2])
-            ),
-            scales="time/day, space_x/1sqm, space_y/1sqm",
-            unit="g/ha"
+            chunks=base.chunk_size((None, None, 1), data_set_info["shape"]),
+            scales="space_y/1sqm, space_x/1sqm, time/day",
+            unit="g/ha",
+            offset=data_set_info["offsets"]
         )
         pec_current_day = np.zeros(
-            (1, data_set_info["shape"][1], data_set_info["shape"][2]), data_set_info["data_type"])
-        for t in range(data_set_info["shape"][0]):
-            current_slice = (slice(t, t + 1), slice(0, data_set_info["shape"][1]), slice(0, data_set_info["shape"][2]))
+            (data_set_info["shape"][0], data_set_info["shape"][1], 1), data_set_info["data_type"])
+        for t in range(data_set_info["shape"][2]):
+            current_slice = (slice(0, data_set_info["shape"][0]), slice(0, data_set_info["shape"][1]), slice(t, t + 1))
             pec_current_day *= math.exp(-math.log(2) / soil_dt50)
             for exposureInput in enabled_exposure_inputs:
                 pec_current_day += exposureInput.read(slices=current_slice).values

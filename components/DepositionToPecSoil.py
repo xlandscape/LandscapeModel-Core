@@ -34,6 +34,8 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.added("1.7.0", "Type hints to `components.DepositionToPecSoil` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DepositionToPecSoil` with base class")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.DepositionToPecSoil` ")
+    base.VERSION.changed("1.12.0", "`components.DepositionToPecSoil` output scale order")
+    base.VERSION.changed("1.12.0", "`components.DepositionToPecSoil` reports offset")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -70,7 +72,8 @@ class DepositionToPecSoil(base.Component):
             chunks=data_set_info["chunks"],
             shape=data_set_info["shape"],
             data_type=data_set_info["data_type"],
-            scales="time/day, space_x/1sqm, space_y/1sqm"
+            scales="space_y/1sqm, space_x/1sqm, time/day",
+            offset=data_set_info["offsets"]
         )
         for chunkSlice in chunk_slices:
             deposition = self.inputs["Deposition"].read(slices=chunkSlice).values

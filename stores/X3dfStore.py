@@ -56,6 +56,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.10.0", "`stores.X3dfStore` now manages element names for some scales")
     base.VERSION.changed("1.10.1", "`stores.X3dfStore` recognizes additional scales")
     base.VERSION.changed("1.11.0", "`stores.X3dfStore` manages storage of offsets")
+    base.VERSION.changed("1.12.0", "`stores.X3dfStore` recognizes squaremeter scales for offset description")
 
     def __init__(
             self,
@@ -150,7 +151,8 @@ class X3dfStore(base.Store):
                         data_set.attrs[offset_attribute], "%Y-%m-%d").date()
                 else:
                     offsets[dim] = data_set.attrs[offset_attribute]
-                    if scales[dim] != "time/year":
+                    if scales[dim] != "time/year" and not scales[dim].startswith(
+                            "space_") and not scales[dim].endswith("sqm"):
                         self._observer.write_message(2, f"Unimplemented description for offset scale {scales[dim]}")
         return {
             "shape": data_set.shape,

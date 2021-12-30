@@ -56,6 +56,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.10.0", "`stores.X3dfStore` now manages element names for some scales")
     base.VERSION.changed("1.10.1", "`stores.X3dfStore` recognizes additional scales")
     base.VERSION.changed("1.11.0", "`stores.X3dfStore` manages storage of offsets")
+    base.VERSION.changed("1.12.0", "`stores.X3dfStore` recognizes squaremeter scales for offset description")
 
     def __init__(
             self,

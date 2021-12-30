@@ -1,5 +1,21 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-12-10.
+This is the changelog for the Landscape Model core. It was automatically created on 2021-12-30.
+
+## [1.12] - 2021-12-30
+
+### Added
+
+### Changed
+- `components.DepositionToPecSoil` output scale order
+- `components.DepositionToPecSoil` reports offset
+- `components.EnvironmentalFate` output scale order
+- `components.EnvironmentalFate` reports offset
+- `stores.X3dfStore` recognizes squaremeter scales for offset description
+- `components.LandscapeScenario` output scale order
+- `components.LandscapeScenario` reports offset
+
+### Fixed
+
 
 ## [1.11] - 2021-12-10
 

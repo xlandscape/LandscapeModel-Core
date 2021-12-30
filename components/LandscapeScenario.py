@@ -57,6 +57,8 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.10.0", "`components.LandscapeScenario` reports global scale of metadata outputs")
     base.VERSION.changed("1.10.0", "`components.LandscapeScenario` gained semantics for element identifier attribute")
     base.VERSION.changed("1.10.4", "Added additional consistency check to `components.LandscapeScenario` ")
+    base.VERSION.changed("1.12.0", "`components.LandscapeScenario` output scale order")
+    base.VERSION.changed("1.12.0", "`components.LandscapeScenario` reports offset")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

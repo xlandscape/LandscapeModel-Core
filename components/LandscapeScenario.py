@@ -189,20 +189,21 @@ class LandscapeScenario(base.Component):
                 dataset_name = f"{entry.tag}_values"
                 self.outputs[dataset_name].set_values(
                     np.ndarray,
-                    shape=(r.RasterXSize, r.RasterYSize),
+                    shape=(r.RasterYSize, r.RasterXSize),
                     data_type=np.int,
-                    chunks=(min(block_size_x, r.RasterXSize), min(block_size_y, r.RasterYSize)),
-                    scales=f"space_x/{cell_area}sqm, space_y/{cell_area}sqm"
+                    chunks=(min(block_size_y, r.RasterYSize), min(block_size_x, r.RasterXSize)),
+                    scales=f"space_y/{cell_area}sqm, space_x/{cell_area}sqm",
+                    offset=(raster_extent[2], raster_extent[0])
                 )
                 for y_offset in range(0, r.RasterYSize, block_size_y):
                     number_rows = block_size_y if y_offset + block_size_y < r.RasterYSize else r.RasterYSize - y_offset
                     for x_offset in range(0, r.RasterXSize, block_size_x):
                         number_cols = \
                             block_size_x if x_offset + block_size_x < r.RasterXSize else r.RasterXSize - x_offset
-                        data = np.transpose(raster_band.ReadAsArray(x_offset, y_offset, number_cols, number_rows))
+                        data = raster_band.ReadAsArray(x_offset, y_offset, number_cols, number_rows)
                         self.outputs[dataset_name].set_values(
                             data,
-                            slices=(slice(x_offset, x_offset + number_cols), slice(y_offset, y_offset + number_rows)),
+                            slices=(slice(y_offset, y_offset + number_rows), slice(x_offset, x_offset + number_cols)),
                             create=False
                         )
             elif entry.text[-4:] == ".shp":

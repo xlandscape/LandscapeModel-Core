@@ -70,7 +70,8 @@ class DepositionToPecSoil(base.Component):
             chunks=data_set_info["chunks"],
             shape=data_set_info["shape"],
             data_type=data_set_info["data_type"],
-            scales="time/day, space_x/1sqm, space_y/1sqm"
+            scales="space_y/1sqm, space_x/1sqm, time/day",
+            offset=data_set_info["offsets"]
         )
         for chunkSlice in chunk_slices:
             deposition = self.inputs["Deposition"].read(slices=chunkSlice).values

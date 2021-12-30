@@ -150,7 +150,8 @@ class X3dfStore(base.Store):
                         data_set.attrs[offset_attribute], "%Y-%m-%d").date()
                 else:
                     offsets[dim] = data_set.attrs[offset_attribute]
-                    if scales[dim] != "time/year":
+                    if scales[dim] != "time/year" and not scales[dim].startswith(
+                            "space_") and not scales[dim].endswith("sqm"):
                         self._observer.write_message(2, f"Unimplemented description for offset scale {scales[dim]}")
         return {
             "shape": data_set.shape,

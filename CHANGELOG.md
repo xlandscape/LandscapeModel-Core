@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2021-12-30.
+This is the changelog for the Landscape Model core. It was automatically created on 2022-01-04.
+
+## [1.12.1] - 2022-01-04
+
+### Added
+
+### Changed
+- Extended CONTRIBUTING.md in `base.documentation` 
+
+### Fixed
+
 
 ## [1.12] - 2021-12-30
 

@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.12.2", "2022-01-04"),
     base.VersionInfo("1.12.1", "2022-01-04"),
     base.VersionInfo("1.12.0", "2021-12-30"),
     base.VersionInfo("1.11.0", "2021-12-10"),
@@ -151,6 +152,7 @@ VERSION.changed("1.9.0", "Switched to Google docstring style in `init.py` ")
 
 # CHANGELOG document.py
 VERSION.added("1.4.9", "`document.py` ")
+VERSION.added("1.12.2", "Automatic creation of CONTRIBUTING.md in `document.py` ")
 
 # CHANGELOG runtime environment
 VERSION.changed("1.6.0", "updated runtime environment to Python 3.9.7")

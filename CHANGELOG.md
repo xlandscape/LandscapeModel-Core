@@ -1,6 +1,18 @@
 # Changelog
 This is the changelog for the Landscape Model core. It was automatically created on 2022-01-04.
 
+## [1.12.2] - 2022-01-04
+
+### Added
+- Automatic creation of CONTRIBUTING.md in `document.py` 
+
+### Changed
+- Fixed typos in `stores.X3dfStore` documentation
+
+### Fixed
+- Typos in `base.documentation` 
+
+
 ## [1.12.1] - 2022-01-04
 
 ### Added
@@ -20,7 +32,7 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `components.DepositionToPecSoil` reports offset
 - `components.EnvironmentalFate` output scale order
 - `components.EnvironmentalFate` reports offset
-- `stores.X3dfStore` recognizes squaremeter scales for offset description
+- `stores.X3dfStore` recognizes square-meter scales for offset description
 - `components.LandscapeScenario` output scale order
 - `components.LandscapeScenario` reports offset
 

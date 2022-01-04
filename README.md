@@ -444,9 +444,9 @@ input XML elements. Currently, there are three aspects that can be specified, wh
    * With `type="bool"` and a _Value_ of `true` (case-insensitive), the component receives a value of `True` and, in all
      other cases, a value of `False`.
    * If `type="date"`, the _Value_ must be given in the format `"%Y-%m-%d"` ("4 digit Year-2 digit month-2 digit day", 
-     e.g., "2021-11-24"). It is then parsed as a Python `datetime.date` and provided as such as input value.
+     e.g., "2022-11-24"). It is then parsed as a Python `datetime.date` and provided as such as input value.
    * If `type="datetime"`, the _Value_ must be given in the format `"%Y-%m-%d %H:%M"` ("4 digit Year-2 digit month-2 
-     digit day<space>2 digit hour:2 digit minute", e.g., "2021-11-24 10:21"). It is then parsed as a Python 
+     digit day<space>2 digit hour:2 digit minute", e.g., "2022-11-24 10:21"). It is then parsed as a Python 
      `datetime.datetime` and provided as such as input value.
    * If `type="float"`, the _Value_ is parsed a Python `float` (no localization considered) and passed as such.
    * If `type="int"`, the _Value_ is parsed a Python `nt` (no localization considered) and passed as such.

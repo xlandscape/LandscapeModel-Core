@@ -40,6 +40,7 @@ base.VERSION.added(
     "1.9.1", "Arguments to `documentation.document_variant` to specify variant name and endpoint flexibly")
 base.VERSION.changed("1.10.3", "Spell checking in `base.documentation` ")
 base.VERSION.changed("1.12.1", "Extended CONTRIBUTING.md in `base.documentation` ")
+base.VERSION.fixed("1.12.2", "Typos in `base.documentation` ")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -331,8 +332,8 @@ checklist when submitting an issue.
    repository, please use the top level repository of the according model variant, e.g., xAquaticRisk or 
    xOffFieldSoilRisk.
 3. Give the issue a strong, self-explanatory title.
-4. Provide any information in the issue's description that is needed understand the purpose of the issue and allows to
-   work on it. This includes a rationale, excerpts of log files, screenshots etc. Be concise.
+4. Provide any information in the issue's description that is needed to understand the purpose of the issue and allows
+   working on it. This includes a rationale, excerpts of log files, screenshots etc. Be concise.
 5. If you are going to work on the issue yourself, assign the issue to you. In any other case, assign the issue to the
    repository owner.
 6. Assign one of the following labels to the issue: `bug` if the issue is related to exceptions or erroneous runtime
@@ -368,8 +369,8 @@ please adhere to the following steps:
 7. Test your code extensively!
 8. If your code works satisfyingly, push your local feature branch to the GitLab repository.
 9. Create then a merge request for your pushed branch (= source branch) into the master branch.
-10. Your changes will be reviewed by the owner of the repository and the merge will be performed or you may be asked for
-    additional modifications of your code. 
+10. Your changes will be reviewed by the owner of the repository and the merge will be performed, or you may be asked
+    for additional modifications of your code. 
 """)
 
 

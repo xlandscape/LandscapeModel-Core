@@ -15,3 +15,4 @@ base.documentation.write_changelog("Landscape Model core", base.VERSION, os.path
 base.documentation.document_components(components, os.path.join(root_folder, "COMPONENTS.md"))
 base.documentation.document_observers(observer, os.path.join(root_folder, "OBSERVER.md"))
 base.documentation.document_stores(stores, os.path.join(root_folder, "STORES.md"))
+base.documentation.write_contribution_notes(os.path.join(root_folder, "CONTRIBUTING.md"))

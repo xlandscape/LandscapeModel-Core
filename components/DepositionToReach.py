@@ -1,6 +1,8 @@
 """
 Class definition of the DepositionToReach Landscape Model component.
 """
+import os.path
+
 import numpy as np
 import base
 import attrib
@@ -135,7 +137,7 @@ class DepositionToReach(base.Component):
         deposition_input_source = self.inputs["DepositionInputSource"].read().values
         deposition_input_file = self.inputs["DepositionInputFile"].read().values
         if deposition_input_source == "DepositionInput":
-            if deposition_input_file:
+            if os.path.isfile(deposition_input_file):
                 self.default_observer.write_message(
                     2,
                     "Deposition configured to be taken from input, but deposition file specified; file will be ignored"

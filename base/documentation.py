@@ -369,7 +369,8 @@ please adhere to the following steps:
 7. Test your code extensively!
 8. If your code works satisfyingly, push your local feature branch to the GitLab repository.
 9. Create then a merge request for your pushed branch (= source branch) into the master branch.
-10. Your changes will be reviewed by the owner of the repository and the merge will be performed, or you may be asked
+10. Assign the owner of the repository to the merge request.
+11. Your changes will be reviewed by the owner of the repository and the merge will be performed, or you may be asked
     for additional modifications of your code. 
 """)
 

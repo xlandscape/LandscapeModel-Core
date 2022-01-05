@@ -3,6 +3,9 @@ Class definition of the Landscape Model UserParameters class.
 """
 import xml.etree.ElementTree
 import base
+import re
+import os
+import xmlschema
 
 
 class UserParameters:
@@ -21,16 +24,23 @@ class UserParameters:
 
     def __init__(self, xml_file: str) -> None:
         self._params = {}
-        config = xml.etree.ElementTree.parse(xml_file).getroot()
-        for parameter in config:
-            self.params[parameter.tag] = parameter.text
+        xsd = os.path.abspath(os.path.join(os.path.dirname(base.__file__), "..", "..", "variant", "parameters.xsd"))
+        if os.path.exists(xsd):
+            xmlschema.XMLSchema(xsd).validate(xml_file)
+        else:
+            print("WARNING: no parameter schema found, skipping parameter validation")
+        config = xml.etree.ElementTree.parse(xml_file)
+        for parameter in config.iter():
+            if not parameter:
+                self.params[re.match("(?:{.*})?(?P<tag>.+)", parameter.tag).group(1)] = parameter.text
         self._xml = xml_file
-        if "uncertainty_sensitivity_analysis_runs" in config.attrib:
-            self._uncertaintyAndSensitivityAnalysis = int(config.attrib["uncertainty_sensitivity_analysis_runs"])
+        if "uncertainty_sensitivity_analysis_runs" in config.getroot().attrib:
+            self._uncertaintyAndSensitivityAnalysis = int(
+                config.getroot().attrib["uncertainty_sensitivity_analysis_runs"])
         else:
             self._uncertaintyAndSensitivityAnalysis = None
-        if "subdir" in config.attrib:
-            self._subdir = config.attrib["subdir"]
+        if "subdir" in config.getroot().attrib:
+            self._subdir = config.getroot().attrib["subdir"]
         else:
             self._subdir = ""
 

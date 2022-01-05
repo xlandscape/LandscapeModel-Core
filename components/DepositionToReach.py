@@ -1,6 +1,8 @@
 """
 Class definition of the DepositionToReach Landscape Model component.
 """
+import os.path
+
 import numpy as np
 import base
 import attrib
@@ -49,6 +51,8 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.10.0", "`components.DepositionToReach` switched to Google-style docstrings")
     base.VERSION.added("1.10.5", "Handling of covered reaches to `components.DepositionToReach` ")
     base.VERSION.changed("1.11.0", "`components.DepositionToReach` allows predefining deposition in a CSV file")
+    base.VERSION.fixed(
+        "1.12.3", "Removed warning for unused deposition from file `components.DepositionToReach` if path is specified")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -135,7 +139,7 @@ class DepositionToReach(base.Component):
         deposition_input_source = self.inputs["DepositionInputSource"].read().values
         deposition_input_file = self.inputs["DepositionInputFile"].read().values
         if deposition_input_source == "DepositionInput":
-            if deposition_input_file:
+            if os.path.isfile(deposition_input_file):
                 self.default_observer.write_message(
                     2,
                     "Deposition configured to be taken from input, but deposition file specified; file will be ignored"

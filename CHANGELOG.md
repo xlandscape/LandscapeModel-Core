@@ -1,10 +1,24 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2022-01-04.
+This is the changelog for the Landscape Model core. It was automatically created on 2022-01-05.
+
+## [1.12.3] - 2022-01-05
+
+### Added
+- xmlschema package to Python runtime environment
+- XML validation to `base.UserParameters` 
+
+### Changed
+- `base.UserParameters` handles XML namespaces
+
+### Fixed
+- Removed warning for unused deposition from file `components.DepositionToReach` if path is specified
+
 
 ## [1.12.2] - 2022-01-04
 
 ### Added
 - Automatic creation of CONTRIBUTING.md in `document.py` 
+- Step to merge request instructions in `base.documentation` 
 
 ### Changed
 - Fixed typos in `stores.X3dfStore` documentation

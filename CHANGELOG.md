@@ -1,5 +1,20 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2022-01-05.
+This is the changelog for the Landscape Model core. It was automatically created on 2022-01-11.
+
+## [1.12.4] - 2022-01-11
+
+### Added
+
+### Changed
+- Increased encapsulation of Jupyter notebook in `init.py` 
+- Order of exposure input scales in `components.DoseResponse` 
+- `components.DoseResponse` reports offsets of output
+- Division warning suppressed in `components.DoseResponse`
+- Order of exposure input scales in `components.TerRQ` 
+- `components.TerRQ` reports offsets of output
+
+### Fixed
+
 
 ## [1.12.3] - 2022-01-05
 

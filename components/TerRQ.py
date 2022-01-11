@@ -29,6 +29,8 @@ class TerRQ(base.Component):
     base.VERSION.changed("1.5.3", "`components.TerRQ` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `components.TerRQ` ")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.TerRQ` with base class")
+    base.VERSION.changed("1.12.4", "Order of exposure input scales in `components.TerRQ` ")
+    base.VERSION.changed("1.12.4", "`components.TerRQ` reports offsets of output")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(TerRQ, self).__init__(name, default_observer, default_store)
@@ -45,7 +47,7 @@ class TerRQ(base.Component):
                     (
                         attrib.Class(np.ndarray),
                         attrib.Unit("g/ha"),
-                        attrib.Scales("time/day, space_x/1sqm, space_y/1sqm")
+                        attrib.Scales("space_y/1sqm, space_x/1sqm, time/day")
                     ),
                     self.default_observer
                 )
@@ -68,7 +70,8 @@ class TerRQ(base.Component):
             shape=data_set_info["shape"],
             data_type=data_set_info["data_type"],
             scales=data_set_info["scales"],
-            unit="1"
+            unit="1",
+            offset=data_set_info["offsets"]
         )
         self.outputs["RQ"].set_values(
             np.ndarray,
@@ -76,7 +79,8 @@ class TerRQ(base.Component):
             shape=data_set_info["shape"],
             data_type=data_set_info["data_type"],
             scales=data_set_info["scales"],
-            unit="1"
+            unit="1",
+            offset=data_set_info["offsets"]
         )
         for chunkSlice in chunk_slices:
             exposure = self.inputs["Exposure"].read(slices=chunkSlice).values

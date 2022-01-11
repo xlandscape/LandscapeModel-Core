@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.12.4", "2022-01-11"),
     base.VersionInfo("1.12.3", "2022-01-05"),
     base.VersionInfo("1.12.2", "2022-01-04"),
     base.VersionInfo("1.12.1", "2022-01-04"),
@@ -150,6 +151,7 @@ VERSION.changed("1.4.9", "`init.py` spell check exclusions")
 VERSION.added("1.7.0", "Type hints to `init.py` ")
 VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `init.py` ")
 VERSION.changed("1.9.0", "Switched to Google docstring style in `init.py` ")
+VERSION.changed("1.12.4", "Increased encapsulation of Jupyter notebook in `init.py` ")
 
 # CHANGELOG document.py
 VERSION.added("1.4.9", "`document.py` ")

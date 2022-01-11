@@ -50,7 +50,7 @@ class DoseResponse(base.Component):
                     (
                         attrib.Class(np.ndarray),
                         attrib.Unit("g/ha"),
-                        attrib.Scales("time/day, space_x/1sqm, space_y/1sqm")
+                        attrib.Scales("space_y/1sqm, space_x/1sqm, time/day")
                     ),
                     self.default_observer
                 )
@@ -73,9 +73,11 @@ class DoseResponse(base.Component):
             shape=data_set_info["shape"],
             data_type=data_set_info["data_type"],
             scales=data_set_info["scales"],
-            unit="1"
+            unit="1",
+            offset=data_set_info["offsets"]
         )
         for chunkSlice in chunk_slices:
             exposure = self.inputs["Exposure"].read(slices=chunkSlice).values
-            effect = 1 / (1 + np.exp(slope_factor * (np.log(exposure) - np.log(ec50))))
+            with np.errstate(divide="ignore"):
+                effect = 1 / (1 + np.exp(slope_factor * (np.log(exposure) - np.log(ec50))))
             self.outputs["Effect"].set_values(effect, slices=chunkSlice, create=False, calculate_max=True)

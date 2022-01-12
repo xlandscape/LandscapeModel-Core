@@ -8,6 +8,8 @@ import xml.etree.ElementTree
 import attrib
 import numpy as np
 import typing
+import xmlschema
+import re
 
 
 class LandscapeScenario(base.Component):
@@ -79,7 +81,13 @@ class LandscapeScenario(base.Component):
                     attrib.Scales("global", 1),
                     attrib.Ontology("")
                 ),
-                self.default_observer)
+                self.default_observer
+            ),
+            base.Input(
+                "GeoPackageNamespace",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer
+            )
         ])
         self._outputs = base.ProvisionalOutputs(self, default_store)
         self._spatial_reference = None
@@ -92,6 +100,17 @@ class LandscapeScenario(base.Component):
         Returns:
             Nothing.
         """
+        def strip_namespace(tag: str) -> str:
+            """
+            Strips the namespace from an XML tag.
+            Args:
+                tag: The complete tag including namespace.
+
+            Returns:
+                The tag without namespace.
+            """
+            return re.match("(?:{.*})?(?P<stripped_tag>.+)", tag).group(1)
+
         os.environ["PROJ_LIB"] = os.path.abspath(
             os.path.join(
                 os.path.dirname(__file__),
@@ -106,28 +125,31 @@ class LandscapeScenario(base.Component):
             )
         )
         landscape_info_file = self.inputs["BaseLandscapeGeometries"].read().values
+        schema_path = os.path.join(os.path.dirname(__file__), "..", "..", "variant", "package.xsd")
+        xmlschema.XMLSchema(schema_path).validate(landscape_info_file)
         landscape_info_xml = xml.etree.ElementTree.parse(landscape_info_file).getroot()
         landscape_path = os.path.dirname(os.path.abspath(landscape_info_file))
+        namespace = {"": self.inputs["GeoPackageNamespace"].read().values}
         attributes = {
-            landscape_info_xml.find("base/feature_id_attribute").text: "FeatureIds",
-            landscape_info_xml.find("base/feature_type_attribute").text: "FeatureTypeIds"
+            landscape_info_xml.find("base/feature_id_attribute", namespace).text: "FeatureIds",
+            landscape_info_xml.find("base/feature_type_attribute", namespace).text: "FeatureTypeIds"
         }
-        for additionalAttribute in landscape_info_xml.find("base/additional_attributes"):
-            attributes[additionalAttribute.text] = additionalAttribute.tag
+        for additionalAttribute in landscape_info_xml.find("base/additional_attributes", namespace):
+            attributes[additionalAttribute.text] = strip_namespace(additionalAttribute.tag)
         self.import_shapefile(
-            os.path.join(landscape_path, landscape_info_xml.find("base/base_landscape_geometries").text),
+            os.path.join(landscape_path, landscape_info_xml.find("base/base_landscape_geometries", namespace).text),
             attributes,
             True
         )
-        meta = landscape_info_xml.find("meta")
-        roi = meta.find("ROI_extent")
+        meta = landscape_info_xml.find("meta", namespace)
+        roi = meta.find("ROI_extent", namespace)
         if roi is not None:
             extent = tuple([float(x) for x in roi.text.split(",")])
         else:
             extent = self._base_geometries_extent
         for entry in meta:
-            self.outputs[entry.tag].set_values(entry.text, scales="global")
-        for entry in landscape_info_xml.find("supplementary"):
+            self.outputs[strip_namespace(entry.tag)].set_values(entry.text, scales="global")
+        for entry in landscape_info_xml.find("supplementary", namespace):
             if entry.text[-4:] == ".tif":
                 raster_path = os.path.join(landscape_path, entry.text)
                 r = gdal.Open(raster_path)
@@ -135,11 +157,12 @@ class LandscapeScenario(base.Component):
                 raster_spatial_reference = osr.SpatialReference()
                 raster_spatial_reference.ImportFromWkt(raster_crs)
                 if not self._spatial_reference.IsSame(raster_spatial_reference):
-                    self.default_observer.write_message(1, f"Base CRS and CRS of {entry.tag} do not match")
+                    self.default_observer.write_message(
+                        1, f"Base CRS and CRS of {strip_namespace(entry.tag)} do not match")
                     raise ValueError
                 raster_geo_transform = r.GetGeoTransform()
                 if raster_geo_transform[2] != 0 or raster_geo_transform[4] != 0:
-                    self.default_observer.write_message(1, f"Raster {entry.tag} is skewed")
+                    self.default_observer.write_message(1, f"Raster {strip_namespace(entry.tag)} is skewed")
                     raise ValueError
                 raster_extent = (raster_geo_transform[0],
                                  raster_geo_transform[0] + raster_geo_transform[1] * r.RasterXSize,
@@ -152,11 +175,12 @@ class LandscapeScenario(base.Component):
                     if entry.attrib.setdefault("deviatingExtent", "") == "confirmed":
                         self.default_observer.write_message(
                             3,
-                            f"ROI and {entry.tag} have different extents (confirmed)")
+                            f"ROI and {strip_namespace(entry.tag)} have different extents (confirmed)")
                         self.default_observer.write_message(3, f"1: {extent}")
                         self.default_observer.write_message(3, f"2: {raster_extent}")
                     else:
-                        self.default_observer.write_message(1, f"ROI and {entry.tag} have different extents")
+                        self.default_observer.write_message(
+                            1, f"ROI and {strip_namespace(entry.tag)} have different extents")
                         self.default_observer.write_message(3, f"1: {extent}")
                         self.default_observer.write_message(3, f"2: {raster_extent}")
                         raise ValueError
@@ -165,7 +189,7 @@ class LandscapeScenario(base.Component):
                     if entry.attrib.setdefault("deviatingExtent", "") == "confirmed":
                         self.default_observer.write_message(
                             3,
-                            f"1sqm ROI and {entry.tag} differ in size (confirmed)"
+                            f"1sqm ROI and {strip_namespace(entry.tag)} differ in size (confirmed)"
                         )
                         self.default_observer.write_message(
                             3,
@@ -173,7 +197,8 @@ class LandscapeScenario(base.Component):
                         )
                         self.default_observer.write_message(3, f"2: {r.RasterXSize} x {r.RasterYSize}")
                     else:
-                        self.default_observer.write_message(1, f"1sqm ROI and {entry.tag} differ in size")
+                        self.default_observer.write_message(
+                            1, f"1sqm ROI and {strip_namespace(entry.tag)} differ in size")
                         self.default_observer.write_message(
                             3,
                             f"1: {int(round(extent[1] - extent[0]))} x {int(round(extent[3] - extent[2]))}"
@@ -184,11 +209,11 @@ class LandscapeScenario(base.Component):
                     self.default_observer.write_message(3, f"2: {r.RasterYSize} x {r.RasterYSize}")
                     raise ValueError
                 self.default_observer.write_message(5, f"Importing {raster_path}")
-                self.outputs[entry.tag].set_values(raster_path, scales="global")
+                self.outputs[strip_namespace(entry.tag)].set_values(raster_path, scales="global")
                 raster_band = r.GetRasterBand(1)
                 block_size_x, block_size_y = raster_band.GetBlockSize()
                 cell_area = str(int(raster_geo_transform[1] * -raster_geo_transform[5]))
-                dataset_name = f"{entry.tag}_values"
+                dataset_name = f"{strip_namespace(entry.tag)}_values"
                 self.outputs[dataset_name].set_values(
                     np.ndarray,
                     shape=(r.RasterYSize, r.RasterXSize),
@@ -210,24 +235,25 @@ class LandscapeScenario(base.Component):
                         )
             elif entry.text[-4:] == ".shp":
                 shapefile_path = os.path.join(landscape_path, entry.text)
-                self.outputs[entry.tag].set_values(shapefile_path, scales="global")
+                self.outputs[strip_namespace(entry.tag)].set_values(shapefile_path, scales="global")
             else:
-                self.outputs[entry.tag].set_values(entry.text, scales="global")
-        for entry in landscape_info_xml.find("supplementary_shapefiles"):
+                self.outputs[strip_namespace(entry.tag)].set_values(entry.text, scales="global")
+        for entry in landscape_info_xml.find("supplementary_shapefiles", namespace):
             attributes = {}
             units = {}
             id_attribute = None
-            for attribute in entry.find("attributes"):
-                attributes[attribute.attrib["column"]] = f"{entry.tag}_{attribute.tag}"
-                units[f"{entry.tag}_{attribute.tag}"] = attribute.attrib["unit"] if "unit" in attribute.attrib else None
+            for attribute in entry.find("attributes", namespace):
+                attribute_name = f"{strip_namespace(entry.tag)}_{strip_namespace(attribute.tag)}"
+                attributes[attribute.attrib["column"]] = attribute_name
+                units[attribute_name] = attribute.attrib["unit"] if "unit" in attribute.attrib else None
                 if "role" in attribute.attrib and attribute.attrib["role"] == "id":
-                    id_attribute = f"{entry.tag}_{attribute.tag}"
+                    id_attribute = attribute_name
             if id_attribute is None:
-                raise ValueError(f"Role of id column for {entry.tag} is not asserted")
+                raise ValueError(f"Role of id column for {strip_namespace(entry.tag)} is not asserted")
             self.import_shapefile(
-                os.path.join(landscape_path, entry.find("file_name").text),
+                os.path.join(landscape_path, entry.find("file_name", namespace).text),
                 attributes,
-                geometry_output=f"{entry.tag}_geom",
+                geometry_output=f"{strip_namespace(entry.tag)}_geom",
                 units=units,
                 id_attribute=id_attribute
             )

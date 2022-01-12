@@ -42,6 +42,7 @@ base.VERSION.changed("1.10.3", "Spell checking in `base.documentation` ")
 base.VERSION.changed("1.12.1", "Extended CONTRIBUTING.md in `base.documentation` ")
 base.VERSION.fixed("1.12.2", "Typos in `base.documentation` ")
 base.VERSION.added("1.12.2", "Step to merge request instructions in `base.documentation` ")
+base.VERSION.changed("1.12.5", "Enhanced contribution documentation in `base.documentation` ")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:

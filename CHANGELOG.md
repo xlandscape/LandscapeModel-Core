@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2022-01-11.
+This is the changelog for the Landscape Model core. It was automatically created on 2022-01-12.
+
+## [1.12.5] - 2022-01-12
+
+### Added
+
+### Changed
+- Perform XML schema validation in `components.LandscapeScenario` 
+- Enhanced contribution documentation in `base.documentation` 
+
+### Fixed
+
 
 ## [1.12.4] - 2022-01-11
 

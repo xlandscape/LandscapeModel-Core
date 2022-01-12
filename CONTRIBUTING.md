@@ -1,6 +1,6 @@
 # Contributing
 Contributions to the project are welcome. Please contact the authors. These contribution notes refer to the general 
-Landscape Model contribution guidelines and were written on 2022-01-11.
+Landscape Model contribution guidelines and were written on 2022-01-12.
 
 ## Issues
 Whenever you identify a bug or like to suggest an enhancement to the code, please file an issue. Stick to the following
@@ -53,3 +53,27 @@ please adhere to the following steps:
 10. Assign the owner of the repository to the merge request.
 11. Your changes will be reviewed by the owner of the repository and the merge will be performed, or you may be asked
     for additional modifications of your code. 
+
+## Components
+If you are requesting a merge containing component code, please make sure that the following applies:
+- [ ] The commit that is requested to branch is based on the most recent commit on the master branch.
+- [ ] The repository can be cloned from GitLab.
+- [ ] The component runs successfully without any errors using the most recent model version..
+- [ ] You haven't reverted any changes made by other contributors unless there is a good reason to do so.
+- [ ] You haven't introduced inputs to the component that are not needed for calculations.
+
+## Model variant
+If you are requesting a merge relating to a model variant, please make sure that the following applies:
+- [ ] The commit that is requested to branch is based on the most recent commit on the master branch.
+- [ ] The entire model, including all submodules, can be cloned from GitLab.
+- [ ] The model runs successfully without any errors using the most recent model version..
+- [ ] You haven't reverted any changes made by other contributors unless there is a good reason to do so.
+
+## Scenario
+If you are requesting a merge relating to a scenario, please make sure that the following applies:
+- [ ] The commit that is requested to branch is based on the most recent commit on the master branch.
+- [ ] The repository can be cloned from GitLab.
+- [ ] The component runs successfully without any errors using the most recent model version.
+- [ ] You haven't reverted any changes made by other contributors unless there is a good reason to do so.
+- [ ] Added data is required, cannot be retrieved by a component and is not redundant.
+

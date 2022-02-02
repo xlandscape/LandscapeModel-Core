@@ -131,7 +131,7 @@ class HydrologyFromTimeSeries(base.Component):
         time_series_start = datetime.datetime.strptime(h5["time_from"][0].decode("ascii"), "%Y-%m-%dT%H:%M")
         time_series_end = datetime.datetime.strptime(h5["time_to"][0].decode("ascii"), "%Y-%m-%dT%H:%M")
         offset_time = datetime.datetime.combine(from_time, datetime.time(1))
-        offset_hours = int((offset_time - time_series_start).days * 24)
+        offset_hours = int((offset_time - time_series_start).days * 24) - 1
         time_series_length = int((time_series_end - time_series_start).total_seconds() / 3600) + 1
         if time_series_length != flow.shape[0] or time_series_length != depth.shape[0] or \
                 time_series_length != volume.shape[0] or time_series_length != area.shape[0]:

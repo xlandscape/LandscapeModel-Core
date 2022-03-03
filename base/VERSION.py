@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.12.6", "2022-03-03"),
     base.VersionInfo("1.12.5", "2022-01-12"),
     base.VersionInfo("1.12.4", "2022-01-11"),
     base.VersionInfo("1.12.3", "2022-01-05"),
@@ -166,3 +167,4 @@ VERSION.fixed("1.9.4", "Corrupted runtime environment files")
 # noinspection SpellCheckingInspection
 VERSION.fixed("1.9.10", "`mistune` package downgraded to make Jupyter notebook accessible again")
 VERSION.added("1.12.3", "xmlschema package to Python runtime environment")
+VERSION.added("1.12.6", "Updated numpy package to version 1.22.2")

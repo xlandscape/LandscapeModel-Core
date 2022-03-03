@@ -47,9 +47,11 @@ base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.funct
 base.VERSION.changed(
     "1.9.1", "Check if module R instances are sufficiently encapsulated in `base.functions.run_process()` ")
 base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called by `functions.run_process` ")
+base.VERSION.changed("1.12.6", "Mitigated weak code warnings in `base.functions` ")
 
 
-def cartesian_product(*arrays: np.ndarray) -> np.ndarray:
+# noinspection DuplicatedCode
+def cartesian_product(*arrays: np.core.ndarray) -> np.core.ndarray:
     """
     Returns the Cartesian product of two or more arrays.
 

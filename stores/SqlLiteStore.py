@@ -40,6 +40,7 @@ class SqlLiteStore(base.Store):
     base.VERSION.changed(
         "1.10.2", "Changed generation of index numbers in `stores.SqlLiteStore` to considerably reduce memory usage")
     base.VERSION.changed("1.10.5", "Removed superfluous warning message from `stores.SqlLiteStore` ")
+    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `stores.SqlLiteStore` ")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         """
@@ -111,7 +112,12 @@ class SqlLiteStore(base.Store):
         """
         if len(keywords) > 0:
             self._observer.write_message(2, f"Ignoring keywords: {keywords}")
-        numpy_mappings = {float: "REAL", np.dtype("<f8"): "REAL", np.dtype("int32"): "INTEGER", np.dtype("<f4"): "REAL"}
+        numpy_mappings = {
+            float: "REAL",
+            np.core.dtype("<f8"): "REAL",
+            np.core.dtype("int32"): "INTEGER",
+            np.core.dtype("<f4"): "REAL"
+        }
         if create:
             if scales is None:
                 self._observer.store_set_values(3, "SqlLiteStore", f"No scale given for {name}: assuming global")
@@ -343,8 +349,9 @@ class SqlLiteStore(base.Store):
             return datetime.datetime.strptime(cursor.fetchone()[0], "%Y-%m-%d %H:%M:%S")
         raise TypeError(f"Stored type cannot be interpreted: {data_info[1]}")
 
+    # noinspection DuplicatedCode
     @staticmethod
-    def _cartesian_product(*arrays: np.ndarray) -> np.ndarray:
+    def _cartesian_product(*arrays: np.core.ndarray) -> np.core.ndarray:
         """
         Calculates a cartesian product.
 
@@ -354,7 +361,7 @@ class SqlLiteStore(base.Store):
         Returns:
             An array representing the cartesian product of the input arrays.
         """
-        # adapted from https://stackoveflow.com/questions/11144513
+        # adapted from https://stackoverflow.com/questions/11144513
         la = len(arrays)
         data_type = np.result_type(*arrays)
         arr = np.empty([len(a) for a in arrays] + [la], dtype=data_type)

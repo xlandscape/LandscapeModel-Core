@@ -43,6 +43,7 @@ class LandscapeScenarioPreparation(base.Component):
         "1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenarioPreparation` ")
     base.VERSION.changed(
         "1.9.6", "Replaced GDAL constants by numerical values in `components.LandscapeScenarioPreparation` ")
+    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `components.LandscapeScenarioPreparation` ")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(LandscapeScenarioPreparation, self).__init__(name, default_observer, default_store)
@@ -116,7 +117,7 @@ class LandscapeScenarioPreparation(base.Component):
                 dem_values,
                 lambda x: (0, 1, 4, 16, 64)[int(np.argmin(x[[2, 3, 4, 1, 0]]))],
                 footprint=((0, 1, 0), (1, 1, 1), (0, 1, 0)),
-                output=np.dtype('b')
+                output=np.core.dtype('b')
             )
             flow_dir_data_set = raster_driver.Create(
                 os.path.join(output_path, "flow.tif"),

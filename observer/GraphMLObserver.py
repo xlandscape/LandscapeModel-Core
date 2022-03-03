@@ -25,6 +25,7 @@ class GraphMLObserver(base.Observer):
     base.VERSION.changed("1.7.0", "Removed unused methods in `observer.GraphMLObserver` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.GraphMLObserver` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.GraphMLObserver` ")
+    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `observer.GraphMLObserver` ")
 
     def __init__(self, output_file: str, include_modules: str) -> None:
         """
@@ -52,10 +53,10 @@ class GraphMLObserver(base.Observer):
         graph_ml = xml.etree.ElementTree.Element(
             "graphml",
             {
-                "xmlns": "http://graphml.graphdrawing.org/xmlns",
+                "xmlns": "https://graphml.graphdrawing.org/xmlns",
                 "xmlns:xsi": "http://www.w3org/2001/XMLSchema-instance",
                 "xsi:schemaLocation":
-                    "http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"
+                    "https://graphml.graphdrawing.org/xmlns https://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"
             }
         )
         graph_ml.append(xml.etree.ElementTree.Element(

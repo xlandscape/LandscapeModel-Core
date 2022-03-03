@@ -1,5 +1,20 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2022-01-12.
+This is the changelog for the Landscape Model core. It was automatically created on 2022-03-03.
+
+## [1.12.6] - 2022-03-03
+
+### Added
+- Updated numpy package to version 1.22.2
+
+### Changed
+- Mitigated weak code warnings in `base.functions` 
+- Mitigated weak code warning in `stores.SqlLiteStore` 
+- Mitigated weak code warning in `components.LandscapeScenarioPreparation` 
+- Refactored documentation of class members into own function in `base.documentation` 
+- Mitigated weak code warning in `observer.GraphMLObserver` 
+
+### Fixed
+
 
 ## [1.12.5] - 2022-01-12
 

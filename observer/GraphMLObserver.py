@@ -52,10 +52,10 @@ class GraphMLObserver(base.Observer):
         graph_ml = xml.etree.ElementTree.Element(
             "graphml",
             {
-                "xmlns": "http://graphml.graphdrawing.org/xmlns",
+                "xmlns": "https://graphml.graphdrawing.org/xmlns",
                 "xmlns:xsi": "http://www.w3org/2001/XMLSchema-instance",
                 "xsi:schemaLocation":
-                    "http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"
+                    "https://graphml.graphdrawing.org/xmlns https://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"
             }
         )
         graph_ml.append(xml.etree.ElementTree.Element(

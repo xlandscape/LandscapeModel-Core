@@ -49,7 +49,8 @@ base.VERSION.changed(
 base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called by `functions.run_process` ")
 
 
-def cartesian_product(*arrays: np.ndarray) -> np.ndarray:
+# noinspection DuplicatedCode
+def cartesian_product(*arrays: np.core.ndarray) -> np.core.ndarray:
     """
     Returns the Cartesian product of two or more arrays.
 

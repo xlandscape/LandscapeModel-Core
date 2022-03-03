@@ -116,7 +116,7 @@ class LandscapeScenarioPreparation(base.Component):
                 dem_values,
                 lambda x: (0, 1, 4, 16, 64)[int(np.argmin(x[[2, 3, 4, 1, 0]]))],
                 footprint=((0, 1, 0), (1, 1, 1), (0, 1, 0)),
-                output=np.dtype('b')
+                output=np.core.dtype('b')
             )
             flow_dir_data_set = raster_driver.Create(
                 os.path.join(output_path, "flow.tif"),

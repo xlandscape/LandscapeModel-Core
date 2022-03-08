@@ -20,6 +20,7 @@ class Values:
     base.VERSION.added("1.7.0", "Type hints to `base.Values` ")
     base.VERSION.added("1.10.0", "`base.Values` have element names now")
     base.VERSION.changed("1.10.0", "`base.Values` switched to Google-style docstrings")
+    base.VERSION.added("1.13.0", "Offset property to `base.Values` ")
 
     # noinspection PyUnusedLocal
     def __init__(

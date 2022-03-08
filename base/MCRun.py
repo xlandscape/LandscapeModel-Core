@@ -29,6 +29,7 @@ class MCRun:
     base.VERSION.added("1.7.0", "Type hints to `base.MCRun` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.MCRun` ")
     base.VERSION.added("1.10.0", "XML-tag for element names in `base.MCRun` configurations")
+    base.VERSION.changed("1.13.0", "Allowed more spellings for enabling/disabling components in `base.MCRun` ")
 
     def __init__(self, xml_file: str, **keywords) -> None:
         config = xml.etree.ElementTree.parse(xml_file)

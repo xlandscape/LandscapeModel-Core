@@ -1,6 +1,6 @@
 # Contributing
 Contributions to the project are welcome. Please contact the authors. These contribution notes refer to the general 
-Landscape Model contribution guidelines and were written on 2022-03-03.
+Landscape Model contribution guidelines and were written on 2022-03-08.
 
 ## Issues
 Whenever you identify a bug or like to suggest an enhancement to the code, please file an issue. Stick to the following
@@ -58,7 +58,7 @@ please adhere to the following steps:
 If you are requesting a merge containing component code, please make sure that the following applies:
 - [ ] The commit that is requested to branch is based on the most recent commit on the master branch.
 - [ ] The repository can be cloned from GitLab.
-- [ ] The component runs successfully without any errors using the most recent model version..
+- [ ] The component runs successfully without any errors using the most recent model version.
 - [ ] You haven't reverted any changes made by other contributors unless there is a good reason to do so.
 - [ ] You haven't introduced inputs to the component that are not needed for calculations.
 
@@ -66,7 +66,7 @@ If you are requesting a merge containing component code, please make sure that t
 If you are requesting a merge relating to a model variant, please make sure that the following applies:
 - [ ] The commit that is requested to branch is based on the most recent commit on the master branch.
 - [ ] The entire model, including all submodules, can be cloned from GitLab.
-- [ ] The model runs successfully without any errors using the most recent model version..
+- [ ] The model runs successfully without any errors using the most recent model version.
 - [ ] You haven't reverted any changes made by other contributors unless there is a good reason to do so.
 
 ## Scenario

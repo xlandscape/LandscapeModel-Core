@@ -41,6 +41,10 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.MarsWeather` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.MarsWeather` ")
     base.VERSION.changed("1.11.0", "`components.MarsWeather` specifies offsets of outputs")
+    base.VERSION.changed(
+        "1.13.0", "`components.MarsWeather` now stores entire timeseries, regardless of simulation period")
+    base.VERSION.added(
+        "1.13.0", "`stores.X3dfStore` functionality to reference scale 'time/day' with native coordinates")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

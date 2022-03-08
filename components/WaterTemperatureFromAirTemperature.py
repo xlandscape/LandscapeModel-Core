@@ -17,6 +17,9 @@ class WaterTemperatureFromAirTemperature(base.Component):
     OUTPUTS
     WaterTemperature: A timeseries of daily average water temperatures.
     """
+    # CHANGELOG
+    base.VERSION.added("1.13.0", "`components.WaterTemperatureFromAirTemperature` component")
+
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(WaterTemperatureFromAirTemperature, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, (

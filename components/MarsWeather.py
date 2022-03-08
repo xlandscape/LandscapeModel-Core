@@ -41,6 +41,10 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.MarsWeather` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.MarsWeather` ")
     base.VERSION.changed("1.11.0", "`components.MarsWeather` specifies offsets of outputs")
+    base.VERSION.changed(
+        "1.13.0", "`components.MarsWeather` now stores entire timeseries, regardless of simulation period")
+    base.VERSION.added(
+        "1.13.0", "`stores.X3dfStore` functionality to reference scale 'time/day' with native coordinates")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -53,17 +57,7 @@ class MarsWeather(base.Component):
         """
         super(MarsWeather, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
-            base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer),
-            base.Input(
-                "FirstDate",
-                (attrib.Class(datetime.date, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            ),
-            base.Input(
-                "LastDate",
-                (attrib.Class(datetime.date, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            )
+            base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer)
         ])
         self._outputs = base.OutputContainer(
             self,
@@ -94,20 +88,18 @@ class MarsWeather(base.Component):
             data = f.readlines()
         data = [line[:-1].split(",") for line in data]
         date_idx = (data[0].index("YEAR"), data[0].index("MONTH"), data[0].index("DAY"))
-        first_date = self.inputs["FirstDate"].read().values
-        last_date = self.inputs["LastDate"].read().values
-        filtered_data = [r for r in data[1:] if first_date <= datetime.date(int(r[date_idx[0]]), int(r[date_idx[1]]),
-                                                                            int(r[date_idx[2]])) <= last_date]
+        first_date = datetime.date(int(data[1][date_idx[0]]), int(data[1][date_idx[1]]), int(data[1][date_idx[2]]))
         for component_output in self.outputs:
             if component_output.name in data[0]:
                 idx = data[0].index(component_output.name)
-                output_data = np.array([float(r[idx]) for r in filtered_data], dtype=np.float32)
+                output_data = np.array([float(r[idx]) for r in data[1:]], dtype=np.float32)
                 output = self.outputs[component_output.name]
                 output.set_values(
                     output_data,
                     scales="time/day",
                     unit=self._units[component_output.name],
-                    offset=(first_date,)
+                    offset=(first_date,),
+                    requires_indexing=True
                 )
             else:
                 self.default_observer.write_message(2, f"Weather file does not contain field {component_output.name}")

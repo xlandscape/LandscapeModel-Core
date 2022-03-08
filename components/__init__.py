@@ -15,6 +15,7 @@ from .MarsWeather import *
 from .PpmCalendar import *
 from .TerRQ import *
 from .UserParameters import *
+from .WaterTemperatureFromAirTemperature import *
 
 import base.VERSION
 

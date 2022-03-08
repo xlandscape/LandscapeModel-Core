@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2022-03-03.
+It was automatically created on 2022-03-08.
 
 
 ## CsvReader
@@ -262,4 +262,16 @@ It was automatically created on 2022-03-03.
 
     OUTPUTS
     As defined by the user parameters passed to the initialization method of the component.
+    
+
+## WaterTemperatureFromAirTemperature
+    A simple component that takes a series of daily average air temperatures and calculates a series of daily water
+    temperatures by averaging the air temperatures of the current and the two preceding days. The water temperatures
+    of the first two days are set to the one calculated for the third day.
+
+    INPUTS
+    AirTemperature: A timeseries of daily average air temperatures.
+
+    OUTPUTS
+    WaterTemperature: A timeseries of daily average water temperatures.
     

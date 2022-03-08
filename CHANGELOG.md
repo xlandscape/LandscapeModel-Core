@@ -1,5 +1,20 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2022-03-03.
+This is the changelog for the Landscape Model core. It was automatically created on 2022-03-08.
+
+## [1.13] - 2022-03-08
+
+### Added
+- Offset property to `base.Values` 
+- `stores.X3dfStore` functionality to reference scale 'time/day' with native coordinates
+- `components.WaterTemperatureFromAirTemperature` component
+
+### Changed
+- `components.MarsWeather` now stores entire timeseries, regardless of simulation period
+- Allowed more spellings for enabling/disabling components in `base.MCRun` 
+
+### Fixed
+- Spelling error in `base.documentation` 
+
 
 ## [1.12.6] - 2022-03-03
 

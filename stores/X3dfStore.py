@@ -205,8 +205,31 @@ class X3dfStore(base.Store):
         elif original_type == "datetime.date":
             values = datetime.datetime.strptime(data_set[()].decode(), "%Y-%m-%d").date()
         elif original_type == "numpy.ndarray":
-            if "slices" in keywords:
+            if "slices" in keywords and "select" in keywords:
+                raise AttributeError("slices and select keywords may not be used simultaneously")
+            elif data_set.attrs["requires_indexing"] and "select" not in keywords:
+                raise AttributeError(f"Dataset {name} requires strict indexing, but select keyword is not present")
+            elif "slices" in keywords:
                 values = data_set[keywords["slices"]]
+            elif "select" in keywords:
+                data_set_scales = data_set.attrs["scales"]
+                slices = []
+                dataset_description = self.describe(name)
+                for i, scale in enumerate(data_set_scales):
+                    if scale == "time/day":
+                        if keywords["select"][scale] == "all":
+                            slices.append(slice(0, dataset_description["shape"][i]))
+                        else:
+                            slices.append(
+                                slice(
+                                    (keywords["select"][scale]["from"] - dataset_description["offsets"][i]).days,
+                                    (keywords["select"][scale]["to"] - dataset_description["offsets"][i]).days
+                                )
+                            )
+                    else:
+                        raise ValueError(f"Selection not supported for scale {scale}")
+                values = data_set[tuple(slices)]
+                pass
             else:
                 values = data_set[()]
         elif original_type == "datetime.datetime":
@@ -233,7 +256,8 @@ class X3dfStore(base.Store):
             slices: typing.Optional[typing.Sequence[slice]] = None,
             calculate_max: bool = False,
             element_names: typing.Optional[typing.Union[list[str], list[base.Output]]] = None,
-            offset: typing.Optional[list] = None
+            offset: typing.Optional[list] = None,
+            requires_indexing: typing.Optional[bool] = None
     ) -> None:
         """
         Stores a data set in the store.
@@ -253,6 +277,7 @@ class X3dfStore(base.Store):
             calculate_max: Specifies whether the data set should keep track of the maximum value.
             element_names: Specifies datasets by name that contain the identifiers of named elements per scale.
             offset: Specifies the origin of an axis along the consecutive elements of a scale.
+            requires_indexing: Specifies whether retrieving values later on strictly requires coordinates.
 
         Returns:
             Nothing.
@@ -406,6 +431,9 @@ class X3dfStore(base.Store):
                         self._f[name].attrs[f"dim{dim}_offset"] = stored_offset
         if unit is not None:
             self._f[name].attrs["unit"] = unit
+        if requires_indexing and not isinstance(values, numpy.ndarray):
+            raise ValueError(f"Required indexing is not supported for data of type {type(values)}")
+        self._f[name].attrs["requires_indexing"] = bool(requires_indexing)
         return
 
     def has_dataset(self, name: str, partial: bool = False) -> bool:

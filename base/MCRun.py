@@ -53,7 +53,7 @@ class MCRun:
                     f"Component {componentConfig.tag} already present in data store",
                     "Configuration and parameterization ignored"
                 )
-            elif ("enabled" not in componentConfig.attrib or componentConfig.attrib["enabled"] == "true") and \
+            elif ("enabled" not in componentConfig.attrib or componentConfig.attrib["enabled"].lower() == "true") and \
                     ("enabled_expression" not in componentConfig.attrib or
                      eval(componentConfig.attrib["enabled_expression"])):
                 component_module = importlib.import_module(componentConfig.attrib["module"])

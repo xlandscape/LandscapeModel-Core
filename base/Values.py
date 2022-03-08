@@ -1,6 +1,8 @@
 """
 Class definition of the Landscape Model Values class.
 """
+import datetime
+
 import base
 import typing
 
@@ -27,6 +29,7 @@ class Values:
             unit: typing.Optional[str] = None,
             scales: str = "global",
             element_names: typing.Optional[typing.Sequence["base.Output"]] = None,
+            offsets: typing.Optional[typing.Sequence[datetime.date]] = None,
             **keywords
     ) -> None:
         """
@@ -47,6 +50,7 @@ class Values:
         self._unit = unit
         self._scales = scales
         self._element_names = element_names
+        self._offsets = offsets
 
     @property
     def extension(self) -> base.Extensions:
@@ -97,3 +101,13 @@ class Values:
             The identifiers of the individual elements per scale.
         """
         return self._element_names
+
+    @property
+    def offsets(self) -> typing.Optional[typing.Sequence[datetime.date]]:
+        """
+        Gets the offsets of the values.
+
+        Returns:
+            The offsets of the first element per scale.
+        """
+        return self._offsets

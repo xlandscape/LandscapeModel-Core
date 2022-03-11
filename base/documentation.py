@@ -222,7 +222,8 @@ The following gives a sample configuration of the `{component.name}` component. 
         for component_input in component.inputs:
             f.write(f"#### {component_input.name}\n")
             if component_input.description:
-                f.write(f"{inspect.cleandoc(component_input.description)}  \n")
+                f.write("\n".join(textwrap.wrap(inspect.cleandoc(component_input.description), 120)))
+                f.write("\n")
             for attribute in component_input.attributes:
                 if isinstance(attribute, attrib.Class):
                     f.write(

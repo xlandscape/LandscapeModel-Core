@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2022-03-08.
+This is the changelog for the Landscape Model core. It was automatically created on 2022-03-11.
+
+## [1.13.1] - 2022-03-11
+
+### Added
+
+### Changed
+- Text wrapping of member documentation in `base.documentation` 
+
+### Fixed
+
 
 ## [1.13] - 2022-03-08
 

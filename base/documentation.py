@@ -45,6 +45,7 @@ base.VERSION.added("1.12.2", "Step to merge request instructions in `base.docume
 base.VERSION.changed("1.12.5", "Enhanced contribution documentation in `base.documentation` ")
 base.VERSION.changed("1.12.6", "Refactored documentation of class members into own function in `base.documentation` ")
 base.VERSION.fixed("1.13.0", "Spelling error in `base.documentation` ")
+base.VERSION.changed("1.13.1", "Text wrapping of member documentation in `base.documentation` ")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -222,7 +223,8 @@ The following gives a sample configuration of the `{component.name}` component. 
         for component_input in component.inputs:
             f.write(f"#### {component_input.name}\n")
             if component_input.description:
-                f.write(f"{inspect.cleandoc(component_input.description)}  \n")
+                f.write("\n".join(textwrap.wrap(inspect.cleandoc(component_input.description), 120)))
+                f.write("\n")
             for attribute in component_input.attributes:
                 if isinstance(attribute, attrib.Class):
                     f.write(

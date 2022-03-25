@@ -1,7 +1,34 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2022-03-11.
+It was automatically created on 2022-03-25.
 
+
+## BeeForage
+    Simulates nectar and pollen availability to bees based on vegetation and timeseries per vegetation class.
+
+    INPUTS
+    Vegetation: Vegetation classes at a scale of space/base_geometry.
+    Timeseries: A path to an Excel table containing timeseries detailing pollen and nectar availability per vegetation
+    class.
+    NectarPerClass: The nectar availability in L/(m²*d) for each bee forage class.
+    PollenPerClass: The pollen availability in g/(m²*d) for each bee forage class.
+    SimulationStart: The first day of the simulation for which bee forage availability is to be simulated.
+    SimulationEnd: The last day of the simulation for which bee forage availability is to be simulated.
+
+    OUTPUTS
+    Nectar: The availability of nectar to bees in L/(m²*d) at a scale of space/base_geometry and time/day.
+    Pollen: The availability of pollen to bees in g/(m²*d) at a scale of space/base_geometry and time/day.
+    
+
+## BeeHave
+    Prepares a BeeHave scenario.
+
+    INPUTS
+    ProcessingPath: The working directory for the component.
+
+    OUTPUTS
+    None.
+    
 
 ## CsvReader
     A generic component that reads data from a CSV file.
@@ -160,6 +187,20 @@ It was automatically created on 2022-03-11.
     unit.
     Inflow: Inflows into reaches from fields. A NumPy array of scale time/hour, space/reach2. Values have a unit of
     m³/d.
+    
+
+## LandCoverToVegetation
+    Translates land cover into vegetation information using a simple lookup-table approach.
+
+    INPUTS
+    LandCover: A list of integer identifiers that detail the land use / land cover type of individual elements at scale
+    space/base_geometry. Identifiers have no units.
+    Mapping: A file path to an Excel workbook that contains information on how to map land cover classes into
+    vegetation classes.
+    VegetationClasses: A JSON file containing defined vegetation classes and their numerical code.
+
+    OUTPUTS
+    Vegetation: A list of vegetation classes at a space/base_geometry scale.
     
 
 ## LandscapeScenarioPreparation

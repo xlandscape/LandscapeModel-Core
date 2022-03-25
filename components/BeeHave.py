@@ -20,6 +20,9 @@ class BeeHave(base.Component):
     OUTPUTS
     None.
     """
+    # CHANGELOG
+    base.VERSION.added("1.14.0", "`components.BeeHave` ")
+
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
         Initializes a BeeHave component.

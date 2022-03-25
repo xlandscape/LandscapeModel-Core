@@ -62,6 +62,8 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.12.0", "`components.LandscapeScenario` output scale order")
     base.VERSION.changed("1.12.0", "`components.LandscapeScenario` reports offset")
     base.VERSION.changed("1.12.5", "Perform XML schema validation in `components.LandscapeScenario` ")
+    base.VERSION.changed(
+        "1.14.0", "`components.LandscapeScenario` reports geometries of values also as value attributes")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

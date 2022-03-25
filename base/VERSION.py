@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.14.0", "2022-03-25"),
     base.VersionInfo("1.13.1", "2022-03-11"),
     base.VersionInfo("1.13.0", "2022-03-08"),
     base.VersionInfo("1.12.6", "2022-03-03"),
@@ -169,4 +170,5 @@ VERSION.fixed("1.9.4", "Corrupted runtime environment files")
 # noinspection SpellCheckingInspection
 VERSION.fixed("1.9.10", "`mistune` package downgraded to make Jupyter notebook accessible again")
 VERSION.added("1.12.3", "xmlschema package to Python runtime environment")
-VERSION.added("1.12.6", "Updated numpy package to version 1.22.2")
+VERSION.changed("1.12.6", "Updated numpy package to version 1.22.2")
+VERSION.added("1.14.0", "Python packages Shapely and openpyxl to runtime environment")

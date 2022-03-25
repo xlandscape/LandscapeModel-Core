@@ -1,5 +1,24 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2022-03-11.
+This is the changelog for the Landscape Model core. It was automatically created on 2022-03-25.
+
+## [1.14] - 2022-03-25
+
+### Added
+- Python packages Shapely and openpyxl to runtime environment
+- class `base.ExistingValues` for referencing values already stored
+- `components.BeeHave` 
+- `components.LandCoverToVegetation` 
+- default mappings for land cover to vegetation and vegetation to bee forage
+- default dictionary for vegetation classes
+
+### Changed
+- `base.Values` now manages geometries of elements
+- `attrib.Unit` keeps additional value attributes (offsets and geometries) during conversion
+- `stores.X3dfStore` now stores and retrieves geometries of elements
+- `components.LandscapeScenario` reports geometries of values also as value attributes
+
+### Fixed
+
 
 ## [1.13.1] - 2022-03-11
 
@@ -29,9 +48,9 @@ This is the changelog for the Landscape Model core. It was automatically created
 ## [1.12.6] - 2022-03-03
 
 ### Added
-- Updated numpy package to version 1.22.2
 
 ### Changed
+- Updated numpy package to version 1.22.2
 - Mitigated weak code warnings in `base.functions` 
 - Mitigated weak code warning in `stores.SqlLiteStore` 
 - Mitigated weak code warning in `components.LandscapeScenarioPreparation` 
@@ -360,8 +379,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Switched to Google docstring style in `base.Component` 
 - Switched to Google docstring style in `base.Experiment` 
 - Switched to Google docstring style in `base.functions` 
-- Switched to Google docstring style in `component.CsvReader` 
-- Switched to Google docstring style in `component.DepositionToPecSoil` 
 - Switched to Google docstring style in `attrib.Class` 
 - Switched to Google docstring style in `attrib.Equals` 
 - Switched to Google docstring style in `attrib.InList` 
@@ -369,6 +386,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Switched to Google docstring style in `attrib.Scales` 
 - Switched to Google docstring style in `attrib.Transformable` 
 - Switched to Google docstring style in `attrib.Unit` 
+- Switched to Google docstring style in `component.CsvReader` 
+- Switched to Google docstring style in `component.DepositionToPecSoil` 
 - Switched to Google docstring style in `stores.InMemoryStore` 
 - Switched to Google docstring style in `stores.SqlLiteStore` 
 - Switched to Google docstring style in `stores.X3dfStore` 
@@ -452,9 +471,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Type hints to `base.UserParameters` 
 - Type hints to `base.Experiment` 
 - Type hints to `base.functions` 
-- Type hints to `components.CsvReader` 
-- Type hints to `components.DeleteFolder` 
-- Type hints to `components.DepositionToPecSoil` 
 - Type hints to `attrib.Class` 
 - Type hints to `attrib.Equals` 
 - Type hints to `attrib.InList` 
@@ -462,6 +478,9 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Type hints to `attrib.Scales` 
 - Type hints to `attrib.Transformable` 
 - Type hints to `attrib.Unit` 
+- Type hints to `components.CsvReader` 
+- Type hints to `components.DeleteFolder` 
+- Type hints to `components.DepositionToPecSoil` 
 - Type hints to `components.DepositionToReach` 
 - Type hints to `components.DoseResponse` 
 - Type hints to `components.EnvironmentalFate` 
@@ -491,9 +510,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 ### Changed
 - None-return instead of NotImplementedError in `base.Observer` methods
-- Harmonized init signature of `components.CsvReader` with base class
-- Harmonized init signature of `components.DeleteFolder` with base class
-- Harmonized init signature of `components.DepositionToPecSoil` with base class
 - `attrib.Class` got new base class `base.DataAttribute` 
 - Removed support of string-based type definitions in `attrib.Class` in favor for generic types introduced in Python 3.9
 - `attrib.Equals` got new base class `base.DataAttribute` 
@@ -503,6 +519,9 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `attrib.Scales` got new base class `base.DataAttribute` 
 - `attrib.Transformable` got new base class `base.DataAttribute` 
 - `attrib.Unit` got new base class `base.DataAttribute` 
+- Harmonized init signature of `components.CsvReader` with base class
+- Harmonized init signature of `components.DeleteFolder` with base class
+- Harmonized init signature of `components.DepositionToPecSoil` with base class
 - Harmonized init signature of `components.DepositionToReach` with base class
 - Harmonized init signature of `components.DoseResponse` with base class
 - Harmonized init signature of `components.EnvironmentalFate` with base class
@@ -693,10 +712,10 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `base.Component` changelog uses markdown for code elements
 - `base.UserParameters` changelog uses markdown for code elements
 - `base.Experiment` changelog uses markdown for code elements
+- `attrib.Transformable` changelog uses markdown for code elements
 - `components.CsvReader` changelog uses markdown for code elements
 - `components.DeleteFolder` changelog uses markdown for code elements
 - `components.DepositionToPecSoil` changelog uses markdown for code elements
-- `attrib.Transformable` changelog uses markdown for code elements
 - `components.DepositionToReach` changelog uses markdown for code elements
 - `components.DoseResponse` changelog uses markdown for code elements
 - `store.InMemoryStore` changelog uses markdown for code elements
@@ -828,13 +847,13 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `init.py` spell check exclusions
 - `base.UserParameters` property names
 - `base.functions` changelog uses markdown for code elements
-- `components.DepositionToPecSoil` data type access
 - `attrib.Class` changelog uses markdown for code elements
 - `attrib.Equals` changelog uses markdown for code elements
 - `attrib.Ontology` changelog uses markdown for code elements
 - `attrib.Scales` changelog uses markdown for code elements
 - `attrib.Unit` changelog uses markdown for code elements
 - `attrib` changelog uses markdown for code elements
+- `components.DepositionToPecSoil` data type access
 - `components.DepositionToReach` data type access
 - `components.DoseResponse` data type access
 - renamed `components.EnvironmentalFate` component
@@ -974,8 +993,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Changelog in `base.UserParameters` 
 - Changelog in `base.Experiment` 
 - Changelog in `base.functions` 
-- Changelog in `components.CsvReader` 
-- Changelog in `components.DepositionToPecSoil` 
 - Changelog in class `attrib.Class` 
 - Changelog in class `attrib.Equals` 
 - Changelog in class `attrib.Ontology`
@@ -983,6 +1000,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Changelog in `attrib.Transformable`
 - Changelog in class `attrib.Unit` 
 - Changelog in `attrib` 
+- Changelog in `components.CsvReader` 
+- Changelog in `components.DepositionToPecSoil` 
 - Changelog in `components.DepositionToReach`
 - Changelog in `components.DoseResponse`
 - Changelog in `components.EnvironmentalFate`
@@ -1017,10 +1036,10 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Changed `base.VERSION` to a `base.VersionCollection`, tracking changes in classes
 - `base.VersionInfo` completely rewritten to move changelogs nearer to code
 - `base.Experiment.write_info_xml()` uses new `Version` classes
+- Removed class `attrib.VERSION` 
 - `components.CsvReader` class documentation
 - `components.DepositionToPecSoil` class documentation
 - Removed unused output `PecSoil 2` from `components.DepositionToPecSoil` 
-- Removed class `attrib.VERSION` 
 - `components.DepositionToReach` class documentation
 - `components.DoseResponse` class documentation
 - `components.EnvironmentalFate` class documentation
@@ -1113,13 +1132,13 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `base.Input.read()` passes metadata from provider to `base.Values` object
 - `base.InputContainer` refactored
 - `base.Component` refactored
-- `components.CsvReader` refactored
 - `attrib.Class.check()` returns base.CheckResult instead of tuple
 - `attrib.Equals.check()` returns base.CheckResult instead of tuple
 - `attrib.Equals` refactored
 - `attrib.Ontology.check()` returns base.CheckResult instead of tuple
 - `attrib.Transformable.check()` returns base.CheckResult instead of tuple
 - `attrib.Unit.check()` returns base.CheckResult instead of tuple
+- `components.CsvReader` refactored
 - `components.DepositionToReach` checks input types strictly
 - `components.DepositionToReach` checks for physical units
 - `components.DepositionToReach` reports physical units to the data store
@@ -1635,11 +1654,11 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `base.UserParameters` class for user-defined parameters
 - `base.Experiment` class for managing individual experiments
 - `base.functions` providing helper functions
-- `components.CsvReader` component
-- `components.DepositionToPecSoil` component
 - `attrib.Class` 
 - `Transformable` attribute checker
 - `attrib` namespace
+- `components.CsvReader` component
+- `components.DepositionToPecSoil` component
 - `components.EnvironmentalFate` component
 - `store.InMemoryStore` 
 - `store.X3dfStore` 

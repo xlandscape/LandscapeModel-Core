@@ -21,6 +21,8 @@ class Values:
     base.VERSION.added("1.10.0", "`base.Values` have element names now")
     base.VERSION.changed("1.10.0", "`base.Values` switched to Google-style docstrings")
     base.VERSION.added("1.13.0", "Offset property to `base.Values` ")
+    base.VERSION.changed("1.14.0", "`base.Values` now manages geometries of elements")
+    base.VERSION.added("1.14.0", "class `base.ExistingValues` for referencing values already stored")
 
     # noinspection PyUnusedLocal
     def __init__(
@@ -31,6 +33,7 @@ class Values:
             scales: str = "global",
             element_names: typing.Optional[typing.Sequence["base.Output"]] = None,
             offsets: typing.Optional[typing.Sequence[datetime.date]] = None,
+            geometries: typing.Optional[typing.Sequence["base.Output"]] = None,
             **keywords
     ) -> None:
         """
@@ -42,6 +45,8 @@ class Values:
             unit: The physical unit of the values.
             scales: The scales to which the values apply.
             element_names: The identifiers of the individual elements per scale.
+            offsets: The offsets of linear scales.
+            geometries: The spatial extents of scales.
             **keywords: Additional keywords not stored in the object.
         """
         self._values = values
@@ -52,6 +57,7 @@ class Values:
         self._scales = scales
         self._element_names = element_names
         self._offsets = offsets
+        self._geometries = geometries
 
     @property
     def extension(self) -> base.Extensions:
@@ -112,3 +118,18 @@ class Values:
             The offsets of the first element per scale.
         """
         return self._offsets
+
+    @property
+    def geometries(self) -> typing.Optional[typing.Sequence["base.Output"]]:
+        """
+        Gets the geometries of the values.
+
+        Returns:
+            The spatial extents to which the values apply per scale.
+        """
+        return self._geometries
+
+
+class ExistingValues:
+    """A class referencing to already existing values in a data store."""
+    pass

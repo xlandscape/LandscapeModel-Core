@@ -62,6 +62,8 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.12.0", "`components.LandscapeScenario` output scale order")
     base.VERSION.changed("1.12.0", "`components.LandscapeScenario` reports offset")
     base.VERSION.changed("1.12.5", "Perform XML schema validation in `components.LandscapeScenario` ")
+    base.VERSION.changed(
+        "1.14.0", "`components.LandscapeScenario` reports geometries of values also as value attributes")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -325,21 +327,33 @@ class LandscapeScenario(base.Component):
                     raise ValueError(
                         f"NULL values in feature attributes are not supported ({file_name}: {attribute[0]})")
                 values[attribute[1]].append(value)
+        self.outputs[geometry_output].set_values(
+            geometries,
+            scales="space/base_geometry",
+            geometries=(self.outputs[geometry_output],),
+            ignore_missing_metadata=("element_names",)
+        )
         for attribute, attribute_values in values.items():
             if attribute == id_attribute:
-                self._import_attribute_values(attribute, attribute_values, units, self.outputs[id_attribute])
+                self._import_attribute_values(
+                    attribute, attribute_values, units, self.outputs[id_attribute], self.outputs[geometry_output])
         for attribute, attribute_values in values.items():
             if attribute != id_attribute:
-                self._import_attribute_values(attribute, attribute_values, units, self.outputs[id_attribute])
+                self._import_attribute_values(
+                    attribute, attribute_values, units, self.outputs[id_attribute], self.outputs[geometry_output])
         self.outputs[geometry_output].set_values(
-            geometries, scales="space/base_geometry", element_names=(self.outputs[id_attribute],))
+            base.ExistingValues,
+            element_names=(self.outputs[id_attribute],),
+            ignore_missing_metadata=("geometries",)
+        )
 
     def _import_attribute_values(
             self,
             attribute: str,
             attribute_values: list,
             units: typing.Optional[typing.Mapping[str, str]],
-            element_names: base.Output
+            element_names: base.Output,
+            geometries: base.Output
     ):
         """
         Imports feature attribute values into the Landscape Model data store.
@@ -349,6 +363,7 @@ class LandscapeScenario(base.Component):
             attribute_values: The values to import.
             units: The physical units associated with the shapefile attributes.
             element_names: The output containing the identifiers of individual features.
+            geometries: The spatial extents of individual features.
 
         Returns:
             Nothing.
@@ -357,4 +372,9 @@ class LandscapeScenario(base.Component):
         if units is not None and attribute in units:
             unit = units[attribute]
         self.outputs[attribute].set_values(
-            attribute_values, scales="space/base_geometry", unit=unit, element_names=(element_names,))
+            attribute_values,
+            scales="space/base_geometry",
+            unit=unit,
+            element_names=(element_names,),
+            geometries=(geometries,)
+        )

@@ -20,6 +20,8 @@ class Unit(base.DataAttribute):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Unit` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Unit` ")
     base.VERSION.changed("1.10.0", "`attrib.Unit` keeps element names for converted values")
+    base.VERSION.changed(
+        "1.14.0", "`attrib.Unit` keeps additional value attributes (offsets and geometries) during conversion")
 
     def __init__(self, expected_unit: typing.Optional[str], severity: int = 2) -> None:
         """
@@ -62,7 +64,15 @@ class Unit(base.DataAttribute):
         if adapted_values is not None:
             return base.CheckResult(
                 (3, f"Values of unit {original_unit} have been converted to {self.unit}"),
-                base.Values(adapted_values, values.extension, self._unit, values.scales, values.element_names)
+                base.Values(
+                    adapted_values,
+                    values.extension,
+                    self._unit,
+                    values.scales,
+                    values.element_names,
+                    values.offsets,
+                    values.geometries
+                )
             )
         return base.CheckResult(
             (self._severity, f"Values have unit {original_unit}, not {self.unit}"),

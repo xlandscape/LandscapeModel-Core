@@ -1,4 +1,6 @@
 """Imports of the `components` module."""
+from .BeeForage import *
+from .BeeHave import *
 from .CsvReader import *
 from .DeleteFolder import *
 from .DepositionToPecSoil import *
@@ -9,6 +11,7 @@ from .ExportData import *
 from .ReportingDistribution import *
 from .ReportingHydrographicMap import *
 from .HydrologyFromTimeSeries import *
+from .LandCoverToVegetation import *
 from .LandscapeScenarioPreparation import *
 from .LandscapeScenario import *
 from .MarsWeather import *

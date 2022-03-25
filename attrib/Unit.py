@@ -62,7 +62,15 @@ class Unit(base.DataAttribute):
         if adapted_values is not None:
             return base.CheckResult(
                 (3, f"Values of unit {original_unit} have been converted to {self.unit}"),
-                base.Values(adapted_values, values.extension, self._unit, values.scales, values.element_names)
+                base.Values(
+                    adapted_values,
+                    values.extension,
+                    self._unit,
+                    values.scales,
+                    values.element_names,
+                    values.offsets,
+                    values.geometries
+                )
             )
         return base.CheckResult(
             (self._severity, f"Values have unit {original_unit}, not {self.unit}"),

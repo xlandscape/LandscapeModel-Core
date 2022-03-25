@@ -95,7 +95,7 @@ class X3dfStore(base.Store):
         self._observer = observer
         self._known_scales = {
             "global": "plain",
-            "space/base_geometry": "named",
+            "space/base_geometry": "named geometries",
             "space/extent": "plain",
             "space/reach": "named",
             "space/reach2": "named",
@@ -135,6 +135,7 @@ class X3dfStore(base.Store):
         data_set = self._f[name]
         element_names = []
         offsets = []
+        geometries = []
         scales = data_set.attrs.get("scales", ("global",))
         for dim in range(len(data_set.shape)):
             element_names.append(None)
@@ -155,6 +156,10 @@ class X3dfStore(base.Store):
                     if scales[dim] != "time/year" and not scales[dim].startswith(
                             "space_") and not scales[dim].endswith("sqm"):
                         self._observer.write_message(2, f"Unimplemented description for offset scale {scales[dim]}")
+            geometries.append(None)
+            geometries_attribute = f"dim{dim}_geometries"
+            if geometries_attribute in data_set.attrs:
+                geometries[dim] = base.Output(self._f[data_set.attrs[geometries_attribute]].name, self)
         return {
             "shape": data_set.shape,
             "data_type": data_set.dtype,
@@ -162,7 +167,8 @@ class X3dfStore(base.Store):
             "unit": data_set.attrs.get("unit", None),
             "scales": ", ".join(scales),
             "element_names": element_names,
-            "offsets": offsets
+            "offsets": offsets,
+            "geometries": geometries
         }
 
     def get_values(self, name: str, **keywords) -> typing.Any:
@@ -257,7 +263,9 @@ class X3dfStore(base.Store):
             calculate_max: bool = False,
             element_names: typing.Optional[typing.Union[list[str], list[base.Output]]] = None,
             offset: typing.Optional[list] = None,
-            requires_indexing: typing.Optional[bool] = None
+            requires_indexing: typing.Optional[bool] = None,
+            geometries: typing.Optional[list[base.Output]] = None,
+            ignore_missing_metadata: list[str] = ()
     ) -> None:
         """
         Stores a data set in the store.
@@ -278,6 +286,9 @@ class X3dfStore(base.Store):
             element_names: Specifies datasets by name that contain the identifiers of named elements per scale.
             offset: Specifies the origin of an axis along the consecutive elements of a scale.
             requires_indexing: Specifies whether retrieving values later on strictly requires coordinates.
+            geometries: Specifies datasets that contain the spatial extents per scale.
+            ignore_missing_metadata: A list of metadata names that are expected by a scale and are not passed to the
+            function but still should not result in a warning.
 
         Returns:
             Nothing.
@@ -298,7 +309,8 @@ class X3dfStore(base.Store):
             if all(isinstance(x, bytes) for x in values):
                 # noinspection PyUnresolvedReferences
                 data_type = h5py.vlen_dtype(numpy.uint8)
-                data_set = self._f.create_dataset(name, (len(values),), dtype=data_type)
+                data_set = self._f.create_dataset(
+                    name, (len(values),), dtype=data_type, compression="gzip", chunks=(1,))
                 for i in range(len(values)):
                     data_set[i] = numpy.fromstring(values[i], dtype=numpy.uint8)
                 self._f[name].attrs["_type"] = "list[bytes]"
@@ -340,6 +352,8 @@ class X3dfStore(base.Store):
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"
                 dimension_count = len(shape)
+            elif type_name == "base.Values.ExistingValues":
+                pass
             else:
                 raise TypeError(f"Unsupported type: {type(values)}")
         elif isinstance(values, datetime.datetime):
@@ -375,22 +389,47 @@ class X3dfStore(base.Store):
             raise TypeError(f"Cannot store objects of type {type(values)} in X3df")
         element_names = None if element_names is None else [
             x.store_name if isinstance(x, base.Output) else x for x in element_names]
+        geometries = None if geometries is None else [
+            x.store_name if isinstance(x, base.Output) else x for x in geometries]
         if element_names is not None and len(element_names) != dimension_count:
             self._observer.store_set_values(2, "X3dfStore", f"Element names and dimensionality of {name} do not fit")
+        if geometries is not None and len(geometries) != dimension_count:
+            self._observer.store_set_values(2, "X3dfStore", f"Geometries and dimensionality of {name} do not fit")
+        if any([x.endswith("_element_names") for x in self._f[name].attrs]):
+            if element_names is not None:
+                raise ValueError(f"Cannot override existing element names for {name}")
+            element_names = [None] * dimension_count
+            for element_names_dim in [x for x in self._f[name].attrs if x.endswith("_element_names")]:
+                element_names[int(element_names_dim.removeprefix("dim").removesuffix("_element_names"))] = self._f[
+                    name].attrs[element_names_dim]
+        if any([x.endswith("_geometries") for x in self._f[name].attrs]):
+            if geometries is not None:
+                raise ValueError(f"Cannot override existing geometries for {name}")
+            geometries = [None] * dimension_count
+            for geometries_dim in [x for x in self._f[name].attrs if x.endswith("_geometries")]:
+                geometries[int(geometries_dim.removeprefix("dim").removesuffix("_geometries"))] = self._f[
+                    name].attrs[geometries_dim]
+        if any([x.endswith("_offset") for x in self._f[name].attrs]):
+            if offset is not None:
+                raise ValueError(f"Cannot override existing offsets for {name}")
+            offset = [None] * dimension_count
+            for offset_dim in [x for x in self._f[name].attrs if x.endswith("_offset")]:
+                offset[int(offset_dim.removeprefix("dim").removesuffix("_offset"))] = self._f[name].attrs[offset_dim]
         if "scales" in self._f[name].attrs:
             if scales is not None and scales != ", ".join(self._f[name].attrs["scales"]):
                 raise ValueError(f"Cannot override existing scales definition for {name}")
+            scales = ", ".join(self._f[name].attrs["scales"])
+        if scales is None:
+            self._observer.store_set_values(3, "X3dfStore", f"No scales provided for {name}")
         else:
-            if scales is None:
-                self._observer.store_set_values(3, "X3dfStore", f"No scales provided for {name}")
-            else:
-                scales_list = scales.split(", ")
-                if len(scales_list) != dimension_count:
-                    self._observer.store_set_values(2, "X3dfStore", f"Scales and dimensionality of {name} do not fit")
-                self._f[name].attrs["scales"] = scales_list
-                for dim, scale in enumerate(scales_list):
-                    element_description = self._known_scales.get(scale)
-                    if element_description == "named":
+            scales_list = scales.split(", ")
+            if len(scales_list) != dimension_count:
+                self._observer.store_set_values(2, "X3dfStore", f"Scales and dimensionality of {name} do not fit")
+            self._f[name].attrs["scales"] = scales_list
+            for dim, scale in enumerate(scales_list):
+                element_description = self._known_scales.get(scale)
+                if element_description in ("named", "named geometries"):
+                    if "element_names" not in ignore_missing_metadata:
                         if element_names is None or element_names[dim] is None:
                             self._observer.store_set_values(
                                 2, "X3dfStore", f"{name} did not specify element names for {scale}")
@@ -401,34 +440,49 @@ class X3dfStore(base.Store):
                                     "X3dfStore",
                                     f"Number of names in {element_names} and elements in {name} do not fit"
                                 )
-                        if offset is not None and offset[dim] is not None:
-                            self._observer.store_set_values(
-                                3, "X3dfStore", f"Offset provided for {scale} that does not require an offset")
-                    elif element_description == "plain":
-                        if element_names is not None and element_names[dim] is not None:
-                            self._observer.store_set_values(
-                                3, "X3dfStore", f"Names provided for {scale} that does not require named elements")
-                        if offset is not None and offset[dim] is not None:
-                            self._observer.store_set_values(
-                                3, "X3dfStore", f"Offset provided for {scale} that does not require an offset")
-                    elif element_description == "offset" or (
-                            scale.startswith("space_x/") or scale.startswith("space_y/")) and scale.endswith("sqm"):
-                        if offset is None or offset[dim] is None:
-                            self._observer.store_set_values(
-                                2, "X3dfStore", f"{name} did not specify an offset for {scale}")
-                        if element_names is not None and element_names[dim] is not None:
-                            self._observer.store_set_values(
-                                3, "X3dfStore", f"Names provided for {scale} that does not require named elements")
-                    else:
-                        self._observer.store_set_values(2, "X3dfStore", f"Unknown scale: {scale}")
-                    if element_names is not None and element_names[dim] is not None:
-                        self._f[name].attrs[f"dim{dim}_element_names"] = self._f[element_names[dim]].ref
                     if offset is not None and offset[dim] is not None:
-                        if scale in ("time/day", "time/hour"):
-                            stored_offset = str(offset[dim])
-                        else:
-                            stored_offset = offset[dim]
-                        self._f[name].attrs[f"dim{dim}_offset"] = stored_offset
+                        self._observer.store_set_values(
+                            3, "X3dfStore", f"Offset provided for {scale} that does not require an offset")
+                    if element_description == "named" and geometries is not None and geometries[dim] is not None:
+                        self._observer.store_set_values(
+                            3, "X3dfStore", f"Geometries provided for {scale} that does not require geometries")
+                elif element_description == "plain":
+                    if element_names is not None and element_names[dim] is not None:
+                        self._observer.store_set_values(
+                            3, "X3dfStore", f"Names provided for {scale} that does not require named elements")
+                    if offset is not None and offset[dim] is not None:
+                        self._observer.store_set_values(
+                            3, "X3dfStore", f"Offset provided for {scale} that does not require an offset")
+                    if geometries is not None and geometries[dim] is not None:
+                        self._observer.store_set_values(
+                            3, "X3dfStore", f"Geometries provided for {scale} that does not require geometries")
+                elif element_description == "offset" or (
+                        scale.startswith("space_x/") or scale.startswith("space_y/")) and scale.endswith("sqm"):
+                    if offset is None or offset[dim] is None:
+                        self._observer.store_set_values(
+                            2, "X3dfStore", f"{name} did not specify an offset for {scale}")
+                    if element_names is not None and element_names[dim] is not None:
+                        self._observer.store_set_values(
+                            3, "X3dfStore", f"Names provided for {scale} that does not require named elements")
+                    if geometries is not None and geometries[dim] is not None:
+                        self._observer.store_set_values(
+                            3, "X3dfStore", f"Geometries provided for {scale} that does not require geometries")
+                else:
+                    self._observer.store_set_values(2, "X3dfStore", f"Unknown scale: {scale}")
+                if element_names is not None and element_names[dim] is not None:
+                    self._f[name].attrs[f"dim{dim}_element_names"] = self._f[element_names[dim]].ref
+                if offset is not None and offset[dim] is not None:
+                    if scale in ("time/day", "time/hour"):
+                        stored_offset = str(offset[dim])
+                    else:
+                        stored_offset = offset[dim]
+                    self._f[name].attrs[f"dim{dim}_offset"] = stored_offset
+                if element_description == "named geometries":
+                    if (geometries is None or geometries[dim] is None) and "geometries" not in ignore_missing_metadata:
+                        self._observer.store_set_values(
+                            2, "X3dfStore", f"{name} did not specify geometries for {scale}")
+                if geometries is not None and geometries[dim] is not None:
+                    self._f[name].attrs[f"dim{dim}_geometries"] = self._f[geometries[dim]].ref
         if unit is not None:
             self._f[name].attrs["unit"] = unit
         if requires_indexing and not isinstance(values, numpy.ndarray):

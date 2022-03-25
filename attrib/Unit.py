@@ -20,6 +20,8 @@ class Unit(base.DataAttribute):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Unit` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Unit` ")
     base.VERSION.changed("1.10.0", "`attrib.Unit` keeps element names for converted values")
+    base.VERSION.changed(
+        "1.14.0", "`attrib.Unit` keeps additional value attributes (offsets and geometries) during conversion")
 
     def __init__(self, expected_unit: typing.Optional[str], severity: int = 2) -> None:
         """

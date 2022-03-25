@@ -21,6 +21,8 @@ class Values:
     base.VERSION.added("1.10.0", "`base.Values` have element names now")
     base.VERSION.changed("1.10.0", "`base.Values` switched to Google-style docstrings")
     base.VERSION.added("1.13.0", "Offset property to `base.Values` ")
+    base.VERSION.changed("1.14.0", "`base.Values` now manages geometries of elements")
+    base.VERSION.added("1.14.0", "class `base.ExistingValues` for referencing values already stored")
 
     # noinspection PyUnusedLocal
     def __init__(

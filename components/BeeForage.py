@@ -33,6 +33,9 @@ class BeeForage(base.Component):
             default_observer: The default observer of the component.
             default_store: The default store of the component.
         """
+        # CHANGELOG
+        base.VERSION.added("1.14.0", "`components.BeeForage` ")
+
         super(BeeForage, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
             self,

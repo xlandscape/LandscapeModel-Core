@@ -21,6 +21,9 @@ class LandCoverToVegetation(base.Component):
     OUTPUTS
     Vegetation: A list of vegetation classes at a space/base_geometry scale.
     """
+    # CHANGELOG
+    base.VERSION.added("1.14.0", "`components.LandCoverToVegetation` ")
+
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
         Initializes a LandCoverToVegetation component.

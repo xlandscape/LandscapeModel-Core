@@ -19,6 +19,7 @@ from .PpmCalendar import *
 from .TerRQ import *
 from .UserParameters import *
 from .WaterTemperatureFromAirTemperature import *
+from .XPPP.XPPP import *
 
 import base.VERSION
 

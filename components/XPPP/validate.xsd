@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- define attributes -->
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="unit" type="xs:string"/>
+    <xs:attribute name="scales" type="xs:string"/>
+    <xs:attribute name="dist" type="xs:string"/>
+    <xs:attribute name="format" type="xs:string"/>
+
+    <!-- define types -->
+    <xs:simpleType name="simple-int-list">
+        <xs:list itemType="xs:integer"/>
+    </xs:simpleType>
+    <xs:complexType name="int-list">
+        <xs:simpleContent>
+            <xs:extension base="simple-int-list">
+                <xs:attribute ref="type" use="required"/>
+                <xs:attribute ref="unit"/>
+                <xs:attribute ref="scales" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="str">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="type" use="required"/>
+                <xs:attribute ref="unit"/>
+                <xs:attribute ref="scales" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="str-param">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="type" use="required"/>
+                <xs:attribute ref="scales" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="float-param">
+        <xs:simpleContent>
+            <xs:extension base="xs:decimal">
+                <xs:attribute ref="type" use="required"/>
+                <xs:attribute ref="scales" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="class-param">
+        <xs:choice>
+            <xs:sequence>
+                <xs:element name="Name" type="str-param"/>
+                <xs:element name="Probability" type="float-param"/>
+            </xs:sequence>
+        </xs:choice>
+        <xs:attribute name="type" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="list-param">
+        <xs:choice>
+            <xs:sequence>
+                <xs:element name="Choice" type="class-param" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:choice>
+        <xs:attribute name="type" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="distribution">
+        <xs:choice>
+            <xs:sequence>
+                <xs:element name="ApplicationDateStart" type="str-param"/>
+                <xs:element name="ApplicationDateEnd" type="str-param"/>
+                <xs:element name="ApplicationTimeStart" type="str-param"/>
+                <xs:element name="ApplicationTimeEnd" type="str-param"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="Lower" type="float-param"/>
+                <xs:element name="Upper" type="float-param"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="Mean" type="float-param"/>
+                <xs:element name="SD" type="float-param"/>
+            </xs:sequence>
+            <xs:sequence>
+                <xs:element name="ChoiceList" type="list-param"/>
+            </xs:sequence>
+        </xs:choice>
+        <xs:attribute name="type" use="required"/>
+        <xs:attribute name="unit"/>
+        <xs:attribute name="scales" use="required"/>
+        <xs:attribute name="dist" use="required"/>
+        <xs:attribute name="format"/>
+    </xs:complexType>
+
+    <!-- define elements -->
+    <xs:element name="Products">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Product" type="distribution" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Tank">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Products"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="PPMCalendar">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="TargetCrops" type="int-list"/>
+                <xs:element name="ApplicationWindow" type="distribution"/>
+                <xs:element name="InCropBuffer" type="distribution"/>
+                <xs:element name="InFieldMargin" type="distribution"/>
+                <xs:element name="MinimumAppliedArea" type="distribution"/>
+                <xs:element ref="Tank"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="PPMCalendars">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="PPMCalendar" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Application">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Technology" type="distribution"/>
+                <xs:element name="ApplicationRate" type="distribution"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Applications">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Application" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="PPP">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Product" type="str"/>
+                <xs:element name="DaysBetweenApplications" type="distribution"/>
+                <xs:element ref="Applications"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="PPPs">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="PPP" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Technology">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Technology" type="str"/>
+                <xs:element name="DriftReduction" type="distribution"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Technologies">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Technology" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="XPPP">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="PPMCalendars"/>
+                <xs:element ref="PPPs"/>
+                <xs:element ref="Technologies"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

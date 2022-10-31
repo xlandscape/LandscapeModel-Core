@@ -8,5 +8,5 @@ def convert_index(index, source_scale, target_scale):
     elif source_scale == "time/day" and target_scale == "time/year":
         target_index = datetime.datetime.fromordinal(index).year
     else:
-        raise NotImplementedError("Conversion from {source_scale} to {target_scale} not implemented!")
+        raise NotImplementedError(f"Conversion from {source_scale} to {target_scale} not implemented!")
     return target_index

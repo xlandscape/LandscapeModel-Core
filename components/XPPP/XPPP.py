@@ -33,7 +33,6 @@ class XPPP(base.Component):
     # CHANGELOG
     VERSION.added("1.0.0", "First release of `XPPP` ")
 
-    SCALES = ("global", "time/day, space/base_geometry")
     RANDOM_VARIABLE_SCALES = ("global", "time/day", "time/year", "time/day, space/base_geometry", "time/year, space/base_geometry")
 
     def __init__(self, 
@@ -44,6 +43,11 @@ class XPPP(base.Component):
         super(XPPP, self).__init__(name, default_observer, default_store)
         self._module = base.Module("XPPP", "1.0", r"module\README.md") 
         self._inputs = base.InputContainer(self, [
+            base.Input(
+                "ParametrizationNamespace",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer
+            ),
             base.Input(
                 "XPPPFilePath",
                 (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
@@ -105,7 +109,7 @@ class XPPP(base.Component):
                 description="Applied products. A list[str] of scale other/application.")
         ])
         self._ppmCalendars = None
-        self._pppContainer = None
+        self._productLabelContainer = None
         self._technologyContainer = None
 
     @property
@@ -117,12 +121,12 @@ class XPPP(base.Component):
         self._ppmCalendars = value
 
     @property
-    def PPPs(self) -> PPPContainer:
-        return self._pppContainer
+    def ProductLabels(self) -> ProductLabelContainer:
+        return self._productLabelContainer
 
-    @PPPs.setter
-    def PPPs(self, value: PPPContainer) -> None:
-        self._pppContainer = value
+    @ProductLabels.setter
+    def ProductLabels(self, value: ProductLabelContainer) -> None:
+        self._productLabelContainer = value
 
     @property
     def Technologies(self) -> TechnologyContainer:
@@ -131,12 +135,6 @@ class XPPP(base.Component):
     @Technologies.setter
     def Technologies(self, value: TechnologyContainer) -> None:
         self._technologyContainer = value
-
-    def check_scales(self, scales: str) -> None:
-
-        # if scales were not implemented, raise exception:
-        if scales not in self.SCALES:
-            raise NotImplementedError(f"XPPP was not implemented for input scale '{scales}'!")
 
     def check_random_variable_scales(self, scales: str) -> None:
 
@@ -147,16 +145,10 @@ class XPPP(base.Component):
     def set_input(self, component: base.Component, config: xml.etree.ElementTree, ids: typing.List[int]) -> None: 
         
         # get type:
-        try:
+        if "type" in config.attrib:
             type = config.attrib["type"]
-        except KeyError:
-            raise KeyError("Type has to be specified for all inputs!")
-
-        # check scales:
-        try:
-            self.check_scales(config.attrib["scales"])
-        except KeyError:
-            raise KeyError("Scales have to specified for all inputs!")
+        else:
+            type = "str"
 
         # create output:
         value_config = copy.copy(config)
@@ -164,10 +156,10 @@ class XPPP(base.Component):
             value_config.attrib["type"] = "int"
         elif type == "param/float":
             value_config.attrib["type"] = "float"
-        elif type == "str" or type == "param/str" or type == "param/date" or type == "param/time":
+        elif type == "param/str" or type == "param/date" or type == "param/time":
             del value_config.attrib["type"]
         value = base.convert(value_config)
-        output = base.Output(f"XPPP/{config.tag}_{len(ids)}", self.default_store)
+        output = base.Output(f"XPPP/{config.tag.split('}')[1]}_{len(ids)}", self.default_store)
         ids.append(len(ids))
         try: 
             output.set_values(
@@ -179,39 +171,7 @@ class XPPP(base.Component):
             raise KeyError("Scales have to be specified for input values!")
 
         # set input:
-        component.inputs[config.tag] = output
-
-        # # create provider:
-        # provider = base.DataProvider(output)
-
-        # # get input attributes:
-        # input_scales = attrib.Scales(config.attrib["scales"], 1) 
-        # input_unit = attrib.Unit(config.attrib["unit"] if "unit" in config.attrib else None, 1)
-        # if type == "int" or type == "param/int":
-        #     input_type = attrib.Class(int, 1)
-        # elif type == "float" or type == "param/float":
-        #     input_type = attrib.Class(float, 1)
-        # elif type == "str" or type == "param/str":
-        #     input_type = attrib.Class(str, 1)
-        # elif type == "list[int]":
-        #     input_type = attrib.Class(list[int], 1)
-        # elif type == "list[float]":
-        #     input_type = attrib.Class(list[float], 1)
-        # elif type == "list[str]":
-        #     input_type = attrib.Class(list[str], 1)
-        # elif type == "param/date":
-        #     input_type = attrib.Class(str, 1)
-        # elif type == "param/time":
-        #     input_type = attrib.Class(str, 1)
-        # input = base.Input(
-        #         config.tag,
-        #         (input_type, input_unit, input_scales),
-        #         self.default_observer
-        #     )
-
-        # # set provider:
-        # input.provider = provider
-        # return input
+        component.inputs[config.tag.split("}")[1]] = output
 
     def read_inputs(self, parent_object: typing.Any, root: xml.etree.ElementTree, ids: typing.List[int]) -> None:
 
@@ -219,17 +179,20 @@ class XPPP(base.Component):
         for child in root:
 
             # get type:
-            try:
+            if "type" in child.attrib:
                 child_type = child.attrib["type"]
-            except KeyError:
-                raise KeyError("Type has to be specified for all inputs!")
+            else:
+                child_type = "str"
 
             # go through all cases:
             if child_type == "class" or child_type == "param/class":
-                child_object = globals()[child.tag](child.tag, self.default_observer, self.default_store)
+                child_object = globals()[child.tag.split("}")[1]](child.tag, self.default_observer, self.default_store)
                 self.read_inputs(child_object, child, ids)
             elif child_type == "list[class]" or child_type == "param/list":
                 child_object = []
+                self.read_inputs(child_object, child, ids)
+            elif child_type == "dict[class]":
+                child_object = {}
                 self.read_inputs(child_object, child, ids)
             elif child_type == "random":
                 child_object = RandomVariable() 
@@ -264,10 +227,12 @@ class XPPP(base.Component):
                 continue
 
             # if this point is reached, child is an object and has to be set manually:
-            if isinstance(parent_object, list) or isinstance(parent_object, XPPPContainer):
+            if isinstance(parent_object, list): 
                 parent_object.append(child_object)
+            elif isinstance(parent_object, dict) or isinstance(parent_object, ProductLabelContainer) or isinstance(parent_object, TechnologyContainer):                
+                parent_object[child.attrib["id"]] = child_object
             else:
-                setattr(parent_object, child.tag, child_object)
+                setattr(parent_object, child.tag.split("}")[1], child_object)
 
     def read_xml(self) -> None:
   
@@ -275,22 +240,23 @@ class XPPP(base.Component):
         xml_file = self.inputs["XPPPFilePath"].read().values
         xml_tree = xml.etree.ElementTree.parse(xml_file)
         root = xml_tree.getroot()
+        namespace = {"": self.inputs["ParametrizationNamespace"].read().values}
 
         # create lists and containers:
         self.PPMCalendars = []
-        self.PPPs = PPPContainer("PPPContainer", self.default_observer, self.default_store)
+        self.ProductLabels = ProductLabelContainer("ProductLabelContainer", self.default_observer, self.default_store)
         self.Technologies = TechnologyContainer("TechnologyContainer", self.default_observer, self.default_store)
 
         # read lists and containers:
         ids = []
-        self.read_inputs(self.PPMCalendars, root.find("PPMCalendars"), ids)
-        self.read_inputs(self.PPPs, root.find("PPPs"), ids)
-        self.read_inputs(self.Technologies, root.find("Technologies"), ids)
+        self.read_inputs(self.PPMCalendars, root.find("PPMCalendars", namespace), ids)
+        self.read_inputs(self.ProductLabels, root.find("ProductLabels", namespace), ids)
+        self.read_inputs(self.Technologies, root.find("Technologies", namespace), ids)
 
         # initialize:
         for ppm_cal in self.PPMCalendars:
             ppm_cal.initialize()
-        self.PPPs.initialize()
+        self.ProductLabels.initialize()
         self.Technologies.initialize()
 
     def run(self):
@@ -318,7 +284,7 @@ class XPPP(base.Component):
         # read fields, crop ids and geometries:
         fields = self.inputs["Fields"].read().values
         crop_ids = self.inputs["LandUseLandCoverTypes"].read().values
-        applied_geometry = self.inputs["FieldGeometries"].read().values
+        field_geometries = self.inputs["FieldGeometries"].read().values
 
         self.default_observer.write_message(5, f"Simulation started.")
         
@@ -335,54 +301,23 @@ class XPPP(base.Component):
                 # loop over each ppm calendar:
                 for ppm_calendar in self.PPMCalendars:
 
-                    # check if ppmcalendar was already applied:
-                    if ppm_calendar.was_applied(day, field):
-                        continue
-
                     # check area:
-                    if not ppm_calendar.can_apply(day, field, applied_geometry[field], crop_ids[field]):
+                    if not ppm_calendar.can_apply(crop_ids[field]):
                         continue
 
-                    # sample application date and products:
-                    application_date = ppm_calendar.sample_first_application_date(day, field)
-                    products = ppm_calendar.sample_products(day, field)
-            
-                    # loop over each product:
-                    for product in products:
+                    # sample applications:
+                    products, rates, technologies, datetimes, geometries = ppm_calendar.sample_applications(day, field, field_geometries[field], self.ProductLabels)
 
-                        # sample application rate and technology:
-                        application_rate = self.PPPs.sample_first_application_rate(product, day, field)
-                        technology = self.PPPs.sample_first_technology(product, day, field)
+                    # sample drift reductions:
+                    drift_reductions = self.Technologies.sample_drift_reductions(technologies, day, field)
 
-                        # sample drift reduction:
-                        drift_reduction = self.Technologies.sample_drift_reduction(technology, day, field)
-
-                        # add to results:
-                        applied_areas.append(applied_geometry[field])
-                        applied_fields.append(field)
-                        application_dates.append(int(application_date)) # use dates
-                        application_rates.append(application_rate)
-                        technology_drift_reductions.append(drift_reduction)
-                        applied_ppp.append(product)
-
-                        # get subsequent application windows, application rates and technologies:
-                        subsequent_application_dates = self.PPPs.sample_subsequent_application_dates(product, application_date, day, field)
-                        subsequent_application_rates = self.PPPs.sample_subsequent_application_rates(product, day, field)
-                        subsequent_technologys = self.PPPs.sample_subsequent_technologies(product, day, field)
-
-                        # loop over each subsequent application window:
-                        for s, sub_appl_date in enumerate(subsequent_application_dates):
-
-                            # sample drift reduction:
-                            drift_reduction = self.Technologies.sample_drift_reduction(subsequent_technologys[s], day, field)
-
-                            # add to results:
-                            applied_areas.append(applied_geometry[field])
-                            applied_fields.append(field)
-                            application_dates.append(int(sub_appl_date)) # use dates
-                            application_rates.append(subsequent_application_rates[s])
-                            technology_drift_reductions.append(drift_reduction)
-                            applied_ppp.append(product)
+                    # add to results:
+                    applied_areas.extend(geometries)
+                    applied_fields.extend([field] * len(geometries))
+                    application_dates.extend(datetimes)
+                    application_rates.extend(rates)
+                    technology_drift_reductions.extend(drift_reductions)
+                    applied_ppp.extend(products)           
 
         self.default_observer.write_message(5, f"Simulation finished!")
 

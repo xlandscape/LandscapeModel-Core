@@ -1,5 +1,6 @@
 from asyncio import proactor_events
 from multiprocessing.sharedctypes import Value
+import math
 import random
 import typing
 import base
@@ -111,40 +112,53 @@ class Tank(base.Component):
         default_store: typing.Optional[base.Store]
     ) -> None:
         super(Tank, self).__init__(name, default_observer, default_store)
+        self._inputs = base.InputContainer(self, [
+            base.Input(
+                "Products",
+                (attrib.Class(list[str], 1), attrib.Unit(None, 1), attrib.Scales("other/products", 1)),
+                self.default_observer
+            )
+        ])
         self._products = None
+        self._applicationRates = None
 
     @property
-    def Products(self) -> typing.List[RandomVariable]:
-        return self._products
+    def ApplicationRates(self) -> typing.List[RandomVariable]:
+        return self._applicationRates
 
-    @Products.setter
-    def Products(self, value: typing.List[RandomVariable]) -> None:
-        self._products = value
+    @ApplicationRates.setter
+    def ApplicationRates(self, value: typing.List[RandomVariable]) -> None:
+        self._applicationRates = value
 
     def initialize(self):
-        for product in self._products:
-            product.initialize()
+        self._products = self._inputs["Products"].read().values
+        for appl_rate in self._applicationRates:
+            appl_rate.initialize()
 
-    def sample_products(self, day: int, field: int) -> typing.List[str]:
+    def sample_application_rates(self, day: int, field: int) -> typing.List[float]:
 
-        # sample from all random variables:
-        products = []
-        for product in self._products:
-            time_index = convert_index(day, "time/day", product.get_scale("time"))
-            products.append(product.get_realization((time_index, field)))
-        return products
+        # sample application rates:
+        application_rates = []
+        for appl_rate in self._applicationRates:
+            time_index = convert_index(day, "time/day", appl_rate.get_scale("time"))
+            application_rates.append(appl_rate.get_realization((time_index, field)))
+        return application_rates
 
-class PPMCalendar(base.Component):
+    def sample_tank(self, day: int, field: int) -> typing.Tuple[typing.List[str], typing.List[float]]:
+
+        # sample tank:
+        products = self._products
+        application_rates = self.sample_application_rates(day, field)
+
+        return products, application_rates
+
+class Application(base.Component):
     """
-    Implementation of an application calendar. Here, the term `application calendar` refers to an application window, a tank content and any restrictions regarding applications.
+    Implementation of a single application.
 
     INPUTS
-    TargetCrops: Target crops of the application calendar.
-    ApplicationWindow: Application window of the application calendar. This describes a random variable for the application date.
-    InCropBuffer: An in-crop buffer used during application. This describes a random variable for the in-crop buffer.
-    InFieldMargin: An margin without crops within fields. This describes a random variable for the margin.
-    MinimumAppliedArea: The minimum applied area considered. This describes a random variable for the minimum applied area.
-    Tank: Tank content of the application calendar.
+    Technology: Technology used for the application. This describes a random variable for the technology.
+    ApplicationRate: Application rate of the application. This describes a random variable for the application rate.
     """
 
     def __init__(self, 
@@ -152,20 +166,13 @@ class PPMCalendar(base.Component):
         default_observer: base.Observer, 
         default_store: typing.Optional[base.Store]
     ) -> None:
-        super(PPMCalendar, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [
-            base.Input(
-                "TargetCrops",
-                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            )
-        ])
-        self._targetCrops = None
+        super(Application, self).__init__(name, default_observer, default_store)
         self._applicationWindow = None
         self._inCropBuffer = None
         self._inFieldMargin = None
         self._minimumAppliedArea = None
         self._tank = None
+        self._technology = None
         self._fieldTimeIndices = set()
 
     @property
@@ -208,30 +215,31 @@ class PPMCalendar(base.Component):
     def Tank(self, value: Tank) -> None:
         self._tank = value
 
+    @property
+    def Technology(self) -> RandomVariable:
+        return self._technology
+
+    @Technology.setter
+    def Technology(self, value: RandomVariable) -> None:
+        self._technology = value
+
     def initialize(self):
-        self._targetCrops = self._inputs["TargetCrops"].read().values
         self._applicationWindow.initialize()
         self._inCropBuffer.initialize()
         self._inFieldMargin.initialize()
         self._minimumAppliedArea.initialize()
         self._tank.initialize()
+        self._technology.initialize()
 
     def was_applied(self, day: int, field: int) -> bool:
 
-        # check if ppm calendar was applied for field and time:
-        time_index = convert_index(day, "time/day", self._applicationWindow.get_scale("time"))
+        # check if application was realized for field and year:
+        time_index = convert_index(day, "time/day", "time/year")
         if (time_index, field) not in self._fieldTimeIndices:
-            self._fieldTimeIndices.add((time_index, field))
             return False       
         return True
 
-    def can_apply(self, day: int, field: int, applied_geometry: bytes, crop_id: int) -> bool:
-
-        # check crop id:
-        if not self._targetCrops:
-            raise Exception("Parameters were not initialized!")
-        if crop_id not in self._targetCrops:
-            return False
+    def can_apply(self, day: int, field: int, field_geometry: bytes) -> bool:
 
         # get crop buffer, field margin and minimum applied area:
         time_index = convert_index(day, "time/day", self._inCropBuffer.get_scale("time"))
@@ -242,79 +250,64 @@ class PPMCalendar(base.Component):
         min_applied_area = self._minimumAppliedArea.get_realization((time_index, field))
 
         # check area:
-        applied_geometry = ogr.CreateGeometryFromWkb(applied_geometry)
+        applied_geometry = ogr.CreateGeometryFromWkb(field_geometry)
         if in_crop_buffer + in_field_margin > 0:
             applied_geometry = applied_geometry.Buffer(-in_crop_buffer - in_field_margin)
         if applied_geometry.GetArea() < min_applied_area:
             return False
         return True
 
-    def sample_first_application_date(self, day: int, field: int) -> int:
-
-        # sample application date:
-        time_index = convert_index(day, "time/day", self._applicationWindow.get_scale("time"))
-        current_year = datetime.date.fromordinal(day).year
-        return self._applicationWindow.get_realization((time_index, field), current_year = current_year)
-
-    def sample_products(self, day: int, field: int) -> typing.List[str]:
-
-        # sample from tank:
-        return self._tank.sample_products(day, field)
-
-class Application(base.Component):
-    """
-    Implementation of a single application.
-
-    INPUTS
-    Technology: Technology used for the application. This describes a random variable for the technology.
-    ApplicationRate: Application rate of the application. This describes a random variable for the application rate.
-    """
-
-    def __init__(self, 
-        name: str, 
-        default_observer: base.Observer, 
-        default_store: typing.Optional[base.Store]
-    ) -> None:
-        super(Application, self).__init__(name, default_observer, default_store)
-        self._technology = None
-        self._applicationRate = None
-
-    @property
-    def Technology(self) -> RandomVariable:
-        return self._technology
-
-    @Technology.setter
-    def Technology(self, value: RandomVariable) -> None:
-        self._technology = value
-
-    @property
-    def ApplicationRate(self) -> RandomVariable:
-        return self._applicationRate
-
-    @ApplicationRate.setter
-    def ApplicationRate(self, value: RandomVariable) -> None:
-        self._applicationRate = value
-
-    def initialize(self):
-        self._technology.initialize()
-        self._applicationRate.initialize()
+    def sample_tank(self, day: int, field: int) -> typing.Tuple[typing.List[str], typing.List[float]]:
+        return self._tank.sample_tank(day, field)
 
     def sample_technology(self, day: int, field: int) -> str:
         time_index = convert_index(day, "time/day", self._technology.get_scale("time"))
         return self._technology.get_realization((time_index, field))
 
-    def sample_application_rate(self, day: int, field: int) -> float:
-        time_index = convert_index(day, "time/day", self._applicationRate.get_scale("time"))
-        return self._applicationRate.get_realization((time_index, field))
+    def sample_application_datetime(self, day: int, field: int) -> float:
+        time_index = convert_index(day, "time/day", self._applicationWindow.get_scale("time"))
+        current_year = datetime.date.fromordinal(day).year
+        return self._applicationWindow.get_realization((time_index, field), current_year = current_year)
 
-class PPP(base.Component):
+    def sample_application(self, day: int, field: int, field_geometry: bytes, product_labels: "ProductLabelContainer") -> typing.Tuple[typing.List[str], typing.List[float], str, float, bytes]:
+
+        # sample products, technology, application rate and date/time:
+        products, application_rates = self.sample_tank(day, field)
+        technology = self.sample_technology(day, field)
+        application_datetime = self.sample_application_datetime(day, field)
+
+        # get applied geometry:
+        time_index = convert_index(day, "time/day", self._inCropBuffer.get_scale("time"))
+        in_crop_buffer = self._inCropBuffer.get_realization((time_index, field))
+        time_index = convert_index(day, "time/day", self._inFieldMargin.get_scale("time"))
+        in_field_margin = self._inFieldMargin.get_realization((time_index, field))
+        applied_geometry = ogr.CreateGeometryFromWkb(field_geometry)
+        if in_crop_buffer + in_field_margin > 0:
+            applied_geometry = applied_geometry.Buffer(-in_crop_buffer - in_field_margin)
+        applied_geometry = bytes(applied_geometry.ExportToWkb())
+    
+        # remember application:
+        time_index = convert_index(day, "time/day", "time/year")
+        self._fieldTimeIndices.add((time_index, field))
+
+        # check application with label restrictions:
+        product_labels.check_application_time(day, field, products, application_datetime)
+        product_labels.check_application_rates(day, field, products, application_rates)
+        product_labels.check_in_crop_buffer(day, field, products, in_crop_buffer + in_field_margin)
+
+        return products, application_rates, technology, application_datetime, applied_geometry
+
+class PPMCalendar(base.Component):
     """
-    Describes a product and the number of applications.
+    Implementation of an application calendar. Here, the term `application calendar` refers to an application window, a tank content and any restrictions regarding applications.
 
     INPUTS
-    Product: Name of PPP.
-    DaysBetweenApplications: Days between applications. Only relevant for multiple applications. This describes a random variable for the days between applications.
-    Applications: List of applications.
+    TargetCrops: Target crops of the application calendar.
+    ApplicationWindow: Application window of the application calendar. This describes a random variable for the application date.
+    InCropBuffer: An in-crop buffer used during application. This describes a random variable for the in-crop buffer.
+    InFieldMargin: An margin without crops within fields. This describes a random variable for the margin.
+    MinimumAppliedArea: The minimum applied area considered. This describes a random variable for the minimum applied area.
+    Tank: Tank content of the application calendar.
     """
 
     def __init__(self, 
@@ -322,31 +315,16 @@ class PPP(base.Component):
         default_observer: base.Observer, 
         default_store: typing.Optional[base.Store]
     ) -> None:
-        super(PPP, self).__init__(name, default_observer, default_store)
+        super(PPMCalendar, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
-                "Product",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                "TargetCrops",
+                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
                 self.default_observer
             )
         ])
-        self._product = None
-        self._daysBetweenApplications = None
+        self._targetCrops = None
         self._applications = None
-
-    @property
-    def Product(self) -> str:
-        if not self._product:
-            raise Exception("Parameters were not initialized!")
-        return self._product
-
-    @property
-    def DaysBetweenApplications(self) -> RandomVariable:
-        return self._daysBetweenApplications
-
-    @DaysBetweenApplications.setter
-    def DaysBetweenApplications(self, value: RandomVariable) -> None:
-        self._daysBetweenApplications = value
 
     @property
     def Applications(self) -> typing.List[Application]:
@@ -357,49 +335,40 @@ class PPP(base.Component):
         self._applications = value
 
     def initialize(self):
-        self._product = self._inputs["Product"].read().values
-        self._daysBetweenApplications.initialize()
+        self._targetCrops = self._inputs["TargetCrops"].read().values
         for appl in self._applications:
             appl.initialize()
 
-    def sample_first_application_rate(self, day: int, field: int) -> float:
-        if len(self._applications) == 0:
-            raise Exception("No applications were given!")
-        return self._applications[0].sample_application_rate(day, field)
+    def can_apply(self, crop_id: int) -> bool:
 
-    def sample_first_technology(self, day: int, field: int) -> str:
-        if len(self._applications) == 0:
-            raise Exception("No applications were given!")
-        return self._applications[0].sample_technology(day, field)
+        # check crop id:
+        if crop_id not in self._targetCrops:
+            return False
+        return True
 
-    def sample_subsequent_application_dates(self, first_application_date: float, day: int, field: int) -> typing.List[float]:
-        if len(self._applications) == 0:
-            raise Exception("No applications were given!")
-        subsequent_application_dates = []
-        last_application_date = first_application_date
-        for a in range(1, len(self._applications)):
-            time_index = convert_index(day, "time/day", self._daysBetweenApplications.get_scale("time"))
-            days_between_applications = self._daysBetweenApplications.get_realization((time_index, field))
-            subsequent_application_dates.append(last_application_date + days_between_applications)
-            day += days_between_applications
-            last_application_date += days_between_applications
-        return subsequent_application_dates
+    def sample_applications(self, day: int, field: int, field_geometry: bytes, product_labels: "ProductLabelContainer") -> typing.Tuple[typing.List[str], typing.List[float], typing.List[str], typing.List[float], typing.List[bytes]]:
 
-    def sample_subsequent_application_rates(self, day: int, field: int) -> typing.List[float]:
-        if len(self._applications) == 0:
-            raise Exception("No applications were given!")
-        subsequent_application_rates = []
-        for a in range(1, len(self._applications)):
-            subsequent_application_rates.append(self._applications[a].sample_application_rate(day, field))
-        return subsequent_application_rates
-    
-    def sample_subsequent_technologies(self, day: int, field: int) -> typing.List[str]:
-        if len(self._applications) == 0:
-            raise Exception("No applications were given!")
-        subsequent_technologies = []
-        for a in range(1, len(self._applications)):
-            subsequent_technologies.append(self._applications[a].sample_technology(day, field))
-        return subsequent_technologies
+        # sample applications
+        products = []
+        application_rates = []
+        technologies = []
+        application_datetimes = []
+        applied_geometries = []
+        for appl in self._applications:
+            if appl.was_applied(day, field) or not appl.can_apply(day, field, field_geometry):
+                continue
+            prods, rates, tech, datetime, geom = appl.sample_application(day, field, field_geometry, product_labels)
+            products.extend(prods)
+            application_rates.extend(rates)
+            technologies.extend([tech] * len(prods))
+            application_datetimes.extend([datetime] * len(prods))
+            applied_geometries.extend([geom] * len(prods))
+
+        # check applications with label restrictions:
+        product_labels.check_no_of_applications(field, products, application_datetimes)
+        product_labels.check_days_between_applications(field, products, application_datetimes)
+
+        return products, application_rates, technologies, application_datetimes, applied_geometries
 
 class XPPPContainer(base.Component):
     """
@@ -413,10 +382,108 @@ class XPPPContainer(base.Component):
     ) -> None:
         super(XPPPContainer, self).__init__(name, default_observer, default_store)
 
-    def append(self, value: typing.Any) -> None:
+    def __setitem__(self, key: str, value: typing.Any) -> None:
         raise NotImplementedError("append was not implemented for XPPPContainer")
 
-class PPPContainer(XPPPContainer):
+class ProductLabel(base.Component):
+    """
+    Describes a product.
+
+    INPUTS
+    Product: Name of PPP.
+    DaysBetweenApplications: Days between applications. Only relevant for multiple applications. This describes a random variable for the days between applications.
+    Applications: List of applications.
+    """
+
+    def __init__(self, 
+        name: str, 
+        default_observer: base.Observer, 
+        default_store: typing.Optional[base.Store]
+    ) -> None:
+        super(ProductLabel, self).__init__(name, default_observer, default_store)
+        self._inputs = base.InputContainer(self, [
+            base.Input(
+                "ApplicationTimeStart",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer
+            ),
+            base.Input(
+                "ApplicationTimeEnd",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer
+            ),
+            base.Input(
+                "MaxNoOfApplications",
+                (attrib.Class(int, 1), attrib.Unit("1", 1), attrib.Scales("global", 1)),
+                self.default_observer
+            ),
+            base.Input(
+                "MinInCropBuffer",
+                (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global", 1)),
+                self.default_observer
+            ),
+            base.Input(
+                "MinDaysBetweenApplications",
+                (attrib.Class(int, 1), attrib.Unit("d", 1), attrib.Scales("global", 1)),
+                self.default_observer
+            ),
+            base.Input(
+                "MaxApplicationRate",
+                (attrib.Class(float, 1), attrib.Unit("g/ha", 1), attrib.Scales("global", 1)),
+                self.default_observer
+            ),
+        ])
+        self._applicationTimeStart = None
+        self._applicationTimeEnd = None
+        self._maxNoOfApplications = None
+        self._minInCropBuffer = None
+        self._minDaysBetweenApplications = None
+        self._maxApplicationRate = None
+
+    @property
+    def Product(self) -> str:
+        return self._product
+
+    def initialize(self):
+        self._applicationTimeStart = datetime.datetime.strptime(self._inputs["ApplicationTimeStart"].read().values, "%H:%M").time()
+        self._applicationTimeStart = self._applicationTimeStart.hour / 24 + self._applicationTimeStart.minute / (24 * 60)
+        self._applicationTimeEnd = datetime.datetime.strptime(self._inputs["ApplicationTimeEnd"].read().values, "%H:%M").time()
+        self._applicationTimeEnd = self._applicationTimeEnd.hour / 24 + self._applicationTimeEnd.minute / (24 * 60)
+        self._maxNoOfApplications = self._inputs["MaxNoOfApplications"].read().values
+        self._minInCropBuffer = self._inputs["MinInCropBuffer"].read().values
+        self._minDaysBetweenApplications = self._inputs["MinDaysBetweenApplications"].read().values
+        self._maxApplicationRate = self._inputs["MaxApplicationRate"].read().values
+
+    def application_rate_ok(self, day: int, field: int, application_rate: float) -> None:
+        if application_rate > self._maxApplicationRate:
+            return False
+        return True
+
+    def no_of_applications_ok(self, field: int, application_datetimes: typing.List[float]) -> None:
+        if len(application_datetimes) > self._maxNoOfApplications:
+            return False
+        return True
+
+    def days_between_applications_ok(self, field: int, application_datetimes: typing.List[float]) -> None:
+        if len(application_datetimes) == 1:
+            return
+        min_days_between_applications = math.ceil(min([application_datetimes[i] - application_datetimes[i-1] for i in range(1, len(application_datetimes))]))
+        if min_days_between_applications > self._minDaysBetweenApplications:
+            return False
+        return True
+
+    def application_time_ok(self, day: int, field: int, application_datetime: float) -> None:
+        application_time = application_datetime - int(application_datetime)
+        if application_time < self._applicationTimeStart or application_time > self._applicationTimeEnd:
+            return False
+        return True
+
+    def in_crop_buffer_ok(self, day: int, field: int, in_crop_buffer: float) -> None:
+        if in_crop_buffer < self._minInCropBuffer:
+            return False
+        return True
+
+class ProductLabelContainer(XPPPContainer):
     """
     A container of PPPs.
 
@@ -429,68 +496,52 @@ class PPPContainer(XPPPContainer):
         default_observer: base.Observer, 
         default_store: typing.Optional[base.Store]
     ) -> None:
-        super(PPPContainer, self).__init__(name, default_observer, default_store)
-        self._ppps = []
+        super(ProductLabelContainer, self).__init__(name, default_observer, default_store)
+        self._productLabels = {}
 
     @property
-    def PPPs(self) -> typing.List[PPP]:
-        return self._ppps
+    def ProductLabels(self) -> typing.Dict[str, ProductLabel]:
+        return self._productLabels
 
-    @PPPs.setter
-    def PPPs(self, value: typing.List[PPP]) -> None:
-        self._ppps = value
+    @ProductLabels.setter
+    def ProductLabels(self, value: typing.Dict[str, ProductLabel]) -> None:
+        self._productLabels = value
 
     def initialize(self):
-        for ppp in self._ppps:
-            ppp.initialize()
+        for label in self._productLabels.values():
+            label.initialize()
+        
+    def check_application_rates(self, day: int, field: int, products: typing.List[str], application_rates: typing.List[float]) -> None:
+        for idx, product in enumerate(products):
+            if not self._productLabels[product].application_rate_ok(day, field, application_rates[idx]):
+                self.default_observer.write_message(2, f"Max. application rate violated for product {product} on day {day} and field {field}!")
 
-    def sample_first_application_rate(self, product: str, day: int, field: int) -> float:
-        application_rate = None
-        for ppp in self._ppps:
-            if ppp.Product == product:
-                application_rate = ppp.sample_first_application_rate(day, field)
-        if not application_rate:
-            raise Exception(f"PPP '{product}' was not found!")
-        return application_rate
+    def check_no_of_applications(self, field: int, products: typing.List[str], application_datetimes: typing.List[float]) -> None:
+        unique_products = set(products)
+        for product in unique_products:
+            appl_datetimes = [application_datetimes[p] for p in range(len(products)) if product == products[p]]
+            if not self._productLabels[product].no_of_applications_ok(field, appl_datetimes):
+                self.default_observer.write_message(2, f"Max. number of applications violated for product {product} on field {field}!")
 
-    def sample_first_technology(self, product: str, day: int, field: int) -> str:
-        technology = None
-        for ppp in self._ppps:
-            if ppp.Product == product:
-                technology = ppp.sample_first_technology(day, field)
-        if not technology:
-            raise Exception(f"PPP '{product}' was not found!")
-        return technology
+    def check_days_between_applications(self, field: int, products: typing.List[str], application_datetimes: typing.List[float]) -> None:
+        unique_products = set(products)
+        for product in unique_products:
+            appl_datetimes = [application_datetimes[p] for p in range(len(products)) if product == products[p]]
+            if not self._productLabels[product].days_between_applications_ok(field, appl_datetimes):
+                self.default_observer.write_message(2, f"Min. days between applications violated for product {product} on field {field}!")
 
-    def sample_subsequent_application_dates(self, product: str, first_application_date: float, day: int, field: int) -> typing.List[float]:
-        subsequent_application_dates = None
-        for ppp in self._ppps:
-            if ppp.Product == product:
-                subsequent_application_dates = ppp.sample_subsequent_application_dates(first_application_date, day, field)
-        if subsequent_application_dates is None:
-            raise Exception(f"PPP '{product}' was not found!")
-        return subsequent_application_dates
+    def check_application_time(self, day: int, field: int, products: typing.List[str], application_datetime: float) -> None:
+        for idx, product in enumerate(products):
+            if not self._productLabels[product].application_time_ok(day, field, application_datetime):
+                self.default_observer.write_message(2, f"Timing restrictions violated for product {product} on day {day} and field {field}!")
 
-    def sample_subsequent_application_rates(self, product: str, day: int, field: int) -> typing.List[float]:
-        subsequent_application_rates = None
-        for ppp in self._ppps:
-            if ppp.Product == product:
-                subsequent_application_rates = ppp.sample_subsequent_application_rates(day, field)
-        if subsequent_application_rates is None:
-            raise Exception(f"PPP '{product}' was not found!")
-        return subsequent_application_rates
-    
-    def sample_subsequent_technologies(self, product: str, day: int, field: int) -> typing.List[str]:
-        subsequent_technologies = None
-        for ppp in self._ppps:
-            if ppp.Product == product:
-                subsequent_technologies = ppp.sample_subsequent_technologies(day, field)
-        if subsequent_technologies is None:
-            raise Exception(f"PPP '{product}' was not found!")
-        return subsequent_technologies
+    def check_in_crop_buffer(self, day: int, field: int, products: typing.List[str], in_crop_buffer: float) -> None:
+        for idx, product in enumerate(products):
+            if not self._productLabels[product].in_crop_buffer_ok(day, field, in_crop_buffer):
+                self.default_observer.write_message(2, f"Crop buffer restrictions violated for product {product} on day {day} and field {field}!")
 
-    def append(self, ppp: PPP) -> None:
-        self._ppps.append(ppp)
+    def __setitem__(self, key: str, product_label: ProductLabel) -> None:
+        self._productLabels[key] = product_label
 
 class Technology(base.Component):
     """
@@ -507,21 +558,7 @@ class Technology(base.Component):
         default_store: typing.Optional[base.Store]
     ) -> None:
         super(Technology, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [
-            base.Input(
-                "Technology",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            )
-        ])
-        self._technology = None
         self._driftReduction = None
-
-    @property
-    def Technology(self) -> str:
-        if not self._technology:
-            raise Exception("Parameters were not initialized!")
-        return self._technology
 
     @property
     def DriftReduction(self) -> RandomVariable:
@@ -532,7 +569,6 @@ class Technology(base.Component):
         self._driftReduction = value
 
     def initialize(self):
-        self._technology = self._inputs["Technology"].read().values
         self._driftReduction.initialize()
 
     def sample_drift_reduction(self, day: int, field: int) -> str:
@@ -553,29 +589,26 @@ class TechnologyContainer(XPPPContainer):
         default_store: typing.Optional[base.Store]
     ) -> None:
         super(TechnologyContainer, self).__init__(name, default_observer, default_store)
-        self._technologies = []
+        self._technologies = {}
 
     @property
-    def Technologies(self) -> typing.List[Technology]:
+    def Technologies(self) -> typing.Dict[str, Technology]:
         return self._technologies
 
     @Technologies.setter
-    def Technologies(self, value: base.typing.List[Technology]) -> None:
+    def Technologies(self, value: base.typing.Dict[str, Technology]) -> None:
         self._technologies = value
 
     def initialize(self):
-        for tech in self._technologies:
+        for tech in self._technologies.values():
             tech.initialize()
 
-    def sample_drift_reduction(self, technology: str, day: int, field: int) -> float:
-        drift_reduction = None
-        for tech in self._technologies:
-            if tech.Technology == technology:
-                drift_reduction = tech.sample_drift_reduction(day, field)
-        if drift_reduction is None:
-            raise Exception(f"Technology '{technology}' was not found!")
-        return drift_reduction
+    def sample_drift_reductions(self, technologies: typing.List[str], day: int, field: int) -> typing.List[float]:
+        drift_reductions = []
+        for tech in technologies:
+            drift_reductions.append(self._technologies[tech].sample_drift_reduction(day, field))
+        return drift_reductions
 
-    def append(self, technology: Technology) -> None:
-        self._technologies.append(technology)
+    def __setitem__(self, key: str, technology: Technology) -> None:
+        self._technologies[key] = technology
         

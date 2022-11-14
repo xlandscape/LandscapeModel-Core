@@ -297,6 +297,54 @@ class Application(base.Component):
 
         return products, application_rates, technology, application_datetime, applied_geometry
 
+class ApplicationSequence(base.Component):
+
+    def __init__(self, 
+        name: str, 
+        default_observer: base.Observer, 
+        default_store: typing.Optional[base.Store]
+    ) -> None:
+        super(ApplicationSequence, self).__init__(name, default_observer, default_store)
+        self._inputs = base.InputContainer(self, [
+        ])
+        self._applications = None
+
+    @property
+    def Applications(self) -> typing.List[Application]:
+        return self._applications
+
+    @Applications.setter
+    def Applications(self, value: typing.List[Application]) -> None:
+        self._applications = value
+
+    def initialize(self):
+        for appl in self._applications:
+            appl.initialize()
+
+    def sample_applications(self, day: int, field: int, field_geometry: bytes, product_labels: "ProductLabelContainer") -> typing.Tuple[typing.List[str], typing.List[float], typing.List[str], typing.List[float], typing.List[bytes]]:
+
+        # sample applications
+        products = []
+        application_rates = []
+        technologies = []
+        application_datetimes = []
+        applied_geometries = []
+        for appl in self._applications:
+            if not appl.can_apply(day, field, field_geometry) or appl.was_applied(day, field):
+                continue
+            prods, rates, tech, datetime, geom = appl.sample_application(day, field, field_geometry, product_labels)
+            products.extend(prods)
+            application_rates.extend(rates)
+            technologies.extend([tech] * len(prods))
+            application_datetimes.extend([datetime] * len(prods))
+            applied_geometries.extend([geom] * len(prods))
+
+        # check applications with label restrictions:
+        product_labels.check_no_of_applications(field, products, application_datetimes)
+        product_labels.check_days_between_applications(field, products, application_datetimes)
+
+        return products, application_rates, technologies, application_datetimes, applied_geometries
+
 class PPMCalendar(base.Component):
     """
     Implementation of an application calendar. Here, the term `application calendar` refers to an application window, a tank content and any restrictions regarding applications.
@@ -324,20 +372,19 @@ class PPMCalendar(base.Component):
             )
         ])
         self._targetCrops = None
-        self._applications = None
+        self._applicationSequences = None
 
     @property
-    def Applications(self) -> typing.List[Application]:
-        return self._applications
+    def ApplicationSequences(self) -> RandomVariable:
+        return self._applicationSequences
 
-    @Applications.setter
-    def Applications(self, value: typing.List[Application]) -> None:
-        self._applications = value
+    @ApplicationSequences.setter
+    def ApplicationSequences(self, value: RandomVariable) -> None:
+        self._applicationSequences = value
 
     def initialize(self):
         self._targetCrops = self._inputs["TargetCrops"].read().values
-        for appl in self._applications:
-            appl.initialize()
+        self._applicationSequences.initialize()
 
     def can_apply(self, crop_id: int) -> bool:
 
@@ -348,25 +395,12 @@ class PPMCalendar(base.Component):
 
     def sample_applications(self, day: int, field: int, field_geometry: bytes, product_labels: "ProductLabelContainer") -> typing.Tuple[typing.List[str], typing.List[float], typing.List[str], typing.List[float], typing.List[bytes]]:
 
-        # sample applications
-        products = []
-        application_rates = []
-        technologies = []
-        application_datetimes = []
-        applied_geometries = []
-        for appl in self._applications:
-            if appl.was_applied(day, field) or not appl.can_apply(day, field, field_geometry):
-                continue
-            prods, rates, tech, datetime, geom = appl.sample_application(day, field, field_geometry, product_labels)
-            products.extend(prods)
-            application_rates.extend(rates)
-            technologies.extend([tech] * len(prods))
-            application_datetimes.extend([datetime] * len(prods))
-            applied_geometries.extend([geom] * len(prods))
+        # sample sequence:
+        time_index = convert_index(day, "time/day", self._applicationSequences.get_scale("time"))
+        appl_seq = self._applicationSequences.get_realization((time_index, field))
 
-        # check applications with label restrictions:
-        product_labels.check_no_of_applications(field, products, application_datetimes)
-        product_labels.check_days_between_applications(field, products, application_datetimes)
+        # sample applications:
+        products, application_rates, technologies, application_datetimes, applied_geometries = appl_seq.sample_applications(day, field, field_geometry, product_labels)
 
         return products, application_rates, technologies, application_datetimes, applied_geometries
 

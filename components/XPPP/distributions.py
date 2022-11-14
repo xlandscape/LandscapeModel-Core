@@ -161,17 +161,12 @@ class Choice(base.Component):
         super(Choice, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
             base.Input(
-                "Name",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            ),
-            base.Input(
                 "Probability",
                 (attrib.Class(float, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
                 self.default_observer
             )
         ])
-        self._name = None
+        self._object = None
         self._probability = None
 
     @property
@@ -179,10 +174,12 @@ class Choice(base.Component):
         return self._inputs
 
     @property
-    def Name(self) -> base.Input:
-        if self._name is None:
-            raise Exception("Parameters were not initialized!")
-        return self._name
+    def Object(self) -> typing.Any:
+        return self._object
+
+    @Object.setter
+    def Object(self, value: typing.Any) -> None:
+        self._object = value
 
     @property
     def Probability(self) -> base.Input:
@@ -191,7 +188,8 @@ class Choice(base.Component):
         return self._probability
 
     def initialize(self):
-        self._name = self._inputs["Name"].read().values
+        if hasattr(self._object, "initialize") and callable(getattr(self._object, "initialize")):
+            self._object.initialize()
         self._probability = self._inputs["Probability"].read().values
 
 class ChoiceDistribution(Distribution):
@@ -223,13 +221,13 @@ class ChoiceDistribution(Distribution):
             choice.initialize()
 
     def sample(self) -> typing.Any:
-        names = [choice._name for choice in self._choiceList]
-        probabilities = [choice._probability for choice in self._choiceList]
+        objects = [choice.Object for choice in self._choiceList]
+        probabilities = [choice.Probability for choice in self._choiceList]
         if np.sum(probabilities) != 1.0:
             raise ValueError("Probability sum is not 1.0!")
         if np.any(np.array(probabilities) < 0.0) or np.any(np.array(probabilities) > 1.0):
             raise ValueError("Probabilities have to be between 0.0 and 1.0!")
-        return random.choices(names, weights=probabilities)[0]
+        return random.choices(objects, weights=probabilities)[0]
 
 class RandomVariable:
     """

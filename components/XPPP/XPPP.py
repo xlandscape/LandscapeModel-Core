@@ -1,15 +1,10 @@
-from weakref import KeyedRef
-from osgeo import ogr
 import datetime
 import numpy as np
 import random
 import base
-import components
 import attrib
 import typing
 import xml.etree.ElementTree
-import queue
-import importlib
 import copy
 from .distributions import *
 from .classes import *
@@ -142,7 +137,7 @@ class XPPP(base.Component):
         if scales not in self.RANDOM_VARIABLE_SCALES:
             raise NotImplementedError(f"XPPP was not implemented for random variable scale '{scales}'!")
 
-    def set_input(self, component: base.Component, config: xml.etree.ElementTree, ids: typing.List[int]) -> None: 
+    def set_input(self, object: base.Component, config: xml.etree.ElementTree, ids: typing.List[int]) -> None: 
         
         # get type:
         if "type" in config.attrib:
@@ -171,8 +166,61 @@ class XPPP(base.Component):
             raise KeyError("Scales have to be specified for input values!")
 
         # set input:
-        component.inputs[config.tag.split("}")[1]] = output
+        object.inputs[config.tag.split("}")[1]] = output
 
+    def set_random_input(self, object: RandomVariable, config: xml.etree.ElementTree, ids: typing.List[int]) -> None: 
+
+        try:
+            scales = config.attrib["scales"]
+        except KeyError:
+            raise KeyError("Scales have to be specified for all inputs!")
+        self.check_random_variable_scales(scales)
+        try:
+            dist = config.attrib["dist"]
+        except KeyError:
+            raise KeyError("Distributions has to be specified for all inputs!")
+        if dist == "normal":
+            distribution = NormalDistribution("NormalDistribution", self.default_observer, self.default_store)
+            self.read_inputs(distribution, config, ids)
+        elif dist == "uniform":
+            distribution = UniformDistribution("UniformDistribution", self.default_observer, self.default_store)
+            self.read_inputs(distribution, config, ids)
+        elif dist == "uniform_discrete":
+            distribution = DiscreteUniformDistribution("DiscreteUniformDistribution", self.default_observer, self.default_store)
+            self.read_inputs(distribution, config, ids)
+        elif dist == "choice":
+            distribution = ChoiceDistribution("ChoiceDistribution", self.default_observer, self.default_store)
+            distribution.ChoiceList = []
+            config = config[0]
+            for item in config:
+                choice = Choice("Choice", self.default_observer, self.default_store)
+                for input in item:
+                    if input.tag.split("}")[1] == "Probability":
+                        self.set_input(choice, input, ids)                
+                    elif input.tag.split("}")[1] == "ApplicationSequence":
+                        appl_seq_list = []
+                        self.read_inputs(appl_seq_list, input, ids)
+                        appl_seq = ApplicationSequence("ApplicationSequence", self.default_observer, self.default_store)
+                        appl_seq.Applications = appl_seq_list
+                        choice.Object = appl_seq
+                    elif input.tag.split("}")[1] == "Name":
+                        param_str = input.text
+                        choice.Object = param_str
+                    else:
+                        raise Exception(f"Invalid tag {input.tag} for choice-object!")
+                distribution.ChoiceList.append(choice)
+        elif dist == "application_window":
+            try:
+                format = config.attrib["format"]
+            except KeyError:
+                raise KeyError("Date format hast to be specified for application windows!")
+            distribution = ApplicationWindowDistribution("ApplicationWindowDistribution", self.default_observer, self.default_store, format)
+            self.read_inputs(distribution, config, ids)
+        else:
+            raise Exception("Invalid distribution!")
+        object.Scales = scales
+        object.Distribution = distribution
+        
     def read_inputs(self, parent_object: typing.Any, root: xml.etree.ElementTree, ids: typing.List[int]) -> None:
 
         # loop over all child nodes:
@@ -195,33 +243,8 @@ class XPPP(base.Component):
                 child_object = {}
                 self.read_inputs(child_object, child, ids)
             elif child_type == "random":
-                child_object = RandomVariable() 
-                try:
-                    scales = child.attrib["scales"]
-                except KeyError:
-                    raise KeyError("Scales have to be specified for all inputs!")
-                self.check_random_variable_scales(scales)
-                try:
-                    dist = child.attrib["dist"]
-                except KeyError:
-                    raise KeyError("Distributions has to be specified for all inputs!")
-                if dist == "normal":
-                    distribution = NormalDistribution("NormalDistribution", self.default_observer, self.default_store)
-                if dist == "uniform":
-                    distribution = UniformDistribution("UniformDistribution", self.default_observer, self.default_store)
-                if dist == "uniform_discrete":
-                    distribution = DiscreteUniformDistribution("DiscreteUniformDistribution", self.default_observer, self.default_store)
-                if dist == "choice":
-                    distribution = ChoiceDistribution("ChoiceDistribution", self.default_observer, self.default_store)
-                if dist == "application_window":
-                    try:
-                        format = child.attrib["format"]
-                    except KeyError:
-                        raise KeyError("Date format hast to be specified for application windows!")
-                    distribution = ApplicationWindowDistribution("ApplicationWindowDistribution", self.default_observer, self.default_store, format)
-                self.read_inputs(distribution, child, ids)
-                child_object.Scales = scales
-                child_object.Distribution = distribution
+                child_object = RandomVariable()
+                self.set_random_input(child_object, child, ids)
             else:
                 self.set_input(parent_object, child, ids)
                 continue

@@ -1,13 +1,14 @@
 import datetime
 import numpy as np
 import random
+import os
 import base
 import attrib
 import typing
 import xml.etree.ElementTree
-import copy
 from .distributions import *
 from .classes import *
+from .types import *
 
 class XPPP(base.Component):
     """
@@ -28,6 +29,9 @@ class XPPP(base.Component):
     # CHANGELOG
     VERSION.added("1.0.0", "First release of `XPPP` ")
 
+    RANDOM_TYPES = ("xppp.NormalDistribution", "xppp.UniformDistribution", "xppp.DiscreteUniformDistribution", "xppp.ChoiceDistribution")
+    TIME_SPAN_TYPES = ("xppp.TimeSpan", "xppp.MonthDaySpan", "xppp.MonthDayTimeSpan", "xppp.DateSpan")
+    LIST_TIME_SPAN_TYPES = ("list[xppp.TimeSpan]", "list[xppp.MonthDaySpan]", "list[xppp.MonthDayTimeSpan]", "list[xppp.DateSpan]")
     RANDOM_VARIABLE_SCALES = ("global", "time/day", "time/year", "time/day, space/base_geometry", "time/year, space/base_geometry")
 
     def __init__(self, 
@@ -104,8 +108,7 @@ class XPPP(base.Component):
                 description="Applied products. A list[str] of scale other/application.")
         ])
         self._ppmCalendars = None
-        self._productLabelContainer = None
-        self._technologyContainer = None
+        self._technologies = None
 
     @property
     def PPMCalendars(self) -> typing.List[PPMCalendar]:
@@ -116,20 +119,12 @@ class XPPP(base.Component):
         self._ppmCalendars = value
 
     @property
-    def ProductLabels(self) -> ProductLabelContainer:
-        return self._productLabelContainer
-
-    @ProductLabels.setter
-    def ProductLabels(self, value: ProductLabelContainer) -> None:
-        self._productLabelContainer = value
-
-    @property
-    def Technologies(self) -> TechnologyContainer:
-        return self._technologyContainer
+    def Technologies(self) -> typing.List[Technology]:
+        return self._technologies
 
     @Technologies.setter
-    def Technologies(self, value: TechnologyContainer) -> None:
-        self._technologyContainer = value
+    def Technologies(self, value: typing.List[Technology]) -> None:
+        self._technologies = value
 
     def check_random_variable_scales(self, scales: str) -> None:
 
@@ -137,125 +132,180 @@ class XPPP(base.Component):
         if scales not in self.RANDOM_VARIABLE_SCALES:
             raise NotImplementedError(f"XPPP was not implemented for random variable scale '{scales}'!")
 
-    def set_input(self, object: base.Component, config: xml.etree.ElementTree, ids: typing.List[int]) -> None: 
+    def convert(self, config: xml.etree.ElementTree) -> typing.Any: 
         
+        # set unit and scales:
+        unit = None
+        if "unit" in config.attrib:
+            unit = config.attrib["unit"]
+        scales = None
+        if "scales" in config.attrib and config.attrib["scales"] != "other/products":
+            scales = config.attrib["scales"]
+
         # get type:
+        type = None
         if "type" in config.attrib:
             type = config.attrib["type"]
-        else:
-            type = "str"
 
-        # create output:
-        value_config = copy.copy(config)
-        if type == "param/int":
-            value_config.attrib["type"] = "int"
-        elif type == "param/float":
-            value_config.attrib["type"] = "float"
-        elif type == "param/str" or type == "param/date" or type == "param/time":
-            del value_config.attrib["type"]
-        value = base.convert(value_config)
-        output = base.Output(f"XPPP/{config.tag.split('}')[1]}_{len(ids)}", self.default_store)
-        ids.append(len(ids))
-        try: 
-            output.set_values(
-                value, 
-                scales = config.attrib["scales"],
-                unit = config.attrib["unit"] if "unit" in config.attrib else None
-            )
-        except KeyError:
-            raise KeyError("Scales have to be specified for input values!")
+        if type not in self.RANDOM_TYPES: 
 
-        # set input:
-        object.inputs[config.tag.split("}")[1]] = output
+            # get starting indices (only relevant on time scales):
+            sim_start_date = self.inputs["SimulationStart"].read().values
+            index_start = 0
+            if scales == "time/day":
+                index_start = sim_start_date.toordinal()
+            elif scales == "time/year":
+                index_start = sim_start_date.year
+            
+            # get value (convert to dict):
+            if type in self.TIME_SPAN_TYPES:
+                del config.attrib["type"]
+            elif type in self.LIST_TIME_SPAN_TYPES:
+                config.attrib["type"] = "list[str]"
+            raw_value = base.convert(config)
+            values = {}
+            if not isinstance(raw_value, list) or scales == None or scales == "global" or scales == "other/products":
+                values[(index_start,)] = raw_value
+            elif isinstance(raw_value, list):
+                for i in range(len(raw_value)):
+                    values[(index_start + i,)] = raw_value[i]
+            else:
+                raise NotImplementedError(f"Combination of scales {scales} and type {type} not implemented!")                
 
-    def set_random_input(self, object: RandomVariable, config: xml.etree.ElementTree, ids: typing.List[int]) -> None: 
-
-        try:
-            scales = config.attrib["scales"]
-        except KeyError:
-            raise KeyError("Scales have to be specified for all inputs!")
-        self.check_random_variable_scales(scales)
-        try:
-            dist = config.attrib["dist"]
-        except KeyError:
-            raise KeyError("Distributions has to be specified for all inputs!")
-        if dist == "normal":
-            distribution = NormalDistribution("NormalDistribution", self.default_observer, self.default_store)
-            self.read_inputs(distribution, config, ids)
-        elif dist == "uniform":
-            distribution = UniformDistribution("UniformDistribution", self.default_observer, self.default_store)
-            self.read_inputs(distribution, config, ids)
-        elif dist == "uniform_discrete":
-            distribution = DiscreteUniformDistribution("DiscreteUniformDistribution", self.default_observer, self.default_store)
-            self.read_inputs(distribution, config, ids)
-        elif dist == "choice":
-            distribution = ChoiceDistribution("ChoiceDistribution", self.default_observer, self.default_store)
-            distribution.ChoiceList = []
-            config = config[0]
-            for item in config:
-                choice = Choice("Choice", self.default_observer, self.default_store)
-                for input in item:
-                    if input.tag.split("}")[1] == "Probability":
-                        self.set_input(choice, input, ids)                
-                    elif input.tag.split("}")[1] == "ApplicationSequence":
-                        appl_seq_list = []
-                        self.read_inputs(appl_seq_list, input, ids)
-                        appl_seq = ApplicationSequence("ApplicationSequence", self.default_observer, self.default_store)
-                        appl_seq.Applications = appl_seq_list
-                        choice.Object = appl_seq
-                    elif input.tag.split("}")[1] == "Name":
-                        param_str = input.text
-                        choice.Object = param_str
+            # format values if necessary:
+            if type == "xppp.TimeSpan" or type == "list[xppp.TimeSpan]":
+                for key, value in values.items():
+                    if value == "":
+                        values[key] == None
                     else:
-                        raise Exception(f"Invalid tag {input.tag} for choice-object!")
-                distribution.ChoiceList.append(choice)
-        elif dist == "application_window":
-            try:
-                format = config.attrib["format"]
-            except KeyError:
-                raise KeyError("Date format hast to be specified for application windows!")
-            distribution = ApplicationWindowDistribution("ApplicationWindowDistribution", self.default_observer, self.default_store, format)
-            self.read_inputs(distribution, config, ids)
-        else:
-            raise Exception("Invalid distribution!")
-        object.Scales = scales
-        object.Distribution = distribution
+                        dates = value.split(" to ")
+                        dates = (datetime.datetime.strptime(dates[0], "%H:%M"), datetime.datetime.strptime(dates[1], "%H:%M"))
+                        values[key] = TimeSpan(Time(dates[0].hour, dates[0].minute), Time(dates[1].hour, dates[1].minute))
+            elif type == "xppp.MonthDaySpan" or type == "list[xppp.MonthDaySpan]":
+                for key, value in values.items():
+                    if value == "":
+                        values[key] == None
+                    else:
+                        dates = value.split(" to ")
+                        dates = (datetime.datetime.strptime(dates[0], "%m-%d"), datetime.datetime.strptime(dates[1], "%m-%d"))
+                        values[key] = MonthDaySpan(MonthDay(dates[0].month, dates[0].day), MonthDay(dates[1].month, dates[1].day))
+            elif type == "xppp.MonthDayTimeSpan" or type == "list[xppp.MonthDayTimeSpan]":
+                for key, value in values.items():
+                    if value == "":
+                        values[key] == None
+                    else:
+                        dates = value.split(" to ")
+                        dates = (datetime.datetime.strptime(dates[0], "%m-%d %H:%M"), datetime.datetime.strptime(dates[1], "%m-%d %H:%M"))
+                        values[key] = MonthDayTimeSpan(MonthDayTime(dates[0].month, dates[0].day, dates[0].hour, dates[0].minute), MonthDayTime(dates[1].month, dates[1].day, dates[1].hour, dates[1].minute))
+            elif type == "xppp.DateSpan" or type == "list[xppp.DateSpan]":
+                for key, value in values.items():
+                    if value == "":
+                        values[key] == None
+                    else:
+                        dates = value.split(" to ")
+                        dates = (datetime.datetime.strptime(dates[0], "%Y-%m-%d"), datetime.datetime.strptime(dates[1], "%Y-%m-%d"))
+                        values[key] = DateSpan(Date(dates[0].year, dates[0].month, dates[0].day), Date(dates[1].year, dates[1].month, dates[1].day))
+
+            # get type for variable:
+            if not type:
+                type = "str"
+            if "list" in type:
+                type = type[5:-1]
+
+            # return constant:
+            return ConstantVariable(unit, scales, type, values)
         
-    def read_inputs(self, parent_object: typing.Any, root: xml.etree.ElementTree, ids: typing.List[int]) -> None:
+        else:
+
+            # create distribution and read inputs:
+            if type == "xppp.NormalDistribution":
+                distribution = NormalDistribution()
+                self.set_inputs(distribution, config)
+            elif type == "xppp.UniformDistribution":
+                distribution = UniformDistribution()
+                self.set_inputs(distribution, config)
+            elif type == "xppp.DiscreteUniformDistribution":
+                distribution = DiscreteUniformDistribution()
+                self.set_inputs(distribution, config)
+            elif type == "xppp.ChoiceDistribution":
+                distribution = ChoiceDistribution()
+                distribution.ChoiceList = []
+                for child_config in config:
+                    choice = Choice()
+                    choice.Probability = float(child_config.attrib["probability"])
+                    if "type" in child_config.attrib: # child describes random or some simple type
+                        if child_config.attrib["type"] == "random":
+                            child_object = self.convert(child_config)
+                        else:
+                            child_object = self.convert(child_config)
+                    elif len(list(child_config)) == 0: # child describes string
+                        child_object = self.convert(child_config)
+                    elif child_config.tag.split("}")[1] in globals(): # child describes object
+                        child_object = globals()[child_config.tag.split("}")[1]]()
+                        self.set_inputs(child_object, child_config)
+                    else: # child describes list
+                        child_object = []
+                        self.set_inputs(child_object, child_config)
+                    choice.Object = child_object
+                    distribution.ChoiceList.append(choice)
+
+            # return random variable:
+            return RandomVariable(unit, scales, type, distribution)
+
+    def set_inputs(self, parent_object: typing.Any, root: xml.etree.ElementTree) -> None:
 
         # loop over all child nodes:
-        for child in root:
+        for child_config in root:
 
-            # get type:
-            if "type" in child.attrib:
-                child_type = child.attrib["type"]
-            else:
-                child_type = "str"
-
-            # go through all cases:
-            if child_type == "class" or child_type == "param/class":
-                child_object = globals()[child.tag.split("}")[1]](child.tag, self.default_observer, self.default_store)
-                self.read_inputs(child_object, child, ids)
-            elif child_type == "list[class]" or child_type == "param/list":
+            # get child object:
+            if "type" in child_config.attrib: # child describes random or some simple type
+                if child_config.attrib["type"] == "random":
+                    child_object = self.convert(child_config)
+                else:
+                    child_object = self.convert(child_config)
+            elif len(list(child_config)) == 0: # child describes string
+                child_object = self.convert(child_config)
+            elif child_config.tag.split("}")[1] in globals(): # child describes object
+                child_object = globals()[child_config.tag.split("}")[1]]()
+                self.set_inputs(child_object, child_config)
+            else: # child describes list of objects (handled as constant variables)
                 child_object = []
-                self.read_inputs(child_object, child, ids)
-            elif child_type == "dict[class]":
-                child_object = {}
-                self.read_inputs(child_object, child, ids)
-            elif child_type == "random":
-                child_object = RandomVariable()
-                self.set_random_input(child_object, child, ids)
-            else:
-                self.set_input(parent_object, child, ids)
-                continue
+                self.set_inputs(child_object, child_config)
+                child_object = ConstantVariable(None, "global", None, {(0,): child_object})
 
-            # if this point is reached, child is an object and has to be set manually:
+            # assign child object to parent object:
             if isinstance(parent_object, list): 
                 parent_object.append(child_object)
-            elif isinstance(parent_object, dict) or isinstance(parent_object, ProductLabelContainer) or isinstance(parent_object, TechnologyContainer):                
-                parent_object[child.attrib["id"]] = child_object
             else:
-                setattr(parent_object, child.tag.split("}")[1], child_object)
+                setattr(parent_object, child_config.tag.split("}")[1], child_object)
+        
+    def convert_types(self) -> None:
+
+        # convert TemporalValidity if needed:
+        for ppm_calendar in self.PPMCalendars:
+            if ppm_calendar.TemporalValidity.Type == "str":
+                for key, value in ppm_calendar.TemporalValidity.Value.items():
+                    if value == "always":
+                        ppm_calendar.TemporalValidity.Value[key] = DateSpan(Date(1, 1, 1), Date(9999, 12, 31))
+
+    def replace_includes(self, root: xml.etree.ElementTree, namespace: typing.Dict[str, str], dir: str) -> None:
+
+        # replace ppmcalendars if needed:
+        node = root.find("PPMCalendars", namespace)
+        for child_config in node:
+            if "include" in child_config.attrib:
+                file = os.path.join(dir, child_config.attrib["include"])
+                new_child_config = xml.etree.ElementTree.parse(file).getroot()
+                node.insert(0, new_child_config)
+                node.remove(child_config)
+
+        # replace technologies if needed:
+        node = root.find("Technologies", namespace)
+        if "include" in node.attrib:
+            file = os.path.join(dir, node.attrib["include"])
+            new_node = xml.etree.ElementTree.parse(file).getroot()
+            root.insert(0, new_node)
+            root.remove(node)
 
     def read_xml(self) -> None:
   
@@ -265,22 +315,19 @@ class XPPP(base.Component):
         root = xml_tree.getroot()
         namespace = {"": self.inputs["ParametrizationNamespace"].read().values}
 
+        # replace includes if needed:
+        self.replace_includes(root, namespace, os.path.dirname(xml_file))
+
         # create lists and containers:
         self.PPMCalendars = []
-        self.ProductLabels = ProductLabelContainer("ProductLabelContainer", self.default_observer, self.default_store)
-        self.Technologies = TechnologyContainer("TechnologyContainer", self.default_observer, self.default_store)
+        self.Technologies = []
 
         # read lists and containers:
-        ids = []
-        self.read_inputs(self.PPMCalendars, root.find("PPMCalendars", namespace), ids)
-        self.read_inputs(self.ProductLabels, root.find("ProductLabels", namespace), ids)
-        self.read_inputs(self.Technologies, root.find("Technologies", namespace), ids)
+        self.set_inputs(self.PPMCalendars, root.find("PPMCalendars", namespace))
+        self.set_inputs(self.Technologies, root.find("Technologies", namespace))
 
-        # initialize:
-        for ppm_cal in self.PPMCalendars:
-            ppm_cal.initialize()
-        self.ProductLabels.initialize()
-        self.Technologies.initialize()
+        # convert types if needed:
+        self.convert_types()
 
     def run(self):
 
@@ -314,33 +361,31 @@ class XPPP(base.Component):
         # loop over each each day
         for day in range(sim_start, sim_end + 1):
             
-            if (day - sim_start) % 50 == 0:
-                current_date = datetime.date.fromordinal(day).strftime("%Y-%m-%d")
-                self.default_observer.write_message(5, f"Simulation running for date: {current_date} (day {day - sim_start})")
-
             # loop over each field
             for field in range(len(fields)):
                 
                 # loop over each ppm calendar:
                 for ppm_calendar in self.PPMCalendars:
 
-                    # check area:
-                    if not ppm_calendar.can_apply(crop_ids[field]):
+                    # check validity and crop:
+                    if not ppm_calendar.is_valid(day, field) or not ppm_calendar.can_apply_on_crop(day, field, crop_ids[field]):
                         continue
 
                     # sample applications:
-                    products, rates, technologies, datetimes, geometries = ppm_calendar.sample_applications(day, field, field_geometries[field], self.ProductLabels)
+                    applications = ppm_calendar.sample_applications(day, field, field_geometries[field])
 
-                    # sample drift reductions:
-                    drift_reductions = self.Technologies.sample_drift_reductions(technologies, day, field)
-
-                    # add to results:
-                    applied_areas.extend(geometries)
-                    applied_fields.extend([field] * len(geometries))
-                    application_dates.extend(datetimes)
-                    application_rates.extend(rates)
-                    technology_drift_reductions.extend(drift_reductions)
-                    applied_ppp.extend(products)           
+                    # sample drift reductions and add to results:
+                    for appl in applications:
+                        prods, appl_rates, tech, appl_dt, appl_geom = appl
+                        for technology in self.Technologies:
+                            if technology.TechnologyName.get((day, field), "time/day, space/base_geometry") == tech:
+                                drift_red = technology.sample_drift_reduction(day, field)
+                        applied_areas.extend([appl_geom] * len(prods))
+                        applied_fields.extend([field] * len(prods))
+                        application_dates.extend([appl_dt] * len(prods))
+                        application_rates.extend(appl_rates)
+                        technology_drift_reductions.extend([drift_red] * len(prods))
+                        applied_ppp.extend(prods)                                   
 
         self.default_observer.write_message(5, f"Simulation finished!")
 

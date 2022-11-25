@@ -1,25 +1,64 @@
 import random
 import typing
-import base
 import numpy as np
-import re
-import attrib
+from .functions import *
 
-class Distribution(base.Component):
+class Distribution:
     """
-    Generic distribution class.
+    Generic base distribution class.
     """
 
-    def __init__(self, 
-        name: str, 
-        default_observer: base.Observer, 
-        default_store: typing.Optional[base.Store]
-    ) -> None:
-        super(Distribution, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [])
+    def __init__(self) -> None:
+        pass
 
-    def sample(self, **keywords) -> typing.Any:
-        raise NotImplementedError("sampling-function was not implemented!")
+    def sample(self, index: typing.Tuple[int], scales: str) -> typing.Any:
+        raise NotImplementedError("sampling-function was not implemented for base-distribution!")
+
+class Variable:
+    """
+    Generic variable base class.
+    """
+
+    def __init__(self, unit: str, scales: str, type: str, value: typing.Any) -> None:
+        self._unit = unit
+        self._scales = scales
+        self._type = type
+        self._value = value
+
+    @property
+    def Unit(self) -> typing.Optional[str]:
+        return self._unit
+
+    @Unit.setter
+    def Unit(self, value: typing.Optional[str]) -> None:
+        self._unit = value
+
+    @property
+    def Scales(self) -> typing.Optional[str]:
+        return self._scales
+
+    @Scales.setter
+    def Scales(self, value: typing.Optional[str]) -> None:
+        self._scales = value
+
+    @property
+    def Type(self) -> typing.Optional[str]:
+        return self._type
+
+    @Type.setter
+    def Type(self, value: typing.Optional[str]) -> None:
+        self._type = value
+
+    @property
+    def Value(self) -> typing.Any:
+        return self._value
+
+    @Value.setter
+    def Value(self, value: typing.Any) -> None:
+        self._value = value
+
+    def get(self, index: typing.Tuple[int], scales: str) -> typing.Any:
+        raise NotImplementedError("get-method not implemented for base-class Variable!")
 
 class NormalDistribution(Distribution):
     """
@@ -30,37 +69,31 @@ class NormalDistribution(Distribution):
     SD: Standard deviation of normal distribution.
     """
 
-    def __init__(self, 
-        name: str, 
-        default_observer: base.Observer, 
-        default_store: typing.Optional[base.Store]
-    ) -> None:
-        super(NormalDistribution, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [
-            base.Input(
-                "Mean",
-                (attrib.Class(float, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            ),
-            base.Input(
-                "SD",
-                (attrib.Class(float, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            )
-        ])
+    def __init__(self) -> None:
+        super(NormalDistribution, self).__init__()
         self._mean = None
         self._sd = None
 
-    def initialize(self):
-        self._mean = self._inputs["Mean"].read().values
-        self._sd = self._inputs["SD"].read().values
-        if self._sd < 0.0:
-            raise ValueError("Standard deviation has to be positive!")
+    @property
+    def Mean(self) -> Variable:
+        return self._mean
 
-    def sample(self) -> float:
+    @Mean.setter
+    def Mean(self, value: Variable) -> None:
+        self._mean = value
+
+    @property
+    def SD(self) -> Variable:
+        return self._sd
+
+    @SD.setter
+    def SD(self, value: Variable) -> None:
+        self._sd = value
+
+    def sample(self, index: typing.Tuple[int], scales: str) -> Variable:
         if self._mean is None or self._sd is None:
             raise Exception("Parameters were not initialized!")
-        return random.gauss(self._mean, self._sd)
+        return random.gauss(self._mean.get(index, scales), self._sd.get(index, scales))
         
 class UniformDistribution(Distribution):
     """
@@ -71,37 +104,31 @@ class UniformDistribution(Distribution):
     Upper: Upper bound of uniform distribution.
     """
 
-    def __init__(self, 
-        name: str, 
-        default_observer: base.Observer, 
-        default_store: typing.Optional[base.Store]
-    ) -> None:
-        super(UniformDistribution, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [
-            base.Input(
-                "Lower",
-                (attrib.Class(float, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            ),
-            base.Input(
-                "Upper",
-                (attrib.Class(float, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            )
-        ])
+    def __init__(self) -> None:
+        super(UniformDistribution, self).__init__()
         self._lower = None
         self._upper = None
 
-    def initialize(self):
-        self._lower = self._inputs["Lower"].read().values
-        self._upper = self._inputs["Upper"].read().values
-        if self._lower > self._upper:
-            raise ValueError("Lower bound has to be smaller than upper bound!")
+    @property
+    def Lower(self) -> Variable:
+        return self._lower
 
-    def sample(self) -> float:
+    @Lower.setter
+    def Lower(self, value: Variable) -> None:
+        self._lower = value
+
+    @property
+    def Upper(self) -> Variable:
+        return self._upper
+
+    @Upper.setter
+    def Upper(self, value: Variable) -> None:
+        self._upper = value
+
+    def sample(self, index: typing.Tuple[int], scales: str) -> float:
         if self._lower is None or self._upper is None:
             raise Exception("Parameters were not initialized!")
-        return random.uniform(self._lower, self._upper)
+        return random.uniform(self._lower.get(index, scales), self._upper.get(index, scales))
 
 class DiscreteUniformDistribution(Distribution):
     """
@@ -112,39 +139,33 @@ class DiscreteUniformDistribution(Distribution):
     Upper: Upper bound of uniform distribution.
     """
 
-    def __init__(self, 
-        name: str, 
-        default_observer: base.Observer, 
-        default_store: typing.Optional[base.Store]
-    ) -> None:
-        super(DiscreteUniformDistribution, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [
-            base.Input(
-                "Lower",
-                (attrib.Class(int, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            ),
-            base.Input(
-                "Upper",
-                (attrib.Class(int, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            )
-        ])
+    def __init__(self) -> None:
+        super(DiscreteUniformDistribution, self).__init__()
         self._lower = None
         self._upper = None
 
-    def initialize(self):
-        self._lower = self._inputs["Lower"].read().values
-        self._upper = self._inputs["Upper"].read().values
-        if self._lower > self._upper:
-            raise ValueError("Lower bound has to be smaller than upper bound!")
+    @property
+    def Lower(self) -> Variable:
+        return self._lower
 
-    def sample(self) -> float:
+    @Lower.setter
+    def Lower(self, value: Variable) -> None:
+        self._lower = value
+
+    @property
+    def Upper(self) -> Variable:
+        return self._upper
+
+    @Upper.setter
+    def Upper(self, value: Variable) -> None:
+        self._upper = value
+
+    def sample(self, index: typing.Tuple[int], scales: str) -> float:
         if self._lower is None or self._upper is None:
             raise Exception("Parameters were not initialized!")
-        return random.uniform(self._lower, self._upper)
+        return random.uniform(self._lower.get(index, scales), self._upper.get(index, scales))
 
-class Choice(base.Component):
+class Choice:
     """
     Implementation of a single choice in a distribution over a set.
 
@@ -153,25 +174,9 @@ class Choice(base.Component):
     Probability: Probability of sampling the object.
     """
 
-    def __init__(self, 
-        name: str, 
-        default_observer: base.Observer, 
-        default_store: typing.Optional[base.Store]
-    ) -> None:
-        super(Choice, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [
-            base.Input(
-                "Probability",
-                (attrib.Class(float, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
-            )
-        ])
+    def __init__(self) -> None:
         self._object = None
         self._probability = None
-
-    @property
-    def inputs(self) -> base.InputContainer:
-        return self._inputs
 
     @property
     def Object(self) -> typing.Any:
@@ -182,15 +187,12 @@ class Choice(base.Component):
         self._object = value
 
     @property
-    def Probability(self) -> base.Input:
-        if self._probability is None:
-            raise Exception("Parameters were not initialized!")
+    def Probability(self) -> float:
         return self._probability
 
-    def initialize(self):
-        if hasattr(self._object, "initialize") and callable(getattr(self._object, "initialize")):
-            self._object.initialize()
-        self._probability = self._inputs["Probability"].read().values
+    @Probability.setter
+    def Probability(self, value: typing.Any) -> None:
+        self._probability = value
 
 class ChoiceDistribution(Distribution):
     """
@@ -200,12 +202,8 @@ class ChoiceDistribution(Distribution):
     ChoiceList: A list of name-probability-pairs.
     """
 
-    def __init__(self, 
-        name: str, 
-        default_observer: base.Observer, 
-        default_store: typing.Optional[base.Store]
-    ) -> None:
-        super(ChoiceDistribution, self).__init__(name, default_observer, default_store)
+    def __init__(self) -> None:
+        super(ChoiceDistribution, self).__init__()
         self._choiceList = None
 
     @property
@@ -216,11 +214,7 @@ class ChoiceDistribution(Distribution):
     def ChoiceList(self, value: typing.List[Choice]) -> None:
         self._choiceList = value
 
-    def initialize(self):
-        for choice in self._choiceList:
-            choice.initialize()
-
-    def sample(self) -> typing.Any:
+    def sample(self, index: typing.Tuple[int], scales: str) -> typing.Any:
         objects = [choice.Object for choice in self._choiceList]
         probabilities = [choice.Probability for choice in self._choiceList]
         if np.sum(probabilities) != 1.0:
@@ -229,7 +223,7 @@ class ChoiceDistribution(Distribution):
             raise ValueError("Probabilities have to be between 0.0 and 1.0!")
         return random.choices(objects, weights=probabilities)[0]
 
-class RandomVariable:
+class RandomVariable(Variable):
     """
     Implementation of random variables over scales. A random variable keeps realizations in memory so that the sampling is done only once for a given index.
 
@@ -238,47 +232,29 @@ class RandomVariable:
     Distribution: Add description.
     """
 
-    def __init__(self) -> None:
-        self._scales = None
-        self._distribution = None
+    def __init__(self, unit: str, scales: str, type: str, value: typing.Any) -> None:
+        super(RandomVariable, self).__init__(unit, scales, type, value)
         self._realizations = {}
 
-    @property
-    def Scales(self) -> str:
-        return self._scales
+    def get(self, index: typing.Tuple[int], scales: str) -> typing.Any:
+        conv_index = convert_index(index, scales, self._scales)
+        if conv_index not in self._realizations:
+            self._realizations[conv_index] = self._value.sample(index, scales)
+        return self._realizations[conv_index]
 
-    @Scales.setter
-    def Scales(self, value: str) -> None:
-        self._scales = value
+    @classmethod
+    def convert_to_random_variable(self, variable: Variable) -> None:
+        variable.__class__ = RandomVariable
 
-    @property
-    def Distribution(self) -> Distribution:
-        return self._distribution
+class ConstantVariable(Variable):
 
-    @Distribution.setter
-    def Distribution(self, value: Distribution) -> None:
-        self._distribution = value
+    def __init__(self, unit: str, scales: str, type: str, value: typing.Any) -> None:
+        super(ConstantVariable, self).__init__(unit, scales, type, value)
 
-    def initialize(self):
-        self._distribution.initialize()
+    def get(self, index: typing.Tuple[int], scales: str) -> typing.Any:
+        conv_index = convert_index(index, scales, self._scales)
+        return self._value[conv_index]
 
-    def get_scale(self, scale_name: str) -> str:
-        match = re.search(f"{scale_name}\/.*?((?=,)|$)", self._scales)
-        if not match:
-            return "global"
-        return match.group(0)
-
-    def correct_index(self, index: typing.Tuple[int]) -> typing.Tuple[int]:
-        if self._scales == "global":
-            index = ()
-        else:
-            index = index[:len(self._scales.split(","))]
-        return index            
-
-    def was_realized(self, index: typing.Tuple[int]) -> bool:
-        index = self.correct_index(index)
-        return index in self._realizations
-
-    def get_realization(self, random_variable_index: typing.Tuple[int], **keywords) -> typing.Any:
-        random_variable_index = self.correct_index(random_variable_index)
-        return self._realizations.setdefault(random_variable_index, self._distribution.sample(**keywords))
+    @classmethod
+    def convert_to_random_variable(self, variable: Variable) -> None:
+        variable.__class__ = ConstantVariable

@@ -47,6 +47,7 @@ base.VERSION.changed("1.12.6", "Refactored documentation of class members into o
 base.VERSION.fixed("1.13.0", "Spelling error in `base.documentation` ")
 base.VERSION.changed("1.13.1", "Text wrapping of member documentation in `base.documentation` ")
 base.VERSION.added("1.14.1", "Links to external resources in scenario documentation generator")
+base.VERSION.added("1.14.2", "Covered time span to scenario readme generation")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -460,7 +461,10 @@ The scenario adds the following macros to the Landscape Model:
 """)
         for item in scenario_info.findall("Content/Item"):
             f.write(f"* `:{item.attrib['name']}` (version {item.attrib['version']})\n")
-        f.write("""
+        f.write(f"""
+The scenario covers a time span from `{scenario_info.find("TemporalExtent/FromDate").text}` to 
+`{scenario_info.find("TemporalExtent/ToDate").text}`.
+
 ### Roadmap
 The scenario is final and not further developed. It will be, however, updated to reflect new requirements by the 
 Landscape Model core and individual Landscape Model variants.

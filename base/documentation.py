@@ -46,6 +46,7 @@ base.VERSION.changed("1.12.5", "Enhanced contribution documentation in `base.doc
 base.VERSION.changed("1.12.6", "Refactored documentation of class members into own function in `base.documentation` ")
 base.VERSION.fixed("1.13.0", "Spelling error in `base.documentation` ")
 base.VERSION.changed("1.13.1", "Text wrapping of member documentation in `base.documentation` ")
+base.VERSION.added("1.14.1", "Links to external resources in scenario documentation generator")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:

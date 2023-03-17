@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the Landscape Model core. It was automatically created on 2022-03-25.
+This is the changelog for the Landscape Model core. It was automatically created on 2023-03-17.
+
+## [1.14.1] - 2023-03-17
+
+### Added
+- Links to external resources in scenario documentation generator
+
+### Changed
+
+### Fixed
+
 
 ## [1.14] - 2022-03-25
 

@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.14.1", "2023-03-17"),
     base.VersionInfo("1.14.0", "2022-03-25"),
     base.VersionInfo("1.13.1", "2022-03-11"),
     base.VersionInfo("1.13.0", "2022-03-08"),

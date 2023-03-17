@@ -460,7 +460,10 @@ The scenario adds the following macros to the Landscape Model:
 """)
         for item in scenario_info.findall("Content/Item"):
             f.write(f"* `:{item.attrib['name']}` (version {item.attrib['version']})\n")
-        f.write("""
+        f.write(f"""
+The scenario covers a time span from `{scenario_info.find("TemporalExtent/FromDate").text}` to 
+`{scenario_info.find("TemporalExtent/ToDate").text}`.
+
 ### Roadmap
 The scenario is final and not further developed. It will be, however, updated to reflect new requirements by the 
 Landscape Model core and individual Landscape Model variants.

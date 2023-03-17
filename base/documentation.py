@@ -446,7 +446,13 @@ Make sure you use the latest version of the Landscape Model.
 Copy the complete scenario folder unaltered into the `scenario` subdirectory of your model. Reference the scenario
 from the model parameterization. For details how to reference the scenario from the user parameterization, see the 
 `README` of the model.
-
+""")
+        for source in scenario_info.findall("ExternalSources/ExternalSource"):
+            f.write(f"""
+**This scenario requires an additional resource. Please download the resource from 
+[{inspect.cleandoc(source.text)}]({inspect.cleandoc(source.text)}) 
+and put it into the scenario folder.**""")
+        f.write("""
 
 ## Usage
 The scenario adds the following macros to the Landscape Model:

@@ -59,6 +59,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.12.0", "`stores.X3dfStore` recognizes square-meter scales for offset description")
     base.VERSION.changed("1.12.2", "Fixed typos in `stores.X3dfStore` documentation")
     base.VERSION.changed("1.14.0", "`stores.X3dfStore` now stores and retrieves geometries of elements")
+    base.VERSION.changed("1.14.4", "Changed chunk size for lists in `stores.X3dfStore`")
 
     def __init__(
             self,
@@ -311,7 +312,7 @@ class X3dfStore(base.Store):
                 # noinspection PyUnresolvedReferences
                 data_type = h5py.vlen_dtype(numpy.uint8)
                 data_set = self._f.create_dataset(
-                    name, (len(values),), dtype=data_type, compression="gzip", chunks=(1,))
+                    name, (len(values),), dtype=data_type, compression="gzip", chunks=(len(values),))
                 for i in range(len(values)):
                     data_set[i] = numpy.fromstring(values[i], dtype=numpy.uint8)
                 self._f[name].attrs["_type"] = "list[bytes]"

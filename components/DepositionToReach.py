@@ -53,6 +53,8 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.11.0", "`components.DepositionToReach` allows predefining deposition in a CSV file")
     base.VERSION.fixed(
         "1.12.3", "Removed warning for unused deposition from file `components.DepositionToReach` if path is specified")
+    base.VERSION.fixed(
+        "1.14.4", "Fixed dimensionality of `Deposition` output in `components.DepositionToReach` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -149,9 +151,9 @@ class DepositionToReach(base.Component):
                 if len(reach_indexes) == 1 and coverage[i] == 0:
                     reach_index = int(reach_indexes)
                     deposition = self.inputs["Deposition"].read(
-                        slices=(slice(data_set_info["shape"][0]), reach_index)).values
+                        slices=(slice(data_set_info["shape"][0]), slice(reach_index, reach_index + 1))).values
                     self.outputs["Deposition"].set_values(
-                        deposition, slices=(slice(data_set_info["shape"][0]), i), create=False)
+                        deposition, slices=(slice(data_set_info["shape"][0]), slice(i, i + 1)), create=False)
                 elif coverage[i] != 1:
                     self.default_observer.write_message(2, f"Could not map reach #{reachId}; no deposition placed")
         elif deposition_input_source == "DepositionInputFile":

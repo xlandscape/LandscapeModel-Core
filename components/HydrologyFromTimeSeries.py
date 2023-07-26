@@ -60,6 +60,8 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.10.0", "`components.HydrologyFromTimeSeries` reports element names of outputs")
     base.VERSION.added("1.10.3", "Further consistency checks to `HydrologyFromTimeSeries` component")
     base.VERSION.changed("1.11.0", "`components.HydrologyFromTimeSeries` specifies offsets of outputs")
+    base.VERSION.fixed(
+        "1.14.4", "Fixed dimensionality of `Deposition` output in `components.HydrologyFromTimeSeries` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -189,14 +191,26 @@ class HydrologyFromTimeSeries(base.Component):
             offset=(offset_time, None)
         )
         for i in range(number_reaches):
-            self.outputs["Flow"].set_values(flow[(slice(offset_hours, offset_hours + number_hours, 1), i)],
-                                            slices=(slice(number_hours), i), create=False)
-            self.outputs["Depth"].set_values(depth[(slice(offset_hours, offset_hours + number_hours, 1), i)],
-                                             slices=(slice(number_hours), i), create=False)
-            self.outputs["Volume"].set_values(volume[(slice(offset_hours, offset_hours + number_hours, 1), i)],
-                                              slices=(slice(number_hours), i), create=False)
-            self.outputs["Area"].set_values(area[(slice(offset_hours, offset_hours + number_hours, 1), i)],
-                                            slices=(slice(number_hours), i), create=False)
+            self.outputs["Flow"].set_values(
+                flow[(slice(offset_hours, offset_hours + number_hours, 1), slice(i, i + 1))],
+                slices=(slice(number_hours), slice(i, i + 1)),
+                create=False
+            )
+            self.outputs["Depth"].set_values(
+                depth[(slice(offset_hours, offset_hours + number_hours, 1), slice(i, i + 1))],
+                slices=(slice(number_hours), slice(i, i + 1)),
+                create=False
+            )
+            self.outputs["Volume"].set_values(
+                volume[(slice(offset_hours, offset_hours + number_hours, 1), slice(i, i + 1))],
+                slices=(slice(number_hours), slice(i, i + 1)),
+                create=False
+            )
+            self.outputs["Area"].set_values(
+                area[(slice(offset_hours, offset_hours + number_hours, 1), slice(i, i + 1))],
+                slices=(slice(number_hours), slice(i, i + 1)),
+                create=False
+            )
         self.outputs["TimeSeriesStart"].set_values(datetime.datetime.combine(from_time, datetime.time(1)))
         self.outputs["TimeSeriesEnd"].set_values(datetime.datetime.combine(to_time, datetime.time()))
         if self._inputs["ImportInflows"].read().values:

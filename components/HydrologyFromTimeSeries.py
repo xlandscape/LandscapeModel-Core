@@ -60,6 +60,8 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.10.0", "`components.HydrologyFromTimeSeries` reports element names of outputs")
     base.VERSION.added("1.10.3", "Further consistency checks to `HydrologyFromTimeSeries` component")
     base.VERSION.changed("1.11.0", "`components.HydrologyFromTimeSeries` specifies offsets of outputs")
+    base.VERSION.fixed(
+        "1.14.4", "Fixed dimensionality of `Deposition` output in `components.HydrologyFromTimeSeries` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

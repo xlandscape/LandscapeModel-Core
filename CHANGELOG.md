@@ -2,6 +2,20 @@
 
 This is the changelog for the Landscape Model core. It was automatically created on 2023-07-26.
 
+## [1.14.4] - 2023-07-26
+
+### Added
+
+### Changed
+
+- Changed chunk size for lists in `stores.X3dfStore`
+
+### Fixed
+
+- Fixed dimensionality of `Deposition` output in `components.DepositionToReach` component
+
+- Fixed dimensionality of `Deposition` output in `components.HydrologyFromTimeSeries` component
+
 ## [1.14.3] - 2023-07-26
 
 ### Added

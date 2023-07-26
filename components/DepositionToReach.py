@@ -149,9 +149,9 @@ class DepositionToReach(base.Component):
                 if len(reach_indexes) == 1 and coverage[i] == 0:
                     reach_index = int(reach_indexes)
                     deposition = self.inputs["Deposition"].read(
-                        slices=(slice(data_set_info["shape"][0]), reach_index)).values
+                        slices=(slice(data_set_info["shape"][0]), slice(reach_index, reach_index + 1))).values
                     self.outputs["Deposition"].set_values(
-                        deposition, slices=(slice(data_set_info["shape"][0]), i), create=False)
+                        deposition, slices=(slice(data_set_info["shape"][0]), slice(i, i + 1)), create=False)
                 elif coverage[i] != 1:
                     self.default_observer.write_message(2, f"Could not map reach #{reachId}; no deposition placed")
         elif deposition_input_source == "DepositionInputFile":

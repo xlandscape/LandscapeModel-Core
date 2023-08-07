@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema 
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="urn:xPPPLandscapeScenarioParametrization"
-    xmlns="urn:xPPPLandscapeScenarioParametrization"
+    targetNamespace="urn:xCropProtectionLandscapeScenarioParametrization"
+    xmlns="urn:xCropProtectionLandscapeScenarioParametrization"
     elementFormDefault="qualified"
 >
     <xs:attribute name="type" type="xs:string"/>
@@ -164,7 +164,7 @@
         <xs:attribute name="scales" type="xs:string" use="required"/>                                                    
     </xs:complexType>
 
-    <xs:element name="XPPP">
+    <xs:element name="xCropProtection">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="PPMCalendars">

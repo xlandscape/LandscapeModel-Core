@@ -6,7 +6,7 @@ import textwrap
 import inspect
 import xml.etree.ElementTree
 sys.path.insert(0, "model/variant")
-import XPPP
+import xCropProtection
 from .classes import PPMCalendar, ApplicationWindowDistribution, Tank, PPP, Application, Technology
 from .distributions import NormalDistribution, UniformDistribution, DiscreteUniformDistribution, ChoiceDistribution
 
@@ -37,18 +37,18 @@ def document_xml(name: str, sample_xml_path: str, file_path: str):
         )
     with open(file_path, "a", encoding="utf-8") as f: 
         f.write(f"""## {name}  
-The following gives a sample parametrization of the `XPPP` component.  
+The following gives a sample parametrization of the `xCropProtection` component.  
 ```xml
 {sample_parametrization}
 ````  
 """)
 
-readme_path = os.path.join("model", "variant", "XPPP", "README.md")
+readme_path = os.path.join("model", "variant", "xCropProtection", "README.md")
 mc_xml_path = os.path.join("model", "variant", "mc.xml")
-sample_xml_path = os.path.join("model", "variant", "XPPP", "sample.xml")
+sample_xml_path = os.path.join("model", "variant", "xCropProtection", "sample.xml")
 
 base.documentation.document_component(
-    XPPP.XPPP("XPPP", None, None),
+    xCropProtection.xCropProtection("xCropProtection", None, None),
     readme_path,
     mc_xml_path
 )

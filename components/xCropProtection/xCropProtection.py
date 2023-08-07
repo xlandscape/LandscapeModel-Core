@@ -10,15 +10,15 @@ from .distributions import *
 from .classes import *
 from .types import *
 
-class XPPP(base.Component):
+class xCropProtection(base.Component):
     """
-    XPPP is a Landscape Model component for simulating applications of plant protection products on fields with a given 
+    xCropProtection is a Landscape Model component for simulating applications of plant protection products on fields with a given 
     landscape. The simulation is done on a daily-fieldwise resolution. On each day and field in the simulation, the 
     module checks if there are products to apply. If so, exact application dates, rates etc. are sampled from the 
     distributions given by the user. To be more specific, the user parameterizes random variables that are realized 
     during the simulation according to their scales.  
-    XPPP currently supports the input scales `global` and `time/day, space/base_geometry`.  
-    XPPP currently supports the random variable scales `global`, `time/day`, `time/year`, `time/day, space/base_geometry` and `time/year, space/base_geometry`.
+    xCropProtection currently supports the input scales `global` and `time/day, space/base_geometry`.  
+    xCropProtection currently supports the random variable scales `global`, `time/day`, `time/year`, `time/day, space/base_geometry` and `time/year, space/base_geometry`.
     """
 
     # RELEASES
@@ -27,11 +27,11 @@ class XPPP(base.Component):
     )
     
     # CHANGELOG
-    VERSION.added("1.0.0", "First release of `XPPP` ")
+    VERSION.added("1.0.0", "First release of `xCropProtection` ")
 
-    RANDOM_TYPES = ("xppp.NormalDistribution", "xppp.UniformDistribution", "xppp.DiscreteUniformDistribution", "xppp.ChoiceDistribution")
-    TIME_SPAN_TYPES = ("xppp.TimeSpan", "xppp.MonthDaySpan", "xppp.MonthDayTimeSpan", "xppp.DateSpan")
-    LIST_TIME_SPAN_TYPES = ("list[xppp.TimeSpan]", "list[xppp.MonthDaySpan]", "list[xppp.MonthDayTimeSpan]", "list[xppp.DateSpan]")
+    RANDOM_TYPES = ("xCropProtection.NormalDistribution", "xCropProtection.UniformDistribution", "xCropProtection.DiscreteUniformDistribution", "xCropProtection.ChoiceDistribution")
+    TIME_SPAN_TYPES = ("xCropProtection.TimeSpan", "xCropProtection.MonthDaySpan", "xCropProtection.MonthDayTimeSpan", "xCropProtection.DateSpan")
+    LIST_TIME_SPAN_TYPES = ("list[xCropProtection.TimeSpan]", "list[xCropProtection.MonthDaySpan]", "list[xCropProtection.MonthDayTimeSpan]", "list[xCropProtection.DateSpan]")
     RANDOM_VARIABLE_SCALES = ("global", "time/day", "time/year", "time/day, space/base_geometry", "time/year, space/base_geometry")
 
     def __init__(self, 
@@ -39,8 +39,8 @@ class XPPP(base.Component):
         default_observer: base.Observer, 
         default_store: typing.Optional[base.Store]
     ) -> None:
-        super(XPPP, self).__init__(name, default_observer, default_store)
-        self._module = base.Module("XPPP", "1.0", r"module\README.md") 
+        super(xCropProtection, self).__init__(name, default_observer, default_store)
+        self._module = base.Module("xCropProtection", "1.0", r"module\README.md") 
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ParametrizationNamespace",
@@ -48,10 +48,10 @@ class XPPP(base.Component):
                 self.default_observer
             ),
             base.Input(
-                "XPPPFilePath",
+                "xCropProtectionFilePath",
                 (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
                 self.default_observer,
-                description="""The path to the XML-parametrization of XPPP. A `str` of global scale. Value has no unit."""
+                description="""The path to the XML-parametrization of xCropProtection. A `str` of global scale. Value has no unit."""
             ),
             base.Input(
                 "SimulationStart",
@@ -130,7 +130,7 @@ class XPPP(base.Component):
 
         # if scales were not implemented, raise exception:
         if scales not in self.RANDOM_VARIABLE_SCALES:
-            raise NotImplementedError(f"XPPP was not implemented for random variable scale '{scales}'!")
+            raise NotImplementedError(f"xCropProtection was not implemented for random variable scale '{scales}'!")
 
     def convert(self, config: xml.etree.ElementTree) -> typing.Any: 
         
@@ -173,7 +173,7 @@ class XPPP(base.Component):
                 raise NotImplementedError(f"Combination of scales {scales} and type {type} not implemented!")                
 
             # format values if necessary:
-            if type == "xppp.TimeSpan" or type == "list[xppp.TimeSpan]":
+            if type == "xCropProtection.TimeSpan" or type == "list[xCropProtection.TimeSpan]":
                 for key, value in values.items():
                     if value == "":
                         values[key] == None
@@ -181,7 +181,7 @@ class XPPP(base.Component):
                         dates = value.split(" to ")
                         dates = (datetime.datetime.strptime(dates[0], "%H:%M"), datetime.datetime.strptime(dates[1], "%H:%M"))
                         values[key] = TimeSpan(Time(dates[0].hour, dates[0].minute), Time(dates[1].hour, dates[1].minute))
-            elif type == "xppp.MonthDaySpan" or type == "list[xppp.MonthDaySpan]":
+            elif type == "xCropProtection.MonthDaySpan" or type == "list[xCropProtection.MonthDaySpan]":
                 for key, value in values.items():
                     if value == "":
                         values[key] == None
@@ -189,7 +189,7 @@ class XPPP(base.Component):
                         dates = value.split(" to ")
                         dates = (datetime.datetime.strptime(dates[0], "%m-%d"), datetime.datetime.strptime(dates[1], "%m-%d"))
                         values[key] = MonthDaySpan(MonthDay(dates[0].month, dates[0].day), MonthDay(dates[1].month, dates[1].day))
-            elif type == "xppp.MonthDayTimeSpan" or type == "list[xppp.MonthDayTimeSpan]":
+            elif type == "xCropProtection.MonthDayTimeSpan" or type == "list[xCropProtection.MonthDayTimeSpan]":
                 for key, value in values.items():
                     if value == "":
                         values[key] == None
@@ -197,7 +197,7 @@ class XPPP(base.Component):
                         dates = value.split(" to ")
                         dates = (datetime.datetime.strptime(dates[0], "%m-%d %H:%M"), datetime.datetime.strptime(dates[1], "%m-%d %H:%M"))
                         values[key] = MonthDayTimeSpan(MonthDayTime(dates[0].month, dates[0].day, dates[0].hour, dates[0].minute), MonthDayTime(dates[1].month, dates[1].day, dates[1].hour, dates[1].minute))
-            elif type == "xppp.DateSpan" or type == "list[xppp.DateSpan]":
+            elif type == "xCropProtection.DateSpan" or type == "list[xCropProtection.DateSpan]":
                 for key, value in values.items():
                     if value == "":
                         values[key] == None
@@ -218,16 +218,16 @@ class XPPP(base.Component):
         else:
 
             # create distribution and read inputs:
-            if type == "xppp.NormalDistribution":
+            if type == "xCropProtection.NormalDistribution":
                 distribution = NormalDistribution()
                 self.set_inputs(distribution, config)
-            elif type == "xppp.UniformDistribution":
+            elif type == "xCropProtection.UniformDistribution":
                 distribution = UniformDistribution()
                 self.set_inputs(distribution, config)
-            elif type == "xppp.DiscreteUniformDistribution":
+            elif type == "xCropProtection.DiscreteUniformDistribution":
                 distribution = DiscreteUniformDistribution()
                 self.set_inputs(distribution, config)
-            elif type == "xppp.ChoiceDistribution":
+            elif type == "xCropProtection.ChoiceDistribution":
                 distribution = ChoiceDistribution()
                 distribution.ChoiceList = []
                 for child_config in config:
@@ -310,7 +310,7 @@ class XPPP(base.Component):
     def read_xml(self) -> None:
   
         # start reading xml:
-        xml_file = self.inputs["XPPPFilePath"].read().values
+        xml_file = self.inputs["xCropProtectionFilePath"].read().values
         xml_tree = xml.etree.ElementTree.parse(xml_file)
         root = xml_tree.getroot()
         namespace = {"": self.inputs["ParametrizationNamespace"].read().values}

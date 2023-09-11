@@ -16,6 +16,7 @@ class Input:
     base.VERSION.added("1.7.0", "Type hints to `base.Input` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Input` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Input` ")
+    base.VERSION.added("1.15.0", "Messages if `base.Input` misses attributes")
 
     def __init__(
             self,

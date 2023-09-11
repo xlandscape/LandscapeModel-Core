@@ -44,6 +44,7 @@ class Experiment:
     base.VERSION.changed("1.9.1", "New macro `_MODEL_DIR_` in `base.Experiment` ")
     base.VERSION.added("1.9.9", "Option to profile performance of simulation runs in `base.Experiment` ")
     base.VERSION.fixed("1.9.11", "Processing of exceptions thrown in non-blocking mode in `base.Experiment` ")
+    base.VERSION.added("1.15.0", "Repository checks during initialization of `base.Experiment` ")
 
     def __init__(
             self,

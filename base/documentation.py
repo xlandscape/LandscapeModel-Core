@@ -53,6 +53,7 @@ base.VERSION.fixed("1.13.0", "Spelling error in `base.documentation` ")
 base.VERSION.changed("1.13.1", "Text wrapping of member documentation in `base.documentation` ")
 base.VERSION.changed("1.14.3", "Normalized whitespace for creating documentations")
 base.VERSION.added("1.15.0", "Functions to check variant parts and to write repository info for documentation")
+base.VERSION.fixed("1.15.1", "Documentation of scenario respects XML namespace")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -425,17 +426,19 @@ If you are requesting a merge relating to a scenario, please make sure that the 
 """)
 
 
-def document_scenario(info_file: str, file_path: str) -> None:
+def document_scenario(info_file: str, file_path: str, xml_namespace: str = "urn:xLandscapeModelScenarioInfo") -> None:
     """
     Documents a Landscape Model scenario.
 
     Args:
         info_file: The path of scenario information file.
         file_path: The path where the readme file is written to.
+        xml_namespace: The default namespace for the scenario metadata.
 
     Returns:
         Nothing.
     """
+    namespace = {"": xml_namespace}
     scenario_info = xml.etree.ElementTree.parse(info_file)
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(f"""## Table of Contents
@@ -453,14 +456,14 @@ def document_scenario(info_file: str, file_path: str) -> None:
 
 
 ## About the project
-{inspect.cleandoc(scenario_info.find('Description').text)}
+{inspect.cleandoc(scenario_info.find('Description', namespace).text)}
 This is an automatically generated documentation based on the available scenario metadata. The current version of this 
 document is from {datetime.date.today()}.
 
 ### Built with
 The scenario can be used in the following Landscape Models:
 """)
-        for version in scenario_info.findall("SupportedRuntimeVersions/Version"):
+        for version in scenario_info.findall("SupportedRuntimeVersions/Version", namespace):
             f.write(f"* {version.attrib['variant']} version {version.attrib['number']} and higher\n\n\n")
         f.write("""## Getting Started
 ### Prerequisites
@@ -475,7 +478,7 @@ from the model parameterization. For details how to reference the scenario from 
 ## Usage
 The scenario adds the following macros to the Landscape Model:
 """)
-        for item in scenario_info.findall("Content/Item"):
+        for item in scenario_info.findall("Content/Item", namespace):
             f.write(f"* `:{item.attrib['name']}` (version {item.attrib['version']})\n")
         f.write("""
 ### Roadmap
@@ -493,37 +496,39 @@ Distributed under the CC0 License. See `LICENSE` for more information.
 
 ## Contact
 """)
-        for contact in scenario_info.findall("Contacts/Contact"):
+        for contact in scenario_info.findall("Contacts/Contact", namespace):
             f.write(f"* {contact.text}\n")
         f.write("\n\n## Acknowledgements\n")
-        for acknowledgement in scenario_info.findall("Acknowledgements/Acknowledgement"):
+        for acknowledgement in scenario_info.findall("Acknowledgements/Acknowledgement", namespace):
             f.write(f"* {inspect.cleandoc(acknowledgement.text)}\n")
 
 
-def write_scenario_changelog(info_file: str, file_path: str) -> None:
+def write_scenario_changelog(info_file: str, file_path: str, xml_namespace: str = "urn:xLandscapeModelScenarioInfo") -> None:
     """
     Writes an updated scenario changelog according to the version history stored in the scenario info file.
 
     Args:
         info_file: The path of scenario information file.
         file_path: The path of file where the changelog is written to.
+        xml_namespace: The default namespace for the scenario metadata.
 
    Returns:
        Nothing.
     """
     scenario_info = xml.etree.ElementTree.parse(info_file)
+    namespace = {"": xml_namespace}
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Changelog\nThis list contains all additions, changes and fixes for the scenario.\n")
         f.write(f"It was automatically created on {datetime.date.today()}")
-        for version in scenario_info.findall("Changelog/Version"):
+        for version in scenario_info.findall("Changelog/Version", namespace):
             f.write(f"\n\n## [{version.attrib['number']}] - {version.attrib['date']}\n### Added\n")
-            for addition in version.findall("Addition"):
+            for addition in version.findall("Addition", namespace):
                 f.write(f"- {inspect.cleandoc(addition.text)}\n")
             f.write("\n###Changed\n")
-            for change in version.findall("Change"):
+            for change in version.findall("Change", namespace):
                 f.write(f"- {inspect.cleandoc(change.text)}\n")
             f.write("\n###Fixed\n")
-            for fix in version.findall("Fix"):
+            for fix in version.findall("Fix", namespace):
                 f.write(f"- {inspect.cleandoc(fix.text)}\n")
 
 

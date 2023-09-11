@@ -1,6 +1,36 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2023-07-26.
+This is the changelog for the Landscape Model core. It was automatically created on 2023-09-11.
+
+## [1.15] - 2023-09-11
+
+### Added
+
+- `frontmatter` package to runtime environment
+
+- Messages if `base.Output` misses descriptions
+
+- Messages if `base.Input` misses attributes
+
+- `base.Module` now allows nesting of modules
+
+- `base.MultiObserver` remembers whether errors, warnings and notes were written during simulation run
+
+- Repository checks during initialization of `base.Experiment` 
+
+- Added message for initialization of component in `base.MCRun`
+
+- XML validation of scenario metadata
+
+- Runtime environment information of core in `base.__init__`
+
+- Functions to check variant parts and to write repository info for documentation
+
+### Changed
+
+- Updated `GDAL` to version 3.4.3
+
+### Fixed
 
 ## [1.14.4] - 2023-07-26
 
@@ -492,18 +522,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - Switched to Google docstring style in `base.DataProvider` 
 
-- Switched to Google docstring style in `base.Input` 
-
-- Switched to Google docstring style in `base.InputContainer` 
-
-- Switched to Google docstring style in `base.Observer` 
-
-- Switched to Google docstring style in `base.Component` 
-
-- Switched to Google docstring style in `base.Experiment` 
-
-- Switched to Google docstring style in `base.functions` 
-
 - Switched to Google docstring style in `attrib.Class` 
 
 - Switched to Google docstring style in `attrib.Equals` 
@@ -517,6 +535,18 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Switched to Google docstring style in `attrib.Transformable` 
 
 - Switched to Google docstring style in `attrib.Unit` 
+
+- Switched to Google docstring style in `base.Input` 
+
+- Switched to Google docstring style in `base.InputContainer` 
+
+- Switched to Google docstring style in `base.Observer` 
+
+- Switched to Google docstring style in `base.Component` 
+
+- Switched to Google docstring style in `base.Experiment` 
+
+- Switched to Google docstring style in `base.functions` 
 
 - Switched to Google docstring style in `component.CsvReader` 
 
@@ -568,14 +598,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - Replaced Legacy format strings by f-strings in `base.OutputContainer` 
 
-- Replaced Legacy format strings by f-strings in `base.Input` 
-
-- Replaced Legacy format strings by f-strings in `base.InputContainer` 
-
-- Replaced Legacy format strings by f-strings in `base.Experiment` 
-
-- Replaced Legacy format strings by f-strings in `base.functions` 
-
 - Replaced Legacy format strings by f-strings in `attrib.Class` 
 
 - Replaced Legacy format strings by f-strings in `attrib.Equals` 
@@ -585,6 +607,14 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Replaced Legacy format strings by f-strings in `attrib.Scales` 
 
 - Replaced Legacy format strings by f-strings in `attrib.Unit` 
+
+- Replaced Legacy format strings by f-strings in `base.Input` 
+
+- Replaced Legacy format strings by f-strings in `base.InputContainer` 
+
+- Replaced Legacy format strings by f-strings in `base.Experiment` 
+
+- Replaced Legacy format strings by f-strings in `base.functions` 
 
 - Replaced Legacy format strings by f-strings in `components.DepositionToReach` 
 
@@ -654,22 +684,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - Type hints to `base.DataProvider` 
 
-- Type hints to `base.Input` 
-
-- Type hints to `base.InputContainer` 
-
-- Type hints to `base.Observer` 
-
-- Type hints to `base.Module` 
-
-- Type hints to `base.Component` 
-
-- Type hints to `base.UserParameters` 
-
-- Type hints to `base.Experiment` 
-
-- Type hints to `base.functions` 
-
 - Type hints to `attrib.Class` 
 
 - Type hints to `attrib.Equals` 
@@ -683,6 +697,22 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Type hints to `attrib.Transformable` 
 
 - Type hints to `attrib.Unit` 
+
+- Type hints to `base.Input` 
+
+- Type hints to `base.InputContainer` 
+
+- Type hints to `base.Module` 
+
+- Type hints to `base.Observer` 
+
+- Type hints to `base.Component` 
+
+- Type hints to `base.UserParameters` 
+
+- Type hints to `base.Experiment` 
+
+- Type hints to `base.functions` 
 
 - Type hints to `components.CsvReader` 
 
@@ -744,8 +774,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 ### Changed
 
-- None-return instead of NotImplementedError in `base.Observer` methods
-
 - `attrib.Class` got new base class `base.DataAttribute` 
 
 - Removed support of string-based type definitions in `attrib.Class` in favor for generic types introduced in Python 3.9
@@ -763,6 +791,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `attrib.Transformable` got new base class `base.DataAttribute` 
 
 - `attrib.Unit` got new base class `base.DataAttribute` 
+
+- None-return instead of NotImplementedError in `base.Observer` methods
 
 - Harmonized init signature of `components.CsvReader` with base class
 
@@ -994,21 +1024,21 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - `base.DataProvider` changelog uses markdown for code elements
 
+- `attrib.Transformable` changelog uses markdown for code elements
+
 - `base.Input` changelog uses markdown for code elements
 
 - `base.InputContainer` changelog uses markdown for code elements
 
-- `base.Observer` changelog uses markdown for code elements
-
 - `base.Module` changelog uses markdown for code elements
+
+- `base.Observer` changelog uses markdown for code elements
 
 - `base.Component` changelog uses markdown for code elements
 
 - `base.UserParameters` changelog uses markdown for code elements
 
 - `base.Experiment` changelog uses markdown for code elements
-
-- `attrib.Transformable` changelog uses markdown for code elements
 
 - `components.CsvReader` changelog uses markdown for code elements
 
@@ -1184,10 +1214,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - `init.py` spell check exclusions
 
-- `base.UserParameters` property names
-
-- `base.functions` changelog uses markdown for code elements
-
 - `attrib.Class` changelog uses markdown for code elements
 
 - `attrib.Equals` changelog uses markdown for code elements
@@ -1199,6 +1225,10 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `attrib.Unit` changelog uses markdown for code elements
 
 - `attrib` changelog uses markdown for code elements
+
+- `base.UserParameters` property names
+
+- `base.functions` changelog uses markdown for code elements
 
 - `components.DepositionToPecSoil` data type access
 
@@ -1386,22 +1416,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - Changelog in `base.DataProvider`
 
-- Changelog in `base.Input`
-
-- Changelog in `base.InputContainer` 
-
-- Changelog in `base.Observer` 
-
-- Changelog in `base.Module` 
-
-- Changelog in `base.Component`
-
-- Changelog in `base.UserParameters` 
-
-- Changelog in `base.Experiment` 
-
-- Changelog in `base.functions` 
-
 - Changelog in class `attrib.Class` 
 
 - Changelog in class `attrib.Equals` 
@@ -1415,6 +1429,22 @@ This is the changelog for the Landscape Model core. It was automatically created
 - Changelog in class `attrib.Unit` 
 
 - Changelog in `attrib` 
+
+- Changelog in `base.Input`
+
+- Changelog in `base.InputContainer` 
+
+- Changelog in `base.Module` 
+
+- Changelog in `base.Observer` 
+
+- Changelog in `base.Component`
+
+- Changelog in `base.UserParameters` 
+
+- Changelog in `base.Experiment` 
+
+- Changelog in `base.functions` 
 
 - Changelog in `components.CsvReader` 
 
@@ -1484,9 +1514,9 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - `base.VersionInfo` completely rewritten to move changelogs nearer to code
 
-- `base.Experiment.write_info_xml()` uses new `Version` classes
-
 - Removed class `attrib.VERSION` 
+
+- `base.Experiment.write_info_xml()` uses new `Version` classes
 
 - `components.CsvReader` class documentation
 
@@ -1632,12 +1662,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - `base.DataAttributes` refactored
 
-- `base.Input.read()` passes metadata from provider to `base.Values` object
-
-- `base.InputContainer` refactored
-
-- `base.Component` refactored
-
 - `attrib.Class.check()` returns base.CheckResult instead of tuple
 
 - `attrib.Equals.check()` returns base.CheckResult instead of tuple
@@ -1649,6 +1673,12 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `attrib.Transformable.check()` returns base.CheckResult instead of tuple
 
 - `attrib.Unit.check()` returns base.CheckResult instead of tuple
+
+- `base.Input.read()` passes metadata from provider to `base.Values` object
+
+- `base.InputContainer` refactored
+
+- `base.Component` refactored
 
 - `components.CsvReader` refactored
 
@@ -1868,9 +1898,9 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - `base.OutputContainer` refactored
 
-- `base.Observer` refactored
-
 - `base.Module` refactored
+
+- `base.Observer` refactored
 
 - `base.Experiment` refactored
 
@@ -2210,11 +2240,11 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - `base.VersionInfo` for describing individual revisions
 
-- `base.Experiment.write_info_xml()` for saving runtime information of the experiment
-
 - Value equality checker
 
 - Changelog through `VersionInfo` class in `attrib` namespace
+
+- `base.Experiment.write_info_xml()` for saving runtime information of the experiment
 
 - Changelog through `VersionInfo` class in `stores` namespace
 
@@ -2278,13 +2308,19 @@ This is the changelog for the Landscape Model core. It was automatically created
 
 - `base.DataProvider` class for data providers
 
+- `attrib.Class` 
+
+- `Transformable` attribute checker
+
+- `attrib` namespace
+
 - `base.Input` class for representing component inputs
 
 - `base.InputContainer` class for collecting the inputs of a component
 
-- `base.Observer` class for representing Landscape Model observers
-
 - `base.Module` class for describing Landscape Model modules
+
+- `base.Observer` class for representing Landscape Model observers
 
 - `base.Component` class representing Landscape Model components
 
@@ -2293,12 +2329,6 @@ This is the changelog for the Landscape Model core. It was automatically created
 - `base.Experiment` class for managing individual experiments
 
 - `base.functions` providing helper functions
-
-- `attrib.Class` 
-
-- `Transformable` attribute checker
-
-- `attrib` namespace
 
 - `components.CsvReader` component
 

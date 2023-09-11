@@ -20,6 +20,7 @@ class Output:
     base.VERSION.added("1.7.0", "Type hints to `base.Output` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Output` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Output` ")
+    base.VERSION.added("1.15.0", "Messages if `base.Output` misses descriptions")
 
     def __init__(
             self,

@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.15.0", "2023-09-11"),
     base.VersionInfo("1.14.4", "2023-07-26"),
     base.VersionInfo("1.14.3", "2023-07-26"),
     base.VersionInfo("1.14.2", "2023-03-17"),
@@ -176,3 +177,5 @@ VERSION.fixed("1.9.10", "`mistune` package downgraded to make Jupyter notebook a
 VERSION.added("1.12.3", "xmlschema package to Python runtime environment")
 VERSION.changed("1.12.6", "Updated numpy package to version 1.22.2")
 VERSION.added("1.14.0", "Python packages Shapely and openpyxl to runtime environment")
+VERSION.added("1.15.0", "`frontmatter` package to runtime environment")
+VERSION.changed("1.15.0", "Updated `GDAL` to version 3.4.3")

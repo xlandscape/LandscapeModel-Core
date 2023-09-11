@@ -17,6 +17,10 @@ class Observer:
     base.VERSION.added("1.7.0", "Type hints to `base.Observer` ")
     base.VERSION.changed("1.7.0", "None-return instead of NotImplementedError in `base.Observer` methods")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Observer` ")
+    base.VERSION.added(
+        "1.15.0",
+        "`base.MultiObserver` remembers whether errors, warnings and notes were written during simulation run"
+    )
 
     def __init__(self) -> None:
         """Initializes an Observer."""

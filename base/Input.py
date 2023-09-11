@@ -1,6 +1,7 @@
 """Class definition of a Landscape Model component input."""
 import base
 import typing
+import attrib
 
 
 class Input:
@@ -34,13 +35,22 @@ class Input:
             provider: The provider of the input.
             description: A description of the input.
         """
-        self._name = name        
+        self._name = name
         self._provider = provider
         self._attributes = base.DataAttributes(attributes)
         self._messages = []
         self._observer = observer
         self._extensions = []
         self._description = description
+        if observer:
+            if not any([isinstance(x, attrib.Class) for x in attributes]):
+                observer.write_message(2, f"Input {name} does not specify its data type")
+            if not any([isinstance(x, attrib.Scales) for x in attributes]):
+                observer.write_message(2, f"Input {name} does not specify its scales")
+            if not any([isinstance(x, attrib.Unit) for x in attributes]):
+                observer.write_message(2, f"Input {name} does not specify its physical unit")
+            if not description or len(description) < 64:
+                observer.write_message(3, f"Input {name} is missing a detailed description")
 
     def add_extension(self, extension: base.Extension) -> None:
         """

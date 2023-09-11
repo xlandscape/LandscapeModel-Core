@@ -1,4 +1,6 @@
 """This file contains functions for automatically documenting parts Landscape Model code."""
+import distutils.version
+
 import datetime
 import inspect
 import base
@@ -7,6 +9,10 @@ import xml.etree.ElementTree
 import textwrap
 import types
 import typing
+import os
+import configparser
+import urllib.request
+import json
 
 # CHANGELOG
 base.VERSION.added("1.4.9", "`base.documentation` ")
@@ -590,3 +596,91 @@ copy of $(variant_name) using the graphical git client *Sourcetree*.
         template_file,
         file_path
     )
+
+
+def check_variant_parts(variant_root_dir: str) -> None:
+    experiment_config = xml.etree.ElementTree.parse(
+        os.path.join(variant_root_dir, "..", "..", "variant", "experiment.xml")).getroot()
+    mc_config = xml.etree.ElementTree.parse(
+        experiment_config.find(
+            "General").find("MCRunTemplate").text.replace("$(_X3DIR_)", variant_root_dir)).getroot()
+    documented_parts = {(x.attrib["module"], x.attrib["class"]) for x in experiment_config.find("Parts")}
+    configured_parts = {
+        x for x in (
+                {(x.attrib["module"], x.attrib["class"]) for x in experiment_config.findall("Observers/Observer")} |
+                {(x.attrib["module"], x.attrib["class"]) for x in mc_config.findall("Observers/Observer")} |
+                {(x.attrib["module"], x.attrib["class"]) for x in mc_config.findall("Composition/*")}
+        ) if x[0] not in ("observer", "components")
+    }
+    for part in documented_parts - configured_parts:
+        raise ValueError(f"Module {part[0]}, class {part[1]} is documented but not configured")
+    for part in configured_parts - documented_parts:
+        raise ValueError(f"Module {part[0]}, class {part[1]} is configured but not documented")
+    return
+
+
+def write_repository_info(
+        repository_path: str,
+        info_file: str,
+        target_versions: str,
+        part_type: str,
+        code_style_compliance: typing.Optional[distutils.version.StrictVersion] = None
+) -> None:
+    git_path_or_file = os.path.join(repository_path, ".git")
+    git_config_file = os.path.join(git_path_or_file, "config")
+    git_config = configparser.ConfigParser()
+    if os.path.exists(git_config_file):
+        git_config.read(git_config_file)
+    else:
+        with open(git_path_or_file, encoding="ascii") as f:
+            git_config.read(f.read().removeprefix("gitdir: "))
+    repository_info = json.loads(
+        urllib.request.urlopen(
+            git_config['remote "origin"']["url"].replace(
+                "https://github.com/", "https://api.github.com/repos/")).read())
+    branch_info = json.loads(urllib.request.urlopen(repository_info["branches_url"].removesuffix("{/branch}")).read())
+    branches = [x["name"] for x in branch_info]
+    gitflow = (
+            ("main" in branches or "master" in branches) and
+            "develop" in branches and
+            all([
+                x in ("main", "master", "develop") or
+                x.startswith("feature/") or
+                x.startswith("release/") or
+                x.startswith("hotfix/") for x in branches
+            ])
+    )
+    with open(target_versions, encoding="utf-8") as f:
+        target_versions_info = json.load(f)
+    with open(info_file, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "info_created": str(datetime.date.today()),
+                "visibility": repository_info["visibility"],
+                "license": repository_info["license"]["spdx_id"],
+                "issues_enabled": repository_info["has_issues"],
+                "description": repository_info["description"],
+                "website": repository_info["homepage"],
+                "topics": repository_info["topics"],
+                "wiki_enabled": repository_info["has_wiki"],
+                "discussions_enabled": repository_info["has_discussions"],
+                "projects_enabled": repository_info["has_projects"],
+                "default_branch": repository_info["default_branch"],
+                "gitflow": gitflow,
+                "code_style_compliance": (
+                        isinstance(code_style_compliance, distutils.version.StrictVersion) and
+                        code_style_compliance >= target_versions_info["code_style"]
+                ),
+                "latest_changelog_processor": target_versions_info["changelog"],
+                "latest_readme_processor": target_versions_info["readme"][part_type],
+                "latest_contributing_processor": target_versions_info["contributing"],
+                "branch_protection": all(
+                    [x["protected"] for x in branch_info if x["name"] == repository_info["default_branch"]])
+            },
+            f,
+            indent=2
+        )
+
+def write_latest_version_info(version_file: str) -> str:
+    with open(version_file, "w", encoding="utf-8") as f:
+        json.dump({}, f)

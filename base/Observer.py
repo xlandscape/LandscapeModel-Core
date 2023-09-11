@@ -1,6 +1,7 @@
 """Class definitions of a Landscape Model observer and the MultiObserver."""
 import base
 import typing
+import re
 
 
 class Observer:
@@ -150,6 +151,9 @@ class MultiObserver(Observer):
         """
         super(MultiObserver, self).__init__()
         self._observers = observers
+        self._error = None
+        self._warning = None
+        self._note = None
         for observer in self.observers:
             observer.default_observer = self
 
@@ -165,6 +169,19 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.experiment_finished(detail)
+            if self._error:
+                observer.write_message(1, "Experiment completed with errors", "Please report to the developers:")
+                observer.write_message(1, self._error[0].rstrip(), self._error[1].rstrip())
+            if self._warning:
+                observer.write_message(
+                    2,
+                    "Experiment completed with warnings",
+                    "Please check results and consider reporting to the developers:"
+                )
+                observer.write_message(2, self._warning[0].rstrip(), self._warning[1].rstrip())
+            if self._note:
+                observer.write_message(3, "Experiment completed with notes", "Simulation results are not affected:")
+                observer.write_message(3, self._note[0].rstrip(), self._note[1].rstrip())
 
     def input_get_values(self, component_input: base.Input) -> None:
         """
@@ -191,6 +208,22 @@ class MultiObserver(Observer):
         """
         for observer in self._observers:
             observer.mc_run_finished(detail)
+            if self._error:
+                observer.write_message(1, "MC run completed with errors", "Please report to the developers:")
+                observer.write_message(1, self._error[0].rstrip(), self._error[1].rstrip())
+
+            if self._warning:
+                observer.write_message(
+                    2,
+                    "MC run completed with warnings",
+                    "Please check results and consider reporting to the developers:"
+                )
+                observer.write_message(2, self._warning[0].rstrip(), self._warning[1].rstrip())
+
+            if self._note:
+                observer.write_message(
+                    3, "MC run completed with notes", "Simulation results are not affected:")
+                observer.write_message(3, self._note[0].rstrip(), self._note[1].rstrip())
 
     def store_set_values(self, level: int, store_name: str, message: str) -> None:
         """
@@ -219,6 +252,12 @@ class MultiObserver(Observer):
         Returns:
              Nothing.
         """
+        if not self._error and level == 1:
+            self._error = message, detail
+        if not self._error and level == 2:
+            self._warning = message, detail
+        if not self._error and level == 3:
+            self._note = message, detail
         for observer in self._observers:
             observer.write_message(level, message, detail)
 
@@ -255,6 +294,12 @@ class MultiObserver(Observer):
         Returns:
              Nothing.
         """
+        if not self._error and re.search("(?<!std. )error", text, re.IGNORECASE):
+            self._error = text, ""
+        if not self._error and re.search("warn", text, re.IGNORECASE):
+            self._warning = text, ""
+        if not self._error and re.search("note", text, re.IGNORECASE):
+            self._note = text, ""
         for observer in self._observers:
             observer.write(text)
 

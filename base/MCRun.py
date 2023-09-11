@@ -58,6 +58,7 @@ class MCRun:
                     ("enabled_expression" not in componentConfig.attrib or
                      eval(componentConfig.attrib["enabled_expression"])):
                 component_module = importlib.import_module(componentConfig.attrib["module"])
+                self._observer.write_message(5, f"Initializing component {componentConfig.tag}")
                 try:
                     component = getattr(component_module, componentConfig.attrib["class"])(
                         componentConfig.tag, self._observer, self._store)

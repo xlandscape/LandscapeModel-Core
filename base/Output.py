@@ -51,6 +51,13 @@ class Output:
         self._default_attributes = {} if default_attributes is None else default_attributes
         self._description = description
         self._attribute_hints = {} if attribute_hints is None else attribute_hints
+        if component and component.default_observer:
+            if not default_attributes:
+                component.default_observer.write_message(3, f"Output {name} is missing default attributes")
+            if not description or len(description) < 64:
+                component.default_observer.write_message(3, f"Output {name} is missing a detailed description")
+            if not attribute_hints:
+                component.default_observer.write_message(3, f"Output {name} is missing attribute hints")
 
     def describe(self) -> dict[str, typing.Any]:
         """

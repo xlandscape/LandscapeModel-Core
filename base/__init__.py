@@ -16,8 +16,8 @@ from .OutputContainer import *
 from .DataProvider import *
 from .Input import *
 from .InputContainer import *
-from .Observer import *
 from .Module import *
+from .Observer import *
 from .Component import *
 from .UserParameters import *
 from .Experiment import *
@@ -26,6 +26,8 @@ from .MCRun import *
 from .Project import *
 from .UncertaintyAndSensitivityAnalysis import *
 import base.VERSION
+
+MODULE: base.Module = base.Module("Python", "3.9.7", "bin/python-3.9.7-amd64", "bin/python-3.9.7-amd64/NEWS.txt", None)
 
 # CHANGELOG
 base.VERSION.added("1.1.1", "`base` namespace")

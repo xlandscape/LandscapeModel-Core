@@ -2,6 +2,16 @@
 
 This is the changelog for the Landscape Model core. It was automatically created on 2023-09-11.
 
+## [1.15.1] - 2023-09-11
+
+### Added
+
+### Changed
+
+### Fixed
+
+- Documentation of scenario respects XML namespace
+
 ## [1.15] - 2023-09-11
 
 ### Added

@@ -27,7 +27,15 @@ from .Project import *
 from .UncertaintyAndSensitivityAnalysis import *
 import base.VERSION
 
-MODULE: base.Module = base.Module("Python", "3.9.7", "bin/python-3.9.7-amd64", "bin/python-3.9.7-amd64/NEWS.txt", None)
+MODULE: base.Module = base.Module(
+    "Python",
+    "3.9.7",
+    "bin/python-3.9.7-amd64",
+    "bin/python-3.9.7-amd64/Doc/python397.chm",
+    None,
+    True,
+    "bin/python-3.9.7-amd64/NEWS.txt"
+)
 
 # CHANGELOG
 base.VERSION.added("1.1.1", "`base` namespace")
@@ -39,3 +47,4 @@ base.VERSION.changed("1.5.3", "`base` changelog uses markdown for code elements"
 base.VERSION.changed("1.7.0", "Order of imports in `base.__init__` ")
 base.VERSION.added("1.7.0", "Import of new classes in `base.__init__` ")
 base.VERSION.added("1.15.0", "Runtime environment information of core in `base.__init__`")
+base.VERSION.changed("1.15.2", "Extended module information for Python runtime environment")

@@ -45,6 +45,7 @@ class Experiment:
     base.VERSION.added("1.9.9", "Option to profile performance of simulation runs in `base.Experiment` ")
     base.VERSION.fixed("1.9.11", "Processing of exceptions thrown in non-blocking mode in `base.Experiment` ")
     base.VERSION.added("1.15.0", "Repository checks during initialization of `base.Experiment` ")
+    base.VERSION.changed("1.15.2", "Relieved repository checks for external modules")
 
     def __init__(
             self,
@@ -208,11 +209,14 @@ class Experiment:
         def check_module(parent: str, base_path: str, module: base.Module) -> None:
             self._observer.write_message(5, f"{parent} uses {module.name} version {module.version}")
             self.check_repository_state(
-                os.path.join(os.path.dirname(part_module.__file__), module.path),
+                os.path.join(base_path, module.path),
                 module.name,
                 module.version,
                 latest_versions,
-                severity=3
+                severity=3,
+                external=module.external,
+                changelog=module.changelog,
+                documentation=module.doc_file
             )
             if module.module:
                 check_module(module.name, base_path, module.module)
@@ -250,14 +254,7 @@ class Experiment:
             base.VERSION.latest,
             latest_versions
         )
-        self._observer.write_message(5, f"Landscape Model core uses {base.MODULE.name} version {base.MODULE.version}")
-        self.check_repository_state(
-            os.path.join(self._replace_tokens["_MODEL_DIR_"], "core", base.MODULE.path),
-            base.MODULE.name,
-            base.MODULE.version,
-            latest_versions,
-            severity=3
-        )
+        check_module("Landscape Model core", os.path.join(self._replace_tokens["_MODEL_DIR_"], "core"), base.MODULE)
         parts = xml.etree.ElementTree.SubElement(versions, "parts")
         for model_part in model_parts:
             part_module = importlib.import_module(model_part.attrib["module"])
@@ -319,7 +316,10 @@ class Experiment:
             part_version: typing.Union[str, distutils.version.StrictVersion],
             latest_versions: dict[str, str],
             git_dir: str = ".git",
-            severity: int = 2
+            severity: int = 2,
+            external: bool = False,
+            changelog: typing.Optional[str] = None,
+            documentation: typing.Optional[str] = None,
     ) -> None:
         git = os.path.join(path, git_dir)
         git_config_file = os.path.join(git, "config")
@@ -373,11 +373,11 @@ class Experiment:
                 repository_info["license"] = None
             elif not repository_info["license"] and license_file_is_cc0:
                 repository_info["license"] = "CC0-1.0"
-        if repository_info["license"] != "CC0-1.0":
+        if repository_info["license"] not in ("CC0-1.0", "PSF-2.0", "GPL-2.0", "free"):
             self._observer.write_message(
                 2,
-                f"{part_name} has not a CC0-1.0 license, restrictions to usage and distribution may apply",
-                "Please check application for your use-case"
+                f"{part_name} is released under an unknown or non-free license",
+                "Restrictions to usage and distribution may apply, check application for your use-case"
             )
         if not isinstance(part_version, distutils.version.StrictVersion):
             try:
@@ -392,7 +392,7 @@ class Experiment:
                 2, f"{part_name} is a pre-release version", "Consider it experimental and report errors")
         if git_versioned and not repository_info["gitflow"]:
             self._observer.write_message(3, f"{part_name} does not follow git-flow")
-        if not repository_info["code_style_compliance"]:
+        if not external and not repository_info["code_style_compliance"]:
             self._observer.write_message(3, f"Limited code-style conformance of {part_name}")
         for document in ("changelog", "readme", "contributing"):
             doc_file_path = os.path.join(path, f"{document.upper()}.md")
@@ -421,15 +421,18 @@ class Experiment:
                         self._observer.write_message(3, f"{document.title()} of {part_name} may be outdated")
                 else:
                     self._observer.write_message(3, f"{document.title()} of {part_name} has no YAML header")
+            elif external and {"changelog": changelog, "readme": documentation, "contributing": "OK"}[document]:
+                pass
             else:
-                self._observer.write_message(2, f"{part_name} has no {document}")
+                self._observer.write_message(
+                    2, f"{part_name} has no {document.replace('contributing', 'contributing note')}")
         latest_known_version = latest_versions.get(part_name, None)
         if latest_known_version:
             if part_version < distutils.version.StrictVersion(latest_known_version):
                 self._observer.write_message(3, f"{part_name} is not the most recent version")
         else:
             self._observer.write_message(3, f"No latest version information on {part_name}")
-        if not repository_info["issues_enabled"]:
+        if not external and not repository_info["issues_enabled"]:
             self._observer.write_message(3, f"No issue tracking for {part_name}")
         if git_versioned and (not repository_info["default_branch"] or repository_info["default_branch"] != "main"):
             self._observer.write_message(3, f"Default branch of {part_name} is not main")

@@ -17,6 +17,7 @@ class Module:
     base.VERSION.changed("1.5.3", "`base.Module` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Module` ")
     base.VERSION.added("1.15.0", "`base.Module` now allows nesting of modules")
+    base.VERSION.added("1.15.2", "`external` and `changelog` properties to `base.Module`")
 
     def __init__(
             self,
@@ -24,13 +25,17 @@ class Module:
             version: str,
             path: str,
             doc_file: typing.Optional[str],
-            module: typing.Optional["Module"]
+            module: typing.Optional["Module"],
+            external: bool = False,
+            changelog: typing.Optional[str] = None,
     ) -> None:
         self._name = name
         self._version = version
         self._path = path
         self._doc_file = doc_file
         self._module = module
+        self._external = external
+        self._changelog = changelog
 
     @property
     def name(self) -> str:
@@ -66,3 +71,17 @@ class Module:
         Gets the module of the module.
         """
         return self._module
+
+    @property
+    def external(self) -> bool:
+        """
+        Indicates whether the module is governed by the Landscape Model or not.
+        """
+        return self._external
+
+    @property
+    def changelog(self) -> typing.Optional[str]:
+        """
+        Gets the changelog of the module.
+        """
+        return self._changelog

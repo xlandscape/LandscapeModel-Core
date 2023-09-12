@@ -1,6 +1,26 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2023-09-11.
+This is the changelog for the Landscape Model core. It was automatically created on 2023-09-12.
+
+## [1.15.2] - 2023-09-12
+
+### Added
+
+- Creation of repository info during documentation
+
+- Repository info to Python runtime environment
+
+- `external` and `changelog` properties to `base.Module`
+
+### Changed
+
+- Relieved repository checks for external modules
+
+- Extended module information for Python runtime environment
+
+### Fixed
+
+- Fixed resolution of git-paths of submodules
 
 ## [1.15.1] - 2023-09-11
 

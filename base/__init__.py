@@ -47,3 +47,4 @@ base.VERSION.changed("1.5.3", "`base` changelog uses markdown for code elements"
 base.VERSION.changed("1.7.0", "Order of imports in `base.__init__` ")
 base.VERSION.added("1.7.0", "Import of new classes in `base.__init__` ")
 base.VERSION.added("1.15.0", "Runtime environment information of core in `base.__init__`")
+base.VERSION.changed("1.15.2", "Extended module information for Python runtime environment")

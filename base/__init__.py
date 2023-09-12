@@ -27,7 +27,15 @@ from .Project import *
 from .UncertaintyAndSensitivityAnalysis import *
 import base.VERSION
 
-MODULE: base.Module = base.Module("Python", "3.9.7", "bin/python-3.9.7-amd64", "bin/python-3.9.7-amd64/NEWS.txt", None)
+MODULE: base.Module = base.Module(
+    "Python",
+    "3.9.7",
+    "bin/python-3.9.7-amd64",
+    "bin/python-3.9.7-amd64/Doc/python397.chm",
+    None,
+    True,
+    "bin/python-3.9.7-amd64/NEWS.txt"
+)
 
 # CHANGELOG
 base.VERSION.added("1.1.1", "`base` namespace")

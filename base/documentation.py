@@ -639,11 +639,12 @@ def write_repository_info(
         git_config.read(git_config_file)
     else:
         with open(git_path_or_file, encoding="ascii") as f:
-            git_config.read(f.read().removeprefix("gitdir: "))
+            git_reference = os.path.join(repository_path, f.read().removeprefix("gitdir: ").rstrip(), "config")
+        git_config.read(git_reference)
     repository_info = json.loads(
         urllib.request.urlopen(
             git_config['remote "origin"']["url"].replace(
-                "https://github.com/", "https://api.github.com/repos/")).read())
+                "https://github.com/", "https://api.github.com/repos/").removesuffix(".git")).read())
     branch_info = json.loads(urllib.request.urlopen(repository_info["branches_url"].removesuffix("{/branch}")).read())
     branches = [x["name"] for x in branch_info]
     gitflow = (

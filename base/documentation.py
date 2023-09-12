@@ -54,6 +54,7 @@ base.VERSION.changed("1.13.1", "Text wrapping of member documentation in `base.d
 base.VERSION.changed("1.14.3", "Normalized whitespace for creating documentations")
 base.VERSION.added("1.15.0", "Functions to check variant parts and to write repository info for documentation")
 base.VERSION.fixed("1.15.1", "Documentation of scenario respects XML namespace")
+base.VERSION.fixed("1.15.2", "Fixed resolution of git-paths of submodules")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:

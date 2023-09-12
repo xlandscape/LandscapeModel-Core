@@ -17,6 +17,7 @@ class Module:
     base.VERSION.changed("1.5.3", "`base.Module` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Module` ")
     base.VERSION.added("1.15.0", "`base.Module` now allows nesting of modules")
+    base.VERSION.added("1.15.2", "`external` and `changelog` properties to `base.Module`")
 
     def __init__(
             self,

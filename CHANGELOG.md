@@ -1,6 +1,16 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2023-09-12.
+This is the changelog for the Landscape Model core. It was automatically created on 2023-09-13.
+
+## [1.15.3] - 2023-09-13
+
+### Added
+
+- Added option to skip initial attribute checks of a `base.Input`
+
+### Changed
+
+### Fixed
 
 ## [1.15.2] - 2023-09-12
 
@@ -27,6 +37,12 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 ### Changed
+
+- Included types in `DepositionToReach` input attributes
+
+- Skip initial attribute checks for `Values` input of `ExportData` component
+
+- Added scale attribute to `FilePath` input of `MarsWeather` component
 
 ### Fixed
 

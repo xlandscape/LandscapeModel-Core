@@ -57,7 +57,11 @@ class MarsWeather(base.Component):
         """
         super(MarsWeather, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
-            base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer)
+            base.Input(
+                "FilePath",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global")),
+                self.default_observer
+            )
         ])
         self._outputs = base.OutputContainer(
             self,

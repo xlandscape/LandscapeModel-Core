@@ -98,10 +98,19 @@ class DepositionToReach(base.Component):
             ),
             base.Input(
                 "DepositionInputSource",
-                (attrib.Unit(None), attrib.Scales("global"), attrib.InList(("DepositionInput", "DepositionInputFile"))),
+                (
+                    attrib.Unit(None),
+                    attrib.Scales("global"),
+                    attrib.InList(("DepositionInput", "DepositionInputFile")),
+                    attrib.Class(str)
+                ),
                 self.default_observer
             ),
-            base.Input("DepositionInputFile", (attrib.Unit(None), attrib.Scales("global")), self.default_observer)
+            base.Input(
+                "DepositionInputFile",
+                (attrib.Unit(None), attrib.Scales("global"), attrib.Class(str)),
+                self.default_observer
+            )
         ])
         self._outputs = base.OutputContainer(self, (base.Output("Deposition", default_store, self),))
 

@@ -47,7 +47,7 @@ class ExportData(base.Component):
                 (attrib.Class(str), attrib.Scales("global"), attrib.Unit(None)),
                 self.default_observer
             ),
-            base.Input("Values", (), self.default_observer),
+            base.Input("Values", (), self.default_observer, skip_initial_attribute_checks=True),
             base.Input(
                 "Create",
                 (attrib.Class(bool), attrib.Scales("global"), attrib.Unit(None)),

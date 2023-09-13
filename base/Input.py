@@ -24,7 +24,8 @@ class Input:
             attributes: typing.Sequence[base.DataAttribute],
             observer: typing.Optional["base.Observer"] = None,
             provider: typing.Optional[base.DataProvider] = None,
-            description: typing.Optional[str] = None
+            description: typing.Optional[str] = None,
+            skip_initial_attribute_checks: bool = False
     ) -> None:
         """
         Initializes an Input.
@@ -43,7 +44,7 @@ class Input:
         self._observer = observer
         self._extensions = []
         self._description = description
-        if observer:
+        if observer and not skip_initial_attribute_checks:
             if not any([isinstance(x, attrib.Class) for x in attributes]):
                 observer.write_message(2, f"Input {name} does not specify its data type")
             if not any([isinstance(x, attrib.Scales) for x in attributes]):

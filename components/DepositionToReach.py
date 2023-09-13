@@ -55,6 +55,7 @@ class DepositionToReach(base.Component):
         "1.12.3", "Removed warning for unused deposition from file `components.DepositionToReach` if path is specified")
     base.VERSION.fixed(
         "1.14.4", "Fixed dimensionality of `Deposition` output in `components.DepositionToReach` component")
+    base.VERSION.changed("1.15.1", "Included types in `DepositionToReach` input attributes")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -98,10 +99,19 @@ class DepositionToReach(base.Component):
             ),
             base.Input(
                 "DepositionInputSource",
-                (attrib.Unit(None), attrib.Scales("global"), attrib.InList(("DepositionInput", "DepositionInputFile"))),
+                (
+                    attrib.Unit(None),
+                    attrib.Scales("global"),
+                    attrib.InList(("DepositionInput", "DepositionInputFile")),
+                    attrib.Class(str)
+                ),
                 self.default_observer
             ),
-            base.Input("DepositionInputFile", (attrib.Unit(None), attrib.Scales("global")), self.default_observer)
+            base.Input(
+                "DepositionInputFile",
+                (attrib.Unit(None), attrib.Scales("global"), attrib.Class(str)),
+                self.default_observer
+            )
         ])
         self._outputs = base.OutputContainer(self, (base.Output("Deposition", default_store, self),))
 

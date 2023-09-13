@@ -45,6 +45,7 @@ class MarsWeather(base.Component):
         "1.13.0", "`components.MarsWeather` now stores entire timeseries, regardless of simulation period")
     base.VERSION.added(
         "1.13.0", "`stores.X3dfStore` functionality to reference scale 'time/day' with native coordinates")
+    base.VERSION.changed("1.15.1", "Added scale attribute to `FilePath` input of `MarsWeather` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -57,7 +58,11 @@ class MarsWeather(base.Component):
         """
         super(MarsWeather, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
-            base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer)
+            base.Input(
+                "FilePath",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global")),
+                self.default_observer
+            )
         ])
         self._outputs = base.OutputContainer(
             self,

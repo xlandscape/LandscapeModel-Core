@@ -13,6 +13,7 @@ class Transformable(base.DataAttribute):
     base.VERSION.changed("1.7.0", "`attrib.Transformable` got new base class `base.DataAttribute` ")
     base.VERSION.added("1.7.0", "Type hints to `attrib.Transformable` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Transformable` ")
+    base.VERSION.changed("1.15.4", "String representations of `attrib.Transformable` is now more readable")
 
     def __init__(self, severity: int = 2) -> None:
         """

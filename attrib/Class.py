@@ -24,6 +24,7 @@ class Class(base.DataAttribute):
     )
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Class` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Class` ")
+    base.VERSION.changed("1.15.4", "String representations of `attrib.Class` is now more readable")
 
     def __init__(self, expected_type: type, severity: int = 2) -> None:
         """

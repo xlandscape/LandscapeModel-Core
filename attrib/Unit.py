@@ -34,6 +34,9 @@ class Unit(base.DataAttribute):
         self._unit = expected_unit
         self._severity = severity
 
+    def __repr__(self) -> str:
+        return f"Unit: `{self.unit}`"
+
     def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values regarding a specific data attribute.

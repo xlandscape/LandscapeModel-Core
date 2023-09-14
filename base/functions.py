@@ -291,7 +291,7 @@ def reporting(
     reporting_element.__init__("ReportingElement", console_observer, None)
     parameters_definition = [components.UserParameter(name, value, "global") for name, value in parameters]
     user_parameters = components.UserParameters(
-        "UserParameters", parameters_definition, console_observer, in_memory_store)
+        "UserParameters", console_observer, in_memory_store, parameters_definition)
     for name, value in parameters:
         if value is not None:
             reporting_element.inputs[name] = user_parameters.outputs[name]

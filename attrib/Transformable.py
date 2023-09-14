@@ -1,5 +1,6 @@
 """Class definition of the Landscape Model Transformable attribute."""
 import base
+import typing
 
 
 class Transformable(base.DataAttribute):
@@ -22,6 +23,14 @@ class Transformable(base.DataAttribute):
         """
         self._type = type
         self._severity = severity
+
+    def __repr__(self) -> str:
+        return (f"Transformable: `{'' if self._type.__module__ == 'builtins' else self._type.__module__ + '.'}"
+                f"{self._type.__qualname__}" +
+                (
+                    f"[{', '.join([x.__qualname__ for x in typing.get_args(self._type)])}]`"
+                    if typing.get_args(self._type) else "`")
+                )
 
     def check(self, values: base.Values) -> base.CheckResult:
         """

@@ -33,12 +33,13 @@ class UserParameters(base.Component):
 
     def __init__(
             self, name: str,
-            values: typing.Sequence["UserParameter"],
             default_observer: base.Observer,
-            default_store: typing.Optional[base.Store]
+            default_store: typing.Optional[base.Store],
+            values: typing.Sequence["UserParameter"] = None
     ) -> None:
         super(UserParameters, self).__init__(name, default_observer, default_store)
         outputs = []
+        values = values if values else []
         for parameter in values:
             output = base.Output(parameter.name, default_store)
             output.set_values(

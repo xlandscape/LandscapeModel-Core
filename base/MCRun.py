@@ -110,7 +110,7 @@ class MCRun:
                         component.inputs[inputConfig.tag].add_extension(extension)
                 self._composition[component.name] = component
         user_parameters_component = components.UserParameters(
-            "__UserParameters__", user_parameters, self._observer, self._store)
+            "__UserParameters__", self._observer, self._store, user_parameters)
         for component_output in user_parameters_component.outputs:
             output = user_parameters_component.outputs[component_output.name]
             component_name, input_name = output.name.split("/")

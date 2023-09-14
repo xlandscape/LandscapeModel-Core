@@ -25,6 +25,9 @@ class Scales(base.DataAttribute):
         self._scales = expected_scales
         self._severity = severity
 
+    def __repr__(self) -> str:
+        return f"Scales: `{self.scales}`"
+
     def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values regarding a specific data attribute.

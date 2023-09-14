@@ -28,6 +28,9 @@ class Equals(base.DataAttribute):
         self._value = value
         self._severity = severity
 
+    def __repr__(self) -> str:
+        return f"Equals: `{self.value}`"
+
     def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values regarding a specific data attribute.

@@ -105,13 +105,20 @@ def document_components(components_module: types.ModuleType, file_path: str) -> 
         _document_member(components_module, f)
 
 
-def _document_member(components_module: types.ModuleType, f: typing.TextIO) -> None:
+def _document_member(
+        components_module: types.ModuleType, f: typing.TextIO, member_type: typing.Type = base.Component) -> None:
     f.write(f"It was automatically created on {datetime.date.today()}.\n")
     for name, member in components_module.__dict__.items():
-        if inspect.isclass(member) and issubclass(member, base.Component):
+        if inspect.isclass(member) and issubclass(member, member_type):
             f.write(f"\n\n## {name}")
             f.write(member.__doc__)
-
+            if issubclass(member, base.Component):
+                component = member("_tmp_", base.Observer(), None)
+                f.write(f"\n### Inputs")
+                for component_input in component.inputs:
+                    f.write(f"\n#### {component_input.name}\n{component_input.description or ''}")
+                    for attribute in component_input.attributes:
+                        f.write(f"  \n{attribute}")
 
 def document_observers(observers_module: types.ModuleType, file_path: str) -> None:
     """
@@ -127,7 +134,7 @@ def document_observers(observers_module: types.ModuleType, file_path: str) -> No
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Observers\n")
         f.write("This file lists all observers that are currently included in the Landscape Model core.\n")
-        _document_member(observers_module, f)
+        _document_member(observers_module, f, base.Observer)
 
 
 def document_stores(stores_module: types.ModuleType, file_path: str) -> None:
@@ -144,7 +151,7 @@ def document_stores(stores_module: types.ModuleType, file_path: str) -> None:
     with open(file_path, "w", encoding="utf-8") as f:
         f.write("# Stores\n")
         f.write("This file lists all stores that are currently included in the Landscape Model core.\n")
-        _document_member(stores_module, f)
+        _document_member(stores_module, f, base.Store)
 
 
 def document_component(

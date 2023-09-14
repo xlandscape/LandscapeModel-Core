@@ -24,6 +24,9 @@ class InList(base.DataAttribute):
         self._values = values
         self._severity = severity
 
+    def __repr__(self) -> str:
+        return f"InList: {', '.join(['`' + str(x) + '`' for x in self._values])}"
+
     def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values regarding a specific data attribute.

@@ -30,6 +30,8 @@ class UserParameters(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.UserParameters` with base class")
     base.VERSION.added("1.10.0", "`components.UserParameters` have element names now")
     base.VERSION.changed("1.10.0", "`components.UserParameters` switched to Google-style docstrings")
+    base.VERSION.changed(
+        "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
 
     def __init__(
             self, name: str,

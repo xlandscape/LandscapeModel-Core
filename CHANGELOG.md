@@ -1,6 +1,32 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2023-09-13.
+This is the changelog for the Landscape Model core. It was automatically created on 2023-09-14.
+
+## [1.15.4] - 2023-09-14
+
+### Added
+
+### Changed
+
+- String representations of `attrib.Class` is now more readable
+
+- String representations of `attrib.Equals` is now more readable
+
+- String representations of `attrib.Scales` is now more readable
+
+- String representations of `attrib.Transformable` is now more readable
+
+- String representations of `attrib.Unit` is now more readable
+
+- Order of arguments in `UserParameters` component now follows `base.Component` class
+
+- Order of arguments in `UserParameters` component now follows `base.Component` class
+
+- Order of arguments in `UserParameters` component now follows `base.Component` class
+
+- Documentation of core components lists component's inputs and their attributes
+
+### Fixed
 
 ## [1.15.3] - 2023-09-13
 

@@ -48,6 +48,8 @@ base.VERSION.changed(
     "1.9.1", "Check if module R instances are sufficiently encapsulated in `base.functions.run_process()` ")
 base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called by `functions.run_process` ")
 base.VERSION.changed("1.12.6", "Mitigated weak code warnings in `base.functions` ")
+base.VERSION.changed(
+    "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
 
 
 # noinspection DuplicatedCode

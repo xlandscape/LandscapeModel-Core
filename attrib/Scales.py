@@ -13,6 +13,7 @@ class Scales(base.DataAttribute):
     base.VERSION.added("1.7.0", "Type hints to `attrib.Scales` ")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Scales` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Scales` ")
+    base.VERSION.changed("1.15.4", "String representations of `attrib.Scales` is now more readable")
 
     def __init__(self, expected_scales: str, severity: int = 2) -> None:
         """

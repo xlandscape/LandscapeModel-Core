@@ -46,6 +46,7 @@ class Experiment:
     base.VERSION.fixed("1.9.11", "Processing of exceptions thrown in non-blocking mode in `base.Experiment` ")
     base.VERSION.added("1.15.0", "Repository checks during initialization of `base.Experiment` ")
     base.VERSION.changed("1.15.2", "Relieved repository checks for external modules")
+    base.VERSION.fixed("1.15.5", "Errors when scenario was not tested with current model")
 
     def __init__(
             self,

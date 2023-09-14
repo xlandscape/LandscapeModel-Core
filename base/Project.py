@@ -21,12 +21,15 @@ class Project:
     base.VERSION.added("1.7.0", "Type hints to `base.Project` ")
     base.VERSION.changed("1.9.10", "`base.Project` can handle outsourced package parts")
     base.VERSION.added("1.15.0", "XML validation of scenario metadata")
+    base.VERSION.changed("1.15.5", "Raise clearer error message if scenario XML does not use the right XML namespace")
 
     def __init__(self, project: str, project_dir: str, prefix: str = ":") -> None:
         self._content = {}
         self._path = os.path.join(project_dir, project)
         namespace = {"": "urn:xLandscapeModelScenarioInfo"}
         project_info = os.path.join(self._path, "scenario.xproject")
+        if xmlschema.XMLResource(project_info).namespace != "urn:xLandscapeModelScenarioInfo":
+            raise ValueError("scenario XML invalid: root element is not in namespace urn:xLandscapeModelScenarioInfo")
         schema = os.path.join(os.path.dirname(base.__file__), "scenario.xsd")
         xmlschema.XMLSchema(schema).validate(project_info)
         config = xml.etree.ElementTree.parse(project_info).getroot()

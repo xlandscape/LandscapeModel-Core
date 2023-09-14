@@ -2,6 +2,24 @@
 
 This is the changelog for the Landscape Model core. It was automatically created on 2023-09-14.
 
+## [1.15.5] - 2023-09-14
+
+### Added
+
+- Usage of a fixed path for the versions.json during documentation
+
+### Changed
+
+- Updated scenario XML-schema to optionally include ExternalSources and Acknowledgements
+
+- Made order of elements within scenario XML version changelog arbitrary
+
+- Raise clearer error message if scenario XML does not use the right XML namespace
+
+### Fixed
+
+- Errors when scenario was not tested with current model
+
 ## [1.15.4] - 2023-09-14
 
 ### Added
@@ -79,6 +97,8 @@ This is the changelog for the Landscape Model core. It was automatically created
 ### Added
 
 - `frontmatter` package to runtime environment
+
+- Scenario XML schema
 
 - Messages if `base.Output` misses descriptions
 

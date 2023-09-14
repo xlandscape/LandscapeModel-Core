@@ -48,6 +48,8 @@ base.VERSION.changed(
     "1.9.1", "Check if module R instances are sufficiently encapsulated in `base.functions.run_process()` ")
 base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called by `functions.run_process` ")
 base.VERSION.changed("1.12.6", "Mitigated weak code warnings in `base.functions` ")
+base.VERSION.changed(
+    "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
 
 
 # noinspection DuplicatedCode
@@ -291,7 +293,7 @@ def reporting(
     reporting_element.__init__("ReportingElement", console_observer, None)
     parameters_definition = [components.UserParameter(name, value, "global") for name, value in parameters]
     user_parameters = components.UserParameters(
-        "UserParameters", parameters_definition, console_observer, in_memory_store)
+        "UserParameters", console_observer, in_memory_store, parameters_definition)
     for name, value in parameters:
         if value is not None:
             reporting_element.inputs[name] = user_parameters.outputs[name]

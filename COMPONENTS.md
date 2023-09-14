@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2023-09-13.
+It was automatically created on 2023-09-14.
 
 
 ## BeeForage
@@ -19,6 +19,37 @@ It was automatically created on 2023-09-13.
     Nectar: The availability of nectar to bees in L/(m²*d) at a scale of space/base_geometry and time/day.
     Pollen: The availability of pollen to bees in g/(m²*d) at a scale of space/base_geometry and time/day.
     
+### Inputs
+#### Vegetation
+  
+Class: `numpy.ndarray`  
+Unit: `None`  
+Scales: `space/base_geometry`
+#### Timeseries
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
+#### NectarPerClass
+  
+Class: `list[float]`  
+Unit: `L/(m²*d)`  
+Scales: `global`
+#### PollenPerClass
+  
+Class: `list[float]`  
+Unit: `g/(m²*d)`  
+Scales: `global`
+#### SimulationStart
+  
+Class: `datetime.date`  
+Unit: `None`  
+Scales: `global`
+#### SimulationEnd
+  
+Class: `datetime.date`  
+Unit: `None`  
+Scales: `global`
 
 ## BeeHave
     Prepares a BeeHave scenario.
@@ -29,6 +60,47 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     None.
     
+### Inputs
+#### ProcessingPath
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
+#### Nectar
+  
+Class: `numpy.ndarray`  
+Unit: `L/(m²*d)`  
+Scales: `space/base_geometry, time/day`
+#### Pollen
+  
+Class: `numpy.ndarray`  
+Unit: `g/(m²*d)`  
+Scales: `space/base_geometry, time/day`
+#### BeeHaveMapCenterPointX
+  
+Class: `float`  
+Unit: `m`  
+Scales: `global`
+#### BeeHaveMapCenterPointY
+  
+Class: `float`  
+Unit: `m`  
+Scales: `global`
+#### SegmentationGridRadii
+  
+Class: `list[float]`  
+Unit: `m`  
+Scales: `global`
+#### SegmentationGridSteps
+  
+Class: `int`  
+Unit: `1`  
+Scales: `global`
+#### SegmentationGridNumberSegmentsPerRadius
+  
+Class: `list[int]`  
+Unit: `1`  
+Scales: `global`
 
 ## CsvReader
     A generic component that reads data from a CSV file.
@@ -40,6 +112,9 @@ It was automatically created on 2023-09-13.
     The outputs of this component are provisional, i.e., they are defined by links from inputs and have to be satisfied
     by data in the CSV file. Output names equal column names in the file.
     
+### Inputs
+#### FilePath
+
 
 ## DeleteFolder
     A generic component that deletes a folder from the file system.
@@ -50,6 +125,9 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     None.
     
+### Inputs
+#### Path
+
 
 ## DepositionToPecSoil
     Calculates the PEC soil from surface deposition by a simple homogeneous distribution of mass in the topsoil layer.
@@ -63,6 +141,13 @@ It was automatically created on 2023-09-13.
     PecSoil: The homogeneous concentration of substance in soil. A NumPy array with scales time/day, space_x/1sqm,
     space_y/1sqm.
     
+### Inputs
+#### Deposition
+
+#### SoilBulkDensity
+
+#### Depth
+
 
 ## DepositionToReach
     Calculates the initial environmental fate in reaches for spray-drift depositions.
@@ -84,6 +169,39 @@ It was automatically created on 2023-09-13.
     Values have the same unit as the input deposition.
     Reaches: The identifiers of individual reaches. A NumPy array of scale space/reach.
     
+### Inputs
+#### Deposition
+  
+Class: `numpy.ndarray`  
+Unit: `g/ha`  
+Scales: `time/day, space/base_geometry`
+#### Reaches
+  
+Class: `numpy.ndarray`  
+Unit: `None`  
+Scales: `space/reach`
+#### Mapping
+  
+Class: `list[int]`  
+Unit: `None`  
+Scales: `space/base_geometry`
+#### SprayDriftCoverage
+  
+Class: `list[float]`  
+Unit: `1`  
+Scales: `space/base_geometry`  
+InList: `0`, `1`
+#### DepositionInputSource
+  
+Unit: `None`  
+Scales: `global`  
+InList: `DepositionInput`, `DepositionInputFile`  
+Class: `str`
+#### DepositionInputFile
+  
+Unit: `None`  
+Scales: `global`  
+Class: `str`
 
 ## DoseResponse
     Calculates an effect based on a log-logistic dose-response function.
@@ -97,6 +215,22 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     Effect: The calculated effect. A NumPy array with the same scale as the exposure input. Values have a unit of 1.
     
+### Inputs
+#### SlopeFactor
+  
+Class: `float`  
+Unit: `1`  
+Scales: `global`
+#### EC50
+  
+Class: `float`  
+Unit: `g/ha`  
+Scales: `global`
+#### Exposure
+  
+Class: `numpy.ndarray`  
+Unit: `g/ha`  
+Scales: `space_y/1sqm, space_x/1sqm, time/day`
 
 ## EnvironmentalFate
     Calculates environmental fate based on a simple half-time degradation.
@@ -110,6 +244,22 @@ It was automatically created on 2023-09-13.
     Pec: The concentration of substance considering exposure and degradation. A NumPy array of scales time/day,
     space_x/1sqm, space_y/1sqm.
     
+### Inputs
+#### SprayDriftExposure
+  
+Class: `numpy.ndarray`  
+Scales: `space_y/1sqm, space_x/1sqm, time/day`  
+Unit: `g/ha`
+#### RunOffExposure
+  
+Class: `numpy.ndarray`  
+Scales: `space_y/1sqm, space_x/1sqm, time/day`  
+Unit: `g/ha`
+#### SoilDT50
+  
+Class: `float`  
+Scales: `global`  
+Unit: `d`
 
 ## ExportData
     A generic component that exports Landscape Model data into another data store.
@@ -126,6 +276,34 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     None.
     
+### Inputs
+#### TargetStoreType
+  
+Class: `str`  
+Scales: `global`  
+Unit: `None`
+#### FilePath
+  
+Class: `str`  
+Scales: `global`  
+Unit: `None`
+#### Values
+
+#### Create
+  
+Class: `bool`  
+Scales: `global`  
+Unit: `None`
+#### ForeignKey
+  
+Class: `list[str]`  
+Scales: `global`  
+Unit: `None`
+#### Sql
+  
+Class: `str`  
+Scales: `global`  
+Unit: `None`
 
 ## ReportingDistribution
     Draws a distribution of values.
@@ -141,6 +319,29 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     None.
     
+### Inputs
+#### Values
+  
+Class: `numpy.ndarray`
+#### XLabel
+  
+Class: `str`
+#### Title
+  
+Class: `str`  
+Scales: `global`
+#### XMin
+  
+Class: `float`  
+Scales: `global`
+#### XMax
+  
+Class: `float`  
+Scales: `global`
+#### OutputFile
+  
+Class: `str`  
+Scales: `global`
 
 ## ReportingHydrographicMap
     Draws a map displaying the distribution of values in a hydrographic network.
@@ -164,6 +365,58 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     None.
     
+### Inputs
+#### Hydrography
+  
+Class: `list[bytes]`  
+Scales: `space/base_geometry`
+#### HydrographicReachIds
+  
+Class: `list[int]`  
+Scales: `space/base_geometry`
+#### SimulationStart
+  
+Class: `datetime.date`  
+Scales: `global`
+#### DisplayedTime
+  
+Class: `datetime.datetime`  
+Scales: `global`
+#### Values
+  
+Class: `numpy.ndarray`
+#### ValuesReachIds
+  
+Class: `list[int]`  
+Scales: `space/reach`
+#### Title
+  
+Class: `str`  
+Scales: `global`
+#### OutputFile
+  
+Class: `str`  
+Scales: `global`
+#### DisplayedUnit
+  
+Class: `str`  
+Scales: `global`
+#### ScaleMaxValue
+  
+Class: `float`  
+Scales: `global`
+#### ScaleMinValue
+  
+Class: `float`  
+Scales: `global`
+#### ValuesNormalization
+  
+Class: `str`  
+Scales: `global`
+#### ColorMap
+  
+Class: `list[str]`  
+Scales: `global`
 
 ## HydrologyFromTimeSeries
     Loads hydrological data from an HDF5 file.
@@ -188,6 +441,32 @@ It was automatically created on 2023-09-13.
     Inflow: Inflows into reaches from fields. A NumPy array of scale time/hour, space/reach2. Values have a unit of
     m³/d.
     
+### Inputs
+#### TimeSeries
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
+#### FromTime
+  
+Class: `datetime.date`  
+Unit: `None`  
+Scales: `global`
+#### ToTime
+  
+Class: `datetime.date`  
+Unit: `None`  
+Scales: `global`
+#### InflowTimeSeriesPath
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
+#### ImportInflows
+  
+Class: `bool`  
+Unit: `None`  
+Scales: `global`
 
 ## LandCoverToVegetation
     Translates land cover into vegetation information using a simple lookup-table approach.
@@ -202,6 +481,22 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     Vegetation: A list of vegetation classes at a space/base_geometry scale.
     
+### Inputs
+#### LandCover
+  
+Class: `list[int]`  
+Unit: `None`  
+Scales: `space/base_geometry`
+#### Mapping
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
+#### VegetationClasses
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
 
 ## LandscapeScenarioPreparation
     A component that prepares landscape scenarios ingested by the LandscapeScenario component from geo-files.
@@ -218,6 +513,25 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     None.
     
+### Inputs
+#### OutputPath
+
+#### LandscapeScenarioVersion
+
+#### LandscapeScenarioDescription
+
+#### TargetFieldLandUseLandCoverType
+
+#### HabitatLUseLandCoverTypes
+
+#### BaseLandscapeGeometries
+
+#### FeatureIdAttribute
+
+#### FeatureLandUsLandCoverTypeAttribute
+
+#### DEM
+
 
 ## LandscapeScenario
     Provides landscape scenarios to the Landscape Model.
@@ -231,6 +545,18 @@ It was automatically created on 2023-09-13.
     by data in the CSV file. Outputs are Crs, Extent, and information specified in the package information file of the
     landscape scenario.
     
+### Inputs
+#### BaseLandscapeGeometries
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`  
+Ontology: ``
+#### GeoPackageNamespace
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
 
 ## MarsWeather
     Provides MARS weather data from a CSV fle to the Landscape Model.
@@ -245,6 +571,12 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     TEMPERATURE_AVG: The average temperature. A NumPy array of scale time/day. Values have a unit of °C.
     
+### Inputs
+#### FilePath
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
 
 ## PpmCalendar
     Encapsulates the PpmCalendar as a Landscape Model component.
@@ -281,6 +613,77 @@ It was automatically created on 2023-09-13.
     AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. The values have no
     unit.
     
+### Inputs
+#### SimulationStart
+  
+Class: `datetime.date`  
+Unit: `None`  
+Scales: `global`
+#### SimulationEnd
+  
+Class: `datetime.date`  
+Unit: `None`  
+Scales: `global`
+#### ApplicationWindows
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
+#### Fields
+  
+Class: `list[int]`  
+Unit: `None`  
+Scales: `space/base_geometry`
+#### LandUseLandCoverTypes
+  
+Class: `list[int]`  
+Unit: `None`  
+Scales: `space/base_geometry`
+#### TargetLandUseLandCoverType
+  
+Class: `str`  
+Unit: `None`  
+Scales: `global`
+#### ApplicationRate
+  
+Class: `float`  
+Unit: `g/ha`  
+Scales: `global`
+#### TechnologyDriftReduction
+  
+Class: `float`  
+Unit: `1`  
+Scales: `global`
+#### InCropBuffer
+  
+Class: `float`  
+Unit: `m`  
+Scales: `global`
+#### InFieldMargin
+  
+Class: `float`  
+Unit: `m`  
+Scales: `global`
+#### FieldGeometries
+  
+Class: `list[bytes]`  
+Unit: `None`  
+Scales: `space/base_geometry`
+#### MinimumAppliedArea
+  
+Class: `float`  
+Unit: `m²`  
+Scales: `global`
+#### RandomSeed
+  
+Class: `int`  
+Unit: `None`  
+Scales: `global`
+#### ProbabilityFieldApplied
+  
+Class: `float`  
+Unit: `1`  
+Scales: `global`
 
 ## TerRQ
     Calculates the TER and the RQ.
@@ -294,6 +697,17 @@ It was automatically created on 2023-09-13.
     TER: The calculated TER. A NumPy array of the same scales as the exposure input. Values have a unit of 1.
     RQ: The calculated RQ. A NumPy array of the same scales as the exposure input. Values have a unit of 1.
     
+### Inputs
+#### Threshold
+  
+Class: `float`  
+Unit: `g/ha`  
+Scales: `global`
+#### Exposure
+  
+Class: `numpy.ndarray`  
+Unit: `g/ha`  
+Scales: `space_y/1sqm, space_x/1sqm, time/day`
 
 ## UserParameters
     Encapsulates a set of user-defined parameters as a Landscape Model component.
@@ -304,6 +718,7 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     As defined by the user parameters passed to the initialization method of the component.
     
+### Inputs
 
 ## WaterTemperatureFromAirTemperature
     A simple component that takes a series of daily average air temperatures and calculates a series of daily water
@@ -316,3 +731,9 @@ It was automatically created on 2023-09-13.
     OUTPUTS
     WaterTemperature: A timeseries of daily average water temperatures.
     
+### Inputs
+#### AirTemperature
+  
+Class: `numpy.ndarray`  
+Scales: `time/day`  
+Unit: `°C`

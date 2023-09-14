@@ -1,4 +1,6 @@
 """Class definition of the Landscape Model Class attribute."""
+import typing
+
 import base
 import types
 
@@ -22,6 +24,7 @@ class Class(base.DataAttribute):
     )
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Class` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Class` ")
+    base.VERSION.changed("1.15.4", "String representations of `attrib.Class` is now more readable")
 
     def __init__(self, expected_type: type, severity: int = 2) -> None:
         """
@@ -33,6 +36,14 @@ class Class(base.DataAttribute):
         """
         self._type = expected_type
         self._severity = severity
+
+    def __repr__(self) -> str:
+        return (f"Class: `{'' if self._type.__module__ == 'builtins' else self._type.__module__ + '.'}"
+                f"{self._type.__qualname__}" +
+                (
+                    f"[{', '.join([x.__qualname__ for x in typing.get_args(self._type)])}]`"
+                    if typing.get_args(self._type) else "`")
+                )
 
     def check(self, values: base.Values) -> base.CheckResult:
         """

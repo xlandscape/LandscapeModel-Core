@@ -27,6 +27,8 @@ class Project:
         self._path = os.path.join(project_dir, project)
         namespace = {"": "urn:xLandscapeModelScenarioInfo"}
         project_info = os.path.join(self._path, "scenario.xproject")
+        if xmlschema.XMLResource(project_info).namespace != "urn:xLandscapeModelScenarioInfo":
+            raise ValueError("scenario XML invalid: root element is not in namespace urn:xLandscapeModelScenarioInfo")
         schema = os.path.join(os.path.dirname(base.__file__), "scenario.xsd")
         xmlschema.XMLSchema(schema).validate(project_info)
         config = xml.etree.ElementTree.parse(project_info).getroot()

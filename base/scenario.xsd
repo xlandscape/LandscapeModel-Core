@@ -90,7 +90,7 @@
             <xsd:sequence maxOccurs="unbounded">
               <xsd:element name="Version">
                 <xsd:complexType>
-                  <xsd:sequence>
+                  <xsd:choice maxOccurs="unbounded">
                     <xsd:element name="Addition" minOccurs="0" maxOccurs="unbounded">
                       <xsd:complexType>
                         <xsd:simpleContent>
@@ -118,7 +118,7 @@
                         </xsd:simpleContent>
                       </xsd:complexType>
                     </xsd:element>
-                  </xsd:sequence>
+                  </xsd:choice>
                   <xsd:attribute name="number" use="required">
                     <xsd:simpleType>
                       <xsd:restriction base="xsd:string">
@@ -177,6 +177,17 @@
             </xsd:sequence>
           </xsd:complexType>
         </xsd:element>
+        <xsd:element name="ExternalSources" minOccurs="0">
+          <xsd:complexType>
+            <xsd:sequence maxOccurs="unbounded">
+              <xsd:element name="ExternalSource">
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:anyURI"/>
+                </xsd:simpleType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
         <xsd:element name="Contacts">
           <xsd:complexType>
             <xsd:sequence maxOccurs="unbounded">
@@ -192,7 +203,7 @@
         </xsd:element>
         <xsd:element name="Acknowledgements">
           <xsd:complexType>
-            <xsd:sequence maxOccurs="unbounded">
+            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
               <xsd:element name="Acknowledgement">
                 <xsd:simpleType>
                   <xsd:restriction base="xsd:string">

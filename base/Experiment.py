@@ -227,7 +227,7 @@ class Experiment:
         xml.etree.ElementTree.SubElement(info_xml, "computer").text = os.environ["COMPUTERNAME"]
         versions = xml.etree.ElementTree.SubElement(info_xml, "versions")
         model_info_file = os.path.join(self._replace_tokens["_MODEL_DIR_"], "..", "model.json")
-        model_info = {"name": "Model"}
+        model_info = {"name": "Model", "version": "0.0.1"}
         if os.path.exists(model_info_file):
             with open(model_info_file, encoding="utf-8") as f:
                 model_info |= json.load(f)
@@ -281,14 +281,14 @@ class Experiment:
         xml.etree.ElementTree.SubElement(versions, "scenario", {"name": scenario.name}).text = scenario.version
         self._observer.write_message(
             5, f"{model_info['name']} uses scenario {scenario.name} version {scenario.version}")
-        scenario_supported_versions = scenario.supported_runtimes.get(model_info["name"])
+        scenario_supported_versions = scenario.supported_runtimes.get(model_info["name"]) or []
         if not scenario_supported_versions:
             self._observer.write_message(
                 2,
-                f"Usage of scenario {scenario.name} in model {model_info['name']} is not officially "
+                f"Usage of scenario {scenario.name} in {model_info['name']} is not officially "
                 "supported. Please proceed with care."
             )
-        if not model_info["version"] in scenario_supported_versions:
+        elif not model_info["version"] in scenario_supported_versions:
             model_version = distutils.version.StrictVersion(model_info["version"])
             latest_supported_version = max([distutils.version.StrictVersion(x) for x in scenario_supported_versions])
             if model_version > latest_supported_version:

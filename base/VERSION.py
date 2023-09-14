@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.15.5", "2023-09-14"),
     base.VersionInfo("1.15.4", "2023-09-14"),
     base.VersionInfo("1.15.3", "2023-09-13"),
     base.VersionInfo("1.15.2", "2023-09-12"),
@@ -171,6 +172,7 @@ VERSION.changed("1.12.4", "Increased encapsulation of Jupyter notebook in `init.
 VERSION.added("1.4.9", "`document.py` ")
 VERSION.added("1.12.2", "Automatic creation of CONTRIBUTING.md in `document.py` ")
 VERSION.added("1.15.2", "Creation of repository info during documentation")
+VERSION.added("1.15.5", "Usage of a fixed path for the versions.json during documentation")
 
 # CHANGELOG runtime environment
 VERSION.changed("1.6.0", "updated runtime environment to Python 3.9.7")
@@ -185,3 +187,9 @@ VERSION.added("1.14.0", "Python packages Shapely and openpyxl to runtime environ
 VERSION.added("1.15.0", "`frontmatter` package to runtime environment")
 VERSION.changed("1.15.0", "Updated `GDAL` to version 3.4.3")
 VERSION.added("1.15.2", "Repository info to Python runtime environment")
+
+# CHANGELOG scenario.xsd
+VERSION.added("1.15.0", "Scenario XML schema")
+VERSION.changed(
+    "1.15.5", "Updated scenario XML-schema to optionally include ExternalSources and Acknowledgements")
+VERSION.changed("1.15.5", "Made order of elements within scenario XML version changelog arbitrary")

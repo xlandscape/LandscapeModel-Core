@@ -49,6 +49,8 @@ class DepositionToReach(base.Component):
     base.VERSION.fixed(
         "1.14.4", "Fixed dimensionality of `Deposition` output in `components.DepositionToReach` component")
     base.VERSION.changed("1.15.1", "Included types in `DepositionToReach` input attributes")
+    base.VERSION.changed("1.15.6", "Updated description of `DepositionToReach` component")
+    base.VERSION.added("1.15.6", "Input descriptions to `DepositionToReach` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

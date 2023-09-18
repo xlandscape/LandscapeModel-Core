@@ -52,6 +52,8 @@ class PpmCalendar(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.PpmCalendar` with base class")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.PpmCalendar` ")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.PpmCalendar` ")
+    base.VERSION.changed("1.15.6", "Updated description of `PpmCalendar` component")
+    base.VERSION.added("1.15.6", "Input descriptions to `PpmCalendar` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

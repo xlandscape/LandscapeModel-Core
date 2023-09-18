@@ -47,6 +47,7 @@ class Experiment:
     base.VERSION.added("1.15.0", "Repository checks during initialization of `base.Experiment` ")
     base.VERSION.changed("1.15.2", "Relieved repository checks for external modules")
     base.VERSION.fixed("1.15.5", "Errors when scenario was not tested with current model")
+    base.VERSION.added("1.15.6", "Message to writing of info XML in Experiment regarding un-checked scenario modules")
 
     def __init__(
             self,

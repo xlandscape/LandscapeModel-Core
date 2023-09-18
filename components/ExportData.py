@@ -24,6 +24,8 @@ class ExportData(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ExportData` with base class")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.ExportData` ")
     base.VERSION.changed("1.15.1", "Skip initial attribute checks for `Values` input of `ExportData` component")
+    base.VERSION.changed("1.15.6", "Updated description of `ExportData` component")
+    base.VERSION.added("1.15.6", "Input descriptions to `ExportData` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(ExportData, self).__init__(name, default_observer, default_store)

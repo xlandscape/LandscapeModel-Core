@@ -1,6 +1,52 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2023-09-14.
+This is the changelog for the Landscape Model core. It was automatically created on 2023-09-18.
+
+## [1.15.6] - 2023-09-18
+
+### Added
+
+- Message to writing of info XML in Experiment regarding un-checked scenario modules
+
+- Input descriptions to `DepositionToReach` component
+
+- Input descriptions to `ExportData` component
+
+- Input descriptions to `HydrologyFromTimeSeries` component
+
+- Input descriptions to `LandscapeScenario` component
+
+- Input descriptions to `MarsWeather` component
+
+- Input descriptions to `PpmCalendar` component
+
+- Input descriptions to `WaterTemperatureFromAirTemperature` component
+
+- User warning regarding non-documented modules during scenario documentation
+
+### Changed
+
+- Updated description of `DepositionToReach` component
+
+- Changed `other/application`, `other/runs` and `other/soil_horizon` to named scales in `XdfStore`
+
+- Removed `space/reach2` as recognized scale from `X3dfStore`
+
+- Updated description of `ExportData` component
+
+- Updated description of `HydrologyFromTimeSeries` component
+
+- Updated description of `LandscapeScenario` component
+
+- Updated description of `MarsWeather` component
+
+- Updated description of `PpmCalendar` component
+
+- Updated description of `WaterTemperatureFromAirTemperature` component
+
+- Updated installation notes in model documentation
+
+### Fixed
 
 ## [1.15.5] - 2023-09-14
 

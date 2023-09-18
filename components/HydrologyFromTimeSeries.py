@@ -58,6 +58,8 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.11.0", "`components.HydrologyFromTimeSeries` specifies offsets of outputs")
     base.VERSION.fixed(
         "1.14.4", "Fixed dimensionality of `Deposition` output in `components.HydrologyFromTimeSeries` component")
+    base.VERSION.changed("1.15.6", "Updated description of `HydrologyFromTimeSeries` component")
+    base.VERSION.added("1.15.6", "Input descriptions to `HydrologyFromTimeSeries` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

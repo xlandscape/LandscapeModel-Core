@@ -8,14 +8,12 @@ import typing
 
 class MarsWeather(base.Component):
     """
-    Provides MARS weather data from a CSV fle to the Landscape Model.
-
-    INPUTS
-    FilePath: A valid file path to a CSV file containing MARS weather data. A string of global scale. Value has no unit.
-    FirstDate: The first date of the requested weather information. A `datetime.date` of global scale. The value has no
-    unit.
-    LastDate: The last date of the requested weather information. A `datetime.date` of global scale. The value has no
-    unit.
+    Provides MARS weather data from a CSV file to the Landscape Model. The CSV file must have a header and must contain
+    the following columns in arbitrary order: DAY, MONTH, YEAR. Each row of the CSV file gives data for one day, and
+    which day this is, is specified as the numerical day of month (DAY), month of year (MONTH) and the year (YEAR).
+    Values in columns named equal to the component's outputs are parsed and used for the outputs. See the documentation
+    of outputs for additional information on the expected values. The CSV file may contain additional columns that are
+    not used by the component.
 
     OUTPUTS
     TEMPERATURE_AVG: The average temperature. A NumPy array of scale time/day. Values have a unit of °C.
@@ -60,8 +58,10 @@ class MarsWeather(base.Component):
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "FilePath",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global")),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="A valid file path to a CSV file containing MARS weather data. See above for the expected "
+                            "format of the CSV file."
             )
         ])
         self._outputs = base.OutputContainer(

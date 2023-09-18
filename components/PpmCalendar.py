@@ -10,29 +10,11 @@ import typing
 
 class PpmCalendar(base.Component):
     """
-    Encapsulates the PpmCalendar as a Landscape Model component.
-
-    INPUTS
-    SimulationStart: The first day of the simulation. A `datetime.date` of global scale. Value has no unit.
-    SimulationEnd: The last day of the simulation. A `datetime.date` of global scale. Value has no unit.
-    ApplicationWindows: A definition of application windows. A string of global scale. Value has no unit.
-    Fields: A list of identifiers of individual geometries. A list[int] of scale space/base_geometry. Values have no
-    unit.
-    LandUseLandCoverTypes: The land-use and land-cover type of spatial units. A list[int] of scale space/base_geometry.
-    Values have no unit.
-    TargetLandUseLandCoverType: The land-use or land-cover type that is applied. A string of global scale. Value has no
-    unit.
-    ApplicationRate: The application rate. A float of global scale. Value has a unit of g/ha.
-    TechnologyDriftReduction: The fraction by which spray-drift is reduced due to technological measures. A float of
-    global scale. Value has a unit of 1.
-    InCropBuffer: An in-crop buffer used during application. A float of scale global. Value has a unit of m.
-    InFieldMargin: An margin without crops within fields. A float of scale global. Value has a unit of m.
-    FieldGeometries: The geometries of individual landscape parts. A list[bytes] of scale space/base_geometry. Values
-    have no unit.
-    MinimumAppliedArea: The minimum applied area considered. A float of global scale. Value has a unit of m².
-    RandomSeed: A initialization for the random number generator. An int of global scale. Value has a unit of 1.
-    ProbabilityFieldApplied: The probability with which a field is applied. A float of global scale. Value has a unit of
-    1.
+    Creates a calendar for pesticide applications for all or some landscape features of a specific type based on fixed
+    values for application rate, technological drift reduction, in-crop buffers and in-field margin. Application dates
+    are uniformly sampled from application windows. It is possible to specify application sequences by defining more
+    than one application window. Whether a specific landscape feature receives an application is controlled by a
+    specified probability.
 
     OUTPUTS
     AppliedFields: The identifiers of applied fields. A NumPy array of scale other/application.
@@ -84,77 +66,122 @@ class PpmCalendar(base.Component):
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "SimulationStart",
-                (attrib.Class(datetime.date, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The first day of the simulation. No applications prior to this date will be written into "
+                            "the calendar."
             ),
             base.Input(
                 "SimulationEnd",
-                (attrib.Class(datetime.date, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The last day of the simulation. No applications after this date will be written into the "
+                            "calendar."
             ),
             base.Input(
                 "ApplicationWindows",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="A definition of application windows. The value must follow the format "
+                            "`MM-DD to MM-DD[, MM-DD to MM-DD...]`, where `MM` is the month of year and `DD` is the "
+                            "day of month. Application dates are sampled within the specified time window for each "
+                            "year in the period from `SimulationStart` to `SimulationEnd` individually. If multiple "
+                            "application windows are specified, a single application will take place in each of the "
+                            "windows, sampled individually."
             ),
             base.Input(
                 "Fields",
-                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
-                self.default_observer
+                (attrib.Class(list[int]), attrib.Unit(None), attrib.Scales("space/base_geometry")),
+                self.default_observer,
+                description="A list of identifiers of individual geometries. This input will be removed in a future "
+                            "version of the `PpmCalendar` component."
             ),
             base.Input(
                 "LandUseLandCoverTypes",
-                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
-                self.default_observer
+                (attrib.Class(list[int]), attrib.Unit(None), attrib.Scales("space/base_geometry")),
+                self.default_observer,
+                description="The land-use and land-cover type of spatial units. This information is used to determine "
+                            "applied landscape elements (i.e., target fields), by only considering base geometries "
+                            "that have a land use/land cover type equal to the `TargetLandUseLandCoverType` input."
             ),
             base.Input(
                 "TargetLandUseLandCoverType",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The land-use or land-cover type that receives pesticide applications. It filters the base "
+                            "geometries described by the `LandUseLandCoverTypes` input to those that have the "
+                            "according value. Only the filtered landscape elements will be considered for "
+                            "applications, based on a probability defined by the `ProbabilityFieldApplied` input."
             ),
             base.Input(
                 "ApplicationRate",
-                (attrib.Class(float, 1), attrib.Unit("g/ha", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("g/ha"), attrib.Scales("global")),
+                self.default_observer,
+                description="The application rate. The `PpmCalendar` component applies the same rate to all "
+                            "applications. If your use-case requires different rates, e.g., within a application "
+                            "sequence, another component has to be used."
             ),
             base.Input(
                 "TechnologyDriftReduction",
-                (attrib.Class(float, 1), attrib.Unit("1", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("1"), attrib.Scales("global")),
+                self.default_observer,
+                description="The fraction by which spray-drift is reduced due to technological measures. The "
+                            "technological drift-reduction has to be a value between `0` and `1`, with `0` "
+                            "representing spray-equipment that does not reduce drift-deposition relative to the "
+                            "equipment used for the derivation of regulatory drift-depositions values and `1` "
+                            "resulting in drift-deposition being prevented entirely due to technological measures."
             ),
             base.Input(
                 "InCropBuffer",
-                (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("m"), attrib.Scales("global")),
+                self.default_observer,
+                description="An in-crop buffer used during application. The in-crop buffer is a section along the "
+                            "boundary of the applied landscape feature of the specified width that does not receive "
+                            "applications. The in-crop buffer is geometrically removed from the applied feature to "
+                            "determine the applied area."
             ),
             base.Input(
                 "InFieldMargin",
-                (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("m"), attrib.Scales("global")),
+                self.default_observer,
+                description="A margin without crops within fields. The in-field margin is an additional section "
+                            "between the boundary of the applied landscape feature and the in-crop buffer that is, "
+                            "like the in-crop buffer, does not receive applications, but is also considered to have no "
+                            "crops planted on it. Like the in-crop buffer, it is geometrically removed from the base "
+                            "geometries to derive the geometry of the applied area."
             ),
             base.Input(
                 "FieldGeometries",
-                (
-                    attrib.Class(list[bytes], 1),
-                    attrib.Unit(None, 1),
-                    attrib.Scales("space/base_geometry", 1)
-                ),
-                self.default_observer
+                (attrib.Class(list[bytes]), attrib.Unit(None), attrib.Scales("space/base_geometry")),
+                self.default_observer,
+                description="The geometries of individual landscape parts. This input will be removed in a future "
+                            "version of the `PpmCalendar` component."
             ),
             base.Input(
                 "MinimumAppliedArea",
-                (attrib.Class(float, 1), attrib.Unit("m²", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("m²"), attrib.Scales("global")),
+                self.default_observer,
+                description="The minimum applied area considered. If the applied area of a landscape feature is, "
+                            "after applying the in-crop buffer and in-field margin is smaller than this threshold, "
+                            "then no application is scheduled for this feature."
             ),
             base.Input(
                 "RandomSeed",
-                (attrib.Class(int, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(int), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="An initialization for the random number generator. Setting this input to a value other "
+                            "than `0` seeds the random number generator. This can be useful for debugging or checking "
+                            "results. A value of `0` initializes the random number generator randomly."
             ),
             base.Input(
                 "ProbabilityFieldApplied",
-                (attrib.Class(float, 1), attrib.Unit("1", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("1"), attrib.Scales("global")),
+                self.default_observer,
+                description="The probability with which a field is applied, given as a number between `0` and `1`. A "
+                            "landscape feature is excluded entirely from the PPM calendar, if it is not selected for "
+                            "application based on the probability specified here. A value of `0` would result in an "
+                            "empty PPM calendar, a value of `1` in all landscape features being applied, if no other "
+                            "considerations (land use/land cover type filter and minimum area applied) prevent this."
             )
         ])
         self._outputs = base.OutputContainer(self, [
@@ -164,6 +191,17 @@ class PpmCalendar(base.Component):
             base.Output("TechnologyDriftReductions", default_store, self),
             base.Output("AppliedAreas", default_store, self)
         ])
+        if self.default_observer:
+            self.default_observer.write_message(
+                3,
+                "The Fields input will be removed in a future version of the PpmCalendar component",
+                "The element names will be retrieved from the metadata of the LandUseLandCoverTypes input"
+            )
+            self.default_observer.write_message(
+                3,
+                "The FieldGeometries input will be removed in a future version of the PpmCalendar component",
+                "The geometries will be retrieved from the metadata of the LandUseLandCoverTypes input"
+            )
 
     def run(self) -> None:
         """

@@ -9,10 +9,7 @@ class WaterTemperatureFromAirTemperature(base.Component):
     """
     A simple component that takes a series of daily average air temperatures and calculates a series of daily water
     temperatures by averaging the air temperatures of the current and the two preceding days. The water temperatures
-    of the first two days are set to the one calculated for the third day.
-
-    INPUTS
-    AirTemperature: A timeseries of daily average air temperatures.
+    of the first two days in the timeseries are set to the one calculated for the third day.
 
     OUTPUTS
     WaterTemperature: A timeseries of daily average water temperatures.
@@ -26,7 +23,9 @@ class WaterTemperatureFromAirTemperature(base.Component):
             base.Input(
                 "AirTemperature",
                 (attrib.Class(np.ndarray), attrib.Scales("time/day"), attrib.Unit("°C")),
-                self.default_observer
+                self.default_observer,
+                description="A timeseries of daily average air temperatures. Water temperatures will be output for the "
+                            "temporal extent spanned by the air temperatures."
             ),
         ))
         self._outputs = base.OutputContainer(

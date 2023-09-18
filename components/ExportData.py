@@ -10,19 +10,9 @@ import typing
 
 class ExportData(base.Component):
     """
-    A generic component that exports Landscape Model data into another data store.
-
-    INPUTS
-    TargetStoreType: The type of the target store. A string of global scale. Must be "SqlLite". Value has no unit.
-    FilePath: The file path of the non-existing data store. A string of global scale. Value has no unit.
-    Values: The datasets to export.
-    Create: Specifies if the data store should be created. A bool of global scale. Value has no unit.
-    ForeignKey: An optional input that specifies foreign keys for each dimension. A list[str] with global scale. Values
-    have no unit.
-    Sql: An optional SQL statement that is executed after the export. A string with global scale. Value has no unit.
-
-    OUTPUTS
-    None.
+    A generic component that exports Landscape Model data into another data store. Currently, the only supported output
+    store are SqlLite databases. The component allows to create a new SqlLite database or append to an existing one. It
+    also features the execution of arbitrary SQL code after the export of data.
     """
     # CHANGELOG
     base.VERSION.added("1.4.3", "`components.ExportData` component")
@@ -40,26 +30,48 @@ class ExportData(base.Component):
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "TargetStoreType",
-                (attrib.Class(str), attrib.Scales("global"), attrib.Unit(None)),
-                self.default_observer
+                (attrib.Class(str), attrib.Scales("global"), attrib.Unit(None), attrib.Equals("SqlLite")),
+                self.default_observer,
+                description="The type of the target store. Currently, `SqlLite` is the only supported store type."
             ),
             base.Input(
                 "FilePath",
                 (attrib.Class(str), attrib.Scales("global"), attrib.Unit(None)),
-                self.default_observer
+                self.default_observer,
+                description="The file path of the data store. If `Create` is set to `True`, the store is not allowed "
+                            "to already exist. If set to `False`, however, the store is required to be present on the "
+                            "specified location."
             ),
-            base.Input("Values", (), self.default_observer, skip_initial_attribute_checks=True),
+            base.Input(
+                "Values", (),
+                self.default_observer,
+                description="The datasets to export. This can be virtually any data managed by the Landscape Model as "
+                            "far as the datatype is supported by the `SqlLite` store. Some metadata might become lost "
+                            "during export.",
+                skip_initial_attribute_checks=True
+            ),
             base.Input(
                 "Create",
                 (attrib.Class(bool), attrib.Scales("global"), attrib.Unit(None)),
-                self.default_observer
+                self.default_observer,
+                description="Specifies if the data store should be created. If set to `True`, the store is not allowed "
+                            "to already exist, if set to `False`, it has to already exist."
             ),
             base.Input(
                 "ForeignKey",
                 (attrib.Class(list[str]), attrib.Scales("global"), attrib.Unit(None)),
-                self.default_observer
+                self.default_observer,
+                description="An optional input that specifies foreign keys for each dimension. This value is appended "
+                            "to the table definition of the dataset and commonly looks like something similar to "
+                            "``|`space/base_geometry`(`CascadeToxswa/hydrography_id`)``."
             ),
-            base.Input("Sql", (attrib.Class(str), attrib.Scales("global"), attrib.Unit(None)), self.default_observer)
+            base.Input(
+                "Sql",
+                (attrib.Class(str), attrib.Scales("global"), attrib.Unit(None)),
+                self.default_observer,
+                description="An optional SQL statement that is executed after the export. This can, for instance, be "
+                            "used to create views in a SqlLite database."
+            )
         ])
         self._outputs = base.ProvisionalOutputs(self, default_store)
 

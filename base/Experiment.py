@@ -309,6 +309,7 @@ class Experiment:
         self.check_repository_state(scenario.path, scenario.name, scenario.version, latest_versions)
         xml.etree.ElementTree.indent(info_xml)
         xml.etree.ElementTree.ElementTree(info_xml).write(path, encoding="utf-8", xml_declaration=True)
+        self._observer.write_message(3, "Modules of the scenario are currently not checked")
 
     def check_repository_state(
             self,

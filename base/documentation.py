@@ -510,6 +510,10 @@ Distributed under the CC0 License. See `LICENSE` for more information.
         f.write("\n\n## Acknowledgements\n")
         for acknowledgement in scenario_info.findall("Acknowledgements/Acknowledgement", namespace):
             f.write(f"* {inspect.cleandoc(acknowledgement.text)}\n")
+    raise UserWarning(
+        "Geospatial data of the scenario, made available through the LandscapeScenario component, is currently "
+        "not documented"
+    )
 
 
 def write_scenario_changelog(info_file: str, file_path: str, xml_namespace: str = "urn:xLandscapeModelScenarioInfo") -> None:

@@ -100,18 +100,17 @@ class X3dfStore(base.Store):
             "space/base_geometry": "named geometries",
             "space/extent": "plain",
             "space/reach": "named",
-            "space/reach2": "named",
             "space/x_5dm": "offset",
             "space/y_5dm": "offset",
             "time/day": "offset",
             "time/day_of_year": "plain",
             "time/hour": "offset",
             "time/year": "offset",
-            "other/application": "plain",
+            "other/application": "named",
             "other/crop": "named",
             "other/factor": "named",
-            "other/runs": "plain",
-            "other/soil_horizon": "plain",
+            "other/run": "named",
+            "other/soil_horizon": "named",
             "other/species": "named"
         }
 

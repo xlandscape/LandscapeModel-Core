@@ -60,6 +60,9 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.12.2", "Fixed typos in `stores.X3dfStore` documentation")
     base.VERSION.changed("1.14.0", "`stores.X3dfStore` now stores and retrieves geometries of elements")
     base.VERSION.changed("1.14.4", "Changed chunk size for lists in `stores.X3dfStore`")
+    base.VERSION.changed(
+        "1.15.6", "Changed `other/application`, `other/runs` and `other/soil_horizon` to named scales in `XdfStore`")
+    base.VERSION.changed("1.15.6", "Removed `space/reach2` as recognized scale from `X3dfStore`")
 
     def __init__(
             self,
@@ -100,18 +103,17 @@ class X3dfStore(base.Store):
             "space/base_geometry": "named geometries",
             "space/extent": "plain",
             "space/reach": "named",
-            "space/reach2": "named",
             "space/x_5dm": "offset",
             "space/y_5dm": "offset",
             "time/day": "offset",
             "time/day_of_year": "plain",
             "time/hour": "offset",
             "time/year": "offset",
-            "other/application": "plain",
+            "other/application": "named",
             "other/crop": "named",
             "other/factor": "named",
-            "other/runs": "plain",
-            "other/soil_horizon": "plain",
+            "other/run": "named",
+            "other/soil_horizon": "named",
             "other/species": "named"
         }
 

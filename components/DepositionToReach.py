@@ -12,19 +12,12 @@ import datetime
 
 class DepositionToReach(base.Component):
     """
-    Calculates the initial environmental fate in reaches for spray-drift depositions.
-
-    INPUTS
-    Deposition: The substance deposited at the water surface. A NumPy array of scales time/day, space/base_geometry.
-    Values have a unit of g/ha.
-    Reaches: The identifiers of individual reaches. A NumPy array of scale space/reach. Values have no unit.
-    Mapping: Maps base geometries to reaches. A list[int] of scale space/base_geometry. Values have no unit.
-    SprayDriftCoverage: The fraction of a reach surface that is not exposed to spray drift. A list[float] of scale
-    space/reach. Values have no unit. Currently, only values of 0 and 1 are supported.
-    DepositionInputSource: Specifies from what source the deposition input is retrieved. A string of global scale.
-    Allowed values are 'DepositionInput' and 'DepositionInputFile' which refer to the inputs of same names.
-    DepositionInputFile: The path to a CSV file containing predefined depositions in g/ha per reach and day. A string
-    of global scale.
+    Calculates the average spray-drift deposition for reaches based on spray-drift depositions reported for base
+    geometries. Base geometries are mapped to reaches, whereby the base geometry should represent an average uncovered
+    area of the reach. For cases, where the base geometries contain areas of reaches that are actually covered (e.g.,
+    underground), the `DepositionToReach` component allows to explicitly state this fact and exclude the reaches from
+    reception of spray-drift deposition. The component has also a mode where depositions are load from a CSV file,
+    which helps in simulations where spray-drift depositions are not simulated bit are known from other sources.
 
     OUTPUTS
     Deposition: The substance deposited at the water surface for reaches. A NumPy array of scales time/day, space/reach.
@@ -56,6 +49,8 @@ class DepositionToReach(base.Component):
     base.VERSION.fixed(
         "1.14.4", "Fixed dimensionality of `Deposition` output in `components.DepositionToReach` component")
     base.VERSION.changed("1.15.1", "Included types in `DepositionToReach` input attributes")
+    base.VERSION.changed("1.15.6", "Updated description of `DepositionToReach` component")
+    base.VERSION.added("1.15.6", "Input descriptions to `DepositionToReach` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -70,22 +65,26 @@ class DepositionToReach(base.Component):
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "Deposition",
-                (
-                    attrib.Class(np.ndarray, 1),
-                    attrib.Unit("g/ha", 1),
-                    attrib.Scales("time/day, space/base_geometry", 1)
-                ),
-                self.default_observer
+                (attrib.Class(np.ndarray), attrib.Unit("g/ha"), attrib.Scales("time/day, space/base_geometry")),
+                self.default_observer,
+                description="The rate at which the substance is deposited at the water surface. The values of this "
+                            "input should represent an average over the uncovered area of the reach, but the maximum "
+                            "of the day."
             ),
             base.Input(
                 "Reaches",
-                (attrib.Class(np.ndarray, 1), attrib.Unit(None, 1), attrib.Scales("space/reach", 1)),
-                self.default_observer
+                (attrib.Class(np.ndarray), attrib.Unit(None), attrib.Scales("space/reach")),
+                self.default_observer,
+                description="The identifiers of individual reaches. This information is used alongside the values of "
+                            "the `Mapping` input to associate individual reaches to their base geometries representing "
+                            "average uncovered reach surfaces."
             ),
             base.Input(
                 "Mapping",
-                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
-                self.default_observer
+                (attrib.Class(list[int]), attrib.Unit(None), attrib.Scales("space/base_geometry")),
+                self.default_observer,
+                description="Maps base geometries to reaches. Each reach should be represented also as a base geometry "
+                            "showing its average uncovered area if it is at least partially exposed to spray-drift."
             ),
             base.Input(
                 "SprayDriftCoverage",
@@ -93,9 +92,14 @@ class DepositionToReach(base.Component):
                     attrib.Class(list[float]),
                     attrib.Unit("1"),
                     attrib.Scales("space/base_geometry"),
-                    attrib.InList((0, 1))
+                    attrib.InList((0., 1.))
                 ),
-                self.default_observer
+                self.default_observer,
+                description="The fraction of a reach surface that is not exposed to spray drift. If this value is `0`, "
+                            "the spray-deposition reported for the base geometry is also reported for the reach. If "
+                            "the value is `1`, a deposition of `0` is reported instead. Allowing to set the coverage "
+                            "of reaches to `1` helps in scenarios, where, e.g., the geodata does not differentiate "
+                            "between under- and overground reaches."
             ),
             base.Input(
                 "DepositionInputSource",
@@ -105,15 +109,31 @@ class DepositionToReach(base.Component):
                     attrib.InList(("DepositionInput", "DepositionInputFile")),
                     attrib.Class(str)
                 ),
-                self.default_observer
+                self.default_observer,
+                description="Specifies from what source the deposition input is retrieved. If set to "
+                            "`DepositionInputFile`, the data is read from the `DepositionInputFile`. In this case, all "
+                            "other inputs are ignored and the deposition reported for each reach is entirely "
+                            "determined by the values in the input file. Reaches not listed there will receive a "
+                            "deposition of `0`. If the `DepositionInputSource` is set to `DepositionInput`, the value "
+                            "of the `DepositionInputFile` input is ignored."
             ),
             base.Input(
                 "DepositionInputFile",
                 (attrib.Unit(None), attrib.Scales("global"), attrib.Class(str)),
-                self.default_observer
+                self.default_observer,
+                description="The path to a CSV file containing predefined depositions in g/ha per reach and day. The "
+                            "CSV file must have an arbitrary header row and data rows consisting of the date of "
+                            "exposure in the format `%Y-%m-%d`, the numerical identifier of the reach that is exposed "
+                            "and the value of deposition as a floating point number in g/ha."
             )
         ])
         self._outputs = base.OutputContainer(self, (base.Output("Deposition", default_store, self),))
+        if self.default_observer:
+            self.default_observer.write_message(
+                2,
+                "DepositionToReach currently does not check the identity of base geometries",
+                "Make sure that inputs of scale space/base_geometry retrieve data in the same base geometry-order"
+            )
 
     def run(self) -> None:
         """Runs the component.

@@ -10,14 +10,10 @@ import typing
 
 class HydrologyFromTimeSeries(base.Component):
     """
-    Loads hydrological data from an HDF5 file.
-
-    INPUTS
-    TimeSeries: A valid file path to the input HDF5 data. A string of global scale. Value has no unit.
-    FromTime: The start time of the requested hydrology. A `datetime.date` of global scale. Value has no unit.
-    ToTime: The end time of the requested hydrology. A `datetime.date` of global scale. Value has no unit.
-    InflowTimeSeriesPath: The path where reach-inflows are stored. A string of global scale. Value has no unit.
-    ImportInflows: Specifies whether reach inflows from fields are imported. A bool of global scale. Value has no unit.
+    Loads hydrological data from a hydrological scenario. A hydrological scenario is normally part of a scenario
+    intended for aquatic simulations and consists of the following elements: a HDF5-file that contains the hydrological
+    parameters flow, depth, volume and area (see output description for more details) plus some metadata, and, possibly,
+    a folder containing CSV files detailing the lateral inflows of reaches.
 
     OUTPUTS
     Flow: The water flow. A NumPy array of scales time/hour, space/reach. Values have a unit of m³/d.
@@ -62,6 +58,8 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.11.0", "`components.HydrologyFromTimeSeries` specifies offsets of outputs")
     base.VERSION.fixed(
         "1.14.4", "Fixed dimensionality of `Deposition` output in `components.HydrologyFromTimeSeries` component")
+    base.VERSION.changed("1.15.6", "Updated description of `HydrologyFromTimeSeries` component")
+    base.VERSION.added("1.15.6", "Input descriptions to `HydrologyFromTimeSeries` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -76,28 +74,45 @@ class HydrologyFromTimeSeries(base.Component):
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "TimeSeries",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="A valid file path to the input HDF5 data. This data must follow a specific format. See "
+                            "any of the publicly available hydrological scenarios for an example."
             ),
             base.Input(
                 "FromTime",
-                (attrib.Class(datetime.date, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The start time of the hydrological data. This specifies the first date for which "
+                            "hydrological data is imported into the Landscape Model. It must lay within the time frame "
+                            "for which data is available. Consult the scenario documentation for this time frame."
             ),
             base.Input(
                 "ToTime",
-                (attrib.Class(datetime.date, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The end time of the hydrological data.This specifies the last date for which "
+                            "hydrological data is imported into the Landscape Model. It must lay within the time frame "
+                            "for which data is available. Consult the scenario documentation for this time frame."
             ),
             base.Input(
                 "InflowTimeSeriesPath",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The path where reach-inflows are stored. This path must contain a CSV file for each reach "
+                            "that receives lateral inflows. See any of the publicly available hydrological scenarios "
+                            "to learn about the specific format of the CSV files."
             ),
             base.Input(
                 "ImportInflows",
-                (attrib.Class(bool, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(bool), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="Specifies whether lateral inflows from fields are imported. Setting this input to `False` "
+                            "will skip the import of CSV files from the `InflowTimeSeriesPath`. This decreases the "
+                            "processing time of the component, but can only be done if none of the components in the "
+                            "simulation require data on lateral inflows. This input should also be set to `False` if "
+                            "the hydrological scenario does not contain information on lateral inflows, In this case, "
+                            "it will not be possible to run components that require according data."
             )
         ])
         self._outputs = base.OutputContainer(self, [

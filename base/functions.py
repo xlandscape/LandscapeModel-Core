@@ -50,6 +50,7 @@ base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called
 base.VERSION.changed("1.12.6", "Mitigated weak code warnings in `base.functions` ")
 base.VERSION.changed(
     "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
+base.VERSION.changed("1.15.7", "File encoding for reading and writing using the `replace_tokens` function is now UTF-8")
 
 
 # noinspection DuplicatedCode
@@ -207,13 +208,13 @@ def replace_tokens(tokens: typing.Mapping[str, str], source: str, destination: s
     parsed_source = source
     for key, value in tokens.items():
         parsed_source = parsed_source.replace(f"$({key})", str(value or ""))
-    with open(parsed_source) as file:
+    with open(parsed_source, encoding="utf-8") as file:
         configuration = file.read()
         for key, value in tokens.items():
             configuration = configuration.replace(f"$$({key})", str(value or ""))
         for key, value in tokens.items():
             configuration = configuration.replace(f"$({key})", str(value or ""))
-        with open(destination, "w") as f:
+        with open(destination, "w", encoding="utf-8") as f:
             f.write(configuration)
 
 

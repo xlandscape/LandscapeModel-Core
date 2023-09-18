@@ -2,6 +2,18 @@
 
 This is the changelog for the Landscape Model core. It was automatically created on 2023-09-18.
 
+## [1.15.7] - 2023-09-18
+
+### Added
+
+### Changed
+
+- Adapted scenario XML schema to allow `outsourced` XML attribute
+
+- File encoding for reading and writing using the `replace_tokens` function is now UTF-8
+
+### Fixed
+
 ## [1.15.6] - 2023-09-18
 
 ### Added

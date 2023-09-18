@@ -60,6 +60,9 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.12.2", "Fixed typos in `stores.X3dfStore` documentation")
     base.VERSION.changed("1.14.0", "`stores.X3dfStore` now stores and retrieves geometries of elements")
     base.VERSION.changed("1.14.4", "Changed chunk size for lists in `stores.X3dfStore`")
+    base.VERSION.changed(
+        "1.15.6", "Changed `other/application`, `other/runs` and `other/soil_horizon` to named scales in `XdfStore`")
+    base.VERSION.changed("1.15.6", "Removed `space/reach2` as recognized scale from `X3dfStore`")
 
     def __init__(
             self,

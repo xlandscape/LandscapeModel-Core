@@ -56,6 +56,8 @@ base.VERSION.added("1.15.0", "Functions to check variant parts and to write repo
 base.VERSION.fixed("1.15.1", "Documentation of scenario respects XML namespace")
 base.VERSION.fixed("1.15.2", "Fixed resolution of git-paths of submodules")
 base.VERSION.changed("1.15.4", "Documentation of core components lists component's inputs and their attributes")
+base.VERSION.changed("1.15.6", "Updated installation notes in model documentation")
+base.VERSION.added("1.15.6", "User warning regarding non-documented modules during scenario documentation")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:

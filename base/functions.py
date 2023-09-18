@@ -207,13 +207,13 @@ def replace_tokens(tokens: typing.Mapping[str, str], source: str, destination: s
     parsed_source = source
     for key, value in tokens.items():
         parsed_source = parsed_source.replace(f"$({key})", str(value or ""))
-    with open(parsed_source) as file:
+    with open(parsed_source, encoding="utf-8") as file:
         configuration = file.read()
         for key, value in tokens.items():
             configuration = configuration.replace(f"$$({key})", str(value or ""))
         for key, value in tokens.items():
             configuration = configuration.replace(f"$({key})", str(value or ""))
-        with open(destination, "w") as f:
+        with open(destination, "w", encoding="utf-8") as f:
             f.write(configuration)
 
 

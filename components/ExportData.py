@@ -75,7 +75,6 @@ class ExportData(base.Component):
                             "used to create views in a SqlLite database."
             )
         ])
-        self._outputs = base.ProvisionalOutputs(self, default_store)
 
     def run(self) -> None:
         """
@@ -89,7 +88,8 @@ class ExportData(base.Component):
         else:
             raise ValueError(f"Store type not supported: {store_type}")
         source_description = self._inputs["Values"].describe()
-        output = base.Output(self._inputs["Values"].provider.output.name.split("/")[-1], store, self)
+        output = base.Output(
+            self._inputs["Values"].provider.output.name.split("/")[-1], store, self, skip_initial_attribute_checks=True)
         foreign_keys = self._inputs["ForeignKey"].read().values if self._inputs["ForeignKey"].has_provider else None
         if source_description["chunks"] is None:
             output.set_values(

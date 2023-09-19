@@ -29,7 +29,8 @@ class Output:
             component: typing.Optional["base.Component"] = None,
             default_attributes: typing.Optional[typing.Mapping[str, typing.Any]] = None,
             description: typing.Optional[str] = None,
-            attribute_hints: typing.Optional[typing.Mapping[str, typing.Any]] = None
+            attribute_hints: typing.Optional[typing.Mapping[str, typing.Any]] = None,
+            skip_initial_attribute_checks: bool = False
     ) -> None:
         """
         Initializes an output.
@@ -52,7 +53,7 @@ class Output:
         self._default_attributes = {} if default_attributes is None else default_attributes
         self._description = description
         self._attribute_hints = {} if attribute_hints is None else attribute_hints
-        if component and component.default_observer:
+        if component and component.default_observer and not skip_initial_attribute_checks:
             if not default_attributes:
                 component.default_observer.write_message(3, f"Output {name} is missing default attributes")
             if not description or len(description) < 64:

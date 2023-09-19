@@ -102,7 +102,7 @@ class X3dfStore(base.Store):
             "global": "plain",
             "space/base_geometry": "named geometries",
             "space/extent": "plain",
-            "space/reach": "named",
+            "space/reach": "named geometries",
             "space/x_5dm": "offset",
             "space/y_5dm": "offset",
             "time/day": "offset",

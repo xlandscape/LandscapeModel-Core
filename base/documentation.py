@@ -1,6 +1,6 @@
 """This file contains functions for automatically documenting parts Landscape Model code."""
+import builtins
 import distutils.version
-
 import datetime
 import inspect
 import base
@@ -110,6 +110,17 @@ def document_components(components_module: types.ModuleType, file_path: str) -> 
 
 def _document_member(
         components_module: types.ModuleType, f: typing.TextIO, member_type: typing.Type = base.Component) -> None:
+    def format_type(type_to_format: typing.Type) -> str:
+        formatted_string = (
+            "`" if type(type_to_format).__module__ == 'builtins' else f"`{type(type_to_format).__module__}.")
+        return formatted_string + (
+                f"{type_to_format.__qualname__}" +
+                (
+                    f"[{', '.join([x.__qualname__ for x in typing.get_args(type(type_to_format))])}]`"
+                    if typing.get_args(type(type_to_format)) else "`"
+                )
+        )
+
     f.write(f"It was automatically created on {datetime.date.today()}.\n")
     for name, member in components_module.__dict__.items():
         if inspect.isclass(member) and issubclass(member, member_type):
@@ -121,7 +132,27 @@ def _document_member(
                 for component_input in component.inputs:
                     f.write(f"\n#### {component_input.name}\n{component_input.description or ''}")
                     for attribute in component_input.attributes:
-                        f.write(f"  \n{attribute}")
+                        f.write(f"\n- {attribute}")
+                f.write(f"\n### Outputs")
+                for component_output in component.outputs:
+                    f.write(f"\n#### {component_output.name}\n{component_output.description or ''}")
+                    for attribute, value in component_output.default_attributes.items():
+                        f.write(f"\n- {attribute.title().replace('_', ' ')}: `{value}`")
+                    for attribute, value in component_output.attribute_hints.items():
+                        if isinstance(value, builtins.type):
+                            display_value = format_type(value)
+                        elif isinstance(value, typing.Iterable):
+                            scales = component_output.default_attributes["scales"].split(", ")
+                            display_value = ", ".join(
+                                [
+                                    f"`{scales[i]}`: {format_type(v) if isinstance(v, builtins.type) else v}"
+                                    for i, v in enumerate(value) if value
+                                ]
+                            )
+                        else:
+                            display_value = f"`{value}`"
+                        f.write(f"\n- {attribute.title()}: {display_value}")
+
 
 def document_observers(observers_module: types.ModuleType, file_path: str) -> None:
     """

@@ -10,9 +10,6 @@ class WaterTemperatureFromAirTemperature(base.Component):
     A simple component that takes a series of daily average air temperatures and calculates a series of daily water
     temperatures by averaging the air temperatures of the current and the two preceding days. The water temperatures
     of the first two days in the timeseries are set to the one calculated for the third day.
-
-    OUTPUTS
-    WaterTemperature: A timeseries of daily average water temperatures.
     """
     # CHANGELOG
     base.VERSION.added("1.13.0", "`components.WaterTemperatureFromAirTemperature` component")
@@ -37,7 +34,14 @@ class WaterTemperatureFromAirTemperature(base.Component):
                     "WaterTemperature",
                     default_store,
                     self,
-                    {"scales": "time/day", "unit": "°C", "requires_indexing": True}
+                    {"scales": "time/day", "unit": "°C", "requires_indexing": True},
+                    "A timeseries of daily average water temperatures. The water temperature as estimated as a 3-day "
+                    "moving average of the air temperature.",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days reported in the `AirTemperature` input",),
+                        "offsets": ("the first date reported in the `AirTemperature` input",)
+                    }
                 )
             ]
         )

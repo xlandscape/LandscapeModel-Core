@@ -26,6 +26,8 @@ class ExportData(base.Component):
     base.VERSION.changed("1.15.1", "Skip initial attribute checks for `Values` input of `ExportData` component")
     base.VERSION.changed("1.15.6", "Updated description of `ExportData` component")
     base.VERSION.added("1.15.6", "Input descriptions to `ExportData` component")
+    base.VERSION.changed("1.15.8", "Removed ProvisionalOutputs from `ExportData` component")
+    base.VERSION.changed("1.15.8", "Target outputs for export in `ExportData` component no longer check attributes")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(ExportData, self).__init__(name, default_observer, default_store)
@@ -75,7 +77,6 @@ class ExportData(base.Component):
                             "used to create views in a SqlLite database."
             )
         ])
-        self._outputs = base.ProvisionalOutputs(self, default_store)
 
     def run(self) -> None:
         """
@@ -89,7 +90,8 @@ class ExportData(base.Component):
         else:
             raise ValueError(f"Store type not supported: {store_type}")
         source_description = self._inputs["Values"].describe()
-        output = base.Output(self._inputs["Values"].provider.output.name.split("/")[-1], store, self)
+        output = base.Output(
+            self._inputs["Values"].provider.output.name.split("/")[-1], store, self, skip_initial_attribute_checks=True)
         foreign_keys = self._inputs["ForeignKey"].read().values if self._inputs["ForeignKey"].has_provider else None
         if source_description["chunks"] is None:
             output.set_values(

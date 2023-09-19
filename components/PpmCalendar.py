@@ -15,16 +15,6 @@ class PpmCalendar(base.Component):
     are uniformly sampled from application windows. It is possible to specify application sequences by defining more
     than one application window. Whether a specific landscape feature receives an application is controlled by a
     specified probability.
-
-    OUTPUTS
-    AppliedFields: The identifiers of applied fields. A NumPy array of scale other/application.
-    ApplicationDates: The dates of application. A NumPy array of scale other/application.
-    ApplicationRates: The applied rates. A NumPy array of scale other/application. Values have the same unit as the
-    input application rate.
-    TechnologyDriftReductions: The technological drift reductions. A NumPy array of scale other/application. Values have
-    the same unit as the input drift reductions.
-    AppliedAreas: The geometries of the applied areas. A list[bytes] of scale other/application. The values have no
-    unit.
     """
     # CHANGELOG
     base.VERSION.added("1.1.1", "`components.PpmCalendar` component")
@@ -54,6 +44,7 @@ class PpmCalendar(base.Component):
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.PpmCalendar` ")
     base.VERSION.changed("1.15.6", "Updated description of `PpmCalendar` component")
     base.VERSION.added("1.15.6", "Input descriptions to `PpmCalendar` component")
+    base.VERSION.added("1.15.8", "Documentation of outputs in `PpmCalendar` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -187,11 +178,74 @@ class PpmCalendar(base.Component):
             )
         ])
         self._outputs = base.OutputContainer(self, [
-            base.Output("AppliedFields", default_store, self),
-            base.Output("ApplicationDates", default_store, self),
-            base.Output("ApplicationRates", default_store, self),
-            base.Output("TechnologyDriftReductions", default_store, self),
-            base.Output("AppliedAreas", default_store, self)
+            base.Output(
+                "AppliedFields",
+                default_store,
+                self,
+                {"scales": "other/application"},
+                "The element names of the applied fields. This output should not be interpreted in a way that "
+                "necessarily the entire field received an application, for the spatial extent of the application see "
+                "the `AppliedAreas` output, instead. The values of this output link, however, applications to fields, "
+                "which can be an interesting parameter for statistics or plotting.",
+                {
+                    "type": np.ndarray,
+                    "data_type": np.int,
+                    "shape": ("the number of applications simulated by the component",)
+                }
+            ),
+            base.Output(
+                "ApplicationDates",
+                default_store,
+                self,
+                {"scales": "other/application"},
+                "The dates at which applications were conducted. Dates are represented as ordinal numbers, as a result "
+                "of applying the according function of the `datetime.date` object.",
+                {
+                    "type": np.ndarray,
+                    "data_type": int,
+                    "shape": ("the number of applications simulated by the component",)
+                }
+            ),
+            base.Output(
+                "ApplicationRates",
+                default_store,
+                self,
+                {"scales": "other/application"},
+                "The application rates for each individual application. See the `ApplicationRate` input for further "
+                "details.",
+                {
+                    "type": np.ndarray,
+                    "data_type": np.double,
+                    "shape": ("the number of applications simulated by the component",),
+                    "unit": "the same as that of the `ApplicationRate` input"
+                }
+            ),
+            base.Output(
+                "TechnologyDriftReductions",
+                default_store,
+                self,
+                {"scales": "other/application"},
+                "The spray-drift reduction by the spray-equipment, expressed as a fraction between `0` and `1`. See "
+                "the `TechnologyDriftReduction` input for more details.",
+                {
+                    "type": np.ndarray,
+                    "data_type": np.double,
+                    "shape": ("the number of applications simulated by the component",),
+                    "unit": "the same as that of the `TechnologyDriftReduction` input"
+                }
+            ),
+            base.Output(
+                "AppliedAreas",
+                default_store,
+                self,
+                {"scales": "other/application"},
+                "The geometries of the applied areas, represented in Well-Known-Bytes notation. See the `InCropBuffer` "
+                "and `InFieldMargin` inputs for further details on how the geometries are derived.",
+                {
+                    "type": list[bytes],
+                    "shape": ("the number of applications simulated by the component",)
+                }
+            )
         ])
         if self.default_observer:
             self.default_observer.write_message(
@@ -257,19 +311,14 @@ class PpmCalendar(base.Component):
             application_dates[i] = application.date.toordinal()
             application_rates[i] = application.application_rate.values
             technology_drift_reductions[i] = application.technology_drift_reduction.values
-        self.outputs["AppliedFields"].set_values(applied_fields, scales="other/application")
-        self.outputs["ApplicationDates"].set_values(application_dates, scales="other/application")
-        self.outputs["ApplicationRates"].set_values(
-            application_rates,
-            scales="other/application",
-            unit=application_rate.unit
-        )
+        self.outputs["AppliedFields"].set_values(applied_fields)
+        self.outputs["ApplicationDates"].set_values(application_dates)
+        self.outputs["ApplicationRates"].set_values(application_rates, unit=application_rate.unit)
         self.outputs["TechnologyDriftReductions"].set_values(
             technology_drift_reductions,
-            scales="other/application",
             unit=technology_drift_reduction.unit
         )
-        self.outputs["AppliedAreas"].set_values(applied_areas, scales="other/application")
+        self.outputs["AppliedAreas"].set_values(applied_areas)
 
 
 class SprayApplication:

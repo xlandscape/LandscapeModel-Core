@@ -14,19 +14,6 @@ class HydrologyFromTimeSeries(base.Component):
     intended for aquatic simulations and consists of the following elements: a HDF5-file that contains the hydrological
     parameters flow, depth, volume and area (see output description for more details) plus some metadata, and, possibly,
     a folder containing CSV files detailing the lateral inflows of reaches.
-
-    OUTPUTS
-    Flow: The water flow. A NumPy array of scales time/hour, space/reach. Values have a unit of m³/d.
-    Depth: The water depth. A NumPy array of scales time/hour, space/reach. Values have a unit m.
-    Reaches: The numeric identifier of reaches. A list[int] of scale space/reach.
-    TimeSeriesStart: The start time of the hydrological data. A datetime.datetime of global scale. Value has no unit.
-    TimeSeriesEnd: The end time of the hydrological data. A datetime.datetime of global scale. Value has no unit.
-    Volume: The water volume. A NumPy array of scales time/hour, space/reach. Values have a unit of m³.
-    Area: The water surface area. A NumPy array of scales time/hour, space/reach. Values have a unit of m².
-    InflowReaches: Identifier that receive inflows from fields. A NumPy array of scale space/reach2. Values have no
-    unit.
-    Inflow: Inflows into reaches from fields. A NumPy array of scale time/hour, space/reach2. Values have a unit of
-    m³/d.
     """
     # CHANGELOG
     base.VERSION.added("1.2.20", "`components.HydrologyFromTimeSeries` component")
@@ -60,6 +47,7 @@ class HydrologyFromTimeSeries(base.Component):
         "1.14.4", "Fixed dimensionality of `Deposition` output in `components.HydrologyFromTimeSeries` component")
     base.VERSION.changed("1.15.6", "Updated description of `HydrologyFromTimeSeries` component")
     base.VERSION.added("1.15.6", "Input descriptions to `HydrologyFromTimeSeries` component")
+    base.VERSION.added("1.15.8", "Documentation of outputs in `HydrologyFromTimeSeries` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -116,16 +104,129 @@ class HydrologyFromTimeSeries(base.Component):
             )
         ])
         self._outputs = base.OutputContainer(self, [
-            base.Output("Flow", default_store, self),
-            base.Output("Depth", default_store, self),
-            base.Output("Reaches", default_store, self),
+            base.Output(
+                "Flow",
+                default_store,
+                self,
+                {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m³/d"},
+                attribute_hints={
+                    "type": np.ndarray,
+                    "shape": (
+                        "the number of hours represented by the time span between the `FromTime` and the `ToTime`",
+                        "the number of reaches as stored in the `TimeSeries` input"
+                    ),
+                    "chunks": "for fast retrieval of timeseries",
+                    "element_names": (None, "as specified by the `Reaches` output"),
+                    "offset": ("as specified by the `FromTime` input", None)
+                }
+            ),
+            base.Output(
+                "Depth",
+                default_store,
+                self,
+                {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m"},
+                attribute_hints={
+                    "type": np.ndarray,
+                    "shape": (
+                        "the number of hours represented by the time span between the `FromTime` and the `ToTime`",
+                        "the number of reaches as stored in the `TimeSeries` input"
+                    ),
+                    "chunks": "for fast retrieval of timeseries",
+                    "element_names": (None, "as specified by the `Reaches` output"),
+                    "offset": ("as specified by the `FromTime` input", None)
+                }
+            ),
+            base.Output(
+                "Reaches",
+                default_store,
+                self,
+                {"scales": "space/reach"},
+                "This output lists the element names of the reaches as retrieved from the `TimeSeries` input. All "
+                "outputs that have a scale of `space/reach` report reaches in the order specified by this input, "
+                "except the `Inflow` output which reports reaches in the order of the `InflowReaches` output.",
+                {
+                    "type": np.ndarray,
+                    "shape": "the number of reaches as stored in the `TimeSeries` input",
+                    "element_names": ("as specified by the output itself",)
+                }
+            ),
             base.Output("TimeSeriesStart", default_store, self, {"scales": "global"}),
             base.Output("TimeSeriesEnd", default_store, self, {"scales": "global"}),
-            base.Output("Volume", default_store, self),
-            base.Output("Area", default_store, self),
-            base.Output("InflowReaches", default_store, self),
-            base.Output("Inflow", default_store, self)
+            base.Output(
+                "Volume",
+                default_store,
+                self,
+                {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m³"},
+                attribute_hints={
+                    "type": np.ndarray,
+                    "shape": (
+                        "the number of hours represented by the time span between the `FromTime` and the `ToTime`",
+                        "the number of reaches as stored in the `TimeSeries` input"
+                    ),
+                    "chunks": "for fast retrieval of timeseries",
+                    "element_names": (None, "as specified by the `Reaches` output"),
+                    "offset": ("as specified by the `FromTime` input", None)
+                }
+            ),
+            base.Output(
+                "Area",
+                default_store,
+                self,
+                {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m²"},
+                attribute_hints={
+                    "type": np.ndarray,
+                    "shape": (
+                        "the number of hours represented by the time span between the `FromTime` and the `ToTime`",
+                        "the number of reaches as stored in the `TimeSeries` input"
+                    ),
+                    "chunks": "for fast retrieval of timeseries",
+                    "element_names": (None, "as specified by the `Reaches` output"),
+                    "offset": ("as specified by the `FromTime` input", None)
+                }
+            ),
+            base.Output(
+                "InflowReaches",
+                default_store,
+                self,
+                {"scales": "space/reach"},
+                "This output lists the element names of reaches as reported by the `Inflow` output. This order may "
+                "differ from the order of reaches in all other outputs with scale `space/reach`.",
+                {
+                    "type": np.ndarray,
+                    "shape": ("the number of reaches for which inflow-data is available",),
+                    "element_names": ("as specified by the output itself",)
+                }
+            ),
+            base.Output(
+                "Inflow",
+                default_store,
+                self,
+                {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m³/d"},
+                attribute_hints={
+                    "type": np.ndarray,
+                    "shape": (
+                        "the number of hours represented by the time span between the `FromTime` and the `ToTime`",
+                        "the number of reaches as stored in the `InflowReaches` input"
+                    ),
+                    "chunks": "for fast retrieval of timeseries",
+                    "element_names": (None, "as specified by the `InflowReaches` output"),
+                    "offset": ("as specified by the `FromTime` input", None)
+                }
+            )
         ])
+        if self.default_observer:
+            self.default_observer.write_message(
+                3,
+                "The TimeSeriesStart output will be removed from a future version of the HydrologyFromTimeSeries "
+                "component",
+                "The according information can be retrieved from the outputs with scale `time/hour`"
+            )
+            self.default_observer.write_message(
+                3,
+                "The TimeSeriesEnd output will be removed from a future version of the HydrologyFromTimeSeries "
+                "component",
+                "The according information can be retrieved from the outputs with scale `time/hour`"
+            )
 
     def run(self) -> None:
         """
@@ -164,44 +265,32 @@ class HydrologyFromTimeSeries(base.Component):
                 f"Requested {number_hours - flow.shape[0]} too late values; values available for {time_series_start} "
                 f"to {time_series_end}"
             )
-        self.outputs["Reaches"].set_values(reaches, scales="space/reach", element_names=(self.outputs["Reaches"],))
+        self.outputs["Reaches"].set_values(reaches, element_names=(self.outputs["Reaches"],))
         self.outputs["Flow"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
-            data_type=np.float,
             chunks=(number_hours, 1),
-            scales="time/hour, space/reach",
-            unit="m³/d",
             element_names=(None, self.outputs["Reaches"]),
             offset=(offset_time, None)
         )
         self.outputs["Depth"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
-            data_type=np.float,
             chunks=(number_hours, 1),
-            scales="time/hour, space/reach",
-            unit="m",
             element_names=(None, self.outputs["Reaches"]),
             offset=(offset_time, None)
         )
         self.outputs["Volume"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
-            data_type=np.float,
             chunks=(number_hours, 1),
-            scales="time/hour, space/reach",
-            unit="m³",
             element_names=(None, self.outputs["Reaches"]),
             offset=(offset_time, None)
         )
         self.outputs["Area"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
-            data_type=np.float,
             chunks=(number_hours, 1),
-            scales="time/hour, space/reach",
-            unit="m²",
             element_names=(None, self.outputs["Reaches"]),
             offset=(offset_time, None)
         )
@@ -232,15 +321,11 @@ class HydrologyFromTimeSeries(base.Component):
             inflow_path = self._inputs["InflowTimeSeriesPath"].read().values
             inflow_files = os.listdir(inflow_path)
             inflow_reaches = [int(f[1:-4]) for f in inflow_files]
-            self.outputs["InflowReaches"].set_values(
-                inflow_reaches, scales="space/reach2", element_names=(self.outputs["InflowReaches"],))
+            self.outputs["InflowReaches"].set_values(inflow_reaches, element_names=(self.outputs["InflowReaches"],))
             self.outputs["Inflow"].set_values(
                 np.ndarray,
                 shape=(number_hours, len(inflow_reaches)),
-                data_type=np.float,
                 chunks=(number_hours, 1),
-                scales="time/hour, space/reach2",
-                unit="m³/d",
                 element_names=(None, self.outputs["InflowReaches"]),
                 offset=(offset_time, None)
             )

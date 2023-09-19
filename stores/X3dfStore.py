@@ -63,6 +63,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed(
         "1.15.6", "Changed `other/application`, `other/runs` and `other/soil_horizon` to named scales in `XdfStore`")
     base.VERSION.changed("1.15.6", "Removed `space/reach2` as recognized scale from `X3dfStore`")
+    base.VERSION.changed("1.15.8", "Changed `space/reach` to a named geometries scale in `X3dfStore`")
 
     def __init__(
             self,

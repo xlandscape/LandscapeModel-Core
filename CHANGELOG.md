@@ -1,6 +1,32 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2023-09-18.
+This is the changelog for the Landscape Model core. It was automatically created on 2023-09-19.
+
+## [1.15.8] - 2023-09-19
+
+### Added
+
+- Possibility to skip initial attribute checks for `base.Output`
+
+- Documentation of outputs in `HydrologyFromTimeSeries` component
+
+- Documentation of outputs in `MarsWeather` component
+
+- Documentation of outputs in `PpmCalendar` component
+
+- Documentation of outputs in `WaterTemperatureFromAirTemperature` component
+
+- Documentation of outputs for components in core
+
+### Changed
+
+- Changed `space/reach` to a named geometries scale in `X3dfStore`
+
+- Removed ProvisionalOutputs from `ExportData` component
+
+- Target outputs for export in `ExportData` component no longer check attributes
+
+### Fixed
 
 ## [1.15.7] - 2023-09-18
 

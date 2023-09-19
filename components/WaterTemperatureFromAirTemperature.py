@@ -15,6 +15,7 @@ class WaterTemperatureFromAirTemperature(base.Component):
     base.VERSION.added("1.13.0", "`components.WaterTemperatureFromAirTemperature` component")
     base.VERSION.changed("1.15.6", "Updated description of `WaterTemperatureFromAirTemperature` component")
     base.VERSION.added("1.15.6", "Input descriptions to `WaterTemperatureFromAirTemperature` component")
+    base.VERSION.added("1.15.8", "Documentation of outputs in `WaterTemperatureFromAirTemperature` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(WaterTemperatureFromAirTemperature, self).__init__(name, default_observer, default_store)

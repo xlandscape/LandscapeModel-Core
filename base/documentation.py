@@ -58,6 +58,7 @@ base.VERSION.fixed("1.15.2", "Fixed resolution of git-paths of submodules")
 base.VERSION.changed("1.15.4", "Documentation of core components lists component's inputs and their attributes")
 base.VERSION.changed("1.15.6", "Updated installation notes in model documentation")
 base.VERSION.added("1.15.6", "User warning regarding non-documented modules during scenario documentation")
+base.VERSION.added("1.15.8", "Documentation of outputs for components in core")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -112,7 +113,7 @@ def _document_member(
         components_module: types.ModuleType, f: typing.TextIO, member_type: typing.Type = base.Component) -> None:
     def format_type(type_to_format: typing.Type) -> str:
         formatted_string = (
-            "`" if type(type_to_format).__module__ == 'builtins' else f"`{type(type_to_format).__module__}.")
+            "`" if type_to_format.__module__ == 'builtins' else f"`{type_to_format.__module__}.")
         return formatted_string + (
                 f"{type_to_format.__qualname__}" +
                 (
@@ -137,11 +138,16 @@ def _document_member(
                 for component_output in component.outputs:
                     f.write(f"\n#### {component_output.name}\n{component_output.description or ''}")
                     for attribute, value in component_output.default_attributes.items():
-                        f.write(f"\n- {attribute.title().replace('_', ' ')}: `{value}`")
+                        if isinstance(value, builtins.type):
+                            f.write(f"\n- {attribute.title().replace('_', ' ')}: {format_type(value)}")
+                        else:
+                            f.write(f"\n- {attribute.title().replace('_', ' ')}: `{value}`")
                     for attribute, value in component_output.attribute_hints.items():
                         if isinstance(value, builtins.type):
                             display_value = format_type(value)
-                        elif isinstance(value, typing.Iterable):
+                        elif isinstance(value, str):
+                            display_value = value
+                        elif isinstance(value, typing.Sequence):
                             scales = component_output.default_attributes["scales"].split(", ")
                             display_value = ", ".join(
                                 [

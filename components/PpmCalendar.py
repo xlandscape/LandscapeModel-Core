@@ -44,6 +44,7 @@ class PpmCalendar(base.Component):
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.PpmCalendar` ")
     base.VERSION.changed("1.15.6", "Updated description of `PpmCalendar` component")
     base.VERSION.added("1.15.6", "Input descriptions to `PpmCalendar` component")
+    base.VERSION.added("1.15.8", "Documentation of outputs in `PpmCalendar` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

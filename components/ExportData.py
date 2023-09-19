@@ -26,6 +26,8 @@ class ExportData(base.Component):
     base.VERSION.changed("1.15.1", "Skip initial attribute checks for `Values` input of `ExportData` component")
     base.VERSION.changed("1.15.6", "Updated description of `ExportData` component")
     base.VERSION.added("1.15.6", "Input descriptions to `ExportData` component")
+    base.VERSION.changed("1.15.8", "Removed ProvisionalOutputs from `ExportData` component")
+    base.VERSION.changed("1.15.8", "Target outputs for export in `ExportData` component no longer check attributes")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(ExportData, self).__init__(name, default_observer, default_store)

@@ -51,6 +51,9 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.15.1", "Included types in `DepositionToReach` input attributes")
     base.VERSION.changed("1.15.6", "Updated description of `DepositionToReach` component")
     base.VERSION.added("1.15.6", "Input descriptions to `DepositionToReach` component")
+    base.VERSION.changed("1.15.9", "Extended Deposition output description of `DepositionToReach` component")
+    base.VERSION.added(
+        "1.15.9", "Output `Deposition` of `DepositionToReach` component now also reports reach geometries")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

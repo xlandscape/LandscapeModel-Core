@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2023-09-19.
+It was automatically created on 2023-09-20.
 
 
 ## BeeForage
@@ -212,7 +212,16 @@ The path to a CSV file containing predefined depositions in g/ha per reach and d
 - Class: `str`
 ### Outputs
 #### Deposition
-
+The spray-drift deposition expressed as average rate. The rate depends on the reported average rate for the estimated average surface of a reach exposed to spray-drift, but may be nullified if the reach is completely covered against spray-drift, e.g., is flowing underground.
+- Scales: `time/day, space/reach`
+- Type: `numpy.ndarray`
+- Shape: `time/day`: the number of days as in the `Deposition` input, `space/reach`: the number of reaches as in the `Reaches` input
+- Data_Type: the same as the one of the `Deposition` input
+- Chunks: for fast retrieval of timeseries
+- Unit: the same as the one of the `Deposition` input
+- Element_Names: `time/day`: None, `space/reach`: as specified by the `Reaches` input
+- Offset: `time/day`: the same as the ones of the `Deposition` input, `space/reach`: None
+- Geometries: `time/day`: None, `space/reach`: the same as the ones of the `Reaches` input
 
 ## DoseResponse
     Calculates an effect based on a log-logistic dose-response function.
@@ -461,6 +470,11 @@ Specifies whether lateral inflows from fields are imported. Setting this input t
 - Class: `bool`
 - Unit: `None`
 - Scales: `global`
+#### Hydrography
+The `Hydrography` input expects the geometries of reaches for which hydrological data is available in Well-Known-Byte notation. It will be used (in the correct order) to augment all outputs with scale `space/reach`.
+- Class: `list[bytes]`
+- Unit: `None`
+- Scales: `space/reach`
 ### Outputs
 #### Flow
 
@@ -472,6 +486,7 @@ Specifies whether lateral inflows from fields are imported. Setting this input t
 - Chunks: for fast retrieval of timeseries
 - Element_Names: `time/hour`: None, `space/reach`: as specified by the `Reaches` output
 - Offset: `time/hour`: as specified by the `FromTime` input, `space/reach`: None
+- Geometries: `time/hour`: None, `space/reach`: as specified by the `ReachesGeometries` output
 #### Depth
 
 - Data Type: `float`
@@ -482,12 +497,14 @@ Specifies whether lateral inflows from fields are imported. Setting this input t
 - Chunks: for fast retrieval of timeseries
 - Element_Names: `time/hour`: None, `space/reach`: as specified by the `Reaches` output
 - Offset: `time/hour`: as specified by the `FromTime` input, `space/reach`: None
+- Geometries: `time/hour`: None, `space/reach`: as specified by the `ReachesGeometries` output
 #### Reaches
 This output lists the element names of the reaches as retrieved from the `TimeSeries` input. All outputs that have a scale of `space/reach` report reaches in the order specified by this input, except the `Inflow` output which reports reaches in the order of the `InflowReaches` output.
 - Scales: `space/reach`
 - Type: `numpy.ndarray`
 - Shape: the number of reaches as stored in the `TimeSeries` input
 - Element_Names: `space/reach`: as specified by the output itself
+- Geometries: `space/reach`: as specified by the `ReachesGeometries` output
 #### TimeSeriesStart
 
 - Scales: `global`
@@ -504,6 +521,7 @@ This output lists the element names of the reaches as retrieved from the `TimeSe
 - Chunks: for fast retrieval of timeseries
 - Element_Names: `time/hour`: None, `space/reach`: as specified by the `Reaches` output
 - Offset: `time/hour`: as specified by the `FromTime` input, `space/reach`: None
+- Geometries: `time/hour`: None, `space/reach`: as specified by the `ReachesGeometries` output
 #### Area
 
 - Data Type: `float`
@@ -514,12 +532,14 @@ This output lists the element names of the reaches as retrieved from the `TimeSe
 - Chunks: for fast retrieval of timeseries
 - Element_Names: `time/hour`: None, `space/reach`: as specified by the `Reaches` output
 - Offset: `time/hour`: as specified by the `FromTime` input, `space/reach`: None
+- Geometries: `time/hour`: None, `space/reach`: as specified by the `ReachesGeometries` output
 #### InflowReaches
 This output lists the element names of reaches as reported by the `Inflow` output. This order may differ from the order of reaches in all other outputs with scale `space/reach`.
 - Scales: `space/reach`
 - Type: `numpy.ndarray`
 - Shape: `space/reach`: the number of reaches for which inflow-data is available
 - Element_Names: `space/reach`: as specified by the output itself
+- Geometries: `space/reach`: as specified by the `InflowReachesGeometries` output
 #### Inflow
 
 - Data Type: `float`
@@ -530,6 +550,21 @@ This output lists the element names of reaches as reported by the `Inflow` outpu
 - Chunks: for fast retrieval of timeseries
 - Element_Names: `time/hour`: None, `space/reach`: as specified by the `InflowReaches` output
 - Offset: `time/hour`: as specified by the `FromTime` input, `space/reach`: None
+- Geometries: `time/hour`: None, `space/reach`: as specified by the output itself
+#### ReachesGeometries
+This output lists the geometries of reaches as reported by the `Inflow` output. This order may differ from the order of reaches in all other outputs with scale `space/reach`.
+- Scales: `space/reach`
+- Type: `list`
+- Shape: the number of reaches as stored in the `TimeSeries` input
+- Element_Names: `space/reach`: as specified by the `Reaches` output
+- Geometries: `space/reach`: as specified by the output itself
+#### InflowReachesGeometries
+This output lists the geometries of the reaches as retrieved from the `Hydrography` input. All outputs that have a scale of `space/reach` report reaches in the order specified by this input, except the `Inflow` output which reports reaches in the order of the `InflowReachesGeometries` output.
+- Scales: `space/reach`
+- Type: `list`
+- Shape: the number of reaches as stored in the `TimeSeries` input
+- Element_Names: `space/reach`: as specified by the `Reaches` output
+- Geometries: `space/reach`: as specified by the output itself
 
 ## LandCoverToVegetation
     Translates land cover into vegetation information using a simple lookup-table approach.

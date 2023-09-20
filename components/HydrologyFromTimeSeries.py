@@ -48,6 +48,9 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.15.6", "Updated description of `HydrologyFromTimeSeries` component")
     base.VERSION.added("1.15.6", "Input descriptions to `HydrologyFromTimeSeries` component")
     base.VERSION.added("1.15.8", "Documentation of outputs in `HydrologyFromTimeSeries` component")
+    base.VERSION.added("1.15.9", "`Hydrography` input to `HydrologyFromTimeSeries` component")
+    base.VERSION.changed("1.15.9", "Extended output descriptions of `HydrologyFromTimeSeries` component")
+    base.VERSION.changed("1.15.9", "Outputs of `HydrologyFromTimeSeries` component now report reach geometries")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -158,7 +161,7 @@ class HydrologyFromTimeSeries(base.Component):
                     "type": np.ndarray,
                     "shape": "the number of reaches as stored in the `TimeSeries` input",
                     "element_names": ("as specified by the output itself",),
-                    "geometries": (None, "as specified by the `ReachesGeometries` output")
+                    "geometries": ("as specified by the `ReachesGeometries` output",)
                 }
             ),
             base.Output("TimeSeriesStart", default_store, self, {"scales": "global"}),
@@ -208,7 +211,7 @@ class HydrologyFromTimeSeries(base.Component):
                     "type": np.ndarray,
                     "shape": ("the number of reaches for which inflow-data is available",),
                     "element_names": ("as specified by the output itself",),
-                    "geometries": (None, "as specified by the `InflowReachesGeometries` output")
+                    "geometries": ("as specified by the `InflowReachesGeometries` output",)
                 }
             ),
             base.Output(

@@ -65,6 +65,7 @@ class X3dfStore(base.Store):
         "1.15.6", "Changed `other/application`, `other/runs` and `other/soil_horizon` to named scales in `XdfStore`")
     base.VERSION.changed("1.15.6", "Removed `space/reach2` as recognized scale from `X3dfStore`")
     base.VERSION.changed("1.15.8", "Changed `space/reach` to a named geometries scale in `X3dfStore`")
+    base.VERSION.added("1.15.9", "Logic to postpone creation of reference links in `X3dfStore` if needed")
 
     def __init__(
             self,

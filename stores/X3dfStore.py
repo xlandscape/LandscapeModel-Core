@@ -8,6 +8,7 @@ import glob
 import shutil
 import base
 import typing
+import h5py.h5r
 
 
 class X3dfStore(base.Store):
@@ -117,6 +118,7 @@ class X3dfStore(base.Store):
             "other/soil_horizon": "named",
             "other/species": "named"
         }
+        self._pending_links = {}
 
     def close(self) -> None:
         """
@@ -125,6 +127,9 @@ class X3dfStore(base.Store):
         Returns:
             Nothing.
         """
+        if self._pending_links:
+            self._observer.write_message(
+                2, f"Store is closing but has still pending links: {', '.join(self._pending_links.keys())}")
         self._f.close()
 
     def describe(self, name: str) -> dict[str, typing.Any]:
@@ -298,6 +303,40 @@ class X3dfStore(base.Store):
         Returns:
             Nothing.
         """
+
+        def create_link(
+                target_dataset: typing.Union[str, h5py.h5r.Reference],
+                source_dataset: str,
+                attribute: str,
+                expected_length: int
+        ) -> None:
+            """
+            Creates a reference link within the HDF5 data store or adds it to the list of links that should be created
+            as soon as possible, if the target dataset currently does not exist.
+
+            Args:
+                target_dataset: The full dataset name of the referenced dataset.
+                source_dataset: The full dataset name of the source dataset.
+                attribute: The name of the attribute in the source dataset that should be linked to the target dataset.
+                expected_length: The number of elements that is expected to be present in the target dataset. A message
+                    is send if the actual number is unequal to the expected number.
+
+            Returns:
+                Nothing.
+            """
+            if isinstance(target_dataset, h5py.h5r.Reference) or target_dataset in self._f:
+                self._f[source_dataset].attrs[attribute] = self._f[target_dataset].ref
+                if self._f[target_dataset].shape != (expected_length,):
+                    self._observer.store_set_values(
+                        2,
+                        "X3dfStore",
+                        f"Number of elements in {source_dataset} and {target_dataset} do not fit"
+                    )
+            else:
+                self._pending_links.setdefault(target_dataset, set()).add((source_dataset, attribute, expected_length))
+
+        geometries: list[typing.Union[str, h5py.h5r.Reference, None]]
+        element_names: list[typing.Union[str, h5py.h5r.Reference, None]]
         if default is not None and default != 0:
             self._observer.write_message(2, "Default value not supported by X3dfStore")
         dimension_count = 1
@@ -438,13 +477,6 @@ class X3dfStore(base.Store):
                         if element_names is None or element_names[dim] is None:
                             self._observer.store_set_values(
                                 2, "X3dfStore", f"{name} did not specify element names for {scale}")
-                        else:
-                            if (self._f[name].shape[dim],) != self._f[element_names[dim]].shape:
-                                self._observer.store_set_values(
-                                    2,
-                                    "X3dfStore",
-                                    f"Number of names in {element_names} and elements in {name} do not fit"
-                                )
                     if offset is not None and offset[dim] is not None:
                         self._observer.store_set_values(
                             3, "X3dfStore", f"Offset provided for {scale} that does not require an offset")
@@ -475,7 +507,7 @@ class X3dfStore(base.Store):
                 else:
                     self._observer.store_set_values(2, "X3dfStore", f"Unknown scale: {scale}")
                 if element_names is not None and element_names[dim] is not None:
-                    self._f[name].attrs[f"dim{dim}_element_names"] = self._f[element_names[dim]].ref
+                    create_link(element_names[dim], name, f"dim{dim}_element_names", self._f[name].shape[dim])
                 if offset is not None and offset[dim] is not None:
                     if scale in ("time/day", "time/hour"):
                         stored_offset = str(offset[dim])
@@ -487,13 +519,15 @@ class X3dfStore(base.Store):
                         self._observer.store_set_values(
                             2, "X3dfStore", f"{name} did not specify geometries for {scale}")
                 if geometries is not None and geometries[dim] is not None:
-                    self._f[name].attrs[f"dim{dim}_geometries"] = self._f[geometries[dim]].ref
+                    create_link(geometries[dim], name, f"dim{dim}_geometries", self._f[name].shape[dim])
         if unit is not None:
             self._f[name].attrs["unit"] = unit
         if requires_indexing and not isinstance(values, numpy.ndarray):
             raise ValueError(f"Required indexing is not supported for data of type {type(values)}")
         self._f[name].attrs["requires_indexing"] = bool(requires_indexing)
-        return
+        pending_links = self._pending_links.pop(name, set())
+        for pending_link in pending_links:
+            create_link(name, pending_link[0], pending_link[1], pending_link[2])
 
     def has_dataset(self, name: str, partial: bool = False) -> bool:
         """

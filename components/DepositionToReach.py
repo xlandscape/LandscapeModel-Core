@@ -127,7 +127,33 @@ class DepositionToReach(base.Component):
                             "and the value of deposition as a floating point number in g/ha."
             )
         ])
-        self._outputs = base.OutputContainer(self, (base.Output("Deposition", default_store, self),))
+        self._outputs = base.OutputContainer(
+            self,
+            (
+                base.Output(
+                    "Deposition",
+                    default_store,
+                    self,
+                    {"scales": "time/day, space/reach"},
+                    "The spray-drift deposition expressed as average rate. The rate depends on the reported average "
+                    "rate for the estimated average surface of a reach exposed to spray-drift, but may be nullified if "
+                    "the reach is completely covered against spray-drift, e.g., is flowing underground.",
+                    {
+                        "type": np.ndarray,
+                        "shape": (
+                            "the number of days as in the `Deposition` input",
+                            "the number of reaches as in the `Reaches` input"
+                        ),
+                        "data_type": "the same as the one of the `Deposition` input",
+                        "chunks": "for fast retrieval of timeseries",
+                        "unit": "the same as the one of the `Deposition` input",
+                        "element_names": (None, "as specified by the `Reaches` input"),
+                        "offset": ("the same as the ones of the `Deposition` input", None),
+                        "geometries": (None, "the same as the ones of the `Reaches` input")
+                    }
+                ),
+            )
+        )
         if self.default_observer:
             self.default_observer.write_message(
                 2,
@@ -163,10 +189,10 @@ class DepositionToReach(base.Component):
             shape=(data_set_info["shape"][0], reaches.values.shape[0]),
             data_type=data_set_info["data_type"],
             chunks=(data_set_info["shape"][0], 1),
-            scales="time/day, space/reach",
             unit=data_set_info["unit"],
             element_names=(None, reaches.element_names[0]),
-            offset=(data_set_info["offsets"])
+            offset=(data_set_info["offsets"][0], None),
+            geometries=(None, reaches.geometries[0])
         )
         deposition_input_source = self.inputs["DepositionInputSource"].read().values
         deposition_input_file = self.inputs["DepositionInputFile"].read().values

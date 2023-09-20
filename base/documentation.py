@@ -59,6 +59,8 @@ base.VERSION.changed("1.15.4", "Documentation of core components lists component
 base.VERSION.changed("1.15.6", "Updated installation notes in model documentation")
 base.VERSION.added("1.15.6", "User warning regarding non-documented modules during scenario documentation")
 base.VERSION.added("1.15.8", "Documentation of outputs for components in core")
+base.VERSION.changed(
+    "1.15.9", "Documentation of outputs for components in core and external components now uses the same code")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -111,17 +113,6 @@ def document_components(components_module: types.ModuleType, file_path: str) -> 
 
 def _document_member(
         components_module: types.ModuleType, f: typing.TextIO, member_type: typing.Type = base.Component) -> None:
-    def format_type(type_to_format: typing.Type) -> str:
-        formatted_string = (
-            "`" if type_to_format.__module__ == 'builtins' else f"`{type_to_format.__module__}.")
-        return formatted_string + (
-                f"{type_to_format.__qualname__}" +
-                (
-                    f"[{', '.join([x.__qualname__ for x in typing.get_args(type(type_to_format))])}]`"
-                    if typing.get_args(type(type_to_format)) else "`"
-                )
-        )
-
     f.write(f"It was automatically created on {datetime.date.today()}.\n")
     for name, member in components_module.__dict__.items():
         if inspect.isclass(member) and issubclass(member, member_type):
@@ -134,30 +125,45 @@ def _document_member(
                     f.write(f"\n#### {component_input.name}\n{component_input.description or ''}")
                     for attribute in component_input.attributes:
                         f.write(f"\n- {attribute}")
-                f.write(f"\n### Outputs")
-                for component_output in component.outputs:
-                    f.write(f"\n#### {component_output.name}\n{component_output.description or ''}")
-                    for attribute, value in component_output.default_attributes.items():
-                        if isinstance(value, builtins.type):
-                            f.write(f"\n- {attribute.title().replace('_', ' ')}: {format_type(value)}")
-                        else:
-                            f.write(f"\n- {attribute.title().replace('_', ' ')}: `{value}`")
-                    for attribute, value in component_output.attribute_hints.items():
-                        if isinstance(value, builtins.type):
-                            display_value = format_type(value)
-                        elif isinstance(value, str):
-                            display_value = value
-                        elif isinstance(value, typing.Sequence):
-                            scales = component_output.default_attributes["scales"].split(", ")
-                            display_value = ", ".join(
-                                [
-                                    f"`{scales[i]}`: {format_type(v) if isinstance(v, builtins.type) else v}"
-                                    for i, v in enumerate(value) if value
-                                ]
-                            )
-                        else:
-                            display_value = f"`{value}`"
-                        f.write(f"\n- {attribute.title()}: {display_value}")
+                _document_outputs(f, component)
+
+
+def _document_outputs(f: typing.TextIO, component: base.Component) -> None:
+    def _format_type(type_to_format: typing.Type) -> str:
+        formatted_string = (
+            "`" if type_to_format.__module__ == 'builtins' else f"`{type_to_format.__module__}.")
+        return formatted_string + (
+                f"{type_to_format.__qualname__}" +
+                (
+                    f"[{', '.join([x.__qualname__ for x in typing.get_args(type(type_to_format))])}]`"
+                    if typing.get_args(type(type_to_format)) else "`"
+                )
+        )
+
+    f.write(f"\n### Outputs")
+    for component_output in component.outputs:
+        f.write(f"\n#### {component_output.name}\n{component_output.description or ''}")
+        for attribute, value in component_output.default_attributes.items():
+            if isinstance(value, builtins.type):
+                f.write(f"\n- {attribute.title().replace('_', ' ')}: {_format_type(value)}")
+            else:
+                f.write(f"\n- {attribute.title().replace('_', ' ')}: `{value}`")
+        for attribute, value in component_output.attribute_hints.items():
+            if isinstance(value, builtins.type):
+                display_value = _format_type(value)
+            elif isinstance(value, str):
+                display_value = value
+            elif isinstance(value, typing.Sequence):
+                scales = component_output.default_attributes["scales"].split(", ")
+                display_value = ", ".join(
+                    [
+                        f"`{scales[i]}`: {_format_type(v) if isinstance(v, builtins.type) else v}"
+                        for i, v in enumerate(value) if value
+                    ]
+                )
+            else:
+                display_value = f"`{value}`"
+            f.write(f"\n- {attribute.title()}: {display_value}")
 
 
 def document_observers(observers_module: types.ModuleType, file_path: str) -> None:
@@ -308,40 +314,7 @@ The following gives a sample configuration of the `{component.name}` component. 
                 else:
                     raise TypeError(f"Unsupported attribute type: {type(attribute)}")
             f.write("\n")
-        f.write("### Outputs\n")
-        for component_output in component.outputs:
-            f.write(f"#### {component_output.name}\n")
-            if component_output.description:
-                f.write(f"{inspect.cleandoc(component_output.description)}  \n")
-            for attribute, value in component_output.attribute_hints.items():
-                if attribute == "type":
-                    f.write(f"Values are expectedly of type `{value if isinstance(value, str) else value.__name__}`.\n")
-                elif attribute == "shape":
-                    f.write(f"Value representation is in a {len(value)}-dimensional array.\n")
-                    for i in range(len(value)):
-                        f.write(f"Dimension {i + 1} spans {value[i]}.\n")
-                elif attribute == "chunks":
-                    f.write(f"Chunking of the array is {value}.\n")
-                elif attribute == "data_type":
-                    f.write(f"Individual array elements have a type of `{value.__name__}`.\n")
-                elif attribute == "unit":
-                    f.write(f"Values expectedly have a unit of `{value}`.\n")
-                else:
-                    raise ValueError(f"Unsupported default attribute: {attribute}")
-            for attribute, value in component_output.default_attributes.items():
-                if attribute == "data_type":
-                    f.write(f"Individual array elements have a type of `{value.__name__}`.\n")
-                elif attribute == "scales":
-                    f.write(f"The values apply to the following scale: `{value}`.\n")
-                elif attribute == "unit":
-                    if value is None:
-                        f.write("Values have no physical unit.\n")
-                    else:
-                        f.write(f"The physical unit of the values is `{value}`.\n")
-                elif attribute == "default":
-                    f.write(f"The default value of the output is `{value}`.\n")
-                else:
-                    raise ValueError(f"Unsupported default attribute: {attribute}")
+        _document_outputs(f, component)
         f.write("\n## Roadmap\n\n")
         if len(component.VERSION.roadmap) == 0:
             f.write(f"The `{component.name}` component is stable. No further development takes place at the moment.\n")

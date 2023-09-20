@@ -48,6 +48,9 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.15.6", "Updated description of `HydrologyFromTimeSeries` component")
     base.VERSION.added("1.15.6", "Input descriptions to `HydrologyFromTimeSeries` component")
     base.VERSION.added("1.15.8", "Documentation of outputs in `HydrologyFromTimeSeries` component")
+    base.VERSION.added("1.15.9", "`Hydrography` input to `HydrologyFromTimeSeries` component")
+    base.VERSION.changed("1.15.9", "Extended output descriptions of `HydrologyFromTimeSeries` component")
+    base.VERSION.changed("1.15.9", "Outputs of `HydrologyFromTimeSeries` component now report reach geometries")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -101,6 +104,14 @@ class HydrologyFromTimeSeries(base.Component):
                             "simulation require data on lateral inflows. This input should also be set to `False` if "
                             "the hydrological scenario does not contain information on lateral inflows, In this case, "
                             "it will not be possible to run components that require according data."
+            ),
+            base.Input(
+                "Hydrography",
+                (attrib.Class(list[bytes]), attrib.Unit(None), attrib.Scales("space/reach")),
+                self.default_observer,
+                description="The `Hydrography` input expects the geometries of reaches for which hydrological data is "
+                            "available in Well-Known-Byte notation. It will be used (in the correct order) to augment "
+                            "all outputs with scale `space/reach`."
             )
         ])
         self._outputs = base.OutputContainer(self, [
@@ -117,7 +128,8 @@ class HydrologyFromTimeSeries(base.Component):
                     ),
                     "chunks": "for fast retrieval of timeseries",
                     "element_names": (None, "as specified by the `Reaches` output"),
-                    "offset": ("as specified by the `FromTime` input", None)
+                    "offset": ("as specified by the `FromTime` input", None),
+                    "geometries": (None, "as specified by the `ReachesGeometries` output")
                 }
             ),
             base.Output(
@@ -133,7 +145,8 @@ class HydrologyFromTimeSeries(base.Component):
                     ),
                     "chunks": "for fast retrieval of timeseries",
                     "element_names": (None, "as specified by the `Reaches` output"),
-                    "offset": ("as specified by the `FromTime` input", None)
+                    "offset": ("as specified by the `FromTime` input", None),
+                    "geometries": (None, "as specified by the `ReachesGeometries` output")
                 }
             ),
             base.Output(
@@ -147,7 +160,8 @@ class HydrologyFromTimeSeries(base.Component):
                 {
                     "type": np.ndarray,
                     "shape": "the number of reaches as stored in the `TimeSeries` input",
-                    "element_names": ("as specified by the output itself",)
+                    "element_names": ("as specified by the output itself",),
+                    "geometries": ("as specified by the `ReachesGeometries` output",)
                 }
             ),
             base.Output("TimeSeriesStart", default_store, self, {"scales": "global"}),
@@ -165,7 +179,8 @@ class HydrologyFromTimeSeries(base.Component):
                     ),
                     "chunks": "for fast retrieval of timeseries",
                     "element_names": (None, "as specified by the `Reaches` output"),
-                    "offset": ("as specified by the `FromTime` input", None)
+                    "offset": ("as specified by the `FromTime` input", None),
+                    "geometries": (None, "as specified by the `ReachesGeometries` output")
                 }
             ),
             base.Output(
@@ -181,7 +196,8 @@ class HydrologyFromTimeSeries(base.Component):
                     ),
                     "chunks": "for fast retrieval of timeseries",
                     "element_names": (None, "as specified by the `Reaches` output"),
-                    "offset": ("as specified by the `FromTime` input", None)
+                    "offset": ("as specified by the `FromTime` input", None),
+                    "geometries": (None, "as specified by the `ReachesGeometries` output")
                 }
             ),
             base.Output(
@@ -194,7 +210,8 @@ class HydrologyFromTimeSeries(base.Component):
                 {
                     "type": np.ndarray,
                     "shape": ("the number of reaches for which inflow-data is available",),
-                    "element_names": ("as specified by the output itself",)
+                    "element_names": ("as specified by the output itself",),
+                    "geometries": ("as specified by the `InflowReachesGeometries` output",)
                 }
             ),
             base.Output(
@@ -210,7 +227,38 @@ class HydrologyFromTimeSeries(base.Component):
                     ),
                     "chunks": "for fast retrieval of timeseries",
                     "element_names": (None, "as specified by the `InflowReaches` output"),
-                    "offset": ("as specified by the `FromTime` input", None)
+                    "offset": ("as specified by the `FromTime` input", None),
+                    "geometries": (None, "as specified by the output itself")
+                }
+            ),
+            base.Output(
+                "ReachesGeometries",
+                default_store,
+                self,
+                {"scales": "space/reach"},
+                "This output lists the geometries of reaches as reported by the `Inflow` output. This order may "
+                "differ from the order of reaches in all other outputs with scale `space/reach`.",
+                {
+                    "type": list[bytes],
+                    "shape": "the number of reaches as stored in the `TimeSeries` input",
+                    "element_names": ("as specified by the `Reaches` output",),
+                    "geometries": ("as specified by the output itself",)
+                }
+            ),
+            base.Output(
+                "InflowReachesGeometries",
+                default_store,
+                self,
+                {"scales": "space/reach"},
+                "This output lists the geometries of the reaches as retrieved from the `Hydrography` input. All "
+                "outputs that have a scale of `space/reach` report reaches in the order specified by this input, "
+                "except the `Inflow` output which reports reaches in the order of the `InflowReachesGeometries` "
+                "output.",
+                {
+                    "type": list[bytes],
+                    "shape": "the number of reaches as stored in the `TimeSeries` input",
+                    "element_names": ("as specified by the `Reaches` output",),
+                    "geometries": ("as specified by the output itself",)
                 }
             )
         ])
@@ -255,44 +303,59 @@ class HydrologyFromTimeSeries(base.Component):
                 time_series_length != volume.shape[0] or time_series_length != area.shape[0]:
             self.default_observer.write_message(2, "Temporal inconsistency in hydrological scenario")
             self.default_observer.write_message(2, "It is highly recommended checking your hydrological scenario")
-        if offset_hours < 0:
+        from_datetime = datetime.datetime.combine(from_time, datetime.time(1))
+        to_datetime = datetime.datetime.combine(to_time + datetime.timedelta(1), datetime.time())
+        if (
+                from_datetime > to_datetime or
+                from_datetime < time_series_start or
+                from_datetime > time_series_end or
+                to_datetime < time_series_start or
+                to_datetime > time_series_end
+        ):
             raise ValueError(
-                f"Requested {-offset_hours} too early values; values available for {time_series_start} to "
-                f"{time_series_end}"
+                f"Requested time span from {from_time} to {to_time} is invalid or does not fit available data: "
+                f"{time_series_start} to {time_series_end}"
             )
-        if number_hours - flow.shape[0] > 0:
-            raise ValueError(
-                f"Requested {number_hours - flow.shape[0]} too late values; values available for {time_series_start} "
-                f"to {time_series_end}"
-            )
-        self.outputs["Reaches"].set_values(reaches, element_names=(self.outputs["Reaches"],))
+        hydrography = self.inputs["Hydrography"].read()
+        hydrography_reach_names = hydrography.element_names[0].get_values()
+        self.outputs["ReachesGeometries"].set_values(
+            [hydrography.values[hydrography_reach_names.index(x)] for x in reaches],
+            element_names=(self.outputs["Reaches"],),
+            geometries=(self.outputs["ReachesGeometries"],)
+        )
+        self.outputs["Reaches"].set_values(
+            reaches, element_names=(self.outputs["Reaches"],), geometries=(self.outputs["ReachesGeometries"],))
         self.outputs["Flow"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
             chunks=(number_hours, 1),
             element_names=(None, self.outputs["Reaches"]),
-            offset=(offset_time, None)
+            offset=(offset_time, None),
+            geometries=(None, self.outputs["ReachesGeometries"])
         )
         self.outputs["Depth"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
             chunks=(number_hours, 1),
             element_names=(None, self.outputs["Reaches"]),
-            offset=(offset_time, None)
+            offset=(offset_time, None),
+            geometries=(None, self.outputs["ReachesGeometries"])
         )
         self.outputs["Volume"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
             chunks=(number_hours, 1),
             element_names=(None, self.outputs["Reaches"]),
-            offset=(offset_time, None)
+            offset=(offset_time, None),
+            geometries=(None, self.outputs["ReachesGeometries"])
         )
         self.outputs["Area"].set_values(
             np.ndarray,
             shape=(number_hours, number_reaches),
             chunks=(number_hours, 1),
             element_names=(None, self.outputs["Reaches"]),
-            offset=(offset_time, None)
+            offset=(offset_time, None),
+            geometries=(None, self.outputs["ReachesGeometries"])
         )
         for i in range(number_reaches):
             self.outputs["Flow"].set_values(
@@ -321,13 +384,19 @@ class HydrologyFromTimeSeries(base.Component):
             inflow_path = self._inputs["InflowTimeSeriesPath"].read().values
             inflow_files = os.listdir(inflow_path)
             inflow_reaches = [int(f[1:-4]) for f in inflow_files]
+            self.outputs["InflowReachesGeometries"].set_values(
+                [hydrography.values[hydrography_reach_names.index(x)] for x in inflow_reaches],
+                element_names=(self.outputs["InflowReaches"],),
+                geometries=(self.outputs["InflowReachesGeometries"],)
+            )
             self.outputs["InflowReaches"].set_values(inflow_reaches, element_names=(self.outputs["InflowReaches"],))
             self.outputs["Inflow"].set_values(
                 np.ndarray,
                 shape=(number_hours, len(inflow_reaches)),
                 chunks=(number_hours, 1),
                 element_names=(None, self.outputs["InflowReaches"]),
-                offset=(offset_time, None)
+                offset=(offset_time, None),
+                geometries=(None, self.outputs["InflowReachesGeometries"])
             )
             for reach_index, inflow_file in enumerate(inflow_files):
                 self.default_observer.write_message(5, f"Importing reach inflows from {inflow_file}...")

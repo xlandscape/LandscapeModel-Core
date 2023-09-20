@@ -1,6 +1,28 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2023-09-19.
+This is the changelog for the Landscape Model core. It was automatically created on 2023-09-20.
+
+## [1.15.9] - 2023-09-20
+
+### Added
+
+- Output `Deposition` of `DepositionToReach` component now also reports reach geometries
+
+- Logic to postpone creation of reference links in `X3dfStore` if needed
+
+- `Hydrography` input to `HydrologyFromTimeSeries` component
+
+### Changed
+
+- Extended Deposition output description of `DepositionToReach` component
+
+- Extended output descriptions of `HydrologyFromTimeSeries` component
+
+- Outputs of `HydrologyFromTimeSeries` component now report reach geometries
+
+- Documentation of outputs for components in core and external components now uses the same code
+
+### Fixed
 
 ## [1.15.8] - 2023-09-19
 

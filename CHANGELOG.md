@@ -1,6 +1,24 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2023-09-20.
+This is the changelog for the Landscape Model core. It was automatically created on 2024-02-28.
+
+## [1.16] - 2024-02-28
+
+### Added
+
+- Inputs of `LandscapeScenario` component are now processed by `base.convert`
+
+- `components.MarsWeather2` component
+
+- `components.Soil` component
+
+### Changed
+
+- Scenario descriptions no longer require acknowledgements
+
+- `TargetLandUseLandCoverType` input in `PpmCalendar` component now is a list of int
+
+### Fixed
 
 ## [1.15.9] - 2023-09-20
 

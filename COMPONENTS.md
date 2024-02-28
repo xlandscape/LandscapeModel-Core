@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2023-09-20.
+It was automatically created on 2024-02-28.
 
 
 ## BeeForage
@@ -718,6 +718,44 @@ The total global radiation. The definition of the total global radiation reflect
 - Shape: `time/day`: the number of days for which weather data is present in the input file
 - Offset: `time/day`: the first date listed in the input file
 
+## MarsWeather2
+    The MarsWeather2 component is similar to the MarsWeather component in regard of providing weather data from CSV
+    files downloaded from Agri4Cast. Unlike the MarsWeather component, the MarsWeather2 component does, however,
+    allow to provide weather data for multiple weather regions in a landcape at once. This is achieved by providing
+    multiple CSV files - one for each Agri4Cast grid cell - and accompanying it by an XML file describing the weather
+    files and linking them to the corresponding CSV files.
+    
+### Inputs
+#### FilePath
+
+- Class: `str`
+- Unit: `None`
+### Outputs
+#### TEMPERATURE_AVG
+
+#### PRECIPITATION
+
+#### ET0
+
+#### WINDSPEED
+
+#### RADIATION
+
+#### TEMPERATURE_MAX
+
+#### TEMPERATURE_MIN
+
+#### VAPOURPRESSURE
+
+#### Latitude
+
+#### Longitude
+
+#### Altitude
+
+#### WeatherRegions
+
+
 ## PpmCalendar
     Creates a calendar for pesticide applications for all or some landscape features of a specific type based on fixed
     values for application rate, technological drift reduction, in-crop buffers and in-field margin. Application dates
@@ -753,7 +791,7 @@ The land-use and land-cover type of spatial units. This information is used to d
 - Scales: `space/base_geometry`
 #### TargetLandUseLandCoverType
 The land-use or land-cover type that receives pesticide applications. It filters the base geometries described by the `LandUseLandCoverTypes` input to those that have the according value. Only the filtered landscape elements will be considered for applications, based on a probability defined by the `ProbabilityFieldApplied` input.
-- Class: `str`
+- Class: `list[int]`
 - Unit: `None`
 - Scales: `global`
 #### ApplicationRate
@@ -828,6 +866,93 @@ The geometries of the applied areas, represented in Well-Known-Bytes notation. S
 - Scales: `other/application`
 - Type: `list`
 - Shape: `other/application`: the number of applications simulated by the component
+
+## Soil
+    Reads soil information from a SQLite database and provides it to the landscape model.
+    
+### Inputs
+#### FilePath
+
+- Class: `str`
+- Unit: `None`
+#### SoilTypes
+
+- Class: `list[str]`
+- Unit: `None`
+- Scales: `space/base_geometry`
+### Outputs
+#### HeightOfSublayer
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `cm`
+#### HeightOfCompartmentsInLayer
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `cm`
+#### NumberOfCompartmentsInLayer
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### ResidualWaterContent
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### SaturatedWaterContent
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### AlphaOfMainDryingCurve
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1/cm`
+#### ShapeParameterN
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### SaturatedVerticalHydraulicConductivity
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `cm/d`
+#### ExponentInHydraulicConductivityFunction
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### AlphaOfMainWettingCurve
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1/cm`
+#### EntryPressureHead
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `cm`
+#### SandContent
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### SiltContent
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### ClayContent
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### OrganicMatterContent
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### pH
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `1`
+#### Density
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `kg/m³`
+#### LenDisLiq
+
+- Scales: `space/base_geometry, other/soil_layer`
+- Unit: `m`
 
 ## TerRQ
     Calculates the TER and the RQ.

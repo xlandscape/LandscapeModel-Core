@@ -45,6 +45,7 @@ class PpmCalendar(base.Component):
     base.VERSION.changed("1.15.6", "Updated description of `PpmCalendar` component")
     base.VERSION.added("1.15.6", "Input descriptions to `PpmCalendar` component")
     base.VERSION.added("1.15.8", "Documentation of outputs in `PpmCalendar` component")
+    base.VERSION.changed("1.16.0", "`TargetLandUseLandCoverType` input in `PpmCalendar` component now is a list of int")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

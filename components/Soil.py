@@ -8,14 +8,10 @@ import sqlite3
 
 class Soil(base.Component):
     """
-    Provides MARS weather data from a SQLite database to the Landscape Model.
-
-    INPUTS
-    FilePath: A valid file path to a SQLite soil database.
-
-    OUTPUTS
-    TEMPERATURE_AVG: The average temperature. A NumPy array of scale time/day. Values have a unit of °C.
+    Reads soil information from a SQLite database and provides it to the landscape model.
     """
+    # CHANGELOG
+    base.VERSION.added("1.16.0", "`components.Soil` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

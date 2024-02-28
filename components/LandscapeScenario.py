@@ -64,6 +64,7 @@ class LandscapeScenario(base.Component):
         "1.14.0", "`components.LandscapeScenario` reports geometries of values also as value attributes")
     base.VERSION.changed("1.15.6", "Updated description of `LandscapeScenario` component")
     base.VERSION.added("1.15.6", "Input descriptions to `LandscapeScenario` component")
+    base.VERSION.added("1.16.0", "Inputs of `LandscapeScenario` component are now processed by `base.convert`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -169,7 +170,7 @@ class LandscapeScenario(base.Component):
         else:
             extent = self._base_geometries_extent
         for entry in meta:
-            self.outputs[strip_namespace(entry.tag)].set_values(entry.text, scales="global")
+            self.outputs[strip_namespace(entry.tag)].set_values(base.convert(entry), scales="global")
         for entry in landscape_info_xml.find("supplementary", namespace):
             if entry.text[-4:] == ".tif":
                 raster_path = os.path.join(landscape_path, entry.text)

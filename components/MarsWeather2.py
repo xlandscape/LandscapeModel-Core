@@ -8,6 +8,16 @@ import os
 
 
 class MarsWeather2(base.Component):
+    """
+    The MarsWeather2 component is similar to the MarsWeather component in regard of providing weather data from CSV
+    files downloaded from Agri4Cast. Unlike the MarsWeather component, the MarsWeather2 component does, however,
+    allow to provide weather data for multiple weather regions in a landcape at once. This is achieved by providing
+    multiple CSV files - one for each Agri4Cast grid cell - and accompanying it by an XML file describing the weather
+    files and linking them to the corresponding CSV files.
+    """
+    # CHANGELOG
+    base.VERSION.added("1.16.0", "`components.MarsWeather2` component")
+
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
         Initializes a MarsWeather component.

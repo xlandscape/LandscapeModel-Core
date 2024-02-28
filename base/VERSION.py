@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.16.0", "2024-02-28"),
     base.VersionInfo("1.15.9", "2023-09-20"),
     base.VersionInfo("1.15.8", "2023-09-19"),
     base.VersionInfo("1.15.7", "2023-09-18"),
@@ -198,3 +199,4 @@ VERSION.changed(
     "1.15.5", "Updated scenario XML-schema to optionally include ExternalSources and Acknowledgements")
 VERSION.changed("1.15.5", "Made order of elements within scenario XML version changelog arbitrary")
 VERSION.changed("1.15.7", "Adapted scenario XML schema to allow `outsourced` XML attribute")
+VERSION.changed("1.16.0", "Scenario descriptions no longer require acknowledgements")

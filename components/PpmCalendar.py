@@ -99,7 +99,7 @@ class PpmCalendar(base.Component):
             ),
             base.Input(
                 "TargetLandUseLandCoverType",
-                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                (attrib.Class(list[int]), attrib.Unit(None), attrib.Scales("global")),
                 self.default_observer,
                 description="The land-use or land-cover type that receives pesticide applications. It filters the base "
                             "geometries described by the `LandUseLandCoverTypes` input to those that have the "
@@ -271,7 +271,7 @@ class PpmCalendar(base.Component):
         application_windows = [x.split(" to ") for x in self.inputs["ApplicationWindows"].read().values.split(", ")]
         fields = self.inputs["Fields"].read().values
         land_use_types = self.inputs["LandUseLandCoverTypes"].read().values
-        target_land_use_type = int(self.inputs["TargetLandUseLandCoverType"].read().values)
+        target_land_use_types = self.inputs["TargetLandUseLandCoverType"].read().values
         application_rate = self.inputs["ApplicationRate"].read()
         technology_drift_reduction = self.inputs["TechnologyDriftReduction"].read()
         in_crop_buffer = self.inputs["InCropBuffer"].read().values
@@ -284,7 +284,7 @@ class PpmCalendar(base.Component):
         spray_applications = []
         applied_areas = []
         for i in range(len(land_use_types)):
-            if land_use_types[i] == target_land_use_type:
+            if land_use_types[i] in target_land_use_types:
                 field = fields[i]
                 applied_geometry = ogr.CreateGeometryFromWkb(self.inputs["FieldGeometries"].read(slices=(i,)).values[0])
                 if in_crop_buffer + in_field_margin > 0:

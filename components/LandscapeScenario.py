@@ -169,7 +169,7 @@ class LandscapeScenario(base.Component):
         else:
             extent = self._base_geometries_extent
         for entry in meta:
-            self.outputs[strip_namespace(entry.tag)].set_values(entry.text, scales="global")
+            self.outputs[strip_namespace(entry.tag)].set_values(base.convert(entry), scales="global")
         for entry in landscape_info_xml.find("supplementary", namespace):
             if entry.text[-4:] == ".tif":
                 raster_path = os.path.join(landscape_path, entry.text)

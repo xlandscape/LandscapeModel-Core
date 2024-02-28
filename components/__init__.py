@@ -15,7 +15,9 @@ from .LandCoverToVegetation import *
 from .LandscapeScenarioPreparation import *
 from .LandscapeScenario import *
 from .MarsWeather import *
+from .MarsWeather2 import *
 from .PpmCalendar import *
+from .Soil import *
 from .TerRQ import *
 from .UserParameters import *
 from .WaterTemperatureFromAirTemperature import *

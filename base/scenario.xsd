@@ -206,7 +206,7 @@
             </xsd:sequence>
           </xsd:complexType>
         </xsd:element>
-        <xsd:element name="Acknowledgements">
+        <xsd:element name="Acknowledgements" minOccurs="0">
           <xsd:complexType>
             <xsd:sequence minOccurs="0" maxOccurs="unbounded">
               <xsd:element name="Acknowledgement">

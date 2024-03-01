@@ -1,6 +1,16 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2024-02-28.
+This is the changelog for the Landscape Model core. It was automatically created on 2024-03-01.
+
+## [1.16.1] - 2024-03-01
+
+### Added
+
+- Weather region as named scale
+
+### Changed
+
+### Fixed
 
 ## [1.16] - 2024-02-28
 

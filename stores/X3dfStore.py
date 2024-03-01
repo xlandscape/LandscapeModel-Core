@@ -106,6 +106,7 @@ class X3dfStore(base.Store):
             "space/base_geometry": "named geometries",
             "space/extent": "plain",
             "space/reach": "named geometries",
+            "space/weather_region": "named",
             "space/x_5dm": "offset",
             "space/y_5dm": "offset",
             "time/day": "offset",
@@ -243,6 +244,15 @@ class X3dfStore(base.Store):
                                     (keywords["select"][scale]["to"] - dataset_description["offsets"][i]).days
                                 )
                             )
+                    elif scale == "space/weather_region":
+                        for selection_method in keywords["select"][scale]:
+                            if selection_method == "element":
+                                element_names = dataset_description["element_names"][i].get_values()
+                                if keywords["select"][scale]["element"] in element_names:
+                                    slices.append(element_names.index(keywords["select"][scale]["element"]))
+                                else:
+                                    raise ValueError(
+                                        f"Element {keywords['select'][scale]['element']} not found for scale {scale}")
                     else:
                         raise ValueError(f"Selection not supported for scale {scale}")
                 values = data_set[tuple(slices)]

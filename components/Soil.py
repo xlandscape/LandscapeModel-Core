@@ -36,102 +36,108 @@ class Soil(base.Component):
             (
                 base.Output(
                     "HeightOfSublayer",
-                    default_store, self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "cm"}
+                    default_store,
+                    self,
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"}
                 ),
                 base.Output(
                     "HeightOfCompartmentsInLayer",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"}
                 ),
                 base.Output(
                     "NumberOfCompartmentsInLayer",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
                     "ResidualWaterContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
                     "SaturatedWaterContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
                     "AlphaOfMainDryingCurve",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1/cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1/cm"}
                 ),
                 base.Output(
                     "ShapeParameterN",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
                     "SaturatedVerticalHydraulicConductivity",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "cm/d"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm/d"}
                 ),
                 base.Output(
                     "ExponentInHydraulicConductivityFunction",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
                     "AlphaOfMainWettingCurve",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1/cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1/cm"}
                 ),
                 base.Output(
                     "EntryPressureHead",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"}
                 ),
                 base.Output(
                     "SandContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
                     "SiltContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
                     "ClayContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
                     "OrganicMatterContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
                 ),
                 base.Output(
-                    "pH", default_store, self, {"scales": "space/base_geometry, other/soil_layer", "unit": "1"}),
+                    "pH", default_store, self, {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}),
                 base.Output(
                     "Density",
                     default_store,
-                    self, {"scales": "space/base_geometry, other/soil_layer", "unit": "kg/m³"}
+                    self,
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "kg/m³"}
                 ),
                 base.Output(
-                    "LenDisLiq", default_store, self, {"scales": "space/base_geometry, other/soil_layer", "unit": "m"})
+                    "LenDisLiq",
+                    default_store,
+                    self,
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "m"}
+                )
             )
         )
 

@@ -12,6 +12,7 @@ class Soil(base.Component):
     """
     # CHANGELOG
     base.VERSION.added("1.16.0", "`components.Soil` component")
+    base.VERSION.changed("1.16.2", "Renamed scale other/soil_layer to other/soil_horizon")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

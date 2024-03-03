@@ -1,6 +1,22 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2024-03-01.
+This is the changelog for the Landscape Model core. It was automatically created on 2024-03-03.
+
+## [1.16.2] - 2024-03-03
+
+### Added
+
+### Changed
+
+- Changed scale other/application to plain scale
+
+- Changed scale other/soil_horizon to plain scale
+
+- Changed semantic checks in `X3dfStore` so that they only take place during creation of datasets
+
+- Renamed scale other/soil_layer to other/soil_horizon
+
+### Fixed
 
 ## [1.16.1] - 2024-03-01
 

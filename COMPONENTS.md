@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2024-03-01.
+It was automatically created on 2024-03-03.
 
 
 ## BeeForage
@@ -883,75 +883,75 @@ The geometries of the applied areas, represented in Well-Known-Bytes notation. S
 ### Outputs
 #### HeightOfSublayer
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `cm`
 #### HeightOfCompartmentsInLayer
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `cm`
 #### NumberOfCompartmentsInLayer
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### ResidualWaterContent
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### SaturatedWaterContent
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### AlphaOfMainDryingCurve
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1/cm`
 #### ShapeParameterN
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### SaturatedVerticalHydraulicConductivity
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `cm/d`
 #### ExponentInHydraulicConductivityFunction
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### AlphaOfMainWettingCurve
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1/cm`
 #### EntryPressureHead
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `cm`
 #### SandContent
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### SiltContent
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### ClayContent
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### OrganicMatterContent
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### pH
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `1`
 #### Density
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `kg/m³`
 #### LenDisLiq
 
-- Scales: `space/base_geometry, other/soil_layer`
+- Scales: `space/base_geometry, other/soil_horizon`
 - Unit: `m`
 
 ## TerRQ

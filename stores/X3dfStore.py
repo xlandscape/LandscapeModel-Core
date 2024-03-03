@@ -67,6 +67,10 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.15.8", "Changed `space/reach` to a named geometries scale in `X3dfStore`")
     base.VERSION.added("1.15.9", "Logic to postpone creation of reference links in `X3dfStore` if needed")
     base.VERSION.added("1.16.1", "Weather region as named scale")
+    base.VERSION.changed("1.16.2", "Changed scale other/application to plain scale")
+    base.VERSION.changed("1.16.2", "Changed scale other/soil_horizon to plain scale")
+    base.VERSION.changed(
+        "1.16.2", "Changed semantic checks in `X3dfStore` so that they only take place during creation of datasets")
 
     def __init__(
             self,

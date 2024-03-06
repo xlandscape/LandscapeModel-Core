@@ -182,6 +182,7 @@ class PPMCalendar:
     def __init__(self) -> None:
         self._temporalValidity = None
         self._targetCrops = None
+        self._targetFields = None
         self._indications = None
 
     @property
@@ -199,6 +200,14 @@ class PPMCalendar:
     @TargetCrops.setter
     def TargetCrops(self, value: Variable) -> None:
         self._targetCrops = value
+
+    @property
+    def TargetFields(self) -> Variable:
+        return self._targetFields
+
+    @TargetFields.setter
+    def TargetFields(self, value: Variable) -> None:
+        self._targetFields = value
 
     @property
     def Indications(self) -> Variable:
@@ -219,7 +228,14 @@ class PPMCalendar:
     def can_apply_on_crop(self, day: int, field: int, crop_id: int) -> bool:
 
         # check crop id:
-        if crop_id not in self._targetCrops.get((day, field), ("time/day, space/base_geometry")):
+        if self._targetCrops and crop_id not in self._targetCrops.get((day, field), ("time/day, space/base_geometry")):
+            return False
+        return True
+    
+    def can_apply_on_field(self, day: int, field: int, field_id: int) -> bool:
+
+        # check field id
+        if self._targetFields and field_id not in self._targetFields.get((day, field), ("time/day, space/base_geometry")):
             return False
         return True
 

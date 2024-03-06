@@ -247,6 +247,13 @@ class RandomVariable(Variable):
         variable.__class__ = RandomVariable
 
 class ConstantVariable(Variable):
+    """
+    Implementation of deterministic variables over scales.
+
+    INPUTS
+    Scales: Add description.
+    Distribution: Add description.
+    """
 
     def __init__(self, unit: str, scales: str, type: str, value: typing.Any) -> None:
         super(ConstantVariable, self).__init__(unit, scales, type, value)

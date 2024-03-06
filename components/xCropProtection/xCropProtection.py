@@ -12,11 +12,12 @@ from .types import *
 
 class xCropProtection(base.Component):
     """
-    xCropProtection is a Landscape Model component for simulating applications of plant protection products on fields with a given 
-    landscape. The simulation is done on a daily-fieldwise resolution. On each day and field in the simulation, the 
-    module checks if there are products to apply. If so, exact application dates, rates etc. are sampled from the 
-    distributions given by the user. To be more specific, the user parameterizes random variables that are realized 
-    during the simulation according to their scales.  
+    xCropProtection is a Landscape Model component for simulating applications of plant protection products on fields 
+    with a given landscape. The simulation is done on a daily-fieldwise resolution. On each day and field in the 
+    during the given simulation period, the module checks if there are applications of plant protection products 
+    should be conducted. If so, exact application dates and rates are determined. The user has the option to use
+    deterministic values or sample from a random distribution. 
+
     xCropProtection currently supports the input scales `global` and `time/day, space/base_geometry`.  
     xCropProtection currently supports the random variable scales `global`, `time/day`, `time/year`, `time/day, space/base_geometry` and `time/year, space/base_geometry`.
     """
@@ -27,7 +28,7 @@ class xCropProtection(base.Component):
     )
     
     # CHANGELOG
-    VERSION.added("1.0.0", "First release of `xCropProtection` ")
+    VERSION.added("1.0.0", "First release of `xCropProtection`")
 
     RANDOM_TYPES = ("xCropProtection.NormalDistribution", "xCropProtection.UniformDistribution", "xCropProtection.DiscreteUniformDistribution", "xCropProtection.ChoiceDistribution")
     TIME_SPAN_TYPES = ("xCropProtection.TimeSpan", "xCropProtection.MonthDaySpan", "xCropProtection.MonthDayTimeSpan", "xCropProtection.DateSpan")
@@ -94,18 +95,18 @@ class xCropProtection(base.Component):
             )
         ])
         self._outputs = base.OutputContainer(self, [
-            base.Output("AppliedFields", default_store, self, 
-                description="Indices of applied fields. A numpy-array of scale other/application."),
             base.Output("ApplicationDates", default_store, self,
                 description="Application dates. A numpy-array of scale other/application."),
             base.Output("ApplicationRates", default_store, self, 
                 description="Application rates. A numpy-array of scale other/application."),
-            base.Output("TechnologyDriftReductions", default_store, self, 
-                description="Drift reductions. A numpy-array of scale other/application."),
+            base.Output("AppliedPPP", default_store, self, 
+                description="Applied products. A list[str] of scale other/application."),
             base.Output("AppliedAreas", default_store, self, 
                 description="Applied geometries. A list[bytes] of scale other/application."),
-            base.Output("AppliedPPP", default_store, self, 
-                description="Applied products. A list[str] of scale other/application.")
+            base.Output("AppliedFields", default_store, self, 
+                description="Applied fields. A numpy-array of scale other/application."),
+            base.Output("TechnologyDriftReductions", default_store, self, 
+                description="Drift reductions. A numpy-array of scale other/application.")
         ])
         self._ppmCalendars = None
         self._technologies = None
@@ -368,7 +369,7 @@ class xCropProtection(base.Component):
                 for ppm_calendar in self.PPMCalendars:
 
                     # check validity and crop:
-                    if not ppm_calendar.is_valid(day, field) or not ppm_calendar.can_apply_on_crop(day, field, crop_ids[field]):
+                    if not ppm_calendar.is_valid(day, field) or not ppm_calendar.can_apply_on_crop(day, field, crop_ids[field]) or not ppm_calendar.can_apply_on_field(day, field, fields[field]):
                         continue
 
                     # sample applications:
@@ -381,7 +382,7 @@ class xCropProtection(base.Component):
                             if technology.TechnologyName.get((day, field), "time/day, space/base_geometry") == tech:
                                 drift_red = technology.sample_drift_reduction(day, field)
                         applied_areas.extend([appl_geom] * len(prods))
-                        applied_fields.extend([field] * len(prods))
+                        applied_fields.extend([fields[field]] * len(prods))
                         application_dates.extend([appl_dt] * len(prods))
                         application_rates.extend(appl_rates)
                         technology_drift_reductions.extend([drift_red] * len(prods))

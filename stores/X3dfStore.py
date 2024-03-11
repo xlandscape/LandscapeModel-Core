@@ -408,7 +408,8 @@ class X3dfStore(base.Store):
             type_name = f"{values.__module__}.{values.__qualname__}"
             # noinspection SpellCheckingInspection
             if type_name == "numpy.ndarray":
-                data_set = self._f.create_dataset(name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks)
+                data_set = self._f.create_dataset(
+                    name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks, fillvalue=numpy.nan)
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"
                 dimension_count = len(shape)

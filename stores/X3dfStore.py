@@ -71,6 +71,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.16.2", "Changed scale other/soil_horizon to plain scale")
     base.VERSION.changed(
         "1.16.2", "Changed semantic checks in `X3dfStore` so that they only take place during creation of datasets")
+    base.VERSION.changed("1.16.3", "Changed default value for newly created datasets in X3dfStore to NaN")
 
     def __init__(
             self,
@@ -408,7 +409,8 @@ class X3dfStore(base.Store):
             type_name = f"{values.__module__}.{values.__qualname__}"
             # noinspection SpellCheckingInspection
             if type_name == "numpy.ndarray":
-                data_set = self._f.create_dataset(name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks)
+                data_set = self._f.create_dataset(
+                    name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks, fillvalue=numpy.nan)
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"
                 dimension_count = len(shape)

@@ -1,6 +1,16 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2024-03-03.
+This is the changelog for the Landscape Model core. It was automatically created on 2024-03-11.
+
+## [1.16.3] - 2024-03-11
+
+### Added
+
+### Changed
+
+- Changed default value for newly created datasets in X3dfStore to NaN
+
+### Fixed
 
 ## [1.16.2] - 2024-03-03
 

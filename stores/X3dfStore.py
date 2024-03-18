@@ -371,7 +371,7 @@ class X3dfStore(base.Store):
                 # noinspection PyUnresolvedReferences
                 data_type = h5py.vlen_dtype(numpy.uint8)
                 data_set = self._f.create_dataset(
-                    name, (len(values),), dtype=data_type, compression="gzip", chunks=(len(values),))
+                    name, (len(values),), dtype=data_type, compression="gzip", chunks=(1,))
                 for i in range(len(values)):
                     data_set[i] = numpy.fromstring(values[i], dtype=numpy.uint8)
                 self._f[name].attrs["_type"] = "list[bytes]"

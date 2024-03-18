@@ -1,6 +1,16 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2024-03-11.
+This is the changelog for the Landscape Model core. It was automatically created on 2024-03-18.
+
+## [1.16.4] - 2024-03-18
+
+### Added
+
+### Changed
+
+- Changed chunking of byte lists in X3dfStore
+
+### Fixed
 
 ## [1.16.3] - 2024-03-11
 

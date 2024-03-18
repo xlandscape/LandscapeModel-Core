@@ -72,6 +72,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed(
         "1.16.2", "Changed semantic checks in `X3dfStore` so that they only take place during creation of datasets")
     base.VERSION.changed("1.16.3", "Changed default value for newly created datasets in X3dfStore to NaN")
+    base.VERSION.changed("1.16.4", "Changed chunking of byte lists in X3dfStore")
 
     def __init__(
             self,
@@ -371,7 +372,7 @@ class X3dfStore(base.Store):
                 # noinspection PyUnresolvedReferences
                 data_type = h5py.vlen_dtype(numpy.uint8)
                 data_set = self._f.create_dataset(
-                    name, (len(values),), dtype=data_type, compression="gzip", chunks=(len(values),))
+                    name, (len(values),), dtype=data_type, compression="gzip", chunks=(1,))
                 for i in range(len(values)):
                     data_set[i] = numpy.fromstring(values[i], dtype=numpy.uint8)
                 self._f[name].attrs["_type"] = "list[bytes]"

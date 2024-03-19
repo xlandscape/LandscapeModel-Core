@@ -48,6 +48,9 @@ base.VERSION.changed(
     "1.9.1", "Check if module R instances are sufficiently encapsulated in `base.functions.run_process()` ")
 base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called by `functions.run_process` ")
 base.VERSION.changed("1.12.6", "Mitigated weak code warnings in `base.functions` ")
+base.VERSION.changed(
+    "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
+base.VERSION.changed("1.15.7", "File encoding for reading and writing using the `replace_tokens` function is now UTF-8")
 
 
 # noinspection DuplicatedCode
@@ -205,13 +208,13 @@ def replace_tokens(tokens: typing.Mapping[str, str], source: str, destination: s
     parsed_source = source
     for key, value in tokens.items():
         parsed_source = parsed_source.replace(f"$({key})", str(value or ""))
-    with open(parsed_source) as file:
+    with open(parsed_source, encoding="utf-8") as file:
         configuration = file.read()
         for key, value in tokens.items():
             configuration = configuration.replace(f"$$({key})", str(value or ""))
         for key, value in tokens.items():
             configuration = configuration.replace(f"$({key})", str(value or ""))
-        with open(destination, "w") as f:
+        with open(destination, "w", encoding="utf-8") as f:
             f.write(configuration)
 
 
@@ -291,7 +294,7 @@ def reporting(
     reporting_element.__init__("ReportingElement", console_observer, None)
     parameters_definition = [components.UserParameter(name, value, "global") for name, value in parameters]
     user_parameters = components.UserParameters(
-        "UserParameters", parameters_definition, console_observer, in_memory_store)
+        "UserParameters", console_observer, in_memory_store, parameters_definition)
     for name, value in parameters:
         if value is not None:
             reporting_element.inputs[name] = user_parameters.outputs[name]

@@ -5,6 +5,25 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.16.4", "2024-03-18"),
+    base.VersionInfo("1.16.3", "2024-03-11"),
+    base.VersionInfo("1.16.2", "2024-03-03"),
+    base.VersionInfo("1.16.1", "2024-03-01"),
+    base.VersionInfo("1.16.0", "2024-02-28"),
+    base.VersionInfo("1.15.9", "2023-09-20"),
+    base.VersionInfo("1.15.8", "2023-09-19"),
+    base.VersionInfo("1.15.7", "2023-09-18"),
+    base.VersionInfo("1.15.6", "2023-09-18"),
+    base.VersionInfo("1.15.5", "2023-09-14"),
+    base.VersionInfo("1.15.4", "2023-09-14"),
+    base.VersionInfo("1.15.3", "2023-09-13"),
+    base.VersionInfo("1.15.2", "2023-09-12"),
+    base.VersionInfo("1.15.1", "2023-09-11"),
+    base.VersionInfo("1.15.0", "2023-09-11"),
+    base.VersionInfo("1.14.4", "2023-07-26"),
+    base.VersionInfo("1.14.3", "2023-07-26"),
+    base.VersionInfo("1.14.2", "2023-03-17"),
+    base.VersionInfo("1.14.1", "2023-03-17"),
     base.VersionInfo("1.14.0", "2022-03-25"),
     base.VersionInfo("1.13.1", "2022-03-11"),
     base.VersionInfo("1.13.0", "2022-03-08"),
@@ -161,6 +180,8 @@ VERSION.changed("1.12.4", "Increased encapsulation of Jupyter notebook in `init.
 # CHANGELOG document.py
 VERSION.added("1.4.9", "`document.py` ")
 VERSION.added("1.12.2", "Automatic creation of CONTRIBUTING.md in `document.py` ")
+VERSION.added("1.15.2", "Creation of repository info during documentation")
+VERSION.added("1.15.5", "Usage of a fixed path for the versions.json during documentation")
 
 # CHANGELOG runtime environment
 VERSION.changed("1.6.0", "updated runtime environment to Python 3.9.7")
@@ -172,3 +193,14 @@ VERSION.fixed("1.9.10", "`mistune` package downgraded to make Jupyter notebook a
 VERSION.added("1.12.3", "xmlschema package to Python runtime environment")
 VERSION.changed("1.12.6", "Updated numpy package to version 1.22.2")
 VERSION.added("1.14.0", "Python packages Shapely and openpyxl to runtime environment")
+VERSION.added("1.15.0", "`frontmatter` package to runtime environment")
+VERSION.changed("1.15.0", "Updated `GDAL` to version 3.4.3")
+VERSION.added("1.15.2", "Repository info to Python runtime environment")
+
+# CHANGELOG scenario.xsd
+VERSION.added("1.15.0", "Scenario XML schema")
+VERSION.changed(
+    "1.15.5", "Updated scenario XML-schema to optionally include ExternalSources and Acknowledgements")
+VERSION.changed("1.15.5", "Made order of elements within scenario XML version changelog arbitrary")
+VERSION.changed("1.15.7", "Adapted scenario XML schema to allow `outsourced` XML attribute")
+VERSION.changed("1.16.0", "Scenario descriptions no longer require acknowledgements")

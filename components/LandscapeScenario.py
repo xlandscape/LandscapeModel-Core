@@ -14,16 +14,14 @@ import re
 
 class LandscapeScenario(base.Component):
     """
-    Provides landscape scenarios to the Landscape Model.
-
-    INPUTS
-    BaseLandscapeGeometries: A valid file path to a package file. A string of global scale. Value has no unit.
-    No ontological description is associated with the input.
-
-    OUTPUTS
-    The outputs of this component are provisional, i.e., they are defined by links from inputs and have to be satisfied
-    by data in the CSV file. Outputs are Crs, Extent, and information specified in the package information file of the
-    landscape scenario.
+    Provides geospatial data of landscape scenarios to the Landscape Model. The geospatial data normally consists of a
+    set of one or more shapefiles, accompanied by an arbitrary number of GeoTIFFs. The data package also includes an
+    XML file named `package.xinfo` that details the contents of the package and provides metainformation about the
+    package. It also links individual pieces of information, e.g., individual columns of the shapefiles' attributes, to
+    an informal Landscape Model vocabulary. The set of outputs of the `LandscapeScenario` component differs on the kind
+    of scenario (e.g., off-field soil scenarios versus aquatic scenarios) and is defined by an XML schema (see input
+    descriptions for details). Some outputs are generic and are documented here. For additional outputs, see the
+    documentation of the scenario.
     """
     # CHANGELOG
     base.VERSION.added("1.1.1", "`components.LandscapeScenario` component")
@@ -64,6 +62,9 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.12.5", "Perform XML schema validation in `components.LandscapeScenario` ")
     base.VERSION.changed(
         "1.14.0", "`components.LandscapeScenario` reports geometries of values also as value attributes")
+    base.VERSION.changed("1.15.6", "Updated description of `LandscapeScenario` component")
+    base.VERSION.added("1.15.6", "Input descriptions to `LandscapeScenario` component")
+    base.VERSION.added("1.16.0", "Inputs of `LandscapeScenario` component are now processed by `base.convert`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -78,23 +79,41 @@ class LandscapeScenario(base.Component):
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "BaseLandscapeGeometries",
-                (
-                    attrib.Class(str, 1),
-                    attrib.Unit(None, 1),
-                    attrib.Scales("global", 1),
-                    attrib.Ontology("")
-                ),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global"), attrib.Ontology("")),
+                self.default_observer,
+                description="A valid file path to a package file. The package file is an XML file that contains "
+                            "metadata about the geospatial data of a landscape scenario. Only landscape scenarios with "
+                            "auch a metadata description are compatible with the `LandscapeScenario` component. The "
+                            "package file is commonly name `package.xinfo` and resides alongside the geodata of a "
+                            "landscape scenario. Scenarios normally provide the absolute file path to the package file "
+                            "as a macro to the landscape model. This macro is commonly named `$(:LandscapeScenario)`, "
+                            "a value that should therefore normally be used for configuration of the component.  \n"
+                            "The `LandscapeScenario` component allows to import landscape scenarios for a wide range "
+                            "of simulations which differ in their geospatial requirements (e.g., off-field soil "
+                            "simulations compared with aquatic simulations). The `GeoPackageNamespace` input defines "
+                            "the domain of the simulation regarding this requirements. The structure of the XML is "
+                            "described by an XML schema (`package.xsd` in the `model/variant` folder) and the package "
+                            "file itself must make use of the specified namespace and validate against the XML schema."
             ),
             base.Input(
                 "GeoPackageNamespace",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The XML namespace for the metadata of the landscape scenario. This should be the target "
+                            "namespace of the XML schema (`model/variant/package.xsd`) of this model, e.g., "
+                            "`urn:xAquaticRiskLandscapeScenarioPackageInfo` for an aquatic scenario. Make sure that "
+                            "the scenario's geodata description (`package.xinfo`) makes use of this namespace."
             )
         ])
         self._outputs = base.ProvisionalOutputs(self, default_store)
         self._spatial_reference = None
         self._base_geometries_extent = None
+        if self.default_observer:
+            self.default_observer.write_message(
+                3,
+                "The LandscapeScenario component does currently not document its generic outputs",
+                "Documentation will be added in a future version"
+            )
 
     def run(self) -> None:
         """
@@ -151,7 +170,7 @@ class LandscapeScenario(base.Component):
         else:
             extent = self._base_geometries_extent
         for entry in meta:
-            self.outputs[strip_namespace(entry.tag)].set_values(entry.text, scales="global")
+            self.outputs[strip_namespace(entry.tag)].set_values(base.convert(entry), scales="global")
         for entry in landscape_info_xml.find("supplementary", namespace):
             if entry.text[-4:] == ".tif":
                 raster_path = os.path.join(landscape_path, entry.text)

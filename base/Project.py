@@ -5,6 +5,7 @@ import os
 import xml.etree.ElementTree
 import base
 import typing
+import xmlschema
 
 
 class Project:
@@ -19,13 +20,20 @@ class Project:
     base.VERSION.changed("1.5.3", "`base.Project` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Project` ")
     base.VERSION.changed("1.9.10", "`base.Project` can handle outsourced package parts")
+    base.VERSION.added("1.15.0", "XML validation of scenario metadata")
+    base.VERSION.changed("1.15.5", "Raise clearer error message if scenario XML does not use the right XML namespace")
 
     def __init__(self, project: str, project_dir: str, prefix: str = ":") -> None:
         self._content = {}
         self._path = os.path.join(project_dir, project)
-        # noinspection SpellCheckingInspection
-        config = xml.etree.ElementTree.parse(os.path.join(self._path,  "scenario.xproject")).getroot()
-        for entry in config.find("Content").findall("Item"):
+        namespace = {"": "urn:xLandscapeModelScenarioInfo"}
+        project_info = os.path.join(self._path, "scenario.xproject")
+        if xmlschema.XMLResource(project_info).namespace != "urn:xLandscapeModelScenarioInfo":
+            raise ValueError("scenario XML invalid: root element is not in namespace urn:xLandscapeModelScenarioInfo")
+        schema = os.path.join(os.path.dirname(base.__file__), "scenario.xsd")
+        xmlschema.XMLSchema(schema).validate(project_info)
+        config = xml.etree.ElementTree.parse(project_info).getroot()
+        for entry in config.find("Content", namespace).findall("Item", namespace):
             file_path = os.path.join(project_dir, project, entry.attrib["target"])
             if "outsourced" in entry.attrib and entry.attrib["outsourced"].lower() == "true":
                 if not os.path.exists(file_path):
@@ -37,7 +45,12 @@ class Project:
                         f"was build. Other versions of the part might not work as expected."
                     )
             self._content[prefix + entry.attrib["name"]] = file_path
-        self._version = config.find("Version").text
+        self._version = config.find("Version", namespace).text
+        self._name = config.find("Name", namespace).text
+        self._supported_runtimes = {}
+        for runtime in config.findall("SupportedRuntimeVersions/Version", namespace):
+            self._supported_runtimes.setdefault(runtime.attrib["variant"], set()).add(runtime.attrib["number"])
+        return
 
     @property
     def content(self) -> dict[str, typing.Any]:
@@ -60,3 +73,17 @@ class Project:
         The version of the scenario.
         """
         return self._version
+
+    @property
+    def name(self) -> str:
+        """
+        The name of the scenario.
+        """
+        return self._name
+
+    @property
+    def supported_runtimes(self) -> dict[str, set[str]]:
+        """
+        The names of the supported runtimes and the versions of these runtimes.
+        """
+        return self._supported_runtimes

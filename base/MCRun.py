@@ -30,6 +30,9 @@ class MCRun:
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.MCRun` ")
     base.VERSION.added("1.10.0", "XML-tag for element names in `base.MCRun` configurations")
     base.VERSION.changed("1.13.0", "Allowed more spellings for enabling/disabling components in `base.MCRun` ")
+    base.VERSION.added("1.15.0", "Added message for initialization of component in `base.MCRun`")
+    base.VERSION.changed(
+        "1.15.4","Order of arguments in `UserParameters` component now follows `base.Component` class")
 
     def __init__(self, xml_file: str, **keywords) -> None:
         config = xml.etree.ElementTree.parse(xml_file)
@@ -58,6 +61,7 @@ class MCRun:
                     ("enabled_expression" not in componentConfig.attrib or
                      eval(componentConfig.attrib["enabled_expression"])):
                 component_module = importlib.import_module(componentConfig.attrib["module"])
+                self._observer.write_message(5, f"Initializing component {componentConfig.tag}")
                 try:
                     component = getattr(component_module, componentConfig.attrib["class"])(
                         componentConfig.tag, self._observer, self._store)
@@ -108,7 +112,7 @@ class MCRun:
                         component.inputs[inputConfig.tag].add_extension(extension)
                 self._composition[component.name] = component
         user_parameters_component = components.UserParameters(
-            "__UserParameters__", user_parameters, self._observer, self._store)
+            "__UserParameters__", self._observer, self._store, user_parameters)
         for component_output in user_parameters_component.outputs:
             output = user_parameters_component.outputs[component_output.name]
             component_name, input_name = output.name.split("/")

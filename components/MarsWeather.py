@@ -8,17 +8,12 @@ import typing
 
 class MarsWeather(base.Component):
     """
-    Provides MARS weather data from a CSV fle to the Landscape Model.
-
-    INPUTS
-    FilePath: A valid file path to a CSV file containing MARS weather data. A string of global scale. Value has no unit.
-    FirstDate: The first date of the requested weather information. A `datetime.date` of global scale. The value has no
-    unit.
-    LastDate: The last date of the requested weather information. A `datetime.date` of global scale. The value has no
-    unit.
-
-    OUTPUTS
-    TEMPERATURE_AVG: The average temperature. A NumPy array of scale time/day. Values have a unit of °C.
+    Provides MARS weather data from a CSV file to the Landscape Model. The CSV file must have a header and must contain
+    the following columns in arbitrary order: DAY, MONTH, YEAR. Each row of the CSV file gives data for one day, and
+    which day this is, is specified as the numerical day of month (DAY), month of year (MONTH) and the year (YEAR).
+    Values in columns named equal to the component's outputs are parsed and used for the outputs. See the documentation
+    of outputs for additional information on the expected values. The CSV file may contain additional columns that are
+    not used by the component.
     """
     # CHANGELOG
     base.VERSION.added("1.2.40", "`components.MarsWeather` component")
@@ -45,6 +40,10 @@ class MarsWeather(base.Component):
         "1.13.0", "`components.MarsWeather` now stores entire timeseries, regardless of simulation period")
     base.VERSION.added(
         "1.13.0", "`stores.X3dfStore` functionality to reference scale 'time/day' with native coordinates")
+    base.VERSION.changed("1.15.1", "Added scale attribute to `FilePath` input of `MarsWeather` component")
+    base.VERSION.changed("1.15.6", "Updated description of `MarsWeather` component")
+    base.VERSION.added("1.15.6", "Input descriptions to `MarsWeather` component")
+    base.VERSION.added("1.15.8", "Documentation of outputs in `MarsWeather` component")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -57,25 +56,91 @@ class MarsWeather(base.Component):
         """
         super(MarsWeather, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
-            base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer)
+            base.Input(
+                "FilePath",
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="A valid file path to a CSV file containing MARS weather data. See above for the expected "
+                            "format of the CSV file."
+            )
         ])
         self._outputs = base.OutputContainer(
             self,
             (
-                base.Output("TEMPERATURE_AVG", default_store, self),
-                base.Output("PRECIPITATION", default_store, self),
-                base.Output("ET0", default_store, self),
-                base.Output("WINDSPEED", default_store, self),
-                base.Output("RADIATION", default_store, self)
+                base.Output(
+                    "TEMPERATURE_AVG",
+                    default_store,
+                    self,
+                    {"scales": "time/day", "unit": "°C", "requires_indexing": True},
+                    "The mean air temperature. The definition of mean air temperature reflects the one of the JRC MARS "
+                    "meteorological database (https://agri4cast.jrc.ec.europa.eu/dataportal/).",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days for which weather data is present in the input file",),
+                        "offset": ("the first date listed in the input file",)
+                    }
+                ),
+                base.Output(
+                    "PRECIPITATION",
+                    default_store,
+                    self,
+                    {"scales": "time/day", "unit": "mm/d", "requires_indexing": True},
+                    "The sum of precipitation. The definition of the sum of precipitation reflects the one of the JRC "
+                    "MARS meteorological database (https://agri4cast.jrc.ec.europa.eu/dataportal/).",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days for which weather data is present in the input file",),
+                        "offset": ("the first date listed in the input file",)
+                    }
+                ),
+                base.Output(
+                    "ET0",
+                    default_store,
+                    self,
+                    {"scales": "time/day", "unit": "mm/d", "requires_indexing": True},
+                    "The potential evapotranspiration from a crop canopy. The definition of potential "
+                    "evapotranspiration from a crop canopy reflects the one of the JRC MARS meteorological database "
+                    "(https://agri4cast.jrc.ec.europa.eu/dataportal/).",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days for which weather data is present in the input file",),
+                        "offset": ("the first date listed in the input file",)
+                    }
+                ),
+                base.Output(
+                    "WINDSPEED",
+                    default_store,
+                    self,
+                    {"scales": "time/day", "unit": "m/s", "requires_indexing": True},
+                    "The mean daily wind speed at 10m. The definition of the mean daily wind speed at 10m reflects the "
+                    "one of the JRC MARS meteorological database (https://agri4cast.jrc.ec.europa.eu/dataportal/).",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days for which weather data is present in the input file",),
+                        "offset": ("the first date listed in the input file",)
+                    }
+                ),
+                base.Output(
+                    "RADIATION",
+                    default_store,
+                    self,
+                    {"scales": "time/day", "unit": "kJ/(m²*d)", "requires_indexing": True},
+                    "The total global radiation. The definition of the total global radiation reflects the one of the "
+                    "JRC MARS meteorological database (https://agri4cast.jrc.ec.europa.eu/dataportal/).",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days for which weather data is present in the input file",),
+                        "offset": ("the first date listed in the input file",)
+                    }
+                )
             )
         )
-        self._units = {
-            "TEMPERATURE_AVG": "°C",
-            "PRECIPITATION": "mm/d",
-            "ET0": "mm/d",
-            "WINDSPEED": "m/s",
-            "RADIATION": "kJ/(m²*d)"
-        }
+        if self.default_observer:
+            self.default_observer.write_message(
+                2,
+                "MarsWeather currently does not check the order of dates in the CSV file",
+                "Make sure that the CSV file lists dates consecutively and without gap"
+            )
 
     def run(self) -> None:
         """
@@ -94,12 +159,6 @@ class MarsWeather(base.Component):
                 idx = data[0].index(component_output.name)
                 output_data = np.array([float(r[idx]) for r in data[1:]], dtype=np.float32)
                 output = self.outputs[component_output.name]
-                output.set_values(
-                    output_data,
-                    scales="time/day",
-                    unit=self._units[component_output.name],
-                    offset=(first_date,),
-                    requires_indexing=True
-                )
+                output.set_values(output_data, offset=(first_date,))
             else:
                 self.default_observer.write_message(2, f"Weather file does not contain field {component_output.name}")

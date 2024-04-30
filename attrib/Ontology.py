@@ -24,6 +24,9 @@ class Ontology(base.DataAttribute):
         """
         self._iri = iri
 
+    def __repr__(self) -> str:
+        return f"Ontology: `{self._iri}`"
+
     def check(self, values: base.Values) -> base.CheckResult:
         """
         Checks values regarding a specific data attribute.

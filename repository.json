@@ -1,0 +1,19 @@
+{
+  "info_created": "2024-03-18",
+  "visibility": "public",
+  "license": "CC0-1.0",
+  "issues_enabled": true,
+  "description": null,
+  "website": "",
+  "topics": [],
+  "wiki_enabled": false,
+  "discussions_enabled": false,
+  "projects_enabled": false,
+  "default_branch": "master",
+  "gitflow": false,
+  "code_style_compliance": false,
+  "latest_changelog_processor": "1.14.3",
+  "latest_readme_processor": null,
+  "latest_contributing_processor": "1.14.3",
+  "branch_protection": true
+}

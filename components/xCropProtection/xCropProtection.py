@@ -41,7 +41,7 @@ class xCropProtection(base.Component):
         default_store: typing.Optional[base.Store]
     ) -> None:
         super(xCropProtection, self).__init__(name, default_observer, default_store)
-        self._module = base.Module("xCropProtection", "1.0", r"module\README.md") 
+        self._module = base.Module("xCropProtection", "1.0", r"module\README.md", None, None) 
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ParametrizationNamespace",

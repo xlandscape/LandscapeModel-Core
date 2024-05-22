@@ -1,6 +1,18 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2024-03-18.
+This is the changelog for the Landscape Model core. It was automatically created on 2024-05-22.
+
+## [1.16.5] - 2024-05-22
+
+### Added
+
+- xCropProtection component
+
+### Changed
+
+- Bound xCropProtection version to core version
+
+### Fixed
 
 ## [1.16.4] - 2024-03-18
 

@@ -28,6 +28,8 @@ class xCropProtection(base.Component):
     )
     
     # CHANGELOG
+    base.VERSION.added("1.16.5", "xCropProtection component")
+    base.VERSION.changed("1.16.5", "Bound xCropProtection version to core version")
     VERSION.added("1.0.0", "First release of `xCropProtection`")
 
     RANDOM_TYPES = ("xCropProtection.NormalDistribution", "xCropProtection.UniformDistribution", "xCropProtection.DiscreteUniformDistribution", "xCropProtection.ChoiceDistribution")

@@ -1,6 +1,6 @@
 # Components
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2024-03-18.
+It was automatically created on 2024-05-22.
 
 
 ## BeeForage
@@ -1015,3 +1015,71 @@ A timeseries of daily average water temperatures. The water temperature as estim
 - Type: `numpy.ndarray`
 - Shape: `time/day`: the number of days reported in the `AirTemperature` input
 - Offsets: `time/day`: the first date reported in the `AirTemperature` input
+
+## xCropProtection
+    xCropProtection is a Landscape Model component for simulating applications of plant protection products on fields 
+    with a given landscape. The simulation is done on a daily-fieldwise resolution. On each day and field in the 
+    during the given simulation period, the module checks if there are applications of plant protection products 
+    should be conducted. If so, exact application dates and rates are determined. The user has the option to use
+    deterministic values or sample from a random distribution. 
+
+    xCropProtection currently supports the input scales `global` and `time/day, space/base_geometry`.  
+    xCropProtection currently supports the random variable scales `global`, `time/day`, `time/year`, `time/day, space/base_geometry` and `time/year, space/base_geometry`.
+    
+### Inputs
+#### ParametrizationNamespace
+
+- Class: `str`
+- Unit: `None`
+- Scales: `global`
+#### xCropProtectionFilePath
+The path to the XML-parametrization of xCropProtection. A `str` of global scale. Value has no unit.
+- Class: `str`
+- Unit: `None`
+- Scales: `global`
+#### SimulationStart
+The first day of the simulation. A `datetime.date` of global scale. Value has no unit.
+- Class: `datetime.date`
+- Unit: `None`
+- Scales: `global`
+#### SimulationEnd
+The last day of the simulation. A `datetime.date` of global scale. Value has no unit.
+- Class: `datetime.date`
+- Unit: `None`
+- Scales: `global`
+#### RandomSeed
+A initialization for the random number generator. An int of global scale. Value has a unit of 1.
+- Class: `int`
+- Unit: `None`
+- Scales: `global`
+#### Fields
+A list of identifiers of individual geometries. A list[int] of scale space/base_geometry. Values have no
+                    unit.
+- Class: `list[int]`
+- Unit: `None`
+- Scales: `space/base_geometry`
+#### LandUseLandCoverTypes
+The land-use and land-cover type of spatial units. A list[int] of scale space/base_geometry.
+                    Values have no unit.
+- Class: `list[int]`
+- Unit: `None`
+- Scales: `space/base_geometry`
+#### FieldGeometries
+The geometries of individual landscape parts. A list[bytes] of scale space/base_geometry. Values
+                    have no unit.
+- Class: `list[bytes]`
+- Unit: `None`
+- Scales: `space/base_geometry`
+### Outputs
+#### ApplicationDates
+Application dates. A numpy-array of scale other/application.
+#### ApplicationRates
+Application rates. A numpy-array of scale other/application.
+#### AppliedPPP
+Applied products. A list[str] of scale other/application.
+#### AppliedAreas
+Applied geometries. A list[bytes] of scale other/application.
+#### AppliedFields
+Applied fields. A numpy-array of scale other/application.
+#### TechnologyDriftReductions
+Drift reductions. A numpy-array of scale other/application.

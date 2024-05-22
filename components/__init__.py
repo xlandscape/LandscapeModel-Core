@@ -21,6 +21,7 @@ from .Soil import *
 from .TerRQ import *
 from .UserParameters import *
 from .WaterTemperatureFromAirTemperature import *
+from .xCropProtection.xCropProtection import *
 
 import base.VERSION
 

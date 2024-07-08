@@ -20,6 +20,8 @@ def convert_index(index: typing.Tuple[int], source_scale: str, target_scale: str
         target_index = (0, index[1])
     elif source_scale == "time/day, space/base_geometry" and target_scale == "other/products":
         target_index = (0,)
+    elif source_scale == "time/day, space/base_geometry" and target_scale == "other/active_substances":
+        target_index = (0,)
     elif source_scale == "time/day, space/base_geometry" and target_scale == None:
         target_index = (0,)
     else:

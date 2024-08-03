@@ -109,6 +109,7 @@ class X3dfStore(base.Store):
         self._f = h5py.File(hdf5_file, mode)
         self._observer = observer
         self._known_scales = {
+            "chemical/substance": "named",
             "global": "plain",
             "space/base_geometry": "named geometries",
             "space/extent": "plain",
@@ -411,7 +412,12 @@ class X3dfStore(base.Store):
             # noinspection SpellCheckingInspection
             if type_name == "numpy.ndarray":
                 data_set = self._f.create_dataset(
-                    name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks, fillvalue=numpy.nan)
+                    name, compression="gzip",
+                    shape=shape,
+                    dtype=data_type,
+                    chunks=chunks,
+                    fillvalue=numpy.nan if default is None else default
+                )
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"
                 dimension_count = len(shape)

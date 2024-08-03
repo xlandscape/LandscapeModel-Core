@@ -11,6 +11,7 @@ from .ExportData import *
 from .ReportingDistribution import *
 from .ReportingHydrographicMap import *
 from .HydrologyFromTimeSeries import *
+from .InFieldExposure import *
 from .LandCoverToVegetation import *
 from .LandscapeScenarioPreparation import *
 from .LandscapeScenario import *
@@ -19,6 +20,7 @@ from .MarsWeather2 import *
 from .PpmCalendar import *
 from .Soil import *
 from .TerRQ import *
+from .ToxicLoad import *
 from .UserParameters import *
 from .WaterTemperatureFromAirTemperature import *
 from .xCropProtection.xCropProtection import *

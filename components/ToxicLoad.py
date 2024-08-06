@@ -11,7 +11,6 @@ class ToxicLoad(base.Component):
         self._inputs = base.InputContainer(
             self,
             (
-                base.Input("Substances", (attrib.Class(list[str]), attrib.Unit(None), attrib.Scales("global"))),
                 base.Input(
                     "LD50", (attrib.Class(list[float]), attrib.Unit("µg/bee"), attrib.Scales("chemical/substance"))),
                 base.Input(
@@ -47,10 +46,10 @@ class ToxicLoad(base.Component):
             geometries=pec_description["geometries"],
             offset=pec_description["offsets"]
         )
-        ld50s = self.inputs["LD50"].read().values
-        substances = self.inputs["Substances"].read().values
+        ld50s = self.inputs["LD50"].read()
+        substances = ld50s.element_names[0].get_values()
         for substance in range(pec_description["shape"][2]):
-            ld50 = ld50s[substances.index(pec_substances[substance])]
+            ld50 = ld50s.values[substances.index(pec_substances[substance])]
             for field in range(pec_description["shape"][0]):
                 self.outputs["ToxicLoad"].set_values(
                     self.inputs["Pec"].read(

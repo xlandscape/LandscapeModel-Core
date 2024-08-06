@@ -19,8 +19,6 @@ class InFieldExposure(base.Component):
                 base.Input("SimulationEnd", (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global"))),
                 base.Input(
                     "BaseFeatures", (attrib.Class(list[int]), attrib.Unit(None), attrib.Scales("space/base_geometry"))),
-                base.Input(
-                    "ConsideredSubstances", (attrib.Class(list[str]), attrib.Unit(None), attrib.Scales("global"))),
                 base.Input("DT50", (attrib.Class(list[float]), attrib.Unit("d"), attrib.Scales("chemical/substance"))),
                 base.Input(
                     "AppliedField",
@@ -43,13 +41,12 @@ class InFieldExposure(base.Component):
         self._outputs = base.OutputContainer(
             self,
             (
-                base.Output("SubstanceNames", default_store, self, {"scales": "chemical/substance", "unit": "None"}),
                 base.Output(
                     "Pec",
                     default_store,
                     self,
                     {"scales": "space/base_geometry, time/day, chemical/substance", "unit": "g"}
-                )
+                ),
             )
         )
 
@@ -57,17 +54,13 @@ class InFieldExposure(base.Component):
         simulation_start = self.inputs["SimulationStart"].read().values
         simulated_days = (self.inputs["SimulationEnd"].read().values - simulation_start).days + 1
         base_features = self.inputs["BaseFeatures"].read()
-        considered_substances = self.inputs["ConsideredSubstances"].read().values
-        self.outputs["SubstanceNames"].set_values(
-            considered_substances,
-            scales="chemical/substance",
-            element_names=(self.outputs["SubstanceNames"],)
-        )
+        dt50 = self.inputs["DT50"].read()
+        considered_substances = dt50.element_names[0].get_values()
         self.outputs["Pec"].set_values(
             numpy.ndarray,
             shape=(len(base_features.values), simulated_days, len(considered_substances)),
             chunks=(1, simulated_days, 1),
-            element_names=(base_features.element_names[0], None, self.outputs["SubstanceNames"]),
+            element_names=(base_features.element_names[0], None, dt50.element_names[0]),
             geometries=(base_features.geometries[0], None, None),
             offset=(None, simulation_start, None),
             default=0
@@ -76,7 +69,6 @@ class InFieldExposure(base.Component):
         applied_substance = self.inputs["AppliedSubstance"].read().values
         application_date = self.inputs["ApplicationDate"].read().values
         applied_rate = self.inputs["ApplicationRate"].read().values
-        dt50 = self.inputs["DT50"].read().values
         applications = {}
         for i in range(applied_field.values.shape[0]):
             applications.setdefault(
@@ -101,7 +93,7 @@ class InFieldExposure(base.Component):
                 for t in range(1, time_series.shape[1]):
                     time_series[0, t, 0] = (
                             time_series[0, t, 0] +
-                            time_series[0, t - 1, 0] * math.exp(-math.log(2) / dt50[chemical_index])
+                            time_series[0, t - 1, 0] * math.exp(-math.log(2) / dt50.values[chemical_index])
                     )
                 self.outputs["Pec"].set_values(
                     time_series,

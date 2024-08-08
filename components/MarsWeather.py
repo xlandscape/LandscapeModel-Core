@@ -81,6 +81,45 @@ class MarsWeather(base.Component):
                     }
                 ),
                 base.Output(
+                    "VAPOURPRESSURE",
+                    default_store,
+                    self,
+                    {"scales": "time/day", "unit": "hPa", "requires_indexing": True},
+                    "The vapour pressure. The definition of vapour pressure reflects the one of the JRC MARS "
+                    "meteorological database (https://agri4cast.jrc.ec.europa.eu/dataportal/).",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days for which weather data is present in the input file",),
+                        "offset": ("the first date listed in the input file",)
+                    }
+                ),
+                base.Output(
+                    "TEMPERATURE_MIN",
+                    default_store,
+                    self,
+                    {"scales": "time/day", "unit": "°C", "requires_indexing": True},
+                    "The mean air temperature. The definition of minimum air temperature reflects the one of the JRC MARS "
+                    "meteorological database (https://agri4cast.jrc.ec.europa.eu/dataportal/).",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days for which weather data is present in the input file",),
+                        "offset": ("the first date listed in the input file",)
+                    }
+                ),
+                base.Output(
+                    "TEMPERATURE_MAX",
+                    default_store,
+                    self,
+                    {"scales": "time/day", "unit": "°C", "requires_indexing": True},
+                    "The mean air temperature. The definition of maximum air temperature reflects the one of the JRC MARS "
+                    "meteorological database (https://agri4cast.jrc.ec.europa.eu/dataportal/).",
+                    {
+                        "type": np.ndarray,
+                        "shape": ("the number of days for which weather data is present in the input file",),
+                        "offset": ("the first date listed in the input file",)
+                    }
+                ),
+                base.Output(
                     "PRECIPITATION",
                     default_store,
                     self,

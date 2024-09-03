@@ -115,17 +115,13 @@ class xCropProtection(base.Component):
             base.Output("ApplicationRates", default_store, self, 
                 description="Application rates. A numpy-array of scale other/application."),
             base.Output("AppliedPPP", default_store, self, 
-                description="Applied products. A list[str] of scale other/application."),
+                description="Applied products/substances. A list[str] of scale other/application."),
             base.Output("AppliedAreas", default_store, self, 
                 description="Applied geometries. A list[bytes] of scale other/application."),
             base.Output("AppliedFields", default_store, self, 
                 description="Applied fields. A numpy-array of scale other/application."),
             base.Output("TechnologyDriftReductions", default_store, self, 
-                description="Drift reductions. A numpy-array of scale other/application."),
-            base.Output("ActiveSubstanceApplied", default_store, self,
-                description="Applied active ingredients. A list[str] of scale other/application"),
-            base.Output("ActiveSubstanceApplicationRates", default_store, self,
-                description="Application rates of active substances. A numpy-array of scale other/application")
+                description="Drift reductions. A numpy-array of scale other/application.")
         ])
         self._ppmCalendars = None
         self._technologies = None
@@ -420,7 +416,7 @@ class xCropProtection(base.Component):
                             applied_as.extend(prods)
                             as_application_rates.extend(appl_rates)
                         elif appl_type == "other/products" and output_type == "active substance":
-                            # query DB for active substances and concentrations
+                            # query DB for active substances and concentrations, need to convert from product to a.s.
                             active_substances, concentrations = prod_db.sample_active_substances(prods, appl_rates)
                             
                             len_modifier = len(active_substances)
@@ -461,5 +457,5 @@ class xCropProtection(base.Component):
             self.outputs["AppliedPPP"].set_values(applied_ppp, scales="other/application")
             self.outputs["ApplicationRates"].set_values(application_rates, scales="other/application")
         elif output_type == "active substance":
-            self.outputs["ActiveSubstanceApplied"].set_values(applied_as, scales="other/application")
-            self.outputs["ActiveSubstanceApplicationRates"].set_values(as_application_rates, scales="other/application")
+            self.outputs["AppliedPPP"].set_values(applied_as, scales="other/application")
+            self.outputs["ApplicationRates"].set_values(as_application_rates, scales="other/application")

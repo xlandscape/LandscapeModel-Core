@@ -49,7 +49,8 @@ class ProductDB:
 
         for i in range(0, len(products)):
             product = products[i]
-            appl_rate = product_app_rate[i]
+            # Convert product application rate in g/ha to kg/ha (l/ha)
+            appl_rate = product_app_rate[i] / 1000
 
             active_substances = self._cursor.execute("""
                 SELECT a.ActiveSubstanceName, f.InclusionLevel_g_per_L
@@ -60,10 +61,12 @@ class ProductDB:
                 """, (product,)).fetchall()                                                  
             
             if len(active_substances) > 0:
-                concentration = round(1 / len(active_substances), 2)
+                # Units of active substances must be g/l of product
                 for row in active_substances:
+                    # g/ha (application rate of a.s.) = l/ha * g/l
+                    as_appl_rate = appl_rate * row[1]
                     ais.append(str(row[0]))
-                    application_rates.append(concentration * appl_rate)
+                    application_rates.append(as_appl_rate)
             else:
                 ais.append('Unknown active substance')
                 application_rates.append(0.0)

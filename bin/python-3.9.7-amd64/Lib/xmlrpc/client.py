@@ -439,7 +439,7 @@ class ExpatParser:
         parser.EndElementHandler = target.end
         parser.CharacterDataHandler = target.data
         encoding = None
-        target.xml(encoding, None)
+        target.file(encoding, None)
 
     def feed(self, data):
         self._parser.Parse(data, False)

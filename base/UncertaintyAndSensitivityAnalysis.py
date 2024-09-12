@@ -39,7 +39,7 @@ class UncertaintyAndSensitivityAnalysis:
         Creates a set of uncertainty or sensitivity analysis runs.
         :return: Nothing.
         """
-        output_dir = os.path.dirname(self._params.xml)
+        output_dir = os.path.dirname(self._params.file)
         for uncertaintyAndSensitivityAnalysis in range(self._params.uncertainty_sensitivity_analysis):
             uncertainty_analysis_name = f"{self._params.params['SimID']}-{uncertaintyAndSensitivityAnalysis + 1}"
             # noinspection SpellCheckingInspection

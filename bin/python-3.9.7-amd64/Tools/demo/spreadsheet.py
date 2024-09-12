@@ -203,7 +203,7 @@ class Sheet:
         out = ['<spreadsheet>']
         for (x, y), cell in self.cells.items():
             if hasattr(cell, 'xml'):
-                cellxml = cell.xml()
+                cellxml = cell.file()
             else:
                 cellxml = '<value>%s</value>' % escape(cell)
             out.append('<cell row="%s" col="%s">\n  %s\n</cell>' %

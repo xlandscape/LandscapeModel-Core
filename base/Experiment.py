@@ -72,7 +72,7 @@ class Experiment:
         if parameters is not None:
             self._replace_tokens = dict(parameters.params)
             if param_dir is None:
-                self._replace_tokens["_PARAM_DIR_"] = os.path.dirname(parameters.xml)
+                self._replace_tokens["_PARAM_DIR_"] = os.path.dirname(parameters.file)
             else:
                 self._replace_tokens["_PARAM_DIR_"] = param_dir
         x3dir = os.environ.setdefault("X3DIR", "")
@@ -97,7 +97,7 @@ class Experiment:
         experiment_xml = os.path.join(self._replace_tokens["_EXP_DIR_"], "experiment.xml")
         shutil.move(experiment_temporary_xml, experiment_xml)
         if parameters is not None:
-            shutil.copyfile(parameters.xml, os.path.join(self._replace_tokens["_EXP_DIR_"], "user.xml"))
+            shutil.copyfile(parameters.file, os.path.join(self._replace_tokens["_EXP_DIR_"], "user.xml"))
         self._numberMC = int(config.find("General/NumberMC").text)
         self._numberParallelProcesses = int(config.find("General/NumberParallelProcesses").text)
         self._mcRunConfigurations = []
@@ -122,7 +122,7 @@ class Experiment:
         self._observer = base.MultiObserver(base.observers_from_xml(config.find("Observers")))
         sys.stdout = sys.stderr = self._observer
         self._observer.write_message(5, "Startup initialization")
-        self._observer.write_message(5, f"Parameters: {parameters.xml}")
+        self._observer.write_message(5, f"Parameters: {parameters.file}")
         self._observer.write_message(5, f"Project: {self._replace_tokens['Project']}")
         self._observer.write_message(5, f"Project directory: {self._replace_tokens['_PROJECT_DIR_']}")
         self._observer.write_message(5, f"Runtime directory: {self._replace_tokens['_X3DIR_']}")

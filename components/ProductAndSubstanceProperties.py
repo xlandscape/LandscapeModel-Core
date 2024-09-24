@@ -35,7 +35,16 @@ class ProductAndSubstanceProperties(base.Component):
                     if property_type == "str":
                         properties[property_names[cell.column - 1]].append(str(cell.value))
                     elif property_type == "float":
-                        properties[property_names[cell.column - 1]].append(float(cell.value))
+                        if cell.value:
+                            properties[property_names[cell.column - 1]].append(float(cell.value))
+                        else:
+                            self.default_observer.write_message(
+                                2,
+                                "Missing property value",
+                                f'Chemical {properties["ElementName"][cell.column - 1]}, '
+                                f'{property_names[cell.column - 1]}'
+                            )
+                            properties[property_names[cell.column - 1]].append(float("nan"))
                     else:
                         raise ValueError(property_type)
         for column_name, column_description in columns.items():

@@ -50,6 +50,12 @@ class Tank:
 
         return products, application_rates
 
+    # Returns the scale of products in the tank. Checks that the Product and Application Rate scales are the same
+    def sample_application_type(self) -> str:
+        if self._products.Scales != self._applicationRates.Scales:
+            raise TypeError(f'Product and ApplicationRate scales must be the same. {self._products.Scales} and {self._applicationRates.Scales} is invalid.')
+        return self._products.Scales
+
 class Application:
     """
     Implementation of a single application.
@@ -140,6 +146,9 @@ class Application:
 
     def sample_tank(self, day: int, field: int) -> typing.Tuple[typing.List[str], typing.List[float]]:
         return self._tank.sample_tank(day, field)
+    
+    def sample_application_type(self) -> str:
+        return self._tank.sample_application_type()
 
     def sample_technology(self, day: int, field: int) -> str:
         return self._technology.get((day, field), ("time/day, space/base_geometry"))
@@ -148,10 +157,11 @@ class Application:
         appl_window = self._applicationWindow.get((day, field), ("time/day, space/base_geometry"))
         return appl_window.sample()
 
-    def sample_application(self, day: int, field: int, field_geometry: bytes) -> typing.Tuple[typing.List[str], typing.List[float], str, float, bytes]:
+    def sample_application(self, day: int, field: int, field_geometry: bytes) -> typing.Tuple[typing.List[str], typing.List[float], str, float, bytes, str]:
 
         # sample products, technology, application rate and date/time:
         products, application_rates = self.sample_tank(day, field)
+        application_type = self.sample_application_type()
         technology = self.sample_technology(day, field)
         application_datetime = self.sample_application_datetime(day, field)
         application_datetime = application_datetime.toordinal(datetime.date.fromordinal(day).year)
@@ -164,7 +174,7 @@ class Application:
             applied_geometry = applied_geometry.Buffer(-in_crop_buffer - in_field_margin)
         applied_geometry = bytes(applied_geometry.ExportToWkb())
 
-        return products, application_rates, technology, application_datetime, applied_geometry
+        return products, application_rates, technology, application_datetime, applied_geometry, application_type
 
 class PPMCalendar:
     """
@@ -257,8 +267,8 @@ class PPMCalendar:
                     continue
 
                 # sample application:
-                prods, appl_rates, tech, appl_dt, appl_geom = appl.sample_application(day, field, field_geometry)
-                applications.append((prods, appl_rates, tech, appl_dt, appl_geom))
+                prods, appl_rates, tech, appl_dt, appl_geom, appl_type = appl.sample_application(day, field, field_geometry)
+                applications.append((prods, appl_rates, tech, appl_dt, appl_geom, appl_type))
 
         return applications
 

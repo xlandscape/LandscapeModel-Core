@@ -189,7 +189,14 @@
                                                 </xsd:restriction>
                                             </xsd:simpleType>
                                         </xsd:attribute>
-                                        <xsd:attribute name="scales" type="xsd:string" fixed="other/products" use="required"/>        
+                                        <xsd:attribute name="scales" use="required">
+                                            <xsd:simpleType>
+                                                <xsd:restriction base="xsd:string">
+                                                    <xsd:enumeration value="other/products"/>
+                                                    <xsd:enumeration value="other/active_substances"/>
+                                                </xsd:restriction>
+                                            </xsd:simpleType>
+                                        </xsd:attribute>       
                                     </xsd:extension>
                                 </xsd:simpleContent>
                             </xsd:complexType>
@@ -208,7 +215,14 @@
                                     </xsd:element>
                                 </xsd:sequence>
                                 <xsd:attribute name="type" type="xsd:string" fixed="list\[float\]"/>
-                                <xsd:attribute name="scales" type="xsd:string" fixed="other/products" use="required"/>
+                                <xsd:attribute name="scales" use="required">
+                                    <xsd:simpleType>
+                                        <xsd:restriction base="xsd:string">
+                                            <xsd:enumeration value="other/products"/>
+                                            <xsd:enumeration value="other/active_substances"/>
+                                        </xsd:restriction>
+                                    </xsd:simpleType>
+                                </xsd:attribute>    
                             </xsd:complexType>                                                                                                                                                                                                                                                                            
                         </xsd:element>
                     </xsd:all>

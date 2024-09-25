@@ -29,22 +29,23 @@ class ProductAndSubstanceProperties(base.Component):
             property_names = [x.value for x in workbook["properties"][1]]
             assert set(property_names) == set(columns.keys())
             properties = {x: [] for x in property_names}
-            for row in workbook["properties"].iter_rows(min_row=2):
-                for cell in row:
-                    property_type = columns[property_names[cell.column - 1]][0]
+            for j, row in enumerate(workbook["properties"].iter_rows(min_row=2)):
+                for i, cell in enumerate(row):
+                    value = "" if isinstance(cell, openpyxl.cell.read_only.EmptyCell) else cell.value
+                    property_type = columns[property_names[i]][0]
                     if property_type == "str":
-                        properties[property_names[cell.column - 1]].append(str(cell.value))
+                        properties[property_names[i]].append(str(value))
                     elif property_type == "float":
-                        if cell.value:
-                            properties[property_names[cell.column - 1]].append(float(cell.value))
+                        if value:
+                            properties[property_names[i]].append(float(value))
                         else:
                             self.default_observer.write_message(
                                 2,
                                 "Missing property value",
-                                f'Chemical {properties["ElementName"][cell.column - 1]}, '
-                                f'{property_names[cell.column - 1]}'
+                                f'Chemical {properties["ElementName"][j]}, '
+                                f'{property_names[i]}'
                             )
-                            properties[property_names[cell.column - 1]].append(float("nan"))
+                            properties[property_names[i]].append(float("nan"))
                     else:
                         raise ValueError(property_type)
         for column_name, column_description in columns.items():

@@ -10,6 +10,7 @@ from .products import *
 from .distributions import *
 from .classes import *
 from .types import *
+from .parser import *
 
 class xCropProtection(base.Component):
     """
@@ -328,15 +329,29 @@ class xCropProtection(base.Component):
             root.remove(node)
 
     def read_xml(self) -> None:
-  
         # start reading xml:
-        xml_file = self.inputs["xCropProtectionFilePath"].read().values
-        xml_tree = xml.etree.ElementTree.parse(xml_file)
-        root = xml_tree.getroot()
+        input_file = self.inputs["xCropProtectionFilePath"].read().values
         namespace = {"": self.inputs["ParametrizationNamespace"].read().values}
+  
+        xml_tree = None
+        if input_file.endswith('.xlsx'):
+            # Set output file name and location
+            output_file = os.path.dirname(input_file) + '\\' + os.path.basename(input_file) + '.xml'
+
+            # Generate the xCropProtection xml file
+            ExcelParser(str(input_file), namespace).parse_excel(output_file)
+
+            # Read the resulting xml file
+            xml_tree = xml.etree.ElementTree.parse(output_file)
+        elif input_file.endswith('.xml'):
+            xml_tree = xml.etree.ElementTree.parse(input_file)
+        else:
+            raise TypeError(f"The input file type must be either Excel (.xlsx) or XML (.xml).")
+        
+        root = xml_tree.getroot()
 
         # replace includes if needed:
-        self.replace_includes(root, namespace, os.path.dirname(xml_file))
+        self.replace_includes(root, namespace, os.path.dirname(input_file))
 
         # create lists and containers:
         self.PPMCalendars = []

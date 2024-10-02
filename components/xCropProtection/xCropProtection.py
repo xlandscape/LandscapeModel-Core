@@ -108,6 +108,13 @@ class xCropProtection(base.Component):
                 self.default_observer,
                 description="""The geometries of individual landscape parts. A list[bytes] of scale space/base_geometry. Values
                     have no unit."""
+            ),
+            base.Input(
+                "XMLPath",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer,
+                description="""The path to the folder containing the XML file automatically generated if the input file type 
+                    is Excel. This value is not set by the user and defaults to the run\SimID directory."""
             )
         ])
         self._outputs = base.OutputContainer(self, [
@@ -336,7 +343,7 @@ class xCropProtection(base.Component):
         xml_tree = None
         if input_file.endswith('.xlsx'):
             # Set output file name and location
-            output_file = os.path.dirname(input_file) + '\\' + os.path.basename(input_file) + '.xml'
+            output_file = self.inputs["XMLPath"].read().values + '\\' + os.path.basename(input_file) + '.xml'
 
             # Generate the xCropProtection xml file
             ExcelParser(str(input_file), namespace).parse_excel(output_file)

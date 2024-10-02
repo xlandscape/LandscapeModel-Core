@@ -34,7 +34,7 @@ class ExcelParser:
             # Check that all columns exist in the xCropProtection worksheet
             assert [x.value for x in workbook["xCropProtection"][1]] == ["PPP", "LULC type", "Application window",
                 "Application rate [g/ha]", "In-crop buffer [m]", "In-field margin [m]", 
-                "Spray-drift-reduction [%]"], "The input table must have the following columns in order: PPP, LULC type, Application window, Application rate [g/ha], In-crop buffer [m], In-field margin [m], Spray-drift-reduction [%]"
+                "Spray-drift reduction [fraction]"], "The input table must have the following columns in order: PPP, LULC type, Application window, Application rate [g/ha], In-crop buffer [m], In-field margin [m], Spray-drift reduction [fraction]"
 
             # Set up the LULC and technology dictionaries
             for i, x in enumerate(workbook["xCropProtection"].iter_rows(max_col=7, min_row=2, values_only=False)):

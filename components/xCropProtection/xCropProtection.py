@@ -89,6 +89,12 @@ class xCropProtection(base.Component):
                 description="""Path to the database containing product-active substance relationships."""
             ),
             base.Input(
+                "MinimumAppliedArea",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer,
+                description="""If a field's area is smaller than this value after applying the InCropBuffer and InFieldMargin values, no application will occur."""
+            ),
+            base.Input(
                 "Fields",
                 (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
                 self.default_observer,
@@ -316,6 +322,21 @@ class xCropProtection(base.Component):
                     if value == "always":
                         ppm_calendar.TemporalValidity.Value[key] = DateSpan(Date(1, 1, 1), Date(9999, 12, 31))
 
+    def set_min_applied_area(self) -> None:
+        try:
+            min_app_area = float(self.inputs["MinimumAppliedArea"].read().values)
+        except:
+            raise TypeError(f"The MinimumAppliedArea value provided is not numeric.")
+        
+        if min_app_area < 0:
+            self.default_observer.write_message(2, f"Negative MinimumAppliedArea values are not allowed. The value has been set to 0.")
+            min_app_area = 0
+
+        # Set each calendar's minimum applied area
+        for ppm_calendar in self.PPMCalendars:
+            ppm_calendar.MinAppliedArea = min_app_area
+            
+
     def replace_includes(self, root: xml.etree.ElementTree, namespace: typing.Dict[str, str], dir: str) -> None:
 
         # replace ppmcalendars if needed:
@@ -370,6 +391,8 @@ class xCropProtection(base.Component):
 
         # convert types if needed:
         self.convert_types()
+        # set the minimum applied area for each calendar
+        self.set_min_applied_area()
 
     def run(self):
 

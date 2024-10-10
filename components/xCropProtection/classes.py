@@ -134,7 +134,7 @@ class Application:
         # get crop buffer, field margin and minimum applied area:
         in_crop_buffer = self._inCropBuffer.get((day, field), ("time/day, space/base_geometry"))
         in_field_margin = self._inFieldMargin.get((day, field), ("time/day, space/base_geometry"))
-        min_applied_area = self._minimumAppliedArea.get((day, field), ("time/day, space/base_geometry"))
+        min_applied_area = self._minimumAppliedArea
 
         # check area:
         applied_geometry = ogr.CreateGeometryFromWkb(field_geometry)
@@ -185,7 +185,7 @@ class PPMCalendar:
     ApplicationWindow: Application window of the application calendar. This describes a random variable for the application date.
     InCropBuffer: An in-crop buffer used during application. This describes a random variable for the in-crop buffer.
     InFieldMargin: An margin without crops within fields. This describes a random variable for the margin.
-    MinimumAppliedArea: The minimum applied area considered. This describes a random variable for the minimum applied area.
+    MinimumAppliedArea: The minimum applied area considered. This describes a variable for the minimum applied area.
     Tank: Tank content of the application calendar.
     """
 
@@ -194,6 +194,7 @@ class PPMCalendar:
         self._targetCrops = None
         self._targetFields = None
         self._indications = None
+        self._minAppliedArea = None
 
     @property
     def TemporalValidity(self) -> Variable:
@@ -226,6 +227,14 @@ class PPMCalendar:
     @Indications.setter
     def Indications(self, value: Variable) -> None:
         self._indications = value
+
+    @property
+    def MinAppliedArea(self) -> Variable:
+        return self._minAppliedArea
+
+    @MinAppliedArea.setter
+    def MinAppliedArea(self, value: Variable) -> None:
+        self._minAppliedArea = value
 
     def is_valid(self, day: int, field: int) -> bool:
 
@@ -261,6 +270,8 @@ class PPMCalendar:
 
             # sample applications:
             for appl in appl_seq:
+                # set each application's minimum applied area
+                appl.MinimumAppliedArea = self.MinAppliedArea
                 
                 # check if application can/should be realized:
                 if not appl.apply_today(day, field) or not appl.can_apply_on_geometry(day, field, field_geometry):

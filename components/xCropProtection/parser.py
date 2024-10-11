@@ -133,8 +133,6 @@ class ExcelParser:
         # In-field margin
         in_field_margin = '0' if str(application_info[5]) == 'None' else str(application_info[5])
         ET.SubElement(application, 'InFieldMargin', attrib={'type': 'float', 'unit': 'm', 'scales': 'global'}).text = in_field_margin
-        # Minimum applied area
-        ET.SubElement(application, 'MinimumAppliedArea', attrib={'type': 'float', 'unit': 'm²', 'scales': 'global'}).text = '0'
 
     # Convert from European to US date format
     def convert_date(self, window: str) -> str:

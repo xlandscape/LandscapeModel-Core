@@ -6,6 +6,7 @@ import base
 import attrib
 import typing
 import xml.etree.ElementTree
+from .products import *
 from .distributions import *
 from .classes import *
 from .types import *
@@ -75,6 +76,24 @@ class xCropProtection(base.Component):
                 description="""A initialization for the random number generator. An int of global scale. Value has a unit of 1."""
             ),
             base.Input(
+                "OutputApplicationType",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer,
+                description="""The output type of the simulation: either product or active substance."""
+            ),
+            base.Input(
+                "ProductDatabase",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer,
+                description="""Path to the database containing product-active substance relationships."""
+            ),
+            base.Input(
+                "MinimumAppliedArea",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer,
+                description="""If a field's area is smaller than this value after applying the InCropBuffer and InFieldMargin values, no application will occur."""
+            ),
+            base.Input(
                 "Fields",
                 (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("space/base_geometry", 1)),
                 self.default_observer,
@@ -102,7 +121,7 @@ class xCropProtection(base.Component):
             base.Output("ApplicationRates", default_store, self, 
                 description="Application rates. A numpy-array of scale other/application."),
             base.Output("AppliedPPP", default_store, self, 
-                description="Applied products. A list[str] of scale other/application."),
+                description="Applied products/substances. A list[str] of scale other/application."),
             base.Output("AppliedAreas", default_store, self, 
                 description="Applied geometries. A list[bytes] of scale other/application."),
             base.Output("AppliedFields", default_store, self, 
@@ -142,7 +161,7 @@ class xCropProtection(base.Component):
         if "unit" in config.attrib:
             unit = config.attrib["unit"]
         scales = None
-        if "scales" in config.attrib and config.attrib["scales"] != "other/products":
+        if "scales" in config.attrib and (config.attrib["scales"] != "other/products" or config.attrib["scales"] != "other/active_substances"):
             scales = config.attrib["scales"]
 
         # get type:
@@ -167,7 +186,7 @@ class xCropProtection(base.Component):
                 config.attrib["type"] = "list[str]"
             raw_value = base.convert(config)
             values = {}
-            if not isinstance(raw_value, list) or scales == None or scales == "global" or scales == "other/products":
+            if not isinstance(raw_value, list) or scales == None or scales == "global" or (scales == "other/products" or scales == "other/active_substances"):
                 values[(index_start,)] = raw_value
             elif isinstance(raw_value, list):
                 for i in range(len(raw_value)):
@@ -272,9 +291,13 @@ class xCropProtection(base.Component):
                 child_object = globals()[child_config.tag.split("}")[1]]()
                 self.set_inputs(child_object, child_config)
             else: # child describes list of objects (handled as constant variables)
+                child_object_scale = "global"
+                if str(child_config.tag).endswith("ApplicationRates") and "scales" in child_config.attrib:
+                    child_object_scale = child_config.attrib["scales"]
+
                 child_object = []
                 self.set_inputs(child_object, child_config)
-                child_object = ConstantVariable(None, "global", None, {(0,): child_object})
+                child_object = ConstantVariable(None, child_object_scale, None, {(0,): child_object})
 
             # assign child object to parent object:
             if isinstance(parent_object, list): 
@@ -290,6 +313,21 @@ class xCropProtection(base.Component):
                 for key, value in ppm_calendar.TemporalValidity.Value.items():
                     if value == "always":
                         ppm_calendar.TemporalValidity.Value[key] = DateSpan(Date(1, 1, 1), Date(9999, 12, 31))
+
+    def set_min_applied_area(self) -> None:
+        try:
+            min_app_area = float(self.inputs["MinimumAppliedArea"].read().values)
+        except:
+            raise TypeError(f"The MinimumAppliedArea value provided is not numeric.")
+        
+        if min_app_area < 0:
+            self.default_observer.write_message(2, f"Negative MinimumAppliedArea values are not allowed. The value has been set to 0.")
+            min_app_area = 0
+
+        # Set each calendar's minimum applied area
+        for ppm_calendar in self.PPMCalendars:
+            ppm_calendar.MinAppliedArea = min_app_area
+            
 
     def replace_includes(self, root: xml.etree.ElementTree, namespace: typing.Dict[str, str], dir: str) -> None:
 
@@ -331,6 +369,8 @@ class xCropProtection(base.Component):
 
         # convert types if needed:
         self.convert_types()
+        # set the minimum applied area for each calendar
+        self.set_min_applied_area()
 
     def run(self):
 
@@ -346,6 +386,11 @@ class xCropProtection(base.Component):
         sim_start = self.inputs["SimulationStart"].read().values.toordinal()
         sim_end = self.inputs["SimulationEnd"].read().values.toordinal()
 
+        # set output type and check that the type is valid
+        output_type = str.lower(self.inputs["OutputApplicationType"].read().values)
+        if output_type != "product" and output_type != "active substance":
+            raise ValueError(f"Invalid output type of '{output_type}'. Valid output types are [product,active substance].")
+               
         # define results:
         applied_areas = []
         applied_fields = []
@@ -353,11 +398,16 @@ class xCropProtection(base.Component):
         application_rates = []
         technology_drift_reductions = []
         applied_ppp = []
+        applied_as = []
+        as_application_rates = []
 
         # read fields, crop ids and geometries:
         fields = self.inputs["Fields"].read().values
         crop_ids = self.inputs["LandUseLandCoverTypes"].read().values
         field_geometries = self.inputs["FieldGeometries"].read().values
+
+        prod_db = ProductDB(self.inputs["ProductDatabase"].read().values)
+        prod_db.initialize_db()
 
         self.default_observer.write_message(5, f"Simulation started.")
         
@@ -379,16 +429,38 @@ class xCropProtection(base.Component):
 
                     # sample drift reductions and add to results:
                     for appl in applications:
-                        prods, appl_rates, tech, appl_dt, appl_geom = appl
+                        prods, appl_rates, tech, appl_dt, appl_geom, appl_type = appl
+
+                        # Modify length of outputs based on number of products or active substances
+                        len_modifier = len(prods)
+
+                        if appl_type == "other/active_substances" and output_type == "active substance":
+                            # Result of sampling applications is active substance names
+                            applied_as.extend(prods)
+                            as_application_rates.extend(appl_rates)
+                        elif appl_type == "other/products" and output_type == "active substance":
+                            # query DB for active substances and concentrations, need to convert from product to a.s.
+                            active_substances, concentrations = prod_db.sample_active_substances(prods, appl_rates)
+                            
+                            len_modifier = len(active_substances)
+                            applied_as.extend(active_substances)
+                            as_application_rates.extend(concentrations)
+                        elif not (appl_type == "other/products" and output_type == "product"):
+                            prod_db.close_db()
+                            raise ValueError(f"Invalid Input-Output combination of {appl_type} and {output_type}.")
+
                         for technology in self.Technologies:
                             if technology.TechnologyName.get((day, field), "time/day, space/base_geometry") == tech:
                                 drift_red = technology.sample_drift_reduction(day, field)
-                        applied_areas.extend([appl_geom] * len(prods))
-                        applied_fields.extend([fields[field]] * len(prods))
-                        application_dates.extend([appl_dt] * len(prods))
+
+                        applied_areas.extend([appl_geom] * len_modifier)
+                        applied_fields.extend([fields[field]] * len_modifier)
+                        application_dates.extend([appl_dt] * len_modifier)
                         application_rates.extend(appl_rates)
-                        technology_drift_reductions.extend([drift_red] * len(prods))
-                        applied_ppp.extend(prods)                                   
+                        technology_drift_reductions.extend([drift_red] * len_modifier)
+                        applied_ppp.extend(prods)                 
+
+        prod_db.close_db()
 
         self.default_observer.write_message(5, f"Simulation finished!")
 
@@ -396,12 +468,17 @@ class xCropProtection(base.Component):
         applied_fields = np.array(applied_fields, dtype=np.int)
         application_dates = np.array(application_dates, dtype=int)
         application_rates = np.array(application_rates)
+        as_application_rates = np.array(as_application_rates)
         technology_drift_reductions = np.array(technology_drift_reductions)
 
         # set outputs:
         self.outputs["AppliedFields"].set_values(applied_fields, scales="other/application")
         self.outputs["ApplicationDates"].set_values(application_dates, scales="other/application")
-        self.outputs["ApplicationRates"].set_values(application_rates, scales="other/application")
         self.outputs["TechnologyDriftReductions"].set_values(technology_drift_reductions, scales="other/application")
         self.outputs["AppliedAreas"].set_values(applied_areas, scales="other/application")
-        self.outputs["AppliedPPP"].set_values(applied_ppp, scales="other/application")
+        if output_type == "product":
+            self.outputs["AppliedPPP"].set_values(applied_ppp, scales="other/application")
+            self.outputs["ApplicationRates"].set_values(application_rates, scales="other/application")
+        elif output_type == "active substance":
+            self.outputs["AppliedPPP"].set_values(applied_as, scales="other/application")
+            self.outputs["ApplicationRates"].set_values(as_application_rates, scales="other/application")

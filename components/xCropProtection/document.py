@@ -38,7 +38,7 @@ PARAMETERS = {
         "attributes": {
             "type": "none|list[str]",
             "unit": "none",
-            "scales": "other/products",
+            "scales": "other/products|other/active_substances",
         },
         "description": "List of products that should be applied during a single application.",        
     },

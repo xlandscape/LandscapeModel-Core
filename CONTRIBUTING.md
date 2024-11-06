@@ -1,7 +1,7 @@
 # Contributing
 
 Contributions to the project are welcome. Please contact the authors. These contribution notes refer to the general
-Landscape Model contribution guidelines and were written on 2024-05-22.
+Landscape Model contribution guidelines and were written on 2024-11-06.
 
 ## Issues
 

@@ -10,6 +10,7 @@ from .products import *
 from .distributions import *
 from .classes import *
 from .types import *
+from .parser import *
 
 class xCropProtection(base.Component):
     """
@@ -113,6 +114,13 @@ class xCropProtection(base.Component):
                 self.default_observer,
                 description="""The geometries of individual landscape parts. A list[bytes] of scale space/base_geometry. Values
                     have no unit."""
+            ),
+            base.Input(
+                "XMLPath",
+                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                self.default_observer,
+                description="""The path to the folder containing the XML file automatically generated if the input file type 
+                    is Excel. This value is not set by the user and defaults to the run\SimID directory."""
             )
         ])
         self._outputs = base.OutputContainer(self, [
@@ -349,15 +357,29 @@ class xCropProtection(base.Component):
             root.remove(node)
 
     def read_xml(self) -> None:
-  
         # start reading xml:
-        xml_file = self.inputs["xCropProtectionFilePath"].read().values
-        xml_tree = xml.etree.ElementTree.parse(xml_file)
-        root = xml_tree.getroot()
+        input_file = self.inputs["xCropProtectionFilePath"].read().values
         namespace = {"": self.inputs["ParametrizationNamespace"].read().values}
+  
+        xml_tree = None
+        if input_file.endswith('.xlsx'):
+            # Set output file name and location
+            output_file = self.inputs["XMLPath"].read().values + '\\' + os.path.basename(input_file) + '.xml'
+
+            # Generate the xCropProtection xml file
+            ExcelParser(str(input_file), namespace).parse_excel(output_file)
+
+            # Read the resulting xml file
+            xml_tree = xml.etree.ElementTree.parse(output_file)
+        elif input_file.endswith('.xml'):
+            xml_tree = xml.etree.ElementTree.parse(input_file)
+        else:
+            raise TypeError(f"The input file type must be either Excel (.xlsx) or XML (.xml).")
+        
+        root = xml_tree.getroot()
 
         # replace includes if needed:
-        self.replace_includes(root, namespace, os.path.dirname(xml_file))
+        self.replace_includes(root, namespace, os.path.dirname(input_file))
 
         # create lists and containers:
         self.PPMCalendars = []

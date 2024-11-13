@@ -24,7 +24,6 @@ from .TerRQ import *
 from .ToxicLoad import *
 from .UserParameters import *
 from .WaterTemperatureFromAirTemperature import *
-from .xCropProtection.xCropProtection import *
 
 import base.VERSION
 
@@ -38,3 +37,4 @@ base.VERSION.changed("1.6.1", "`components` imports updated to reflect renamed c
 base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.__init__` ")
 base.VERSION.added("1.14.0", "default mappings for land cover to vegetation and vegetation to bee forage")
 base.VERSION.added("1.14.0", "default dictionary for vegetation classes")
+base.VERSION.changed("1.17.0", "Moved CropProtection component to its own repository")

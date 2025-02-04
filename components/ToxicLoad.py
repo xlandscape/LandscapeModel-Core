@@ -12,7 +12,7 @@ class ToxicLoad(base.Component):
             self,
             (
                 base.Input(
-                    "LD50", (attrib.Class(list[float]), attrib.Unit("µg/bee"), attrib.Scales("chemical/substance"))),
+                    "EffectConcentration", (attrib.Class(list[float]), attrib.Unit(None), attrib.Scales("chemical/substance"))),
                 base.Input(
                     "Pec",
                     (
@@ -46,20 +46,19 @@ class ToxicLoad(base.Component):
             geometries=pec_description["geometries"],
             offset=pec_description["offsets"]
         )
-        ld50s = self.inputs["LD50"].read()
-        substances = ld50s.element_names[0].get_values()
-        for substance in range(pec_description["shape"][2]):
-            ld50 = ld50s.values[substances.index(pec_substances[substance])]
-            for field in range(pec_description["shape"][0]):
-                self.outputs["ToxicLoad"].set_values(
-                    self.inputs["Pec"].read(
-                        slices=(
-                            slice(field, field + 1),
-                            slice(pec_description["shape"][1]),
-                            slice(substance, substance + 1)
-                        )
-                    ).values * 1e6 / ld50,
+        effect_concentrations = self.inputs["EffectConcentration"].read()
+        substances = effect_concentrations.element_names[0].get_values()
+        ecs_values = numpy.array(effect_concentrations.values)
+        for field in range(pec_description["shape"][0]):
+            self.outputs["ToxicLoad"].set_values(
+                (self.inputs["Pec"].read(
                     slices=(
-                        slice(field, field + 1), slice(pec_description["shape"][1]), slice(substance, substance + 1)),
-                    create=False
-                )
+                        slice(field, field + 1),
+                        slice(pec_description["shape"][1]),
+                        slice(pec_description["shape"][2])
+                    )
+                ).values * 1e6) / ecs_values[numpy.newaxis, numpy.newaxis, :],
+                slices=(
+                    slice(field, field + 1), slice(pec_description["shape"][1]), slice(pec_description["shape"][2])),
+                create=False
+            )

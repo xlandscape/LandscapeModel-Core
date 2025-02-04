@@ -59,7 +59,7 @@ class InFieldExposure(base.Component):
         self.outputs["Pec"].set_values(
             numpy.ndarray,
             shape=(len(base_features.values), simulated_days, len(considered_substances)),
-            chunks=(1, simulated_days, 1),
+            chunks=(1, simulated_days, len(considered_substances)),
             element_names=(base_features.element_names[0], None, dt50.element_names[0]),
             geometries=(base_features.geometries[0], None, None),
             offset=(None, simulation_start, None),

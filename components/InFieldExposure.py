@@ -78,6 +78,19 @@ class InFieldExposure(base.Component):
             ).append(
                 (application_date[i], applied_rate[i])
             )
+
+        # Warn the user if any substances applied are not in the list of substances with properties
+        not_included = list(set(applied_substance) - set(considered_substances))
+        if len(not_included) > 0:
+            [self.default_observer.write_message(
+                2,
+                "Substance missing from substance and product properties file",
+                f'In-field exposure will not be calculated for any applications of {substance}.')
+                for substance in not_included]
+        # Remove applications of substances not included
+        for field, substances in applications.items(): 
+            [substances.pop(substance, None) for substance in not_included]
+            
         for field, substances in applications.items():
             spatial_index = base_features.values.index(field)
             area = shapely.wkb.loads(base_features.geometries[0].get_values(slices=(spatial_index,))[0]).area

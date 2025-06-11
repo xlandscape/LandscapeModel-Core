@@ -1,6 +1,5 @@
 """Imports of the `components` module."""
 from .BeeForage import *
-from .BeeHave import *
 from .CsvReader import *
 from .DeleteFolder import *
 from .DepositionToPecSoil import *

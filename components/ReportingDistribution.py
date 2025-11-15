@@ -21,6 +21,7 @@ class ReportingDistribution(base.Component):
     base.VERSION.added("1.7.0", "Type hints to `components.ReportingDistribution`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingDistribution` with base class")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingDistribution`")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.ReportingDistribution`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

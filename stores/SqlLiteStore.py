@@ -41,6 +41,7 @@ class SqlLiteStore(base.Store):
         "1.10.2", "Changed generation of index numbers in `stores.SqlLiteStore` to considerably reduce memory usage")
     base.VERSION.changed("1.10.5", "Removed superfluous warning message from `stores.SqlLiteStore`")
     base.VERSION.changed("1.12.6", "Mitigated weak code warning in `stores.SqlLiteStore`")
+    base.VERSION.changed("1.18.0", "Code refactory in `stores.SQLiteStore`")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         """

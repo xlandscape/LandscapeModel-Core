@@ -23,6 +23,7 @@ class BeeForage(base.Component):
         """
         # CHANGELOG
         base.VERSION.added("1.14.0", "`components.BeeForage`")
+        base.VERSION.changed("1.18.0", "Code refactory in `components.BeeForage`")
 
         super(BeeForage, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(

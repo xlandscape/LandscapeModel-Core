@@ -61,6 +61,7 @@ base.VERSION.added("1.15.6", "User warning regarding non-documented modules duri
 base.VERSION.added("1.15.8", "Documentation of outputs for components in core")
 base.VERSION.changed(
     "1.15.9", "Documentation of outputs for components in core and external components now uses the same code")
+base.VERSION.changed("1.18.0", "Code refactory in `base.documentation`")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:

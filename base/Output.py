@@ -22,6 +22,7 @@ class Output:
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Output`")
     base.VERSION.added("1.15.0", "Messages if `base.Output` misses descriptions")
     base.VERSION.added("1.15.8", "Possibility to skip initial attribute checks for `base.Output`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Output`")
 
     def __init__(
             self,

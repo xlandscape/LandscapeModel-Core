@@ -50,6 +50,7 @@ base.VERSION.changed("1.12.6", "Mitigated weak code warnings in `base.functions`
 base.VERSION.changed(
     "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
 base.VERSION.changed("1.15.7", "File encoding for reading and writing using the `replace_tokens` function is now UTF-8")
+base.VERSION.changed("1.18.0", "Code refactory in `base.functions`")
 
 
 # noinspection DuplicatedCode

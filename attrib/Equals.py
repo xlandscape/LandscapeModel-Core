@@ -17,6 +17,7 @@ class Equals(base.DataAttribute):
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Equals`")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Equals`")
     base.VERSION.changed("1.15.4", "String representations of `attrib.Equals` is now more readable")
+    base.VERSION.changed("1.18.0", "Code refactory in `attrib.Equals`")
 
     def __init__(self, value: typing.Any, severity: int = 1) -> None:
         """

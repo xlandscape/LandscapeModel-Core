@@ -30,6 +30,7 @@ class ReportingHydrographicMap(base.Component):
     base.VERSION.changed(
         "1.8.0", "Replaced Legacy format strings by f-strings in `components.ReportingHydrographicMap`")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingHydrographicMap`")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.ReportingHydrographicMap`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

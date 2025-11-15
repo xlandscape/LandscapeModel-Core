@@ -24,6 +24,7 @@ class LogFileObserver(base.Observer):
     base.VERSION.added("1.9.5", "`observer.LogFileObserver` parameter for less verbose output")
     base.VERSION.changed("1.9.9", "`observer.LogFileObserver` now uses line-end buffering")
     base.VERSION.changed("1.9.11", "`observer.LogFileObserver` flushes buffer after every write")
+    base.VERSION.changed("1.18.0", "Code refactory in `observer.LogFileObserver`")
 
     def __init__(self, logfile: str, show_messages_get_values_ok: typing.Union[bool, str] = True):
         """

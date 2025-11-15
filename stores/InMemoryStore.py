@@ -23,6 +23,7 @@ class InMemoryStore(base.Store):
     base.VERSION.added("1.7.0", "Type hints to `stores.InMemoryStore`")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.InMemoryStore`")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.InMemoryStore`")
+    base.VERSION.changed("1.18.0", "Code refactory in `stores.InMemoryStore`")
 
     def __init__(self) -> None:
         """Initializes an InMemoryStore."""

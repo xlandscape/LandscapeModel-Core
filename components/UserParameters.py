@@ -27,6 +27,7 @@ class UserParameters(base.Component):
     base.VERSION.changed("1.10.0", "`components.UserParameters` switched to Google-style docstrings")
     base.VERSION.changed(
         "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.UserParameters`")
 
     def __init__(
             self, name: str,

@@ -32,6 +32,7 @@ class LandscapeScenarioPreparation(base.Component):
     base.VERSION.changed(
         "1.9.6", "Replaced GDAL constants by numerical values in `components.LandscapeScenarioPreparation`")
     base.VERSION.changed("1.12.6", "Mitigated weak code warning in `components.LandscapeScenarioPreparation`")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.LandscapeScenarioPreparation`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(LandscapeScenarioPreparation, self).__init__(name, default_observer, default_store)

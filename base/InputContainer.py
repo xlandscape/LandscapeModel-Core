@@ -14,6 +14,7 @@ class InputContainer:
     base.VERSION.added("1.7.0", "Type hints to `base.InputContainer`")
     base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.InputContainer`")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.InputContainer`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.InputContainer`")
 
     def __init__(
             self,

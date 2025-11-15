@@ -11,3 +11,4 @@ base.VERSION.added("1.1.6", "Changelog through `VersionInfo` class in `observer`
 base.VERSION.added("1.4.1", "Changelog in `observer.__init__`")
 base.VERSION.changed("1.4.1", "`Removed observer.VERSION`")
 base.VERSION.changed("1.5.3", "`observer` changelog uses markdown for code elements")
+base.VERSION.changed("1.18.0", "Code refactory in `observer/__init__.py`")

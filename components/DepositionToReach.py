@@ -49,6 +49,7 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.15.9", "Extended Deposition output description of `DepositionToReach` component")
     base.VERSION.added(
         "1.15.9", "Output `Deposition` of `DepositionToReach` component now also reports reach geometries")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.DepositionToReach`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

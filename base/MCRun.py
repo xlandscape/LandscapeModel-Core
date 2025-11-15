@@ -35,6 +35,7 @@ class MCRun:
         "1.15.4",
         "Order of arguments in `UserParameters` component now follows `base.Component` class"
     )
+    base.VERSION.changed("1.18.0", "Code refactory in `base.MCRun`")
 
     def __init__(self, xml_file: str, **keywords) -> None:
         config = xml.etree.ElementTree.parse(xml_file)

@@ -11,6 +11,7 @@ class DataProvider:
     base.VERSION.changed("1.5.3", "`base.DataProvider` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.DataProvider`")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.DataProvider`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.DataProvider`")
 
     def __init__(self, output: base.Output) -> None:
         """

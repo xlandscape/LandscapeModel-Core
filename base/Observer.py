@@ -21,6 +21,7 @@ class Observer:
         "1.15.0",
         "`base.MultiObserver` remembers whether errors, warnings and notes were written during simulation run"
     )
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Observer`")
 
     def __init__(self) -> None:
         """Initializes an Observer."""

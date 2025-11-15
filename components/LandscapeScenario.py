@@ -65,6 +65,7 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.15.6", "Updated description of `LandscapeScenario` component")
     base.VERSION.added("1.15.6", "Input descriptions to `LandscapeScenario` component")
     base.VERSION.added("1.16.0", "Inputs of `LandscapeScenario` component are now processed by `base.convert`")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.LandscapeScenario`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

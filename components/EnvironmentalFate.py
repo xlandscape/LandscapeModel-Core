@@ -25,6 +25,7 @@ class EnvironmentalFate(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.EnvironmentalFate` with base class")
     base.VERSION.changed("1.12.0", "`components.EnvironmentalFate` output scale order")
     base.VERSION.changed("1.12.0", "`components.EnvironmentalFate` reports offset")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.EnvironmentalFate`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(EnvironmentalFate, self).__init__(name, default_observer, default_store)

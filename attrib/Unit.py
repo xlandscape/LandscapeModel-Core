@@ -23,6 +23,7 @@ class Unit(base.DataAttribute):
     base.VERSION.changed(
         "1.14.0", "`attrib.Unit` keeps additional value attributes (offsets and geometries) during conversion")
     base.VERSION.changed("1.15.4", "String representations of `attrib.Unit` is now more readable")
+    base.VERSION.changed("1.18.0", "Code refactory in `attrib.Unit`")
 
     def __init__(self, expected_unit: typing.Optional[str], severity: int = 2) -> None:
         """

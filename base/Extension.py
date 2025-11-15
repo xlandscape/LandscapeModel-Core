@@ -7,6 +7,7 @@ class Extension:
     # CHANGELOG
     base.VERSION.added("1.7.0", "`base.Extension` class")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Extension`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Extension`")
 
     def register(self, values: "base.Values") -> None:
         """

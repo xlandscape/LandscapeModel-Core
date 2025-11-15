@@ -22,6 +22,7 @@ class Project:
     base.VERSION.changed("1.9.10", "`base.Project` can handle outsourced package parts")
     base.VERSION.added("1.15.0", "XML validation of scenario metadata")
     base.VERSION.changed("1.15.5", "Raise clearer error message if scenario XML does not use the right XML namespace")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Project`")
 
     # noinspection PyTypeChecker
     def __init__(self, project: str, project_dir: str, prefix: str = ":") -> None:

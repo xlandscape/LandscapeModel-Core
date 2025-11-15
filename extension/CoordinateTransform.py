@@ -12,6 +12,7 @@ class CoordinateTransform(base.Extension):
     base.VERSION.changed("1.5.3", "`extension.CoordinateTransform` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `extension.CoordinateTransform`")
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `extension.CoordinateTransform`")
+    base.VERSION.changed("1.18.0", "Code refactory in `extension.CoordinateTransform`")
 
     def __init__(self, transformation_type: str, offset: str) -> None:
         """

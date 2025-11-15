@@ -44,6 +44,7 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.15.6", "Updated description of `MarsWeather` component")
     base.VERSION.added("1.15.6", "Input descriptions to `MarsWeather` component")
     base.VERSION.added("1.15.8", "Documentation of outputs in `MarsWeather` component")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.MarsWeather`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

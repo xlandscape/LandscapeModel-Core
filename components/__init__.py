@@ -34,3 +34,4 @@ base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.
 base.VERSION.added("1.14.0", "default mappings for land cover to vegetation and vegetation to bee forage")
 base.VERSION.added("1.14.0", "default dictionary for vegetation classes")
 base.VERSION.changed("1.17.0", "Moved CropProtection component to its own repository")
+base.VERSION.changed("1.18.0", "Code refactory in `components.__init__.py`")

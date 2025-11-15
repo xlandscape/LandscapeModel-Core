@@ -23,6 +23,7 @@ class UserParameters:
     base.VERSION.changed("1.10.3", "Spell checking in `base.UserParameters`")
     base.VERSION.added("1.12.3", "XML validation to `base.UserParameters`")
     base.VERSION.changed("1.12.3", "`base.UserParameters` handles XML namespaces")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.UserParameters`")
 
     def __init__(self, xml_file: str) -> None:
         self._params = {}

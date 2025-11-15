@@ -22,6 +22,7 @@ class TerRQ(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.TerRQ` with base class")
     base.VERSION.changed("1.12.4", "Order of exposure input scales in `components.TerRQ`")
     base.VERSION.changed("1.12.4", "`components.TerRQ` reports offsets of output")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.TerRQ`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(TerRQ, self).__init__(name, default_observer, default_store)

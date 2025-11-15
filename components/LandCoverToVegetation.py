@@ -13,6 +13,7 @@ class LandCoverToVegetation(base.Component):
     """
     # CHANGELOG
     base.VERSION.added("1.14.0", "`components.LandCoverToVegetation`")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.LandCoverToVegetation` and `vegetation_classes.json`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

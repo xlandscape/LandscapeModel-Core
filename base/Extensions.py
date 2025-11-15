@@ -14,6 +14,7 @@ class Extensions(dict):
     base.VERSION.added("1.4.1", "Changelog in `base.Extensions`")
     base.VERSION.changed("1.5.3", "`base.Extensions` changelog uses markdown for code elements")
     base.VERSION.added("1.7.0", "Type hints to `base.Extensions`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Extensions`")
 
     def __getattr__(self, key: str) -> base.Extension:
         return self[key]

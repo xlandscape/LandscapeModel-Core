@@ -73,6 +73,7 @@ class X3dfStore(base.Store):
         "1.16.2", "Changed semantic checks in `X3dfStore` so that they only take place during creation of datasets")
     base.VERSION.changed("1.16.3", "Changed default value for newly created datasets in X3dfStore to NaN")
     base.VERSION.changed("1.16.4", "Changed chunking of byte lists in X3dfStore")
+    base.VERSION.changed("1.18.0", "Code refactory in `stores.X3dfStore`")
 
     def __init__(
             self,

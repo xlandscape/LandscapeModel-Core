@@ -18,6 +18,7 @@ class Input:
     base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Input`")
     base.VERSION.added("1.15.0", "Messages if `base.Input` misses attributes")
     base.VERSION.added("1.15.3", "Added option to skip initial attribute checks of a `base.Input`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Input`")
 
     def __init__(
             self,

@@ -18,11 +18,6 @@ class DepositionToReach(base.Component):
     underground), the `DepositionToReach` component allows to explicitly state this fact and exclude the reaches from
     reception of spray-drift deposition. The component has also a mode where depositions are load from a CSV file,
     which helps in simulations where spray-drift depositions are not simulated bit are known from other sources.
-
-    OUTPUTS
-    Deposition: The substance deposited at the water surface for reaches. A NumPy array of scales time/day, space/reach.
-    Values have the same unit as the input deposition.
-    Reaches: The identifiers of individual reaches. A NumPy array of scale space/reach.
     """
     # CHANGELOG
     base.VERSION.added("1.2.3", "`components.DepositionToReach` component stub")
@@ -37,12 +32,12 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.4.1", "`components.DepositionToReach` class documentation")
     base.VERSION.changed("1.4.9", "`components.DepositionToReach` data type access")
     base.VERSION.changed("1.5.3", "`components.DepositionToReach` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `components.DepositionToReach` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.DepositionToReach`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DepositionToReach` with base class")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.DepositionToReach` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.DepositionToReach`")
     base.VERSION.changed("1.10.0", "`components.DepositionToReach` reports element names of `Deposition` output")
     base.VERSION.changed("1.10.0", "`components.DepositionToReach` switched to Google-style docstrings")
-    base.VERSION.added("1.10.5", "Handling of covered reaches to `components.DepositionToReach` ")
+    base.VERSION.added("1.10.5", "Handling of covered reaches to `components.DepositionToReach`")
     base.VERSION.changed("1.11.0", "`components.DepositionToReach` allows predefining deposition in a CSV file")
     base.VERSION.fixed(
         "1.12.3", "Removed warning for unused deposition from file `components.DepositionToReach` if path is specified")
@@ -54,6 +49,7 @@ class DepositionToReach(base.Component):
     base.VERSION.changed("1.15.9", "Extended Deposition output description of `DepositionToReach` component")
     base.VERSION.added(
         "1.15.9", "Output `Deposition` of `DepositionToReach` component now also reports reach geometries")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.DepositionToReach`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

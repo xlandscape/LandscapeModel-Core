@@ -8,23 +8,24 @@ import types
 class Class(base.DataAttribute):
     """Checks whether values are instances of a specific Python class."""
     # CHANGELOG
-    base.VERSION.added("1.1.1", "`attrib.Class` ")
+    base.VERSION.added("1.1.1", "`attrib.Class`")
     base.VERSION.added("1.2.1", "`attrib.Class` checker support of list[int] type")
     base.VERSION.added("1.3.33", "`attrib.Class` support of list[bytes], list[float], list[str] and tuple[float]")
     base.VERSION.changed("1.3.33", "`attrib.Class.check()` returns base.CheckResult instead of tuple")
-    base.VERSION.added("1.4.1", "Changelog in class `attrib.Class` ")
+    base.VERSION.added("1.4.1", "Changelog in class `attrib.Class`")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Class` changelog uses markdown for code elements")
-    base.VERSION.changed("1.7.0", "`attrib.Class` got new base class `base.DataAttribute` ")
-    base.VERSION.added("1.7.0", "Type hints to `attrib.Class` ")
+    base.VERSION.changed("1.7.0", "`attrib.Class` got new base class `base.DataAttribute`")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Class`")
     base.VERSION.changed(
         "1.7.0",
         "Removed support of string-based type definitions in `attrib.Class` in favor for generic types introduced in "
         "Python 3.9"
     )
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Class` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Class` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Class`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Class`")
     base.VERSION.changed("1.15.4", "String representations of `attrib.Class` is now more readable")
+    base.VERSION.changed("1.18.0", "Code refactory in `attrib.Class`")
 
     def __init__(self, expected_type: type, severity: int = 2) -> None:
         """

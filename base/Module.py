@@ -12,12 +12,13 @@ class Module:
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.Module` class for describing Landscape Model modules")
     base.VERSION.changed("1.3.5", "`base.Module` refactored")
-    base.VERSION.added("1.4.1", "Changelog in `base.Module` ")
-    base.VERSION.added("1.5.0", "`base.Module.doc_file` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.Module`")
+    base.VERSION.added("1.5.0", "`base.Module.doc_file`")
     base.VERSION.changed("1.5.3", "`base.Module` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.Module` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.Module`")
     base.VERSION.added("1.15.0", "`base.Module` now allows nesting of modules")
     base.VERSION.added("1.15.2", "`external` and `changelog` properties to `base.Module`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Module`")
 
     def __init__(
             self,

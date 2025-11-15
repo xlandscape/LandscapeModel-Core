@@ -5,6 +5,7 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.18.0", "2025-11-15"),
     base.VersionInfo("1.17.0", "2024-11-06"),
     base.VersionInfo("1.16.5", "2024-05-22"),
     base.VersionInfo("1.16.4", "2024-03-18"),
@@ -148,40 +149,44 @@ VERSION.changed("1.4.0", "`components.XSprayDrift` repackaged as external part")
 VERSION.changed("1.4.0", "`observer.AnalysisObserver` repackaged as external part")
 VERSION.changed("1.4.0", "`observer.ReportingObserver` repackaged as external part")
 VERSION.changed("1.4.1", "Changed `base.VERSION` to a `base.VersionCollection`, tracking changes in classes")
-VERSION.added("1.4.1", "Changelog in `base.VERSION` ")
-VERSION.added("1.4.2", "Corrections in `README` ")
+VERSION.added("1.4.1", "Changelog in `base.VERSION`")
+VERSION.added("1.4.2", "Corrections in `README`")
 VERSION.changed("1.4.9", "`base` changelog uses markdown for code elements")
 VERSION.fixed("1.4.10", "automatic documentation error")
-VERSION.changed("1.5.5", "renamed `LICENSE.txt` to `LICENSE` ")
+VERSION.changed("1.5.5", "renamed `LICENSE.txt` to `LICENSE`")
 VERSION.fixed("1.5.5", "spelling error in readme")
-VERSION.added("1.7.0", "Type hints to `base.VERSION` ")
-VERSION.changed("1.10.3", "Spell checking in `README` ")
+VERSION.added("1.7.0", "Type hints to `base.VERSION`")
+VERSION.changed("1.10.3", "Spell checking in `README`")
+VERSION.changed("1.18.0", "Code refactory in `base.VERSION`")
 
 # CHANGELOG VersionCollection.py
 VERSION.added("1.4.1", "`base.VersionCollection` for managing revision history")
-VERSION.changed("1.5.0", "fixed spelling in `base.VersionCollection` ")
-VERSION.added("1.5.0", "properties `roadmap`, `authors` and `acknowledgements` to `base.VersionCollection` ")
-VERSION.added("1.7.0", "Type hints to `base.VersionCollection` ")
-VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.VersionCollection` ")
-VERSION.changed("1.9.0", "Switched to Google docstring style in `base.VersionCollection` ")
+VERSION.changed("1.5.0", "fixed spelling in `base.VersionCollection`")
+VERSION.added("1.5.0", "properties `roadmap`, `authors` and `acknowledgements` to `base.VersionCollection`")
+VERSION.added("1.7.0", "Type hints to `base.VersionCollection`")
+VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.VersionCollection`")
+VERSION.changed("1.9.0", "Switched to Google docstring style in `base.VersionCollection`")
+VERSION.changed("1.18.0", "Code refactory in `base.VersionCollection`")
 
 # CHANGELOG VersionInfo.py
 VERSION.added("1.1.6", "`base.VersionInfo` for describing individual revisions")
 VERSION.changed("1.3.27", "`base.VersionInfo` refactored")
 VERSION.changed("1.4.1", "`base.VersionInfo` completely rewritten to move changelogs nearer to code")
-VERSION.added("1.7.0", "Type hints to `base.VersionInfo` ")
-VERSION.changed("1.9.0", "Switched to Google docstring style in `base.VersionInfo` ")
+VERSION.added("1.7.0", "Type hints to `base.VersionInfo`")
+VERSION.changed("1.9.0", "Switched to Google docstring style in `base.VersionInfo`")
+VERSION.changed("1.18.0", "Code refactory in `base.VersionInfo`")
 
 # CHANGELOG init.py
 VERSION.changed("1.4.9", "`init.py` spell check exclusions")
-VERSION.added("1.7.0", "Type hints to `init.py` ")
-VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `init.py` ")
-VERSION.changed("1.9.0", "Switched to Google docstring style in `init.py` ")
-VERSION.changed("1.12.4", "Increased encapsulation of Jupyter notebook in `init.py` ")
+VERSION.added("1.7.0", "Type hints to `init.py`")
+VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `init.py`")
+VERSION.changed("1.9.0", "Switched to Google docstring style in `init.py`")
+VERSION.changed("1.12.4", "Increased encapsulation of Jupyter notebook in `init.py`")
+VERSION.changed("1.18.0", "Code refactory in `init.py`")
 
 # CHANGELOG document.py
-VERSION.added("1.4.9", "`document.py` ")
-VERSION.added("1.12.2", "Automatic creation of CONTRIBUTING.md in `document.py` ")
+VERSION.added("1.4.9", "`document.py`")
+VERSION.added("1.12.2", "Automatic creation of CONTRIBUTING.md in `document.py`")
 VERSION.added("1.15.2", "Creation of repository info during documentation")
 VERSION.added("1.15.5", "Usage of a fixed path for the versions.json during documentation")
 

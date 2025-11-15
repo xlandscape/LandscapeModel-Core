@@ -15,49 +15,81 @@ import typing
 class LandscapeScenarioPreparation(base.Component):
     """
     A component that prepares landscape scenarios ingested by the LandscapeScenario component from geo-files.
-
-    INPUTS
-    OutputPath: The path where to write the landscape scenario to.
-    LandscapeScenarioVersion: The version of the landscape scenario.
-    LandscapeScenarioDescription: A description of the landscape scenario.
-    TargetFieldLandUseLandCoverType: The identifier of the target land-use / land-cover type.
-    BaseLandscapeGeometries: The base landscape geometries.
-    FeatureIdAttribute: The name of the feature ID attribute.
-    DEM: A digital elevation model.
-
-    OUTPUTS
-    None.
     """
     # CHANGELOG
     base.VERSION.added("1.3.28", "`components.LandscapeScenarioPreparation` component")
     base.VERSION.changed("1.3.29", "`components.LandscapeScenarioPreparation` can calculate flow grids from DEM")
-    base.VERSION.added("1.4.1", "Changelog in `components.LandscapeScenarioPreparation` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.LandscapeScenarioPreparation`")
     base.VERSION.changed("1.4.1", "`components.LandscapeScenarioPreparation` class documentation")
     base.VERSION.changed("1.4.9", "`components.LandscapeScenarioPreparation` spell check exclusion")
     base.VERSION.changed("1.5.3", "`components.LandscapeScenarioPreparation` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.1", "Updated `components.LandscapeScenarioPreparation` to new metadata format")
-    base.VERSION.added("1.7.0", "Type hints to `components.LandscapeScenarioPreparation` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.LandscapeScenarioPreparation`")
     base.VERSION.changed(
         "1.7.0", "Harmonized init signature of `components.LandscapeScenarioPreparation` with base class")
     base.VERSION.changed(
-        "1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenarioPreparation` ")
+        "1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenarioPreparation`")
     base.VERSION.changed(
-        "1.9.6", "Replaced GDAL constants by numerical values in `components.LandscapeScenarioPreparation` ")
-    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `components.LandscapeScenarioPreparation` ")
+        "1.9.6", "Replaced GDAL constants by numerical values in `components.LandscapeScenarioPreparation`")
+    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `components.LandscapeScenarioPreparation`")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.LandscapeScenarioPreparation`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(LandscapeScenarioPreparation, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [
-            base.Input("OutputPath", (), self.default_observer),
-            base.Input("LandscapeScenarioVersion", (), self.default_observer),
-            base.Input("LandscapeScenarioDescription", (), self.default_observer),
-            base.Input("TargetFieldLandUseLandCoverType", (), self.default_observer),
-            base.Input("HabitatLUseLandCoverTypes", (), self.default_observer),
-            base.Input("BaseLandscapeGeometries", (), self.default_observer),
-            base.Input("FeatureIdAttribute", (), self.default_observer),
-            base.Input("FeatureLandUsLandCoverTypeAttribute", (), self.default_observer),
-            base.Input("DEM", (), self.default_observer)
-        ])
+        self._inputs = base.InputContainer(
+            self,
+            [
+                base.Input(
+                    "OutputPath",
+                    (),
+                    self.default_observer,
+                    description="The path where to write the landscape scenario to."
+                ),
+                base.Input(
+                    "LandscapeScenarioVersion",
+                    (),
+                    self.default_observer,
+                    description="The version of the landscape scenario."
+                ),
+                base.Input(
+                    "LandscapeScenarioDescription",
+                    (),
+                    self.default_observer,
+                    description="A description of the landscape scenario."
+                ),
+                base.Input(
+                    "TargetFieldLandUseLandCoverType",
+                    (),
+                    self.default_observer,
+                    description="The identifier of the target land-use / land-cover type."
+                ),
+                base.Input(
+                    "HabitatLandUseLandCoverTypes",
+                    (),
+                    self.default_observer,
+                    description="The identifiers of the habitat land-use / land-cover types."
+                ),
+                base.Input(
+                    "BaseLandscapeGeometries",
+                    (),
+                    self.default_observer,
+                    description="The base landscape geometries."
+                ),
+                base.Input(
+                    "FeatureIdAttribute",
+                    (),
+                    self.default_observer,
+                    description="The name of the feature ID attribute."
+                ),
+                base.Input(
+                    "FeatureLandUseLandCoverTypeAttribute",
+                    (),
+                    self.default_observer,
+                    description="The name of the land use / land cover type attribute."
+                ),
+                base.Input("DEM", (), self.default_observer, description="A digital elevation model.")
+            ]
+        )
 
     def run(self) -> None:
         """

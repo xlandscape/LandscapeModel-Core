@@ -12,17 +12,18 @@ class InMemoryStore(base.Store):
     None.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "`store.InMemoryStore` ")
+    base.VERSION.added("1.1.1", "`store.InMemoryStore`")
     base.VERSION.changed("1.3.27", "`store.InMemoryStore` `slice` keyword renamed to `slices`")
     base.VERSION.changed("1.3.27", "`store.InMemoryStore` updated")
     base.VERSION.changed("1.3.33", "`store.InMemoryStore` stores physical unit if specified")
-    base.VERSION.added("1.4.1", "Changelog in `store.InMemoryStore` ")
+    base.VERSION.added("1.4.1", "Changelog in `store.InMemoryStore`")
     base.VERSION.changed("1.4.1", "`store.InMemoryStore` class documentation")
     base.VERSION.changed("1.4.9", "`store.InMemoryStore` data type access")
     base.VERSION.changed("1.5.3", "`store.InMemoryStore` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `stores.InMemoryStore` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.InMemoryStore` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.InMemoryStore` ")
+    base.VERSION.added("1.7.0", "Type hints to `stores.InMemoryStore`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.InMemoryStore`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.InMemoryStore`")
+    base.VERSION.changed("1.18.0", "Code refactory in `stores.InMemoryStore`")
 
     def __init__(self) -> None:
         """Initializes an InMemoryStore."""

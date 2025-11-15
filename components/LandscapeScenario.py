@@ -33,15 +33,15 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.2.20", "`components.LandscapeScenario` distinguishes between supplementary data formats")
     base.VERSION.changed(
         "1.2.20", "`components.LandscapeScenario` can import additional attributes from base geometry shapefile")
-    base.VERSION.changed("1.2.34", "Better exceptions in `components.LandscapeScenario` ")
-    base.VERSION.changed("1.2.35", "Class checks in `components.LandscapeScenario` ")
-    base.VERSION.changed("1.3.2", "Enforce strict checks in `components.LandscapeScenario` ")
+    base.VERSION.changed("1.2.34", "Better exceptions in `components.LandscapeScenario`")
+    base.VERSION.changed("1.2.35", "Class checks in `components.LandscapeScenario`")
+    base.VERSION.changed("1.3.2", "Enforce strict checks in `components.LandscapeScenario`")
     base.VERSION.changed("1.3.27", "`components.LandscapeScenario` specifies scales")
     base.VERSION.changed("1.3.33", "`components.LandscapeScenario` checks input types strictly")
     base.VERSION.changed("1.3.33", "`components.LandscapeScenario` checks for physical units")
     base.VERSION.changed("1.3.33", "`components.LandscapeScenario` reports physical units to the data store")
     base.VERSION.changed("1.3.33", "`components.LandscapeScenario` checks for scales")
-    base.VERSION.added("1.4.1", "Changelog in `components.LandscapeScenario` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.LandscapeScenario`")
     base.VERSION.changed("1.4.1", "`components.LandscapeScenario` class documentation")
     base.VERSION.fixed("1.4.7", "`components.LandscapeScenario` added path to proj.db zo fix errors on some systems")
     base.VERSION.changed("1.4.9", "`components.LandscapeScenario` changelog uses markdown for code elements")
@@ -49,22 +49,23 @@ class LandscapeScenario(base.Component):
     base.VERSION.changed("1.6.0", "`components.LandscapeScenario` casts exported WKB geometries to bytes")
     base.VERSION.changed("1.6.1", "Renamed to `components.LandscapeScenario`")
     base.VERSION.changed("1.6.4", "`components.LandscapeScenario` reads physical units from package metadata")
-    base.VERSION.added("1.7.0", "Type hints to `components.LandscapeScenario` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.LandscapeScenario`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.LandscapeScenario` with base class")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenario` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.LandscapeScenario` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.LandscapeScenario`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.LandscapeScenario`")
     base.VERSION.added("1.9.2", "`components.LandscapeScenario` output of base layer EPSG code")
     base.VERSION.changed("1.10.0", "`components.LandscapeScenario` reports global scale of metadata outputs")
     base.VERSION.changed("1.10.0", "`components.LandscapeScenario` gained semantics for element identifier attribute")
-    base.VERSION.changed("1.10.4", "Added additional consistency check to `components.LandscapeScenario` ")
+    base.VERSION.changed("1.10.4", "Added additional consistency check to `components.LandscapeScenario`")
     base.VERSION.changed("1.12.0", "`components.LandscapeScenario` output scale order")
     base.VERSION.changed("1.12.0", "`components.LandscapeScenario` reports offset")
-    base.VERSION.changed("1.12.5", "Perform XML schema validation in `components.LandscapeScenario` ")
+    base.VERSION.changed("1.12.5", "Perform XML schema validation in `components.LandscapeScenario`")
     base.VERSION.changed(
         "1.14.0", "`components.LandscapeScenario` reports geometries of values also as value attributes")
     base.VERSION.changed("1.15.6", "Updated description of `LandscapeScenario` component")
     base.VERSION.added("1.15.6", "Input descriptions to `LandscapeScenario` component")
     base.VERSION.added("1.16.0", "Inputs of `LandscapeScenario` component are now processed by `base.convert`")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.LandscapeScenario`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -91,7 +92,7 @@ class LandscapeScenario(base.Component):
                             "The `LandscapeScenario` component allows to import landscape scenarios for a wide range "
                             "of simulations which differ in their geospatial requirements (e.g., off-field soil "
                             "simulations compared with aquatic simulations). The `GeoPackageNamespace` input defines "
-                            "the domain of the simulation regarding this requirements. The structure of the XML is "
+                            "the domain of the simulation regarding these requirements. The structure of the XML is "
                             "described by an XML schema (`package.xsd` in the `model/variant` folder) and the package "
                             "file itself must make use of the specified namespace and validate against the XML schema."
             ),
@@ -122,6 +123,7 @@ class LandscapeScenario(base.Component):
         Returns:
             Nothing.
         """
+
         def strip_namespace(tag: str) -> str:
             """
             Strips the namespace from an XML tag.
@@ -190,10 +192,12 @@ class LandscapeScenario(base.Component):
                                  raster_geo_transform[0] + raster_geo_transform[1] * r.RasterXSize,
                                  raster_geo_transform[3] + raster_geo_transform[5] * r.RasterYSize,
                                  raster_geo_transform[3])
-                if abs(extent[0] - raster_extent[0]) >= abs(raster_geo_transform[1] / 2) or abs(
-                        extent[1] - raster_extent[1]) >= abs(raster_geo_transform[1] / 2) or abs(
-                        extent[2] - raster_extent[2]) >= abs(raster_geo_transform[5] / 2) or abs(
-                        extent[3] - raster_extent[3]) >= abs(raster_geo_transform[5] / 2):
+                if (
+                        abs(extent[0] - raster_extent[0]) >= abs(raster_geo_transform[1] / 2) or
+                        abs(extent[1] - raster_extent[1]) >= abs(raster_geo_transform[1] / 2) or
+                        abs(extent[2] - raster_extent[2]) >= abs(raster_geo_transform[5] / 2) or
+                        abs(extent[3] - raster_extent[3]) >= abs(raster_geo_transform[5] / 2)
+                ):
                     if entry.attrib.setdefault("deviatingExtent", "") == "confirmed":
                         self.default_observer.write_message(
                             3,

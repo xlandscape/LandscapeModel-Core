@@ -13,17 +13,18 @@ class LogFileObserver(base.Observer):
     logfile: The path and file name of the logfile to write.
     """
     # CHANGELOG
-    base.VERSION.added("1.3.24", "`observer.LogFileObserver` ")
-    base.VERSION.added("1.4.1", "Changelog in `observer.LogFileObserver` ")
+    base.VERSION.added("1.3.24", "`observer.LogFileObserver`")
+    base.VERSION.added("1.4.1", "Changelog in `observer.LogFileObserver`")
     base.VERSION.changed("1.4.1", "`observer.LogFileObserver` class documentation")
     base.VERSION.changed("1.5.3", "`observer.LogFileObserver` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.3", "`observer.LogFileObserver` uses utf-8 encoding for logfiles")
-    base.VERSION.added("1.7.0", "Type hints to `observer.LogFileObserver` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.LogFileObserver` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.LogFileObserver` ")
+    base.VERSION.added("1.7.0", "Type hints to `observer.LogFileObserver`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.LogFileObserver`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.LogFileObserver`")
     base.VERSION.added("1.9.5", "`observer.LogFileObserver` parameter for less verbose output")
     base.VERSION.changed("1.9.9", "`observer.LogFileObserver` now uses line-end buffering")
     base.VERSION.changed("1.9.11", "`observer.LogFileObserver` flushes buffer after every write")
+    base.VERSION.changed("1.18.0", "Code refactory in `observer.LogFileObserver`")
 
     def __init__(self, logfile: str, show_messages_get_values_ok: typing.Union[bool, str] = True):
         """

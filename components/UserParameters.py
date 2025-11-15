@@ -9,29 +9,25 @@ import base
 class UserParameters(base.Component):
     """
     Encapsulates a set of user-defined parameters as a Landscape Model component.
-
-    INPUTS
-    None.
-
-    OUTPUTS
-    As defined by the user parameters passed to the initialization method of the component.
+    Outputs are as defined by the user parameters passed to the initialization method of the component.
     """
     # CHANGELOG
     base.VERSION.added("1.1.1", "`components.UserParameters` component")
     base.VERSION.changed("1.3.27", "`components.UserParameters` specifies scales")
     base.VERSION.changed("1.3.27", "`components.UserParameters` expects list of `UserParameters` as values")
-    base.VERSION.added("1.3.33", "`components.UserParameters.unit` ")
+    base.VERSION.added("1.3.33", "`components.UserParameters.unit`")
     base.VERSION.changed("1.3.33", "`components.UserParameters` reports physical units to the data store")
-    base.VERSION.added("1.4.1", "Changelog in `components.UserParameters` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.UserParameters`")
     base.VERSION.changed("1.4.1", "`components.UserParameters` class documentation")
     base.VERSION.changed("1.5.3", "`components.UserParameters` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `components.UserParameters` ")
-    base.VERSION.added("1.7.0", "Type hints to `components.UserParameter` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.UserParameters`")
+    base.VERSION.added("1.7.0", "Type hints to `components.UserParameter`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.UserParameters` with base class")
     base.VERSION.added("1.10.0", "`components.UserParameters` have element names now")
     base.VERSION.changed("1.10.0", "`components.UserParameters` switched to Google-style docstrings")
     base.VERSION.changed(
         "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.UserParameters`")
 
     def __init__(
             self, name: str,
@@ -63,6 +59,7 @@ class UserParameters(base.Component):
 
 class UserParameter:
     """A single user-defined parameter."""
+
     def __init__(
             self,
             name: str,

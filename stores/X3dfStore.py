@@ -1,4 +1,4 @@
-"""A class encapsulating an X3df data store."""
+"""A class encapsulating a X3df-store."""
 import datetime
 import h5py
 import numpy
@@ -13,7 +13,7 @@ import h5py.h5r
 
 class X3dfStore(base.Store):
     """
-    Encapsulates a X3df data store for usage in the Landscape Model.
+    Encapsulates a X3df-store for usage in the Landscape Model.
 
     PARAMETERS
     file_path: The file path and name for the HDF5 tom use.
@@ -23,27 +23,27 @@ class X3dfStore(base.Store):
     store.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "`store.X3dfStore` ")
+    base.VERSION.added("1.1.1", "`store.X3dfStore`")
     base.VERSION.changed("1.1.5", "`store.X3dfStore` scale information for numpy arrays if provided")
     base.VERSION.changed("1.1.5", "`store.X3dfStore` can calculate maximum for numpy arrays")
     base.VERSION.changed("1.2.2", "`store.X3dfStore` now handles boolean values separately")
     base.VERSION.changed("1.2.16", "Slicing enabled for `list[byte]` in `store.X3dfStore`")
-    base.VERSION.changed("1.2.20", "Support of dates and times in `store.X3dfStore` ")
+    base.VERSION.changed("1.2.20", "Support of dates and times in `store.X3dfStore`")
     base.VERSION.changed("1.2.25", "Support of `NoneType` in `store.X3dfStore`")
-    base.VERSION.changed("1.2.37", "Specified X3df file mode in `store.X3dfStore` ")
-    base.VERSION.changed("1.2.37", "Ability to open X3df in different modes in `store.X3dfStore` ")
+    base.VERSION.changed("1.2.37", "Specified X3df file mode in `store.X3dfStore`")
+    base.VERSION.changed("1.2.37", "Ability to open X3df-stores in different modes in `store.X3dfStore`")
     base.VERSION.changed("1.2.37", "`store.X3dfStore` refactored")
     base.VERSION.changed("1.3.27", "`store.X3dfStore` acknowledges `scales` keyword for all value types")
     base.VERSION.changed("1.3.27", "`store.X3dfStore` `default` keyword added")
-    base.VERSION.changed("1.3.27", "`store.X3dfStore` `slice` keyword renamed to `slices` ")
+    base.VERSION.changed("1.3.27", "`store.X3dfStore` `slice` keyword renamed to `slices`")
     base.VERSION.changed("1.3.33", "`store.X3dfStore` no longer casts `list[bytes]` to bytes")
     base.VERSION.changed("1.3.33", "`store.X3dfStore` can store and read lists of strings")
     base.VERSION.changed("1.3.33", "`store.X3dfStore` is explicit about its parameters")
     base.VERSION.changed("1.3.33", "`store.X3dfStore` stores physical unit if specified")
     base.VERSION.changed("1.3.33", "`store.X3dfStore.describe()` outputs scales")
     base.VERSION.changed("1.3.35", "`store.X3dfStore` can be initialized using existing data")
-    base.VERSION.added("1.3.35", "`store.X3dfStore.has_dataset()` ")
-    base.VERSION.added("1.4.1", "Changelog in `store.X3dfStore` ")
+    base.VERSION.added("1.3.35", "`store.X3dfStore.has_dataset()`")
+    base.VERSION.added("1.4.1", "Changelog in `store.X3dfStore`")
     base.VERSION.changed("1.4.1", "`store.X3dfStore` class documentation")
     base.VERSION.changed("1.4.6", "`store.X3dfStore` `identifier` argument of initializer")
     base.VERSION.changed("1.4.6", "`store.X3dfStore` parent run no longer randomly sampled")
@@ -51,9 +51,9 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.4.9", "`store.X3dfStore` data type access")
     base.VERSION.changed("1.5.3", "`store.X3fdStore` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.0", "`store.X3dfStore` acknowledges that HDF-stored strings are now returned as bytes")
-    base.VERSION.added("1.7.0", "Type hints to `stores.X3dfStore` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.X3dfStore` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.X3dfStore` ")
+    base.VERSION.added("1.7.0", "Type hints to `stores.X3dfStore`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.X3dfStore`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.X3dfStore`")
     base.VERSION.changed("1.10.0", "`stores.X3dfStore` now manages element names for some scales")
     base.VERSION.changed("1.10.1", "`stores.X3dfStore` recognizes additional scales")
     base.VERSION.changed("1.11.0", "`stores.X3dfStore` manages storage of offsets")
@@ -73,6 +73,7 @@ class X3dfStore(base.Store):
         "1.16.2", "Changed semantic checks in `X3dfStore` so that they only take place during creation of datasets")
     base.VERSION.changed("1.16.3", "Changed default value for newly created datasets in X3dfStore to NaN")
     base.VERSION.changed("1.16.4", "Changed chunking of byte lists in X3dfStore")
+    base.VERSION.changed("1.18.0", "Code refactory in `stores.X3dfStore`")
 
     def __init__(
             self,
@@ -83,13 +84,13 @@ class X3dfStore(base.Store):
             identifier: int = 0
     ) -> None:
         """
-        Initializes a X3df data store.
+        Initializes a X3df-store.
 
         Args:
-            file_path: The path of the X3df file.
+            file_path: The path of the X3df-file.
             observer: The observer used by the store.
-            mode: The file mode in which the X3df file is opened.
-            initialization: An existing store with which the new X3df store is initialized.
+            mode: The file mode in which the X3df-file is opened.
+            initialization: An existing store with which the new X3df-store is initialized.
             identifier: The identifier of the initialized run.
         """
         hdf5_file = os.path.join(file_path, "arr.dat")
@@ -337,7 +338,7 @@ class X3dfStore(base.Store):
                 source_dataset: The full dataset name of the source dataset.
                 attribute: The name of the attribute in the source dataset that should be linked to the target dataset.
                 expected_length: The number of elements that is expected to be present in the target dataset. A message
-                    is send if the actual number is unequal to the expected number.
+                    is printed if the actual number is unequal to the expected number.
 
             Returns:
                 Nothing.
@@ -456,7 +457,11 @@ class X3dfStore(base.Store):
             geometries = None if geometries is None else [
                 x.store_name if isinstance(x, base.Output) else x for x in geometries]
             if element_names is not None and len(element_names) != dimension_count:
-                self._observer.store_set_values(2, "X3dfStore", f"Element names and dimensionality of {name} do not fit")
+                self._observer.store_set_values(
+                    2,
+                    "X3dfStore",
+                    f"Element names and dimensionality of {name} do not fit"
+                )
             if geometries is not None and len(geometries) != dimension_count:
                 self._observer.store_set_values(2, "X3dfStore", f"Geometries and dimensionality of {name} do not fit")
             if any([x.endswith("_element_names") for x in self._f[name].attrs]):
@@ -478,7 +483,9 @@ class X3dfStore(base.Store):
                     raise ValueError(f"Cannot override existing offsets for {name}")
                 offset = [None] * dimension_count
                 for offset_dim in [x for x in self._f[name].attrs if x.endswith("_offset")]:
-                    offset[int(offset_dim.removeprefix("dim").removesuffix("_offset"))] = self._f[name].attrs[offset_dim]
+                    offset[int(offset_dim.removeprefix("dim").removesuffix("_offset"))] = (
+                        self._f[name].attrs[offset_dim]
+                    )
             if "scales" in self._f[name].attrs:
                 if scales is not None and scales != ", ".join(self._f[name].attrs["scales"]):
                     raise ValueError(f"Cannot override existing scales definition for {name}")

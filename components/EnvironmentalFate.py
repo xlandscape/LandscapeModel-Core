@@ -11,15 +11,6 @@ import typing
 class EnvironmentalFate(base.Component):
     """
     Calculates environmental fate based on a simple half-time degradation.
-
-    INPUTS
-    SprayDriftExposure: The exposure due to spray-drift.
-    RunOfExposure: The exposure due to run-off.
-    SoilDT50: The half-time for substance degradation in soil.
-
-    OUTPUTS
-    Pec: The concentration of substance considering exposure and degradation. A NumPy array of scales time/day,
-    space_x/1sqm, space_y/1sqm.
     """
     # CHANGELOG
     base.VERSION.added("1.1.1", "`components.EnvironmentalFate` component")
@@ -30,10 +21,11 @@ class EnvironmentalFate(base.Component):
     base.VERSION.changed("1.4.1", "`components.EnvironmentalFate` class documentation")
     base.VERSION.changed("1.4.9", "renamed `components.EnvironmentalFate` component")
     base.VERSION.changed("1.4.14", "added semantic descriptions to `EnvironmentalFate` component")
-    base.VERSION.added("1.7.0", "Type hints to `components.EnvironmentalFate` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.EnvironmentalFate`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.EnvironmentalFate` with base class")
     base.VERSION.changed("1.12.0", "`components.EnvironmentalFate` output scale order")
     base.VERSION.changed("1.12.0", "`components.EnvironmentalFate` reports offset")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.EnvironmentalFate`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(EnvironmentalFate, self).__init__(name, default_observer, default_store)
@@ -41,16 +33,35 @@ class EnvironmentalFate(base.Component):
             base.Input(
                 "SprayDriftExposure",
                 (attrib.Class(np.ndarray), attrib.Scales("space_y/1sqm, space_x/1sqm, time/day"), attrib.Unit("g/ha")),
-                self.default_observer
+                self.default_observer,
+                description="The exposure due to spray-drift."
             ),
             base.Input(
                 "RunOffExposure",
                 (attrib.Class(np.ndarray), attrib.Scales("space_y/1sqm, space_x/1sqm, time/day"), attrib.Unit("g/ha")),
-                self.default_observer),
+                self.default_observer,
+                description="The exposure due to run-off."
+            ),
             base.Input(
-                "SoilDT50", (attrib.Class(float), attrib.Scales("global"), attrib.Unit("d")), self.default_observer)
+                "SoilDT50",
+                (attrib.Class(float), attrib.Scales("global"), attrib.Unit("d")),
+                self.default_observer,
+                description="The half-time for substance degradation in soil."
+            )
         ))
-        self._outputs = base.OutputContainer(self, [base.Output("Pec", default_store, self)])
+        self._outputs = base.OutputContainer(
+            self,
+            [
+                base.Output(
+                    "Pec",
+                    default_store,
+                    self,
+                    description=
+                    "The concentration of substance considering exposure and degradation. A NumPy array of scales "
+                    "time/day, space_x/1sqm, space_y/1sqm."
+                )
+            ]
+        )
 
     def run(self) -> None:
         """

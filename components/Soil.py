@@ -13,10 +13,11 @@ class Soil(base.Component):
     # CHANGELOG
     base.VERSION.added("1.16.0", "`components.Soil` component")
     base.VERSION.changed("1.16.2", "Renamed scale other/soil_layer to other/soil_horizon")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.Soil`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
-        Initializes a MarsWeather component.
+        Initializes a Soil component.
 
         Args:
             name: The name of the component.
@@ -25,11 +26,17 @@ class Soil(base.Component):
         """
         super(Soil, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(self, [
-            base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer),
+            base.Input(
+                "FilePath",
+                (attrib.Class(str, 1), attrib.Unit(None, 1)),
+                self.default_observer,
+                description="The file path to the SQLite database.",
+            ),
             base.Input(
                 "SoilTypes",
                 (attrib.Class(list[str]), attrib.Unit(None), attrib.Scales("space/base_geometry")),
-                self.default_observer
+                self.default_observer,
+                description="The soil types of the individual geometries."
             )
         ])
         self._outputs = base.OutputContainer(
@@ -39,105 +46,127 @@ class Soil(base.Component):
                     "HeightOfSublayer",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"},
+                    "The height of the soil horizon."
                 ),
                 base.Output(
                     "HeightOfCompartmentsInLayer",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"},
+                    "The height of the compartments in the layer."
                 ),
                 base.Output(
                     "NumberOfCompartmentsInLayer",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The number of compartments in the layer."
                 ),
                 base.Output(
                     "ResidualWaterContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The residual water content."
                 ),
                 base.Output(
                     "SaturatedWaterContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The saturated water content."
                 ),
                 base.Output(
                     "AlphaOfMainDryingCurve",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1/cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1/cm"},
+                    "The alpha of the main drying curve."
                 ),
                 base.Output(
                     "ShapeParameterN",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The shape of the drying curve."
                 ),
                 base.Output(
                     "SaturatedVerticalHydraulicConductivity",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm/d"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm/d"},
+                    "The saturated hydraulic conductivity."
                 ),
                 base.Output(
                     "ExponentInHydraulicConductivityFunction",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The value of the exponent in the hydraulic conductivity function."
                 ),
                 base.Output(
                     "AlphaOfMainWettingCurve",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1/cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1/cm"},
+                    "The alpha of the main wetting curve."
                 ),
                 base.Output(
                     "EntryPressureHead",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "cm"},
+                    "The entry pressure head."
                 ),
                 base.Output(
                     "SandContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The sand content of the layer."
                 ),
                 base.Output(
                     "SiltContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The silt content of the layer."
                 ),
                 base.Output(
                     "ClayContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The clay content of the layer."
                 ),
                 base.Output(
                     "OrganicMatterContent",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The organic matter content of the layer."
                 ),
                 base.Output(
-                    "pH", default_store, self, {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"}),
+                    "pH",
+                    default_store,
+                    self,
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "1"},
+                    "The pH-value of the layer."
+                ),
                 base.Output(
                     "Density",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "kg/m³"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "kg/m³"},
+                    "The density of the soil layer."
                 ),
                 base.Output(
                     "LenDisLiq",
                     default_store,
                     self,
-                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "m"}
+                    {"scales": "space/base_geometry, other/soil_horizon", "unit": "m"},
+                    "The LenDisLiq parameter."
                 )
             )
         )
@@ -162,28 +191,27 @@ class Soil(base.Component):
         max_number_soil_layers = max([x[1] for x in soils_data])
         soil_types = self.inputs["SoilTypes"].read()
         for i, soil_parameter in enumerate(
-            (
-                    "HeightOfSublayer",
-                    "HeightOfCompartmentsInLayer",
-                    "NumberOfCompartmentsInLayer",
-                    "ResidualWaterContent",
-                    "SaturatedWaterContent",
-                    "AlphaOfMainDryingCurve",
-                    "ShapeParameterN",
-                    "SaturatedVerticalHydraulicConductivity",
-                    "ExponentInHydraulicConductivityFunction",
-                    "AlphaOfMainWettingCurve",
-                    "EntryPressureHead",
-                    "SandContent",
-                    "SiltContent",
-                    "ClayContent",
-                    "OrganicMatterContent",
-                    "pH",
-                    "Density",
-                    "LenDisLiq"
-            )
+                (
+                        "HeightOfSublayer",
+                        "HeightOfCompartmentsInLayer",
+                        "NumberOfCompartmentsInLayer",
+                        "ResidualWaterContent",
+                        "SaturatedWaterContent",
+                        "AlphaOfMainDryingCurve",
+                        "ShapeParameterN",
+                        "SaturatedVerticalHydraulicConductivity",
+                        "ExponentInHydraulicConductivityFunction",
+                        "AlphaOfMainWettingCurve",
+                        "EntryPressureHead",
+                        "SandContent",
+                        "SiltContent",
+                        "ClayContent",
+                        "OrganicMatterContent",
+                        "pH",
+                        "Density",
+                        "LenDisLiq"
+                )
         ):
-
             data = numpy.full((len(soil_types.values), max_number_soil_layers), numpy.nan)
             for j, soil_type in enumerate(soil_types.values):
                 parameter = numpy.asarray([x[1][i] for x in soils_data.items() if x[0][0] == soil_type])

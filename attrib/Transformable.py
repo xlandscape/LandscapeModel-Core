@@ -10,10 +10,11 @@ class Transformable(base.DataAttribute):
     base.VERSION.changed("1.3.33", "`attrib.Transformable.check()` returns base.CheckResult instead of tuple")
     base.VERSION.added("1.4.1", "Changelog in `attrib.Transformable`")
     base.VERSION.changed("1.5.3", "`attrib.Transformable` changelog uses markdown for code elements")
-    base.VERSION.changed("1.7.0", "`attrib.Transformable` got new base class `base.DataAttribute` ")
-    base.VERSION.added("1.7.0", "Type hints to `attrib.Transformable` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Transformable` ")
+    base.VERSION.changed("1.7.0", "`attrib.Transformable` got new base class `base.DataAttribute`")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Transformable`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Transformable`")
     base.VERSION.changed("1.15.4", "String representations of `attrib.Transformable` is now more readable")
+    base.VERSION.changed("1.18.0", "Code refactory in `attrib.Transformable`")
 
     def __init__(self, severity: int = 2) -> None:
         """

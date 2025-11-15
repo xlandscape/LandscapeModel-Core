@@ -15,14 +15,16 @@ class Project:
     # CHANGELOG
     base.VERSION.added("1.2.1", "`base.Project` class for representing Landscape Model scenarios")
     base.VERSION.changed("1.3.5", "`base.Project` refactored")
-    base.VERSION.added("1.4.1", "Changelog in `base.Project` ")
-    base.VERSION.added("1.4.1", "`base.Project.version` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.Project`")
+    base.VERSION.added("1.4.1", "`base.Project.version`")
     base.VERSION.changed("1.5.3", "`base.Project` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.Project` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.Project`")
     base.VERSION.changed("1.9.10", "`base.Project` can handle outsourced package parts")
     base.VERSION.added("1.15.0", "XML validation of scenario metadata")
     base.VERSION.changed("1.15.5", "Raise clearer error message if scenario XML does not use the right XML namespace")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Project`")
 
+    # noinspection PyTypeChecker
     def __init__(self, project: str, project_dir: str, prefix: str = ":") -> None:
         self._content = {}
         self._path = os.path.join(project_dir, project)

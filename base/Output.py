@@ -8,20 +8,21 @@ class Output:
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.Output` class for representing component outputs")
     base.VERSION.changed("1.3.13", "`base.Output` refactored")
-    base.VERSION.added("1.4.1", "Changelog in `base.Output` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.Output`")
     base.VERSION.changed("1.5.0", "`base.Output` manages default attributes")
     base.VERSION.changed("1.5.0", "`base.Output` output description and hints for attribute descriptions")
     base.VERSION.changed("1.5.0", "usage of specified defaults if no attributes passed in a call to set values")
     base.VERSION.added(
-        "1.5.0", "`base.Output` properties `default_attributes`, `description` and `attribute_hints` ")
+        "1.5.0", "`base.Output` properties `default_attributes`, `description` and `attribute_hints`")
     base.VERSION.changed("1.5.1", "small changes in `base.Output` changelog")
     base.VERSION.changed("1.5.3", "`base.Output` changelog uses markdown for code elements")
     base.VERSION.fixed("1.5.6", "Handling of omitted `base.Output` attribute hints")
-    base.VERSION.added("1.7.0", "Type hints to `base.Output` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Output` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Output` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.Output`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Output`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Output`")
     base.VERSION.added("1.15.0", "Messages if `base.Output` misses descriptions")
     base.VERSION.added("1.15.8", "Possibility to skip initial attribute checks for `base.Output`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Output`")
 
     def __init__(
             self,

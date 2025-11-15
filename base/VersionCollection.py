@@ -7,6 +7,7 @@ import base
 
 class VersionCollection:
     """Collects version changes to compile a changelog."""
+
     # CHANGELOG can be found in `VERSION.py` to avoid circular references
 
     def __init__(self, *versions: base.VersionInfo) -> None:

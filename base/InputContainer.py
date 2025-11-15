@@ -7,13 +7,14 @@ class InputContainer:
     """A container for component inputs."""
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.InputContainer` class for collecting the inputs of a component")
-    base.VERSION.added("1.2.3", "Added `base.InputContainer.append()` and `.__contains__()` ")
+    base.VERSION.added("1.2.3", "Added `base.InputContainer.append()` and `.__contains__()`")
     base.VERSION.changed("1.3.33", "`base.InputContainer` refactored")
-    base.VERSION.added("1.4.1", "Changelog in `base.InputContainer` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.InputContainer`")
     base.VERSION.changed("1.5.3", "`base.InputContainer` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.InputContainer` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.InputContainer` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.InputContainer` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.InputContainer`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.InputContainer`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.InputContainer`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.InputContainer`")
 
     def __init__(
             self,

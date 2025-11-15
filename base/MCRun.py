@@ -10,7 +10,7 @@ import xml.etree.ElementTree
 
 class MCRun:
     """
-    A individual Monte Carlo run of a Landscape Model experiment.
+    An individual Monte Carlo run of a Landscape Model experiment.
     """
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.MCRun` class for managing individual Monte Carlo runs")
@@ -21,18 +21,21 @@ class MCRun:
     base.VERSION.changed("1.3.20", "`base.MCRun` can be enabled/disabled also through expression in configuration")
     base.VERSION.changed("1.3.27", "`base.MCRun` parses user-defined parameter scales")
     base.VERSION.changed("1.3.35", "`base.MCRun` can continue previous simulations")
-    base.VERSION.added("1.4.1", "Changelog in `base.MCRun` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.MCRun`")
     base.VERSION.changed("1.4.2", "`base.McRun` changelog description")
     base.VERSION.changed("1.5.0", "`base.MCRun` iterates over output objects instead of names")
     base.VERSION.changed("1.5.1", "small changes in `base.MCRun` changelog")
     base.VERSION.changed("1.5.3", "`base.MCRun` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.MCRun` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.MCRun` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.MCRun`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.MCRun`")
     base.VERSION.added("1.10.0", "XML-tag for element names in `base.MCRun` configurations")
-    base.VERSION.changed("1.13.0", "Allowed more spellings for enabling/disabling components in `base.MCRun` ")
+    base.VERSION.changed("1.13.0", "Allowed more spellings for enabling/disabling components in `base.MCRun`")
     base.VERSION.added("1.15.0", "Added message for initialization of component in `base.MCRun`")
     base.VERSION.changed(
-        "1.15.4","Order of arguments in `UserParameters` component now follows `base.Component` class")
+        "1.15.4",
+        "Order of arguments in `UserParameters` component now follows `base.Component` class"
+    )
+    base.VERSION.changed("1.18.0", "Code refactory in `base.MCRun`")
 
     def __init__(self, xml_file: str, **keywords) -> None:
         config = xml.etree.ElementTree.parse(xml_file)

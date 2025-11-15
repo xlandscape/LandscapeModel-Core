@@ -8,12 +8,12 @@ import typing
 
 class MarsWeather(base.Component):
     """
-    Provides MARS weather data from a CSV file to the Landscape Model. The CSV file must have a header and must contain
-    the following columns in arbitrary order: DAY, MONTH, YEAR. Each row of the CSV file gives data for one day, and
-    which day this is, is specified as the numerical day of month (DAY), month of year (MONTH) and the year (YEAR).
-    Values in columns named equal to the component's outputs are parsed and used for the outputs. See the documentation
-    of outputs for additional information on the expected values. The CSV file may contain additional columns that are
-    not used by the component.
+    Provides weather data from a CSV file downloaded from Agri4Cast to the Landscape Model. The CSV file must have a
+    header and must contain the following columns in arbitrary order: DAY, MONTH, YEAR. Each row of the CSV file
+    gives data for one day, and which day this is, is specified as the numerical day of month (DAY), month of year (
+    MONTH) and the year (YEAR). Values in columns named equal to the component's outputs are parsed and used for the
+    outputs. See the documentation of outputs for additional information on the expected values. The CSV file may
+    contain additional columns that are not used by the component.
     """
     # CHANGELOG
     base.VERSION.added("1.2.40", "`components.MarsWeather` component")
@@ -24,17 +24,17 @@ class MarsWeather(base.Component):
         "1.3.33", "`components.MarsWeather` reports physical unit of average temperature to data store")
     base.VERSION.changed("1.3.33", "`components.MarsWeather` checks for scales")
     base.VERSION.changed("1.3.35", "`components.MarsWeather` no longer uses a provisional output container")
-    base.VERSION.added("1.4.1", "Changelog in `components.MarsWeather` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.MarsWeather`")
     base.VERSION.changed("1.4.1", "`components.MarsWeather` class documentation")
     base.VERSION.changed("1.4.13", "added physical units to `MarsWeather` outputs")
     base.VERSION.changed("1.5.0", "`components.MarsWeather` iterates over output objects instead of names")
     base.VERSION.changed("1.5.1", "small changes in `components.MarsWeather` changelog")
     base.VERSION.changed("1.5.3", "`components.MarsWeather` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.4", "`components.MarsWeather` warning if weather file misses parameters")
-    base.VERSION.added("1.7.0", "Type hints to `components.MarsWeather` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.MarsWeather`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.MarsWeather` with base class")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.MarsWeather` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.MarsWeather` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.MarsWeather`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.MarsWeather`")
     base.VERSION.changed("1.11.0", "`components.MarsWeather` specifies offsets of outputs")
     base.VERSION.changed(
         "1.13.0", "`components.MarsWeather` now stores entire timeseries, regardless of simulation period")
@@ -44,6 +44,7 @@ class MarsWeather(base.Component):
     base.VERSION.changed("1.15.6", "Updated description of `MarsWeather` component")
     base.VERSION.added("1.15.6", "Input descriptions to `MarsWeather` component")
     base.VERSION.added("1.15.8", "Documentation of outputs in `MarsWeather` component")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.MarsWeather`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

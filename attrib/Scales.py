@@ -6,14 +6,15 @@ class Scales(base.DataAttribute):
     """Checks whether values have specific scales."""
     # CHANGELOG
     base.VERSION.added("1.3.33", "Scale attribute checker")
-    base.VERSION.added("1.4.1", "Changelog in class `attrib.Scales` ")
+    base.VERSION.added("1.4.1", "Changelog in class `attrib.Scales`")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Scales` changelog uses markdown for code elements")
-    base.VERSION.changed("1.7.0", "`attrib.Scales` got new base class `base.DataAttribute` ")
-    base.VERSION.added("1.7.0", "Type hints to `attrib.Scales` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Scales` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Scales` ")
+    base.VERSION.changed("1.7.0", "`attrib.Scales` got new base class `base.DataAttribute`")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Scales`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Scales`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Scales`")
     base.VERSION.changed("1.15.4", "String representations of `attrib.Scales` is now more readable")
+    base.VERSION.changed("1.18.0", "Code refactory in `attrib.Scales`")
 
     def __init__(self, expected_scales: str, severity: int = 2) -> None:
         """

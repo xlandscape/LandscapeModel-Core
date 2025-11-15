@@ -10,10 +10,11 @@ class Ontology(base.DataAttribute):
     base.VERSION.added("1.4.1", "Changelog in class `attrib.Ontology`")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Ontology` changelog uses markdown for code elements")
-    base.VERSION.changed("1.7.0", "`attrib.Ontology` got new base class `base.DataAttribute` ")
-    base.VERSION.added("1.7.0", "Type hints to `attrib.Ontology` ")
-    base.VERSION.changed("1.7.0", "Removed deactivated code in `attrib.Ontology` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Ontology` ")
+    base.VERSION.changed("1.7.0", "`attrib.Ontology` got new base class `base.DataAttribute`")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Ontology`")
+    base.VERSION.changed("1.7.0", "Removed deactivated code in `attrib.Ontology`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Ontology`")
+    base.VERSION.changed("1.18.0", "Code refactory in `attrib.Ontology`")
 
     def __init__(self, iri: str) -> None:
         """

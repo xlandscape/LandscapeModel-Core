@@ -14,15 +14,16 @@ class Values:
     # CHANGELOG
     base.VERSION.added("1.1.1", "`base.Values class` for exchanged data values")
     base.VERSION.changed("1.3.5", "`base.Values` refactored")
-    base.VERSION.added("1.3.33", "Quick access to metadata by `base.Values.unit` and `base.Values.scales` ")
-    base.VERSION.added("1.4.1", "Changelog in `base.Values` ")
+    base.VERSION.added("1.3.33", "Quick access to metadata by `base.Values.unit` and `base.Values.scales`")
+    base.VERSION.added("1.4.1", "Changelog in `base.Values`")
     base.VERSION.changed("1.5.3", "`base.Values` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.Values` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.Values`")
     base.VERSION.added("1.10.0", "`base.Values` have element names now")
     base.VERSION.changed("1.10.0", "`base.Values` switched to Google-style docstrings")
-    base.VERSION.added("1.13.0", "Offset property to `base.Values` ")
+    base.VERSION.added("1.13.0", "Offset property to `base.Values`")
     base.VERSION.changed("1.14.0", "`base.Values` now manages geometries of elements")
     base.VERSION.added("1.14.0", "class `base.ExistingValues` for referencing values already stored")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Values`")
 
     # noinspection PyUnusedLocal
     def __init__(
@@ -69,7 +70,7 @@ class Values:
         """
         return self._extension
 
-    @property 
+    @property
     def values(self) -> typing.Any:
         """
         Gets the actual values.

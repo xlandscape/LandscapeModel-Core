@@ -8,10 +8,11 @@ class Store:
     # CHANGELOG
     base.VERSION.added("1.3.28", "`base.Store` class for representing Landscape Model stores")
     base.VERSION.added("1.3.35", "`base.Store.has_dataset()` to check whether store contains specific data")
-    base.VERSION.added("1.4.1", "Changelog in `base.Store` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.Store`")
     base.VERSION.changed("1.5.3", "`base.Store` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.Store` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Store` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.Store`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Store`")
+    base.VERSION.changed("1.18.0", "Code refactory in `base.Store`")
 
     def close(self) -> None:
         """

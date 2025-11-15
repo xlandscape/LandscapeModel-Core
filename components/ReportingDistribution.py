@@ -10,28 +10,18 @@ import typing
 class ReportingDistribution(base.Component):
     """
     Draws a distribution of values.
-
-    INPUTS
-    Values: The input values. A NumPy array.
-    XLabel: The label of the x-axis. A string.
-    Title: The title of the plot. A string of global scale.
-    XMin: The minimum x-value to display. A float of global sale.
-    XMax: The maximum x-value to display. A float of global sale.
-    OutputFile: A valid file path to write the plot to. A string of global scale.
-
-    OUTPUTS
-    None.
     """
     # CHANGELOG
     base.VERSION.added("1.4.0", "`components.ReportingDistribution` component")
-    base.VERSION.added("1.4.1", "Changelog in `components.ReportingDistribution` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.ReportingDistribution`")
     base.VERSION.added("1.4.1", "`components.ReportingDistribution` class documentation")
     base.VERSION.fixed("1.4.5", "`components.ReportingDistribution` spelling error in documentation")
     base.VERSION.added("1.4.5", "`components.ReportingDistribution.draw()` static method")
     base.VERSION.changed("1.5.3", "`components.ReportingDistribution` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `components.ReportingDistribution` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.ReportingDistribution`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingDistribution` with base class")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingDistribution` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingDistribution`")
+    base.VERSION.changed("1.18.0", "Code refactory in `components.ReportingDistribution`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -46,12 +36,42 @@ class ReportingDistribution(base.Component):
         self._inputs = base.InputContainer(
             self,
             [
-                base.Input("Values", [attrib.Class(numpy.ndarray, 1)], self.default_observer),
-                base.Input("XLabel", [attrib.Class(str, 1)], self.default_observer),
-                base.Input("Title", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
-                base.Input("XMin", (attrib.Class(float, 1), attrib.Scales("global", 1)), self.default_observer),
-                base.Input("XMax", (attrib.Class(float, 1), attrib.Scales("global", 1)), self.default_observer),
-                base.Input("OutputFile", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer)
+                base.Input(
+                    "Values",
+                    [attrib.Class(numpy.ndarray, 1)],
+                    self.default_observer,
+                    description="The input values. A NumPy array."
+                ),
+                base.Input(
+                    "XLabel",
+                    [attrib.Class(str, 1)],
+                    self.default_observer,
+                    description="The label of the x-axis. A string."
+                ),
+                base.Input(
+                    "Title",
+                    (attrib.Class(str, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The title of the plot. A string of global scale."
+                ),
+                base.Input(
+                    "XMin",
+                    (attrib.Class(float, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The minimum x-value to display. A float of global sale."
+                ),
+                base.Input(
+                    "XMax",
+                    (attrib.Class(float, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The maximum x-value to display. A float of global sale."
+                ),
+                base.Input(
+                    "OutputFile",
+                    (attrib.Class(str, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="A valid file path to write the plot to. A string of global scale."
+                )
             ]
         )
         self._outputs = base.OutputContainer(self, [])
@@ -89,7 +109,7 @@ class ReportingDistribution(base.Component):
         Plots the distribution of values.
 
         Args:
-            data_store: The file path where the X3df store is located.
+            data_store: The file path where the X3df-store is located.
             values: The name of the dataset containing the values to plot.
             x_label: The label of the x-axis.
             title: The title of the plot.

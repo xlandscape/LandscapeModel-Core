@@ -10,19 +10,20 @@ class Unit(base.DataAttribute):
     base.VERSION.added("1.3.3", "Unit attribute class to check and convert physical units (currently hard-coded)")
     base.VERSION.changed("1.3.33", "`attrib.Unit.check()` returns base.CheckResult instead of tuple")
     base.VERSION.added("1.3.34", "Additional unit conversions in class `attrib.Unit`")
-    base.VERSION.added("1.4.1", "Changelog in class `attrib.Unit` ")
+    base.VERSION.added("1.4.1", "Changelog in class `attrib.Unit`")
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "`attrib.Unit` changelog uses markdown for code elements")
     base.VERSION.added("1.6.4", "`attrib.Unit` support for lists")
-    base.VERSION.added("1.6.4", "Further unit conversion to `attrib.Unit` ")
-    base.VERSION.changed("1.7.0", "`attrib.Unit` got new base class `base.DataAttribute` ")
-    base.VERSION.added("1.7.0", "Type hints to `attrib.Unit` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Unit` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Unit` ")
+    base.VERSION.added("1.6.4", "Further unit conversion to `attrib.Unit`")
+    base.VERSION.changed("1.7.0", "`attrib.Unit` got new base class `base.DataAttribute`")
+    base.VERSION.added("1.7.0", "Type hints to `attrib.Unit`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `attrib.Unit`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `attrib.Unit`")
     base.VERSION.changed("1.10.0", "`attrib.Unit` keeps element names for converted values")
     base.VERSION.changed(
         "1.14.0", "`attrib.Unit` keeps additional value attributes (offsets and geometries) during conversion")
     base.VERSION.changed("1.15.4", "String representations of `attrib.Unit` is now more readable")
+    base.VERSION.changed("1.18.0", "Code refactory in `attrib.Unit`")
 
     def __init__(self, expected_unit: typing.Optional[str], severity: int = 2) -> None:
         """

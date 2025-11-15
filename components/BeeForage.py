@@ -10,20 +10,8 @@ import openpyxl
 class BeeForage(base.Component):
     """
     Simulates nectar and pollen availability to bees based on vegetation and timeseries per vegetation class.
-
-    INPUTS
-    Vegetation: Vegetation classes at a scale of space/base_geometry.
-    Timeseries: A path to an Excel table containing timeseries detailing pollen and nectar availability per vegetation
-    class.
-    NectarPerClass: The nectar availability in L/(m²*d) for each bee forage class.
-    PollenPerClass: The pollen availability in g/(m²*d) for each bee forage class.
-    SimulationStart: The first day of the simulation for which bee forage availability is to be simulated.
-    SimulationEnd: The last day of the simulation for which bee forage availability is to be simulated.
-
-    OUTPUTS
-    Nectar: The availability of nectar to bees in L/(m²*d) at a scale of space/base_geometry and time/day.
-    Pollen: The availability of pollen to bees in g/(m²*d) at a scale of space/base_geometry and time/day.
     """
+
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
         Initializes a BeeForage component.
@@ -34,7 +22,8 @@ class BeeForage(base.Component):
             default_store: The default store of the component.
         """
         # CHANGELOG
-        base.VERSION.added("1.14.0", "`components.BeeForage` ")
+        base.VERSION.added("1.14.0", "`components.BeeForage`")
+        base.VERSION.changed("1.18.0", "Code refactory in `components.BeeForage`")
 
         super(BeeForage, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
@@ -43,32 +32,40 @@ class BeeForage(base.Component):
                 base.Input(
                     "Vegetation",
                     (attrib.Class(numpy.ndarray), attrib.Unit(None), attrib.Scales("space/base_geometry")),
-                    self.default_observer
+                    self.default_observer,
+                    description="Vegetation classes at a scale of space/base_geometry."
                 ),
                 base.Input(
                     "Timeseries",
                     (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description=
+                    "A path to an Excel table containing timeseries detailing pollen and nectar availability per "
+                    "vegetation class."
                 ),
                 base.Input(
                     "NectarPerClass",
                     (attrib.Class(list[float]), attrib.Unit("L/(m²*d)"), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description="The nectar availability in L/(m²*d) for each bee forage class."
                 ),
                 base.Input(
                     "PollenPerClass",
                     (attrib.Class(list[float]), attrib.Unit("g/(m²*d)"), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description="The pollen availability in g/(m²*d) for each bee forage class."
                 ),
                 base.Input(
                     "SimulationStart",
                     (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description="The first day of the simulation for which bee forage availability is to be simulated."
                 ),
                 base.Input(
                     "SimulationEnd",
                     (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description="The last day of the simulation for which bee forage availability is to be simulated."
                 )
             )
         )
@@ -76,9 +73,19 @@ class BeeForage(base.Component):
             self,
             (
                 base.Output(
-                    "Nectar", default_store, self, {"scales": "space/base_geometry, time/day", "unit": "L/(m²*d)"}),
+                    "Nectar",
+                    default_store,
+                    self,
+                    {"scales": "space/base_geometry, time/day", "unit": "L/(m²*d)"},
+                    "The availability of nectar to bees in L/(m²*d) at a scale of space/base_geometry and time/day."
+                ),
                 base.Output(
-                    "Pollen", default_store, self, {"scales": "space/base_geometry, time/day", "unit": "g/(m²*d)"})
+                    "Pollen",
+                    default_store,
+                    self,
+                    {"scales": "space/base_geometry, time/day", "unit": "g/(m²*d)"},
+                    "The availability of pollen to bees in g/(m²*d) at a scale of space/base_geometry and time/day."
+                )
             )
         )
 

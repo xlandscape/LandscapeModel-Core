@@ -16,25 +16,6 @@ import typing
 class ReportingHydrographicMap(base.Component):
     """
     Draws a map displaying the distribution of values in a hydrographic network.
-
-    INPUTS
-    Hydrography: The hydrographic network geometries. A list[bytes] of scale space/base_geometry.
-    HydrographicReachIds: The identifiers of reaches according to the hydrography. A list[int] of scale
-    space/base_geometry.
-    SimulationStart: The first day of the simulation. A `datetime.date` of global scale.
-    DisplayedTime: The time displayed in the map. A `datetime.date` of global scale.
-    Values: The values to map onto the hydrographic network. A NumPy array.
-    ValuesReachIds: The reach identifiers according to the values. A list[int] of scale space/reach.
-    Title: The title of the plot. A string of global scale.
-    OutputFile: A valid path to a file where the plot is written to. A string of global scale.
-    DisplayedUnit: The unit in which values should be displayed. A string of global scale.
-    ScaleMaxValue: The maximum value to which the legend is scaled. A float of global scale.
-    ScaleMinValue: The minimum value to which the legend is scaled. A float of global scale.
-    ValuesNormalization: The normalization applied to the values. A string of global scale.
-    ColorMap: The color map used for displaying the values. A list[str] with global scale.
-
-    OUTPUTS
-    None.
     """
     # CHANGELOG
     base.VERSION.added("1.4.0", "`components.ReportingHydrographicMap` component")
@@ -44,11 +25,11 @@ class ReportingHydrographicMap(base.Component):
     base.VERSION.changed("1.4.5", "`components.ReportingHydrographicMap.__init__` `observer` argument renamed")
     base.VERSION.changed("1.4.9", "`components.ReportingHydrographicMap` changelog uses markdown for code elements")
     base.VERSION.changed("1.5.3", "`components.ReportingHydrographicMap` markdown usage extended")
-    base.VERSION.added("1.7.0", "Type hints to `components.ReportingHydrographicMap` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.ReportingHydrographicMap`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.ReportingHydrographicMap` with base class")
     base.VERSION.changed(
-        "1.8.0", "Replaced Legacy format strings by f-strings in `components.ReportingHydrographicMap` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingHydrographicMap` ")
+        "1.8.0", "Replaced Legacy format strings by f-strings in `components.ReportingHydrographicMap`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.ReportingHydrographicMap`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -65,41 +46,83 @@ class ReportingHydrographicMap(base.Component):
             [
                 base.Input(
                     "Hydrography",
-                    (attrib.Class(list[bytes], 1),  attrib.Scales("space/base_geometry", 1)),
-                    self.default_observer
+                    (attrib.Class(list[bytes], 1), attrib.Scales("space/base_geometry", 1)),
+                    self.default_observer,
+                    description="The hydrographic network geometries. A list[bytes] of scale space/base_geometry."
                 ),
                 base.Input(
                     "HydrographicReachIds",
                     (attrib.Class(list[int], 1), attrib.Scales("space/base_geometry", 1)),
-                    self.default_observer
+                    self.default_observer,
+                    description=
+                    "The identifiers of reaches according to the hydrography. A list[int] of scale space/base_geometry."
                 ),
                 base.Input(
                     "SimulationStart",
                     (attrib.Class(datetime.date, 1), attrib.Scales("global", 1)),
-                    self.default_observer
+                    self.default_observer,
+                    description="The first day of the simulation. A `datetime.date` of global scale."
                 ),
                 base.Input(
                     "DisplayedTime",
                     (attrib.Class(datetime.datetime, 1), attrib.Scales("global", 1)),
-                    self.default_observer
+                    self.default_observer,
+                    description="The time displayed in the map. A `datetime.date` of global scale."
                 ),
-                base.Input("Values", [attrib.Class(numpy.ndarray, 1)], self.default_observer),
+                base.Input(
+                    "Values",
+                    [attrib.Class(numpy.ndarray, 1)],
+                    self.default_observer,
+                    description="The values to map onto the hydrographic network. A NumPy array."
+                ),
                 base.Input(
                     "ValuesReachIds",
                     (attrib.Class(list[int], 1), attrib.Scales("space/reach", 1)),
-                    self.default_observer
+                    self.default_observer,
+                    description="The reach identifiers according to the values. A list[int] of scale space/reach."
                 ),
-                base.Input("Title", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
-                base.Input("OutputFile", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
-                base.Input("DisplayedUnit", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
                 base.Input(
-                    "ScaleMaxValue", (attrib.Class(float, 1), attrib.Scales("global", 1)), self.default_observer),
+                    "Title",
+                    (attrib.Class(str, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The title of the plot. A string of global scale."
+                ),
                 base.Input(
-                    "ScaleMinValue", (attrib.Class(float, 1), attrib.Scales("global", 1)), self.default_observer),
+                    "OutputFile",
+                    (attrib.Class(str, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="A valid path to a file where the plot is written to. A string of global scale."
+                ),
                 base.Input(
-                   "ValuesNormalization", (attrib.Class(str, 1), attrib.Scales("global", 1)), self.default_observer),
+                    "DisplayedUnit",
+                    (attrib.Class(str, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The unit in which values should be displayed. A string of global scale."
+                ),
                 base.Input(
-                    "ColorMap", (attrib.Class(list[str], 1), attrib.Scales("global", 1)), self.default_observer)
+                    "ScaleMaxValue",
+                    (attrib.Class(float, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The maximum value to which the legend is scaled. A float of global scale."
+                ),
+                base.Input(
+                    "ScaleMinValue",
+                    (attrib.Class(float, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The minimum value to which the legend is scaled. A float of global scale."
+                ),
+                base.Input(
+                    "ValuesNormalization",
+                    (attrib.Class(str, 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The normalization applied to the values. A string of global scale."
+                ),
+                base.Input(
+                    "ColorMap",
+                    (attrib.Class(list[str], 1), attrib.Scales("global", 1)),
+                    self.default_observer,
+                    description="The color map used for displaying the values. A list[str] with global scale."
+                )
             ]
         )
         self._outputs = base.OutputContainer(self, [])
@@ -208,7 +231,7 @@ class ReportingHydrographicMap(base.Component):
         Draws a map displaying the distribution of values in a hydrographic network.
 
         Args:
-            data_store: The file path where the X3df store is located.
+            data_store: The file path where the X3df-store is located.
             hydrography: The name of the dataset containing the hydrographic network geometries.
             hydrographic_reach_ids: The name of the dataset containing the identifiers of reaches.
             simulation_start: The name of the dataset containing the first day of the simulation.

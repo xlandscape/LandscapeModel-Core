@@ -12,11 +12,11 @@ class Observer:
     base.VERSION.changed("1.3.5", "`base.Observer` refactored")
     base.VERSION.added(
         "1.3.24", "Added `base.Observer.flush()` and `base.Observer.write()` to use observers as streams")
-    base.VERSION.added("1.4.1", "Changelog in `base.Observer` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.Observer`")
     base.VERSION.changed("1.5.3", "`base.Observer` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.Observer` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.Observer`")
     base.VERSION.changed("1.7.0", "None-return instead of NotImplementedError in `base.Observer` methods")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Observer` ")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Observer`")
     base.VERSION.added(
         "1.15.0",
         "`base.MultiObserver` remembers whether errors, warnings and notes were written during simulation run"
@@ -146,6 +146,7 @@ class Observer:
 
 class MultiObserver(Observer):
     """A Landscape Model observer that encapsulates multiple observers."""
+
     def __init__(self, observers: typing.Sequence["base.Observer"]) -> None:
         """
         Initializes a MultiObserver.

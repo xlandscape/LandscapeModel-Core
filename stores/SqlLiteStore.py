@@ -19,11 +19,11 @@ class SqlLiteStore(base.Store):
     observer: An observer that handles the messages emitted by the store.
     """
     # CHANGELOG
-    base.VERSION.added("1.3.27", "`store.SqlLiteStore` ")
+    base.VERSION.added("1.3.27", "`store.SqlLiteStore`")
     base.VERSION.added("1.4.1", "Changelog in `store.SqlLiteStore`")
     base.VERSION.changed("1.4.1", "`store.SqlLiteStore` has now `base.Store` as superclass")
     base.VERSION.changed("1.4.1", "`store.SqlLiteStore` class documentation")
-    base.VERSION.added("1.4.1", "s`tore.SqlLiteStore.has_dataset()` ")
+    base.VERSION.added("1.4.1", "s`tore.SqlLiteStore.has_dataset()`")
     base.VERSION.fixed("1.4.3", "`store.SqlLiteStore` can use existing directory")
     base.VERSION.fixed("1.4.3", "`store.SqlLiteStore` uses new version system")
     base.VERSION.changed("1.4.3", "`store.SqlLiteStore` got `create` argument for extending existing datasets")
@@ -33,14 +33,14 @@ class SqlLiteStore(base.Store):
     base.VERSION.changed("1.4.4", "`store.SqlLiteStore` manages chunks")
     base.VERSION.changed("1.4.9", "`store.SqlLiteStore` data type access")
     base.VERSION.changed("1.5.3", "`store.SqlLiteStore` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `stores.SqlLiteStore` ")
-    base.VERSION.fixed("1.7.0", "Check for slices containing steps in `stores.SqlLiteStore` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.SqlLiteStore` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.SqlLiteStore` ")
+    base.VERSION.added("1.7.0", "Type hints to `stores.SqlLiteStore`")
+    base.VERSION.fixed("1.7.0", "Check for slices containing steps in `stores.SqlLiteStore`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `stores.SqlLiteStore`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `stores.SqlLiteStore`")
     base.VERSION.changed(
         "1.10.2", "Changed generation of index numbers in `stores.SqlLiteStore` to considerably reduce memory usage")
-    base.VERSION.changed("1.10.5", "Removed superfluous warning message from `stores.SqlLiteStore` ")
-    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `stores.SqlLiteStore` ")
+    base.VERSION.changed("1.10.5", "Removed superfluous warning message from `stores.SqlLiteStore`")
+    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `stores.SqlLiteStore`")
 
     def __init__(self, file_path: str, observer: base.Observer, create: bool = True) -> None:
         """
@@ -195,7 +195,7 @@ class SqlLiteStore(base.Store):
             data_type = numpy_mappings[values.dtype]
             original_type = "numpy.ndarray"
             if slices:
-                indices = [np.empty((0, ))] * len(slices)
+                indices = [np.empty((0,))] * len(slices)
                 for i, dimension_slice in enumerate(slices):
                     if isinstance(dimension_slice, slice):
                         indices[i] = np.arange(dimension_slice.start or 0, dimension_slice.stop,

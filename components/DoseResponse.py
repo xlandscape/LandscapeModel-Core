@@ -10,15 +10,6 @@ import typing
 class DoseResponse(base.Component):
     """
     Calculates an effect based on a log-logistic dose-response function.
-
-    INPUTS
-    SlopeFactor: The slope parameter of the log-logistic function. A float with global scale. Value has unit 1.
-    EC50: The concentration of 50 percent effect. A float with global scale. Value has a unit g/ha.
-    Exposure: The exposure for which effects are to be calculated. A NumPy array with scales time/day, space_x/1sqm,
-    space_y/1sqm. Values have a unit g/ha.
-
-    OUTPUTS
-    Effect: The calculated effect. A NumPy array with the same scale as the exposure input. Values have a unit of 1.
     """
     # CHANGELOG
     base.VERSION.added("1.4.0", "`components.DoseResponse` component")
@@ -27,9 +18,9 @@ class DoseResponse(base.Component):
     base.VERSION.fixed("1.4.1", "`components.DoseResponse` attrib namespace reference")
     base.VERSION.changed("1.4.9", "`components.DoseResponse` data type access")
     base.VERSION.changed("1.5.3", "`components.DoseResponse` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `components.DoseResponse` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.DoseResponse`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DoseResponse` with base class")
-    base.VERSION.changed("1.12.4", "Order of exposure input scales in `components.DoseResponse` ")
+    base.VERSION.changed("1.12.4", "Order of exposure input scales in `components.DoseResponse`")
     base.VERSION.changed("1.12.4", "`components.DoseResponse` reports offsets of output")
     base.VERSION.changed("1.12.4", "Division warning suppressed in `components.DoseResponse`")
 
@@ -41,12 +32,16 @@ class DoseResponse(base.Component):
                 base.Input(
                     "SlopeFactor",
                     (attrib.Class(float), attrib.Unit("1"), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description=
+                    "The slope parameter of the log-logistic function. A float with global scale. Value has unit 1."
                 ),
                 base.Input(
                     "EC50",
                     (attrib.Class(float), attrib.Unit("g/ha"), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description=
+                    "The concentration of 50 percent effect. A float with global scale. Value has a unit g/ha."
                 ),
                 base.Input(
                     "Exposure",
@@ -55,11 +50,26 @@ class DoseResponse(base.Component):
                         attrib.Unit("g/ha"),
                         attrib.Scales("space_y/1sqm, space_x/1sqm, time/day")
                     ),
-                    self.default_observer
+                    self.default_observer,
+                    description=
+                    "The exposure for which effects are to be calculated. A NumPy array with scales time/day, "
+                    "space_x/1sqm, space_y/1sqm. Values have a unit g/ha."
                 )
             ]
         )
-        self._outputs = base.OutputContainer(self, [base.Output("Effect", default_store, self)])
+        self._outputs = base.OutputContainer(
+            self,
+            [
+                base.Output(
+                    "Effect",
+                    default_store,
+                    self,
+                    description=
+                    "The calculated effect. A NumPy array with the same scale as the exposure input. Values have a "
+                    "unit of 1."
+                )
+            ]
+        )
 
     def run(self) -> None:
         """

@@ -1,6 +1,6 @@
 """An individual experiment prepared for the Landscape Model."""
 import datetime
-import multiprocessing
+import multiprocessing.synchronize
 import os
 import random
 import shutil
@@ -27,24 +27,24 @@ class Experiment:
     base.VERSION.added("1.1.1", "`base.Experiment` class for managing individual experiments")
     base.VERSION.added("1.1.6", "`base.Experiment.write_info_xml()` for saving runtime information of the experiment")
     base.VERSION.changed("1.2.1", "`base.Experiment` expects a global section in the Monte Carlo run configuration")
-    base.VERSION.changed("1.2.1", "`base.Experiment` has new macro `_X3DIR_` ")
-    base.VERSION.changed("1.2.17", "`base.Experiment` has new macro `_PARAM_DIR_` ")
+    base.VERSION.changed("1.2.1", "`base.Experiment` has new macro `_X3DIR_`")
+    base.VERSION.changed("1.2.17", "`base.Experiment` has new macro `_PARAM_DIR_`")
     base.VERSION.changed("1.2.17", "`base.Experiment` is more flexible in parameter directory")
     base.VERSION.changed("1.3.5", "`base.Experiment` refactored")
     base.VERSION.changed("1.3.5", "`base.Experiment` project encapsulation and support of versions")
     base.VERSION.changed("1.3.24", "`base.Experiment` sets standard and error output to default observer")
-    base.VERSION.added("1.4.1", "Changelog in `base.Experiment` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.Experiment`")
     base.VERSION.changed("1.4.1", "`base.Experiment.write_info_xml()` uses new `Version` classes")
     base.VERSION.changed("1.4.2", "Changelog description")
-    base.VERSION.changed("1.4.6", "New system macro `_MC_ID_` ")
+    base.VERSION.changed("1.4.6", "New system macro `_MC_ID_`")
     base.VERSION.changed("1.5.3", "`base.Experiment` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.Experiment` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Experiment` ")
-    base.VERSION.changed("1.9.1", "New macro `_MODEL_DIR_` in `base.Experiment` ")
-    base.VERSION.added("1.9.9", "Option to profile performance of simulation runs in `base.Experiment` ")
-    base.VERSION.fixed("1.9.11", "Processing of exceptions thrown in non-blocking mode in `base.Experiment` ")
-    base.VERSION.added("1.15.0", "Repository checks during initialization of `base.Experiment` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.Experiment`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.Experiment`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.Experiment`")
+    base.VERSION.changed("1.9.1", "New macro `_MODEL_DIR_` in `base.Experiment`")
+    base.VERSION.added("1.9.9", "Option to profile performance of simulation runs in `base.Experiment`")
+    base.VERSION.fixed("1.9.11", "Processing of exceptions thrown in non-blocking mode in `base.Experiment`")
+    base.VERSION.added("1.15.0", "Repository checks during initialization of `base.Experiment`")
     base.VERSION.changed("1.15.2", "Relieved repository checks for external modules")
     base.VERSION.fixed("1.15.5", "Errors when scenario was not tested with current model")
     base.VERSION.added("1.15.6", "Message to writing of info XML in Experiment regarding un-checked scenario modules")
@@ -208,20 +208,23 @@ class Experiment:
             Nothing.
         """
 
-        def check_module(parent: str, base_path: str, module: base.Module) -> None:
-            self._observer.write_message(5, f"{parent} uses {module.name} version {module.version}")
+        def _check_module(parent: str, base_path: str, xlandscape_module: base.Module) -> None:
+            self._observer.write_message(
+                5,
+                f"{parent} uses {xlandscape_module.name} version {xlandscape_module.version}"
+            )
             self.check_repository_state(
-                os.path.join(base_path, module.path),
-                module.name,
-                module.version,
+                os.path.join(base_path, xlandscape_module.path),
+                xlandscape_module.name,
+                xlandscape_module.version,
                 latest_versions,
                 severity=3,
-                external=module.external,
-                changelog=module.changelog,
-                documentation=module.doc_file
+                external=xlandscape_module.external,
+                changelog=xlandscape_module.changelog,
+                documentation=xlandscape_module.doc_file
             )
-            if module.module:
-                check_module(module.name, base_path, module.module)
+            if xlandscape_module.module:
+                _check_module(xlandscape_module.name, base_path, xlandscape_module.module)
 
         info_xml = xml.etree.ElementTree.Element("info")
         xml.etree.ElementTree.SubElement(info_xml, "start_date").text = str(datetime.datetime.now().date())
@@ -256,7 +259,7 @@ class Experiment:
             base.VERSION.latest,
             latest_versions
         )
-        check_module("Landscape Model core", os.path.join(self._replace_tokens["_MODEL_DIR_"], "core"), base.MODULE)
+        _check_module("Landscape Model core", os.path.join(self._replace_tokens["_MODEL_DIR_"], "core"), base.MODULE)
         parts = xml.etree.ElementTree.SubElement(versions, "parts")
         for model_part in model_parts:
             part_module = importlib.import_module(model_part.attrib["module"])
@@ -277,7 +280,7 @@ class Experiment:
             self.check_repository_state(
                 os.path.dirname(part_module.__file__), part_class.__name__, part_class.VERSION.latest, latest_versions)
             if module:
-                check_module(part_class.__name__, os.path.dirname(part_module.__file__), module)
+                _check_module(part_class.__name__, os.path.dirname(part_module.__file__), module)
             else:
                 self._observer.write_message(3, f"{part_class.__name__} does not specify a module")
         xml.etree.ElementTree.SubElement(versions, "scenario", {"name": scenario.name}).text = scenario.version
@@ -288,7 +291,7 @@ class Experiment:
             self._observer.write_message(
                 2,
                 f"Usage of scenario {scenario.name} in {model_info['name']} is not officially "
-                "supported. Please proceed with care."
+                f"supported. Please proceed with care."
             )
         elif not model_info["version"] in scenario_supported_versions:
             model_version = distutils.version.StrictVersion(model_info["version"])
@@ -324,6 +327,23 @@ class Experiment:
             changelog: typing.Optional[str] = None,
             documentation: typing.Optional[str] = None,
     ) -> None:
+        """
+        Checks the state of a git repository.
+
+        Args:
+            path: The file system path to the repository.
+            part_name: The name of the xLandscape model part stored in the repository.
+            part_version: The version of the xLandscape model part.
+            latest_versions: The latest version of the repository available.
+            git_dir: The file path to the GIT database.
+            severity: The severity of check failures.
+            external: Indicates whether this repository is stored outside the xLandscape GitHub group.
+            changelog: An optional file path to the changelog of the repository.
+            documentation: An optional file path to the documentation of the repository.
+
+        Returns:
+            None.
+        """
         git = os.path.join(path, git_dir)
         git_config_file = os.path.join(git, "config")
         git_versioned = True
@@ -350,7 +370,7 @@ class Experiment:
         repository_info_file = os.path.join(path, "repository.json")
         repository_info = {
             "visibility": None,
-            "license": None,
+            "license": "None",
             "gitflow": None,
             "code_style_compliance": None,
             "issues_enabled": None,
@@ -373,7 +393,7 @@ class Experiment:
                 license_bytes = f.read()
             license_file_is_cc0 = hashlib.md5(license_bytes).hexdigest() == "473a7959b44c2f42c375d904305b6307"
             if repository_info["license"] == "CC0-1.0" and not license_file_is_cc0:
-                repository_info["license"] = None
+                repository_info["license"] = "None"
             elif not repository_info["license"] and license_file_is_cc0:
                 repository_info["license"] = "CC0-1.0"
         if repository_info["license"] not in ("CC0-1.0", "PSF-2.0", "GPL-2.0", "free"):
@@ -486,7 +506,7 @@ def run_mc(mc_config: str) -> None:
     return base.MCRun(mc_config, lock=globalLock).run()
 
 
-def pool_init(lock: multiprocessing.Lock, running_processes: typing.Optional[list[int]] = None) -> None:
+def pool_init(lock: multiprocessing.synchronize.Lock, running_processes: typing.Optional[list[int]] = None) -> None:
     """
     Initializes a pool for parallel processing.
 

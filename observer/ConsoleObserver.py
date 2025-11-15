@@ -17,20 +17,20 @@ class ConsoleObserver(base.Observer):
     output. Setting it to True is useful when using the observer within a Jupyter notebook.
     """
     # CHANGELOG
-    base.VERSION.added("1.1.1", "`observer.ConsoleObserver` ")
-    base.VERSION.added("1.2.12", "`observer.ConsoleObserver.mc_run_started()` ")
-    base.VERSION.added("1.3.24", "Added `observer.ConsoleObserver.flush()` and `observer.ConsoleObserver.write()` ")
+    base.VERSION.added("1.1.1", "`observer.ConsoleObserver`")
+    base.VERSION.added("1.2.12", "`observer.ConsoleObserver.mc_run_started()`")
+    base.VERSION.added("1.3.24", "Added `observer.ConsoleObserver.flush()` and `observer.ConsoleObserver.write()`")
     base.VERSION.changed("1.3.24", "`observer.ConsoleObserver` refactored")
-    base.VERSION.added("1.4.1", "Changelog in `observer.ConsoleObserver` ")
+    base.VERSION.added("1.4.1", "Changelog in `observer.ConsoleObserver`")
     base.VERSION.changed("1.4.1", "`observer.ConsoleObserver` class documentation")
     base.VERSION.changed("1.5.3", "`observer.ConsoleObserver` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `observer.ConsoleObserver` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.ConsoleObserver` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.ConsoleObserver` ")
+    base.VERSION.added("1.7.0", "Type hints to `observer.ConsoleObserver`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.ConsoleObserver`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.ConsoleObserver`")
     base.VERSION.added("1.9.5", "`observer.ConsoleObserver` parameter for less verbose output")
-    base.VERSION.changed("1.9.6", "updated docstring of `ConsoleObserver.__init__` ")
+    base.VERSION.changed("1.9.6", "updated docstring of `ConsoleObserver.__init__`")
     base.VERSION.changed("1.9.11", "`observer.ConsoleObserver` flushes buffer after every write")
-    base.VERSION.changed("1.10.3", "Spell checking in `observer.ConsoleObserver` ")
+    base.VERSION.changed("1.10.3", "Spell checking in `observer.ConsoleObserver`")
 
     def __init__(
             self,

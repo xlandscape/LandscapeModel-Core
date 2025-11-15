@@ -13,9 +13,9 @@ class OutputContainer:
     base.VERSION.changed(
         "1.5.0", "Iteration over `base.OutputContainer` now returns `Output` objects instead of their names")
     base.VERSION.changed("1.5.3", "`base.OutputContainer` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `base.OutputContainer` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.OutputContainer` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.OutputContainer` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.OutputContainer`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.OutputContainer`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.OutputContainer`")
 
     def __init__(
             self,
@@ -82,6 +82,7 @@ class OutputContainer:
 
 class ProvisionalOutputs(OutputContainer):
     """An output container that generates outputs with every linked input."""
+
     def __init__(self, component: "base.Component", store: base.Store) -> None:
         """
         Initializes an ProvisionalOutputContainer.

@@ -14,18 +14,18 @@ class GraphMLObserver(base.Observer):
     include_modules: If the string "true" (case-insensitive), modules ae included into the GraphML file.
     """
     # CHANGELOG
-    base.VERSION.added("1.2.12", "`observer.GraphMLObserver` ")
-    base.VERSION.changed("1.2.13", "further implementation of `observer.GraphMLObserver` ")
-    base.VERSION.added("1.3.24", "Added `observer.GraphMLObserver.flush()` and `observer.GraphMLObserver.write()` ")
+    base.VERSION.added("1.2.12", "`observer.GraphMLObserver`")
+    base.VERSION.changed("1.2.13", "further implementation of `observer.GraphMLObserver`")
+    base.VERSION.added("1.3.24", "Added `observer.GraphMLObserver.flush()` and `observer.GraphMLObserver.write()`")
     base.VERSION.changed("1.3.33", "`observer.GraphMLObserver` refactored")
-    base.VERSION.added("1.4.1", "Changelog in `observer.GraphMLObserver` ")
+    base.VERSION.added("1.4.1", "Changelog in `observer.GraphMLObserver`")
     base.VERSION.changed("1.4.1", "`observer.GraphMLObserver` class documentation")
     base.VERSION.changed("1.5.3", "`observer.GraphMLObserver` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `observer.GraphMLObserver` ")
-    base.VERSION.changed("1.7.0", "Removed unused methods in `observer.GraphMLObserver` ")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.GraphMLObserver` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.GraphMLObserver` ")
-    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `observer.GraphMLObserver` ")
+    base.VERSION.added("1.7.0", "Type hints to `observer.GraphMLObserver`")
+    base.VERSION.changed("1.7.0", "Removed unused methods in `observer.GraphMLObserver`")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `observer.GraphMLObserver`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `observer.GraphMLObserver`")
+    base.VERSION.changed("1.12.6", "Mitigated weak code warning in `observer.GraphMLObserver`")
 
     def __init__(self, output_file: str, include_modules: str) -> None:
         """

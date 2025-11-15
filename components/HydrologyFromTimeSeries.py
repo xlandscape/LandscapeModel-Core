@@ -21,12 +21,12 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed(
         "1.2.36", "`components.HydrologyFromTimeSeries` provides water body volume and wet surface area")
     base.VERSION.changed("1.2.36", "`components.HydrologyFromTimeSeries` allows specifying time frame")
-    base.VERSION.changed("1.3.22", "More explanatory error messages in `components.HydrologyFromTimeSeries` ")
+    base.VERSION.changed("1.3.22", "More explanatory error messages in `components.HydrologyFromTimeSeries`")
     base.VERSION.changed("1.3.33", "`components.HydrologyFromTimeSeries` checks input types strictly")
     base.VERSION.changed("1.3.33", "`components.HydrologyFromTimeSeries` checks for physical units")
     base.VERSION.changed("1.3.33", "`components.HydrologyFromTimeSeries` reports physical units to the data store")
     base.VERSION.changed("1.3.33", "`components.HydrologyFromTimeSeries` checks for scales")
-    base.VERSION.added("1.4.1", "Changelog in `components.HydrologyFromTimeSeries` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.HydrologyFromTimeSeries`")
     base.VERSION.changed("1.4.1", "`components.HydrologyFromTimeSeries` class documentation")
     base.VERSION.changed("1.4.2", "new `components.HydrologyFromTimeSeries` inputs InflowTimeSeriesPath, ImportInflows")
     base.VERSION.changed("1.4.2", "new `components.HydrologyFromTimeSeries` outputs InflowReaches and Inflow")
@@ -34,11 +34,11 @@ class HydrologyFromTimeSeries(base.Component):
     base.VERSION.changed("1.4.2", "Changelog description")
     base.VERSION.changed("1.4.9", "renamed `components.HydrologyFromTimeSeries` component")
     base.VERSION.changed("1.6.0", "`components.HydrologyFromTimeSeries` casts exported WKB geometries to bytes")
-    base.VERSION.added("1.7.0", "Type hints to `components.HydrologyFromTimeSeries` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.HydrologyFromTimeSeries`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.HydrologyFromTimeSeries` with base class")
     base.VERSION.changed(
-        "1.8.0", "Replaced Legacy format strings by f-strings in `components.HydrologyFromTimeSeries` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.HydrologyFromTimeSeries` ")
+        "1.8.0", "Replaced Legacy format strings by f-strings in `components.HydrologyFromTimeSeries`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.HydrologyFromTimeSeries`")
     base.VERSION.changed("1.10.0", "`components.HydrologyFromTimeSeries` reports global scale of time span outputs")
     base.VERSION.changed("1.10.0", "`components.HydrologyFromTimeSeries` reports element names of outputs")
     base.VERSION.added("1.10.3", "Further consistency checks to `HydrologyFromTimeSeries` component")
@@ -120,6 +120,7 @@ class HydrologyFromTimeSeries(base.Component):
                 default_store,
                 self,
                 {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m³/d"},
+                "The water flow through the reach.",
                 attribute_hints={
                     "type": np.ndarray,
                     "shape": (
@@ -130,13 +131,14 @@ class HydrologyFromTimeSeries(base.Component):
                     "element_names": (None, "as specified by the `Reaches` output"),
                     "offset": ("as specified by the `FromTime` input", None),
                     "geometries": (None, "as specified by the `ReachesGeometries` output")
-                }
+                },
             ),
             base.Output(
                 "Depth",
                 default_store,
                 self,
                 {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m"},
+                "The average water depth.",
                 attribute_hints={
                     "type": np.ndarray,
                     "shape": (
@@ -164,13 +166,26 @@ class HydrologyFromTimeSeries(base.Component):
                     "geometries": ("as specified by the `ReachesGeometries` output",)
                 }
             ),
-            base.Output("TimeSeriesStart", default_store, self, {"scales": "global"}),
-            base.Output("TimeSeriesEnd", default_store, self, {"scales": "global"}),
+            base.Output(
+                "TimeSeriesStart",
+                default_store,
+                self,
+                {"scales": "global"},
+                "The first date for which hydrological parameters are available."
+            ),
+            base.Output(
+                "TimeSeriesEnd",
+                default_store,
+                self,
+                {"scales": "global"},
+                "The last date for which hydrological parameters are available."
+            ),
             base.Output(
                 "Volume",
                 default_store,
                 self,
                 {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m³"},
+                "The amount of water within the reach.",
                 attribute_hints={
                     "type": np.ndarray,
                     "shape": (
@@ -188,6 +203,7 @@ class HydrologyFromTimeSeries(base.Component):
                 default_store,
                 self,
                 {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m²"},
+                "The water surface area of the reach.",
                 attribute_hints={
                     "type": np.ndarray,
                     "shape": (
@@ -219,6 +235,7 @@ class HydrologyFromTimeSeries(base.Component):
                 default_store,
                 self,
                 {"data_type": np.float, "scales": "time/hour, space/reach", "unit": "m³/d"},
+                "The amount of water that flows laterally into a reach.",
                 attribute_hints={
                     "type": np.ndarray,
                     "shape": (
@@ -252,7 +269,7 @@ class HydrologyFromTimeSeries(base.Component):
                 {"scales": "space/reach"},
                 "This output lists the geometries of the reaches as retrieved from the `Hydrography` input. All "
                 "outputs that have a scale of `space/reach` report reaches in the order specified by this input, "
-                "except the `Inflow` output which reports reaches in the order of the `InflowReachesGeometries` "
+                "except the `Inflow` output which reports reaches in the order of the `InflowReachesGeometries`"
                 "output.",
                 {
                     "type": list[bytes],

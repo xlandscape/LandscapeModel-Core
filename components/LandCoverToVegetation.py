@@ -10,19 +10,9 @@ import numpy
 class LandCoverToVegetation(base.Component):
     """
     Translates land cover into vegetation information using a simple lookup-table approach.
-
-    INPUTS
-    LandCover: A list of integer identifiers that detail the land use / land cover type of individual elements at scale
-    space/base_geometry. Identifiers have no units.
-    Mapping: A file path to an Excel workbook that contains information on how to map land cover classes into
-    vegetation classes.
-    VegetationClasses: A JSON file containing defined vegetation classes and their numerical code.
-
-    OUTPUTS
-    Vegetation: A list of vegetation classes at a space/base_geometry scale.
     """
     # CHANGELOG
-    base.VERSION.added("1.14.0", "`components.LandCoverToVegetation` ")
+    base.VERSION.added("1.14.0", "`components.LandCoverToVegetation`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -40,19 +30,39 @@ class LandCoverToVegetation(base.Component):
                 base.Input(
                     "LandCover",
                     (attrib.Class(list[int]), attrib.Unit(None), attrib.Scales("space/base_geometry")),
-                    self.default_observer
+                    self.default_observer,
+                    description=
+                    "A list of integer identifiers that detail the land use / land cover type of individual elements "
+                    "at scale space/base_geometry. Identifiers have no units."
                 ),
                 base.Input(
-                    "Mapping", (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")), self.default_observer),
+                    "Mapping",
+                    (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                    self.default_observer,
+                    description=
+                    "A file path to an Excel workbook that contains information on how to map land cover classes into "
+                    "vegetation classes."
+                ),
                 base.Input(
                     "VegetationClasses",
                     (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description="A JSON file containing defined vegetation classes and their numerical code."
                 )
             )
         )
         self._outputs = base.OutputContainer(
-            self, (base.Output("Vegetation", default_store, self, {"scales": "space/base_geometry", "unit": None}),))
+            self,
+            (
+                base.Output(
+                    "Vegetation",
+                    default_store,
+                    self,
+                    {"scales": "space/base_geometry", "unit": None},
+                    "A list of vegetation classes at a space/base_geometry scale."
+                ),
+            )
+        )
 
     def run(self) -> None:
         """

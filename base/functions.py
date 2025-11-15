@@ -13,7 +13,6 @@ import base
 import inspect
 import typing
 
-
 # CHANGELOG
 base.VERSION.added("1.1.1", "`base.functions` providing helper functions")
 base.VERSION.changed("1.2.1", "`base.functions.replaceTokens()` allows macros in source path")
@@ -21,7 +20,7 @@ base.VERSION.fixed("1.2.3", "`base.functions.chunkSlices()` indexing")
 base.VERSION.changed("1.2.17", "`base.functions.replaceTokens()` accepts non-string values")
 base.VERSION.changed("1.3.5", "`base.functions.replaceTokens()` replaces $$-tokens before $-tokens")
 base.VERSION.changed("1.3.5", "`base.functions `refactored")
-base.VERSION.changed("1.3.13", "Option to disable observers in configuration by `base.functions.observers_from_xml()` ")
+base.VERSION.changed("1.3.13", "Option to disable observers in configuration by `base.functions.observers_from_xml()`")
 base.VERSION.changed(
     "1.3.20", "`base.functions.observers_from_xml()` enables/disables observers also through expression")
 base.VERSION.changed("1.3.20", "`base.functions.convert()` separator of list[str] parameters changed to |")
@@ -31,23 +30,23 @@ base.VERSION.added("1.3.24", "`base.functions.run_process()` for invoking system
 base.VERSION.fixed("1.3.33", "`base.functions.convert()` crashes with empty lists")
 base.VERSION.changed("1.3.35", "`base.functions.run_process()` manages system environment variables")
 base.VERSION.fixed("1.3.35", "`base.functions.replace_tokens()` treats None values as empty string")
-base.VERSION.added("1.4.1", "Changelog in `base.functions` ")
+base.VERSION.added("1.4.1", "Changelog in `base.functions`")
 base.VERSION.fixed("1.4.1", "`base.functions.observers_from_xml()` passes lock argument only if needed by observer")
 base.VERSION.changed("1.4.3", "`base.functions.convert()` can evaluate values")
-base.VERSION.added("1.4.5", "`base.functions.reporting()` ")
+base.VERSION.added("1.4.5", "`base.functions.reporting()`")
 base.VERSION.changed("1.4.9", "`base.functions` changelog uses markdown for code elements")
-base.VERSION.changed("1.4.11", "parsing of XML parameters strips whitespaces in `base.functions` ")
-base.VERSION.fixed("1.5.4", "stripping of raw configuration values in `base.functions` ")
-base.VERSION.changed("1.5.4", "parsing of raw parameters in `base.functions` ")
+base.VERSION.changed("1.4.11", "parsing of XML parameters strips whitespaces in `base.functions`")
+base.VERSION.fixed("1.5.4", "stripping of raw configuration values in `base.functions`")
+base.VERSION.changed("1.5.4", "parsing of raw parameters in `base.functions`")
 base.VERSION.added("1.5.9", "`base.functions.run_process()` option to run external processes minimized")
 base.VERSION.added("1.6.5", "`base.functions.run_process()` makes use of new Python dict union operator")
-base.VERSION.added("1.7.0", "Type hints to `base.functions` ")
-base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.functions` ")
-base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.functions` ")
+base.VERSION.added("1.7.0", "Type hints to `base.functions`")
+base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.functions`")
+base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.functions`")
 base.VERSION.changed(
-    "1.9.1", "Check if module R instances are sufficiently encapsulated in `base.functions.run_process()` ")
-base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called by `functions.run_process` ")
-base.VERSION.changed("1.12.6", "Mitigated weak code warnings in `base.functions` ")
+    "1.9.1", "Check if module R instances are sufficiently encapsulated in `base.functions.run_process()`")
+base.VERSION.changed("1.9.8", "Switching of buffering of Python instances called by `functions.run_process`")
+base.VERSION.changed("1.12.6", "Mitigated weak code warnings in `base.functions`")
 base.VERSION.changed(
     "1.15.4", "Order of arguments in `UserParameters` component now follows `base.Component` class")
 base.VERSION.changed("1.15.7", "File encoding for reading and writing using the `replace_tokens` function is now UTF-8")
@@ -72,7 +71,7 @@ def cartesian_product(*arrays: np.core.ndarray) -> np.core.ndarray:
     return result_array.reshape(-1, number_arrays)
 
 
-def chunk_slices(shape: typing.Sequence[int], chunks: typing.Sequence[int]) -> list[tuple[slice]]:
+def chunk_slices(shape: typing.Sequence[int], chunks: typing.Sequence[int]) -> list[tuple[slice, ...]]:
     """
     Returns an array of tuples specifying chunks of a multidimensional array.
 
@@ -96,7 +95,7 @@ def chunk_slices(shape: typing.Sequence[int], chunks: typing.Sequence[int]) -> l
     return ranges
 
 
-def chunk_size(chunk: typing.Sequence[int], shape: typing.Sequence[int]) -> tuple[int]:
+def chunk_size(chunk: typing.Sequence[int], shape: typing.Sequence[int]) -> tuple[int, ...]:
     """
     Calculates a chunk size for a multidimensional array.
 
@@ -240,7 +239,7 @@ def run_process(
     """
     if env is None:
         env = {}
-    if os.path.basename(command[0]).lower() in ("r.exe", "rscript.exe", ):
+    if os.path.basename(command[0]).lower() in ("r.exe", "rscript.exe",):
         env = {"HOME": working_directory, "R_USER": working_directory} | env
         if "R_LIBS_USER" not in env:
             observer.write_message(2, f"Presumably starting R instance, but R_LIBS_USER not set")
@@ -275,7 +274,7 @@ def reporting(
     Runs a reporting element in a default reporting environment.
 
     Args:
-        data_store: The file path where the X3df store is located.
+        data_store: The file path where the X3df-store is located.
         reporting_element_class: The class of the reporting element.
         parameters: A list of name-value tuples defining parameters.
         links: A list of name-dataset tuples defining links.

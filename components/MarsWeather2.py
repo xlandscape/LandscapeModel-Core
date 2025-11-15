@@ -1,3 +1,6 @@
+"""
+A xLandscape component for providing weather data downloaded from Agri4Cast.
+"""
 import datetime
 import numpy
 import base
@@ -28,24 +31,92 @@ class MarsWeather2(base.Component):
             default_store: The default store of the component.
         """
         super(MarsWeather2, self).__init__(name, default_observer, default_store)
-        self._inputs = base.InputContainer(self, [
-            base.Input("FilePath", (attrib.Class(str, 1), attrib.Unit(None, 1)), self.default_observer)
-        ])
+        self._inputs = base.InputContainer(
+            self,
+            [
+                base.Input(
+                    "FilePath",
+                    (attrib.Class(str, 1), attrib.Unit(None, 1)),
+                    self.default_observer,
+                    description="The file path to the MARS weather file.",
+                )
+            ]
+        )
         self._outputs = base.OutputContainer(
             self,
             (
-                base.Output("TEMPERATURE_AVG", default_store, self),
-                base.Output("PRECIPITATION", default_store, self),
-                base.Output("ET0", default_store, self),
-                base.Output("WINDSPEED", default_store, self),
-                base.Output("RADIATION", default_store, self),
-                base.Output("TEMPERATURE_MAX", default_store, self),
-                base.Output("TEMPERATURE_MIN", default_store, self),
-                base.Output("VAPOURPRESSURE", default_store, self),
-                base.Output("Latitude", default_store, self),
-                base.Output("Longitude", default_store, self),
-                base.Output("Altitude", default_store, self),
-                base.Output("WeatherRegions", default_store, self)
+                base.Output(
+                    "TEMPERATURE_AVG",
+                    default_store,
+                    self,
+                    description="The average air temperature."
+                ),
+                base.Output(
+                    "PRECIPITATION",
+                    default_store,
+                    self,
+                    description="The total precipitation."
+                ),
+                base.Output(
+                    "ET0",
+                    default_store,
+                    self,
+                    description="The potential evapotranspiration."
+                ),
+                base.Output(
+                    "WINDSPEED",
+                    default_store,
+                    self,
+                    description="The average wind speed."
+                ),
+                base.Output(
+                    "RADIATION",
+                    default_store,
+                    self,
+                    description="The solar radiation."
+                ),
+                base.Output(
+                    "TEMPERATURE_MAX",
+                    default_store,
+                    self,
+                    description="The maximum temperature."
+                ),
+                base.Output(
+                    "TEMPERATURE_MIN",
+                    default_store,
+                    self,
+                    description="The minimum temperature."
+                ),
+                base.Output(
+                    "VAPOURPRESSURE",
+                    default_store,
+                    self,
+                    description="The vapor pressure."
+                ),
+                base.Output(
+                    "Latitude",
+                    default_store,
+                    self,
+                    description="The latitude of the grid cell center."
+                ),
+                base.Output(
+                    "Longitude",
+                    default_store,
+                    self,
+                    description="The longitude of the grid cell center."
+                ),
+                base.Output(
+                    "Altitude",
+                    default_store,
+                    self,
+                    description="The (average?) altitude of the grid cell center."
+                ),
+                base.Output(
+                    "WeatherRegions",
+                    default_store,
+                    self,
+                    description="The weather regions."
+                )
             )
         )
         self._units = {
@@ -68,7 +139,7 @@ class MarsWeather2(base.Component):
         """
         config_file = self.inputs["FilePath"].read().values
         config = xml.etree.ElementTree.parse(config_file).getroot()
-        first_date = base.convert(config.find("FirstDate"))
+        first_date: datetime.date = base.convert(config.find("FirstDate"))
         last_date = base.convert(config.find("LastDate"))
         sites = config.findall("Site")
         self.outputs["WeatherRegions"].set_values(

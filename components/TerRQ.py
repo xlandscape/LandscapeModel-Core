@@ -10,26 +10,17 @@ import typing
 class TerRQ(base.Component):
     """
     Calculates the TER and the RQ.
-
-    INPUTS
-    Threshold: The threshold applied. A float of global scale. Value has a unit of g/ha.
-    Exposure: The exposure considered. A NumPy array of scales time/day, space_x/1sqm, space_y/1sqm. Values have a unit
-    of g/ha.
-
-    OUTPUTS
-    TER: The calculated TER. A NumPy array of the same scales as the exposure input. Values have a unit of 1.
-    RQ: The calculated RQ. A NumPy array of the same scales as the exposure input. Values have a unit of 1.
     """
     # CHANGELOG
     base.VERSION.added("1.4.0", "`components.TerRQ` component")
-    base.VERSION.added("1.4.1", "Changelog in `components.TerRQ` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.TerRQ`")
     base.VERSION.added("1.4.1", "`components.TerRQ` class documentation")
     base.VERSION.fixed("1.4.1", "`components.TerRQ` attrib namespace reference")
     base.VERSION.changed("1.4.9", "`components.TerRQ` data type access")
     base.VERSION.changed("1.5.3", "`components.TerRQ` changelog uses markdown for code elements")
-    base.VERSION.added("1.7.0", "Type hints to `components.TerRQ` ")
+    base.VERSION.added("1.7.0", "Type hints to `components.TerRQ`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.TerRQ` with base class")
-    base.VERSION.changed("1.12.4", "Order of exposure input scales in `components.TerRQ` ")
+    base.VERSION.changed("1.12.4", "Order of exposure input scales in `components.TerRQ`")
     base.VERSION.changed("1.12.4", "`components.TerRQ` reports offsets of output")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
@@ -40,7 +31,8 @@ class TerRQ(base.Component):
                 base.Input(
                     "Threshold",
                     (attrib.Class(float), attrib.Unit("g/ha"), attrib.Scales("global")),
-                    self.default_observer
+                    self.default_observer,
+                    description="The threshold applied. A float of global scale. Value has a unit of g/ha."
                 ),
                 base.Input(
                     "Exposure",
@@ -49,12 +41,34 @@ class TerRQ(base.Component):
                         attrib.Unit("g/ha"),
                         attrib.Scales("space_y/1sqm, space_x/1sqm, time/day")
                     ),
-                    self.default_observer
+                    self.default_observer,
+                    description=
+                    "The exposure considered. A NumPy array of scales time/day, space_x/1sqm, space_y/1sqm. Values "
+                    "have a unit of g/ha."
                 )
             ]
         )
         self._outputs = base.OutputContainer(
-            self, [base.Output("TER", default_store, self), base.Output("RQ", default_store, self)])
+            self,
+            [
+                base.Output(
+                    "TER",
+                    default_store,
+                    self,
+                    description=
+                    "The calculated TER. A NumPy array of the same scales as the exposure input. Values have a unit of "
+                    "1."
+                ),
+                base.Output(
+                    "RQ",
+                    default_store,
+                    self,
+                    description=
+                    "The calculated RQ. A NumPy array of the same scales as the exposure input. Values have a unit of "
+                    "1."
+                )
+            ]
+        )
 
     def run(self) -> None:
         """

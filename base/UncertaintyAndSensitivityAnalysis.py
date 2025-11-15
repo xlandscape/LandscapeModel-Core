@@ -21,13 +21,13 @@ class UncertaintyAndSensitivityAnalysis:
     base.VERSION.fixed("1.2.35", "`base.UncertaintyAndSensitivityAnalysis.create()` function parsing improved")
     base.VERSION.changed("1.3.27", "`base.UncertaintyAndSensitivityAnalysis` refactored")
     base.VERSION.changed("1.3.35", "`base.UncertaintyAndSensitivityAnalysis.create()` regex refactored")
-    base.VERSION.added("1.4.1", "Changelog in `base.UncertaintyAndSensitivityAnalysis` ")
+    base.VERSION.added("1.4.1", "Changelog in `base.UncertaintyAndSensitivityAnalysis`")
     base.VERSION.changed("1.4.9", "`base.UncertaintyAndSensitivityAnalysis` renamed")
     base.VERSION.changed("1.4.9", "`base.UncertaintyAndSensitivityAnalysis` renamed local variables")
-    base.VERSION.added("1.7.0", "Type hints to `base.UncertaintyAnsSensitivityAnalysis` ")
+    base.VERSION.added("1.7.0", "Type hints to `base.UncertaintyAnsSensitivityAnalysis`")
     base.VERSION.changed(
-        "1.8.0", "Replaced Legacy format strings by f-strings in `base.UncertaintyAndSensitivityAnalysis` ")
-    base.VERSION.changed("1.10.3", "Spell checking in `base.UncertaintyAndSensitivityAnalysis` ")
+        "1.8.0", "Replaced Legacy format strings by f-strings in `base.UncertaintyAndSensitivityAnalysis`")
+    base.VERSION.changed("1.10.3", "Spell checking in `base.UncertaintyAndSensitivityAnalysis`")
 
     def __init__(self, parameters: base.UserParameters) -> None:
         if parameters.uncertainty_sensitivity_analysis is None:
@@ -47,7 +47,7 @@ class UncertaintyAndSensitivityAnalysis:
             if os.path.exists(destination):
                 raise FileExistsError(
                     f"Cannot create uncertainty/sensitivity analysis parameterization: file {destination} already "
-                    "exists"
+                    f"exists"
                 )
             if not os.path.exists(os.path.dirname(destination)):
                 os.makedirs(os.path.dirname(destination))

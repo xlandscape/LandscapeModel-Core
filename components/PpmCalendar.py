@@ -26,22 +26,22 @@ class PpmCalendar(base.Component):
     base.VERSION.changed("1.2.16", "`components.PpmCalendar` output refactored")
     base.VERSION.changed("1.2.20", "`components.PpmCalendar` no longer outputs SprayApplication objects")
     base.VERSION.changed("1.2.25", "components.PpmCalendar`.RandomSeed` parameter")
-    base.VERSION.changed("1.2.27", "`ProbabilityFieldApplied` introduced in `components.PpmCalendar` ")
+    base.VERSION.changed("1.2.27", "`ProbabilityFieldApplied` introduced in `components.PpmCalendar`")
     base.VERSION.changed("1.3.27", "`components.PpmCalendar` specifies scales")
     base.VERSION.changed("1.3.33", "`components.PpmCalendar` checks input types strictly")
     base.VERSION.changed("1.3.33", "`components.PpmCalendar` checks for physical units")
     base.VERSION.changed("1.3.33", "`components.PpmCalendar` reports physical units to the data store")
     base.VERSION.changed("1.3.33", "`components.PpmCalendar` checks for scales")
-    base.VERSION.added("1.4.1", "Changelog in `components.PpmCalendar` ")
+    base.VERSION.added("1.4.1", "Changelog in `components.PpmCalendar`")
     base.VERSION.changed("1.4.1", "`components.PpmCalendar` class documentation")
     base.VERSION.changed("1.5.3", "`components.PpmCalendar` changelog uses markdown for code elements")
     base.VERSION.changed("1.6.0", "`components.PpmCalendar` casts exported WKB geometries to bytes")
-    base.VERSION.changed("1.6.1", "Renamed some parameters in `components.PpmCalendar` ")
-    base.VERSION.added("1.7.0", "Type hints to `components.PpmCalendar` ")
-    base.VERSION.added("1.7.0", "Type hints to `components.SprayApplication` ")
+    base.VERSION.changed("1.6.1", "Renamed some parameters in `components.PpmCalendar`")
+    base.VERSION.added("1.7.0", "Type hints to `components.PpmCalendar`")
+    base.VERSION.added("1.7.0", "Type hints to `components.SprayApplication`")
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.PpmCalendar` with base class")
-    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.PpmCalendar` ")
-    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.PpmCalendar` ")
+    base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `components.PpmCalendar`")
+    base.VERSION.changed("1.9.0", "Switched to Google docstring style in `component.PpmCalendar`")
     base.VERSION.changed("1.15.6", "Updated description of `PpmCalendar` component")
     base.VERSION.added("1.15.6", "Input descriptions to `PpmCalendar` component")
     base.VERSION.added("1.15.8", "Documentation of outputs in `PpmCalendar` component")
@@ -112,7 +112,7 @@ class PpmCalendar(base.Component):
                 (attrib.Class(float), attrib.Unit("g/ha"), attrib.Scales("global")),
                 self.default_observer,
                 description="The application rate. The `PpmCalendar` component applies the same rate to all "
-                            "applications. If your use-case requires different rates, e.g., within a application "
+                            "applications. If your use-case requires different rates, e.g., within an application "
                             "sequence, another component has to be used."
             ),
             base.Input(
@@ -120,9 +120,9 @@ class PpmCalendar(base.Component):
                 (attrib.Class(float), attrib.Unit("1"), attrib.Scales("global")),
                 self.default_observer,
                 description="The fraction by which spray-drift is reduced due to technological measures. The "
-                            "technological drift-reduction has to be a value between `0` and `1`, with `0` "
+                            "technological drift-reduction has to be a value between `0` and `1`, with `0`"
                             "representing spray-equipment that does not reduce drift-deposition relative to the "
-                            "equipment used for the derivation of regulatory drift-depositions values and `1` "
+                            "equipment used for the derivation of regulatory drift-depositions values and `1`"
                             "resulting in drift-deposition being prevented entirely due to technological measures."
             ),
             base.Input(
@@ -324,6 +324,7 @@ class PpmCalendar(base.Component):
 
 class SprayApplication:
     """Describes an individual spray-application."""
+
     def __init__(
             self,
             field: int,

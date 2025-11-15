@@ -6,6 +6,7 @@ import typing
 
 class VersionInfo(distutils.version.StrictVersion):
     """A version number plus release date and changelog."""
+
     # CHANGELOG can be found in `VERSION.py` to avoid circular references
 
     def __init__(self, version: str, date: typing.Optional[str]) -> None:

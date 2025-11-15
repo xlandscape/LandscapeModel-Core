@@ -15,20 +15,20 @@ import urllib.request
 import json
 
 # CHANGELOG
-base.VERSION.added("1.4.9", "`base.documentation` ")
+base.VERSION.added("1.4.9", "`base.documentation`")
 base.VERSION.added("1.5.0", "`base.documentation` methods for documenting components")
 base.VERSION.added("1.5.1", "`base.documentation` methods for documenting scenarios")
 base.VERSION.added("1.5.3", "`base.documentation.write_changelog()` no longer escapes underscores")
 base.VERSION.added("1.5.7", "`base.documentation.document_component()` documentation of `Equals` attribute")
 base.VERSION.changed(
     "1.5.8",
-    """`base.documentation.document_component()` can now handle sample configurations with component names differing 
-    from object name"""
+    "`base.documentation.document_component()` can now handle sample configurations with component names differing "
+    "from object name"
 )
 base.VERSION.changed(
     "1.5.8",
-    """`base.documentation.document_component()`: long lines in XML samples are now wrapped to ensure 120 character 
-    width"""
+    "`base.documentation.document_component()`: long lines in XML samples are now wrapped to ensure 120 character "
+    "width"
 )
 base.VERSION.added(
     "1.5.8",
@@ -36,21 +36,21 @@ base.VERSION.added(
 )
 base.VERSION.added(
     "1.5.10", "`base.documentation.document_component()` support for the documentation of unit attribute hints")
-base.VERSION.added("1.7.0", "Type hints to `base.documentation` ")
-base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.documentation` ")
-base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.documentation` ")
-base.VERSION.fixed("1.9.3", "Formatting of generated scenario documentation in `base.documentation` ")
-base.VERSION.added("1.9.6", "Function for template-based documentation of model variants to `base.documentation` ")
+base.VERSION.added("1.7.0", "Type hints to `base.documentation`")
+base.VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `base.documentation`")
+base.VERSION.changed("1.9.0", "Switched to Google docstring style in `base.documentation`")
+base.VERSION.fixed("1.9.3", "Formatting of generated scenario documentation in `base.documentation`")
+base.VERSION.added("1.9.6", "Function for template-based documentation of model variants to `base.documentation`")
 base.VERSION.added(
     "1.9.1", "Arguments to `documentation.document_variant` to specify variant name and endpoint flexibly")
-base.VERSION.changed("1.10.3", "Spell checking in `base.documentation` ")
-base.VERSION.changed("1.12.1", "Extended CONTRIBUTING.md in `base.documentation` ")
-base.VERSION.fixed("1.12.2", "Typos in `base.documentation` ")
-base.VERSION.added("1.12.2", "Step to merge request instructions in `base.documentation` ")
-base.VERSION.changed("1.12.5", "Enhanced contribution documentation in `base.documentation` ")
-base.VERSION.changed("1.12.6", "Refactored documentation of class members into own function in `base.documentation` ")
-base.VERSION.fixed("1.13.0", "Spelling error in `base.documentation` ")
-base.VERSION.changed("1.13.1", "Text wrapping of member documentation in `base.documentation` ")
+base.VERSION.changed("1.10.3", "Spell checking in `base.documentation`")
+base.VERSION.changed("1.12.1", "Extended CONTRIBUTING.md in `base.documentation`")
+base.VERSION.fixed("1.12.2", "Typos in `base.documentation`")
+base.VERSION.added("1.12.2", "Step to merge request instructions in `base.documentation`")
+base.VERSION.changed("1.12.5", "Enhanced contribution documentation in `base.documentation`")
+base.VERSION.changed("1.12.6", "Refactored documentation of class members into own function in `base.documentation`")
+base.VERSION.fixed("1.13.0", "Spelling error in `base.documentation`")
+base.VERSION.changed("1.13.1", "Text wrapping of member documentation in `base.documentation`")
 base.VERSION.changed("1.14.3", "Normalized whitespace for creating documentations")
 base.VERSION.added("1.15.0", "Functions to check variant parts and to write repository info for documentation")
 base.VERSION.fixed("1.15.1", "Documentation of scenario respects XML namespace")
@@ -85,13 +85,16 @@ def write_changelog(name: str, version_history: base.VersionCollection, file_pat
                 f.write(f"\n## [{version}] - {version.date}\n\n")
             f.write("### Added\n")
             for message in version.additions:
-                f.write(f"\n- {message}\n")
+                formatted_text = "\n".join(textwrap.wrap(message, 120, subsequent_indent="  "))
+                f.write(f"\n- {formatted_text}\n")
             f.write("\n### Changed\n")
             for message in version.changes:
-                f.write(f"\n- {message}\n")
+                formatted_text = "\n".join(textwrap.wrap(message, 120, subsequent_indent="  "))
+                f.write(f"\n- {formatted_text}\n")
             f.write("\n### Fixed\n")
             for message in version.fixes:
-                f.write(f"\n- {message}\n")
+                formatted_text = "\n".join(textwrap.wrap(message, 120, subsequent_indent="  "))
+                f.write(f"\n- {formatted_text}\n")
 
 
 def document_components(components_module: types.ModuleType, file_path: str) -> None:
@@ -106,25 +109,33 @@ def document_components(components_module: types.ModuleType, file_path: str) -> 
         Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
-        f.write("# Components\n")
+        f.write("# Components\n\n")
         f.write("This file lists all components that are currently included in the Landscape Model core.\n")
         _document_member(components_module, f)
 
 
 def _document_member(
         components_module: types.ModuleType, f: typing.TextIO, member_type: typing.Type = base.Component) -> None:
-    f.write(f"It was automatically created on {datetime.date.today()}.\n")
+    f.write(f"It was automatically created on {datetime.date.today()}.")
     for name, member in components_module.__dict__.items():
         if inspect.isclass(member) and issubclass(member, member_type):
-            f.write(f"\n\n## {name}")
-            f.write(member.__doc__)
+            f.write(f"\n\n## {name}\n\n")
+            f.write(inspect.cleandoc(member.__doc__))
             if issubclass(member, base.Component):
                 component = member("_tmp_", base.Observer(), None)
-                f.write(f"\n### Inputs")
+                f.write(f"\n\n### Inputs\n")
                 for component_input in component.inputs:
-                    f.write(f"\n#### {component_input.name}\n{component_input.description or ''}")
-                    for attribute in component_input.attributes:
-                        f.write(f"\n- {attribute}")
+                    component_input_description = "\n".join(
+                        textwrap.wrap(
+                            component_input.description,
+                            120,
+                            replace_whitespace=False
+                        )
+                    ) if component_input.description else ""
+                    f.write(f"\n#### {component_input.name}\n\n{component_input_description}\n")
+                    for i, attribute in enumerate(component_input.attributes):
+                        f.write(f"\n" if i == 0 else "")
+                        f.write(f"- {attribute}\n")
                 _document_outputs(f, component)
 
 
@@ -142,7 +153,11 @@ def _document_outputs(f: typing.TextIO, component: base.Component) -> None:
 
     f.write(f"\n### Outputs")
     for component_output in component.outputs:
-        f.write(f"\n#### {component_output.name}\n{component_output.description or ''}")
+        component_output_description = "\n".join(
+            textwrap.wrap(inspect.cleandoc(component_output.description), 120, replace_whitespace=False)
+        ) if component_output.description else ""
+        f.write(f"\n\n#### {component_output.name}\n\n{component_output_description}")
+        f.write("\n" if len(component_output.default_attributes) + len(component_output.attribute_hints) > 0 else "")
         for attribute, value in component_output.default_attributes.items():
             if isinstance(value, builtins.type):
                 f.write(f"\n- {attribute.title().replace('_', ' ')}: {_format_type(value)}")
@@ -163,7 +178,10 @@ def _document_outputs(f: typing.TextIO, component: base.Component) -> None:
                 )
             else:
                 display_value = f"`{value}`"
-            f.write(f"\n- {attribute.title()}: {display_value}")
+            formatted_text = "\n".join(
+                textwrap.wrap(f"- {attribute.title()}: {display_value}", 120, subsequent_indent="  ")
+            )
+            f.write(f"\n{formatted_text}")
 
 
 def document_observers(observers_module: types.ModuleType, file_path: str) -> None:
@@ -178,7 +196,7 @@ def document_observers(observers_module: types.ModuleType, file_path: str) -> No
         Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
-        f.write("# Observers\n")
+        f.write("# Observers\n\n")
         f.write("This file lists all observers that are currently included in the Landscape Model core.\n")
         _document_member(observers_module, f, base.Observer)
 
@@ -195,7 +213,7 @@ def document_stores(stores_module: types.ModuleType, file_path: str) -> None:
         Nothing.
     """
     with open(file_path, "w", encoding="utf-8") as f:
-        f.write("# Stores\n")
+        f.write("# Stores\n\n")
         f.write("This file lists all stores that are currently included in the Landscape Model core.\n")
         _document_member(stores_module, f, base.Store)
 
@@ -227,7 +245,9 @@ def document_component(
         textwrap.wrap(
             inspect.cleandoc(
                 xml.etree.ElementTree.tostring(
-                    configuration_xml.getroot().find("Composition").find(component_name)).decode("utf-8")),
+                    configuration_xml.getroot().find("Composition").find(component_name)
+                ).decode()
+            ),
             120,
             replace_whitespace=False
         )
@@ -528,7 +548,11 @@ Distributed under the CC0 License. See `LICENSE` for more information.
     )
 
 
-def write_scenario_changelog(info_file: str, file_path: str, xml_namespace: str = "urn:xLandscapeModelScenarioInfo") -> None:
+def write_scenario_changelog(
+        info_file: str,
+        file_path: str,
+        xml_namespace: str = "urn:xLandscapeModelScenarioInfo"
+) -> None:
     """
     Writes an updated scenario changelog according to the version history stored in the scenario info file.
 
@@ -613,8 +637,16 @@ $(variant_name) using the graphical git client *Sourcetree*.
     )
 
 
-
 def check_variant_parts(variant_root_dir: str) -> None:
+    """
+    Checks whether all parts used by the model are documented.
+
+    Args:
+        variant_root_dir: The root directory of the model variant.
+
+    Returns:
+        None.
+    """
     experiment_config = xml.etree.ElementTree.parse(
         os.path.join(variant_root_dir, "..", "..", "variant", "experiment.xml")).getroot()
     mc_config = xml.etree.ElementTree.parse(
@@ -642,6 +674,19 @@ def write_repository_info(
         part_type: str,
         code_style_compliance: typing.Optional[distutils.version.StrictVersion] = None
 ) -> None:
+    """
+    Writes information about the repository into a file.
+
+    Args:
+        repository_path: The path of the repository.
+        info_file: The file to write the output to.
+        target_versions: The JSON file containing the version information.
+        part_type: The type of repository.
+        code_style_compliance: An indicator for code style compliance.
+
+    Returns:
+        None.
+    """
     git_path_or_file = os.path.join(repository_path, ".git")
     git_config_file = os.path.join(git_path_or_file, "config")
     git_config = configparser.ConfigParser()
@@ -698,6 +743,16 @@ def write_repository_info(
             indent=2
         )
 
-def write_latest_version_info(version_file: str) -> str:
+
+def write_latest_version_info(version_file: str) -> None:
+    """
+    Write information about the latest version to a file.
+
+    Args:
+        version_file: The file to write to.
+
+    Returns:
+        None.
+    """
     with open(version_file, "w", encoding="utf-8") as f:
         json.dump({}, f)

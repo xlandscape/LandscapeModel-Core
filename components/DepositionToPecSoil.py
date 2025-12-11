@@ -29,6 +29,7 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.changed("1.12.0", "`components.DepositionToPecSoil` output scale order")
     base.VERSION.changed("1.12.0", "`components.DepositionToPecSoil` reports offset")
     base.VERSION.changed("1.18.0", "Code refactory in `components.DepositionToPecSoil`")
+    base.VERSION.added("1.18.1", "Semantic information to inputs of `components.DepositionToPecSoil`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """

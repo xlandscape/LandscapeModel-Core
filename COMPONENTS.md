@@ -1,7 +1,7 @@
 # Components
 
 This file lists all components that are currently included in the Landscape Model core.
-It was automatically created on 2025-11-15.
+It was automatically created on 2025-12-11.
 
 ## BeeForage
 
@@ -97,6 +97,10 @@ A generic component that deletes a folder from the file system.
 
 A valid path of a folder to be deleted.
 
+- Class: `str`
+- Scales: `global`
+- Unit: `None`
+
 ### Outputs
 
 ## DepositionToPecSoil
@@ -109,13 +113,25 @@ Calculates the PEC soil from surface deposition by a simple homogeneous distribu
 
 The deposition on the soil surface.
 
+- Class: `numpy.ndarray`
+- Scales: `space_y/1sqm, space_x/1sqm, time/day`
+- Unit: `g/ha`
+
 #### SoilBulkDensity
 
 The density of the soil layer.
 
+- Class: `float`
+- Scales: `global`
+- Unit: `g/cm³`
+
 #### Depth
 
 The depth of the soil layer in which the deposition is distributed equally.
+
+- Class: `float`
+- Scales: `global`
+- Unit: `cm`
 
 ### Outputs
 

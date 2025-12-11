@@ -309,7 +309,7 @@ class Experiment:
                     2,
                     f"{scenario.name} {scenario.version} is not supported by {model_info['name']} "
                     f"{model_info['version']}, only by a later version version, {latest_supported_version}",
-                    "Please expect compatibility issues and try to update the scenario"
+                    "Please expect compatibility issues and try to update the model"
                 )
         self.check_repository_state(scenario.path, scenario.name, scenario.version, latest_versions)
         xml.etree.ElementTree.indent(info_xml)

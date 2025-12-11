@@ -1,6 +1,7 @@
 """
 Class definition of the Landscape Model DeleteFolder component.
 """
+import attrib
 import base
 import shutil
 import typing
@@ -21,7 +22,14 @@ class DeleteFolder(base.Component):
         super(DeleteFolder, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
             self,
-            [base.Input("Path", (), self.default_observer, description="A valid path of a folder to be deleted.")]
+            [
+                base.Input(
+                    "Path",
+                    (attrib.Class(str), attrib.Scales("global"), attrib.Unit(None)),
+                    self.default_observer,
+                    description="A valid path of a folder to be deleted."
+                )
+            ]
         )
         self._outputs = base.OutputContainer(self, [])
 

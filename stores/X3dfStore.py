@@ -74,6 +74,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.16.3", "Changed default value for newly created datasets in X3dfStore to NaN")
     base.VERSION.changed("1.16.4", "Changed chunking of byte lists in X3dfStore")
     base.VERSION.changed("1.18.0", "Code refactory in `stores.X3dfStore`")
+    base.VERSION.fixed("1.18.1", "`stores.X3dfStore` initialization of arrays with the `default` keyword")
 
     def __init__(
             self,

@@ -47,7 +47,7 @@
                   <xsd:attribute name="number" use="required">
                     <xsd:simpleType>
                       <xsd:restriction base="xsd:string">
-                        <xsd:pattern value="\d\.\d+"/>
+                        <xsd:pattern value="\d\.\d+(\.\d+)?"/>
                       </xsd:restriction>
                     </xsd:simpleType>
                   </xsd:attribute>
@@ -147,14 +147,14 @@
                   <xsd:attribute name="name" use="required">
                     <xsd:simpleType>
                       <xsd:restriction base="xsd:string">
-                        <xsd:pattern value="[a-zA-z]+"/>
+                        <xsd:pattern value="[a-zA-z0-9_-]+"/>
                       </xsd:restriction>
                     </xsd:simpleType>
                   </xsd:attribute>
                   <xsd:attribute name="target" use="required">
                     <xsd:simpleType>
                       <xsd:restriction base="xsd:string">
-                        <xsd:pattern value="[a-zA-z0-9/._]+"/>
+                        <xsd:pattern value="[a-zA-z0-9/._-]+"/>
                       </xsd:restriction>
                     </xsd:simpleType>
                   </xsd:attribute>

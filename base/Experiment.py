@@ -49,6 +49,7 @@ class Experiment:
     base.VERSION.fixed("1.15.5", "Errors when scenario was not tested with current model")
     base.VERSION.added("1.15.6", "Message to writing of info XML in Experiment regarding un-checked scenario modules")
     base.VERSION.changed("1.18.0", "Code refactory in `base.Experiment`")
+    base.VERSION.fixed("1.18.1", "Updated warning message regarding non-supported model version for scenario")
 
     def __init__(
             self,
@@ -309,7 +310,7 @@ class Experiment:
                     2,
                     f"{scenario.name} {scenario.version} is not supported by {model_info['name']} "
                     f"{model_info['version']}, only by a later version version, {latest_supported_version}",
-                    "Please expect compatibility issues and try to update the scenario"
+                    "Please expect compatibility issues and try to update the model"
                 )
         self.check_repository_state(scenario.path, scenario.name, scenario.version, latest_versions)
         xml.etree.ElementTree.indent(info_xml)

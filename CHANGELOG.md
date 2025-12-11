@@ -1,6 +1,26 @@
 # Changelog
 
-This is the changelog for the Landscape Model core. It was automatically created on 2025-11-15.
+This is the changelog for the Landscape Model core. It was automatically created on 2025-12-11.
+
+## [1.18.1] - 2025-12-11
+
+### Added
+
+- Semantic information to inputs of `components.DeleteFolder`
+
+- Semantic information to inputs of `components.DepositionToPecSoil`
+
+### Changed
+
+- Relaxed limitations in scenario schema for version numbers and file names
+
+- Changed user warning regarding geodata to plain console output
+
+### Fixed
+
+- Updated warning message regarding non-supported model version for scenario
+
+- `stores.X3dfStore` initialization of arrays with the `default` keyword
 
 ## [1.18] - 2025-11-15
 

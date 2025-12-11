@@ -74,6 +74,7 @@ class X3dfStore(base.Store):
     base.VERSION.changed("1.16.3", "Changed default value for newly created datasets in X3dfStore to NaN")
     base.VERSION.changed("1.16.4", "Changed chunking of byte lists in X3dfStore")
     base.VERSION.changed("1.18.0", "Code refactory in `stores.X3dfStore`")
+    base.VERSION.fixed("1.18.1", "`stores.X3dfStore` initialization of arrays with the `default` keyword")
 
     def __init__(
             self,
@@ -372,10 +373,13 @@ class X3dfStore(base.Store):
             if all(isinstance(x, bytes) for x in values):
                 # noinspection PyUnresolvedReferences
                 data_type = h5py.vlen_dtype(numpy.uint8)
-                data_set = self._f.create_dataset(
-                    name, (len(values),), dtype=data_type, compression="gzip", chunks=(1,))
-                for i in range(len(values)):
-                    data_set[i] = numpy.fromstring(values[i], dtype=numpy.uint8)
+                if len(values) == 0:
+                    self._f.create_dataset(name, (len(values),), dtype=data_type)
+                else:
+                    data_set = self._f.create_dataset(
+                        name, (len(values),), dtype=data_type, compression="gzip", chunks=(1,))
+                    for i in range(len(values)):
+                        data_set[i] = numpy.fromstring(values[i], dtype=numpy.uint8)
                 self._f[name].attrs["_type"] = "list[bytes]"
             elif all(isinstance(x, float) for x in values):
                 self._f[name] = values
@@ -412,7 +416,13 @@ class X3dfStore(base.Store):
             # noinspection SpellCheckingInspection
             if type_name == "numpy.ndarray":
                 data_set = self._f.create_dataset(
-                    name, compression="gzip", shape=shape, dtype=data_type, chunks=chunks, fillvalue=numpy.nan)
+                    name,
+                    compression="gzip",
+                    shape=shape,
+                    dtype=data_type,
+                    chunks=chunks,
+                    fillvalue=numpy.nan if default is None else default
+                )
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"
                 dimension_count = len(shape)
@@ -433,7 +443,8 @@ class X3dfStore(base.Store):
                     values.shape,
                     values.dtype,
                     compression="gzip",
-                    chunks=chunks
+                    chunks=chunks,
+                    fillvalue=default
                 )
                 # noinspection SpellCheckingInspection
                 data_set.attrs["_type"] = "numpy.ndarray"

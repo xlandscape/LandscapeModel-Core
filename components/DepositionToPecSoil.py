@@ -1,5 +1,6 @@
 """Class definition of the DepositionToPecSoil Landscape Model component."""
 import numpy as np
+import attrib
 import base
 import typing
 
@@ -28,6 +29,7 @@ class DepositionToPecSoil(base.Component):
     base.VERSION.changed("1.12.0", "`components.DepositionToPecSoil` output scale order")
     base.VERSION.changed("1.12.0", "`components.DepositionToPecSoil` reports offset")
     base.VERSION.changed("1.18.0", "Code refactory in `components.DepositionToPecSoil`")
+    base.VERSION.added("1.18.1", "Semantic information to inputs of `components.DepositionToPecSoil`")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         """
@@ -42,11 +44,25 @@ class DepositionToPecSoil(base.Component):
         self._inputs = base.InputContainer(
             self,
             [
-                base.Input("Deposition", (), self.default_observer, description="The deposition on the soil surface."),
-                base.Input("SoilBulkDensity", (), self.default_observer, description="The density of the soil layer."),
+                base.Input(
+                    "Deposition",
+                    (
+                        attrib.Class(np.ndarray),
+                        attrib.Scales("space_y/1sqm, space_x/1sqm, time/day"),
+                        attrib.Unit("g/ha")
+                    ),
+                    self.default_observer,
+                    description="The deposition on the soil surface."
+                ),
+                base.Input(
+                    "SoilBulkDensity",
+                    (attrib.Class(float), attrib.Scales("global"), attrib.Unit("g/cm³")),
+                    self.default_observer,
+                    description="The density of the soil layer."
+                ),
                 base.Input(
                     "Depth",
-                    (),
+                    (attrib.Class(float), attrib.Scales("global"), attrib.Unit("cm")),
                     self.default_observer,
                     description="The depth of the soil layer in which the deposition is distributed equally."
                 )

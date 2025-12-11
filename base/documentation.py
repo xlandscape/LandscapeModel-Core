@@ -62,6 +62,7 @@ base.VERSION.added("1.15.8", "Documentation of outputs for components in core")
 base.VERSION.changed(
     "1.15.9", "Documentation of outputs for components in core and external components now uses the same code")
 base.VERSION.changed("1.18.0", "Code refactory in `base.documentation`")
+base.VERSION.changed("1.18.1", "Changed user warning regarding geodata to plain console output")
 
 
 def write_changelog(name: str, version_history: base.VersionCollection, file_path: str) -> None:
@@ -543,9 +544,9 @@ Distributed under the CC0 License. See `LICENSE` for more information.
         f.write("\n\n## Acknowledgements\n")
         for acknowledgement in scenario_info.findall("Acknowledgements/Acknowledgement", namespace):
             f.write(f"* {inspect.cleandoc(acknowledgement.text)}\n")
-    raise UserWarning(
-        "Geospatial data of the scenario, made available through the LandscapeScenario component, is currently "
-        "not documented"
+    print(
+        "WARNINING: Geospatial data of the scenario, made available through the LandscapeScenario component, is "
+        "currently not documented"
     )
 
 

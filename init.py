@@ -63,7 +63,7 @@ def run(argument: str, basedir: typing.Optional[str] = None) -> None:
         argument = _yaml_to_xrun(argument)
         ext = ".xrun"
     # noinspection SpellCheckingInspection
-    if ext == ".xrun":
+    if ext in (".xrun", ".yaml", ".yml"):
         parameters = base.UserParameters(argument)
         timestamp = datetime.datetime.now().strftime("%d%m%y%H%M%S")
         parameters.params["ExperimentID"] = f"{parameters.params['ExperimentID']}_{timestamp}"

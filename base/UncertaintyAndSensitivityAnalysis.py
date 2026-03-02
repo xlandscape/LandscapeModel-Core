@@ -42,7 +42,7 @@ class UncertaintyAndSensitivityAnalysis:
         """
         output_dir = os.path.dirname(self._params.xml)
         for uncertaintyAndSensitivityAnalysis in range(self._params.uncertainty_sensitivity_analysis):
-            uncertainty_analysis_name = f"{self._params.params['SimID']}-{uncertaintyAndSensitivityAnalysis + 1}"
+            uncertainty_analysis_name = f"{self._params.params['ExperimentID']}-{uncertaintyAndSensitivityAnalysis + 1}"
             # noinspection SpellCheckingInspection
             destination = os.path.join(output_dir, self._params.subdir, f"{uncertainty_analysis_name}.xrun")
             if os.path.exists(destination):
@@ -54,7 +54,7 @@ class UncertaintyAndSensitivityAnalysis:
                 os.makedirs(os.path.dirname(destination))
             parameters_element = xml.etree.ElementTree.Element("Parameters")
             for param, value in self._params.params.items():
-                if param == "SimID":
+                if param == "ExperimentID":
                     xml.etree.ElementTree.SubElement(parameters_element, param).text = uncertainty_analysis_name
                 else:
                     match = re.search(r"\$\[(?P<a>[a-z]+)\((?P<b>.+)\)]", value)

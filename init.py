@@ -1,10 +1,47 @@
 """The Landscape Model startup script."""
+import datetime
 import os
 import sys
 import typing
+import xml.etree.ElementTree as ET
+
+import yaml
 
 
 # CHANGELOG can be found in base\VERSION.py
+
+
+def _yaml_to_xrun(yaml_path: str) -> str:
+    """
+    Converts a YAML parameterisation file to a temporary .xrun XML file.
+
+    Args:
+        yaml_path: Path to the .yaml file.
+
+    Returns:
+        Path to the generated temporary .xrun file (placed next to the YAML source).
+    """
+    with open(yaml_path, "r", encoding="utf-8") as fh:
+        data = yaml.safe_load(fh)
+    root = ET.Element("Parameters", xmlns="urn:xAquaticRisk")
+    for section_name, section_params in data.items():
+        section_el = ET.SubElement(root, str(section_name))
+        if isinstance(section_params, dict):
+            for param_name, param_value in section_params.items():
+                param_el = ET.SubElement(section_el, str(param_name))
+                if param_value is None:
+                    param_el.text = ""
+                elif isinstance(param_value, bool):
+                    param_el.text = "true" if param_value else "false"
+                else:
+                    param_el.text = str(param_value)
+        elif section_params is not None:
+            section_el.text = str(section_params)
+    ET.indent(root, space="  ")
+    tree = ET.ElementTree(root)
+    xrun_path = os.path.splitext(yaml_path)[0] + ".tmp.xrun"
+    tree.write(xrun_path, encoding="utf-8", xml_declaration=True)
+    return xrun_path
 
 
 def run(argument: str, basedir: typing.Optional[str] = None) -> None:
@@ -20,10 +57,16 @@ def run(argument: str, basedir: typing.Optional[str] = None) -> None:
     """
     import base
     sys.path.extend([os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "variant"))])
-    ext = os.path.splitext(argument)[1]
+    ext = os.path.splitext(argument)[1].lower()
+    # noinspection SpellCheckingInspection
+    if ext in (".yaml", ".yml"):
+        argument = _yaml_to_xrun(argument)
+        ext = ".xrun"
     # noinspection SpellCheckingInspection
     if ext == ".xrun":
         parameters = base.UserParameters(argument)
+        timestamp = datetime.datetime.now().strftime("%d%m%y%H%M%S")
+        parameters.params["ExperimentID"] = f"{parameters.params['ExperimentID']}_{timestamp}"
         experiment = base.Experiment(
             parameters,
             os.path.join(os.path.dirname(__file__), "..", "..", "run"),

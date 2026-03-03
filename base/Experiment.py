@@ -88,7 +88,7 @@ class Experiment:
             self._replace_tokens["_PROJECT_DIR_"] = self._replace_tokens["_PARAM_DIR_"]
         else:
             self._replace_tokens["_PROJECT_DIR_"] = os.path.abspath(project_dir)
-        project = base.Project(self._replace_tokens["Project"], self._replace_tokens["_PROJECT_DIR_"])
+        project = base.Project(self._replace_tokens["LandscapeScenario"], self._replace_tokens["_PROJECT_DIR_"])
         self._replace_tokens["_SCENARIO_DIR_"] = project.path
         self._replace_tokens.update(project.content)
         base.replace_tokens(self._replace_tokens, "$(_X3DIR_)/../../variant/experiment.xml", experiment_temporary_xml)
@@ -125,7 +125,7 @@ class Experiment:
         sys.stdout = sys.stderr = self._observer
         self._observer.write_message(5, "Startup initialization")
         self._observer.write_message(5, f"Parameters: {parameters.xml}")
-        self._observer.write_message(5, f"Project: {self._replace_tokens['Project']}")
+        self._observer.write_message(5, f"Project: {self._replace_tokens['LandscapeScenario']}")
         self._observer.write_message(5, f"Project directory: {self._replace_tokens['_PROJECT_DIR_']}")
         self._observer.write_message(5, f"Runtime directory: {self._replace_tokens['_X3DIR_']}")
         self._observer.write_message(5, f"Working directory: {self._replace_tokens['_EXP_BASE_DIR_']}")

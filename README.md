@@ -127,7 +127,7 @@ pause
 
 ### Parameterization Template
 
-The following shows the simplest possible user parameterization. Only the two mandatory parameters `<Project>`,
+The following shows the simplest possible user parameterization. Only the two mandatory parameters `<LandscapeScenario>`,
 specifying which scenario to use, and `SimID`, defining the unique name of the next simulation run, ae present.
 Further parameters can be added and are then available in the configuration by macros. The parameterization provided
 to the user should be inline documented properly using XML comments.
@@ -135,7 +135,7 @@ to the user should be inline documented properly using XML comments.
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <Parameters>
-    <Project>scenario/???</Project>
+    <LandscapeScenario>scenario/???</LandscapeScenario>
     <SimID>Test Run</SimID>
 </Parameters>
 ```

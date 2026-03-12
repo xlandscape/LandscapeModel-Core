@@ -70,7 +70,8 @@ def run(argument: str, basedir: typing.Optional[str] = None) -> None:
         experiment = base.Experiment(
             parameters,
             os.path.join(os.path.dirname(__file__), "..", "..", "run"),
-            param_dir=basedir
+            param_dir=basedir,
+            project_dir=os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         )
         experiment.run()
     # noinspection SpellCheckingInspection

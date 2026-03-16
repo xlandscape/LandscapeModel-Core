@@ -88,7 +88,22 @@ class Experiment:
             self._replace_tokens["_PROJECT_DIR_"] = self._replace_tokens["_PARAM_DIR_"]
         else:
             self._replace_tokens["_PROJECT_DIR_"] = os.path.abspath(project_dir)
-        project = base.Project(self._replace_tokens["LandscapeScenario"], self._replace_tokens["_PROJECT_DIR_"])
+        # Backward compatibility: newer parameterisations use LandscapeScenario
+        # instead of the legacy Project key expected by base.Project.
+        project_ref = self._replace_tokens.get("Project")
+        if not project_ref:
+            project_ref = self._replace_tokens.get("LandscapeScenario")
+            if project_ref:
+                # Resolve scenario/<name> from parameterisation dir to project dir.
+                # Example: parameterisation + ../scenario/<name>
+                norm = project_ref.replace("\\", "/")
+                if norm.startswith("scenario/"):
+                    project_ref = f"../{norm}"
+        if not project_ref:
+            raise KeyError("Project")
+
+        self._replace_tokens["Project"] = project_ref
+        project = base.Project(self._replace_tokens["Project"], self._replace_tokens["_PROJECT_DIR_"])
         self._replace_tokens["_SCENARIO_DIR_"] = project.path
         self._replace_tokens.update(project.content)
         base.replace_tokens(self._replace_tokens, "$(_X3DIR_)/../../variant/experiment.xml", experiment_temporary_xml)

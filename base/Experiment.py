@@ -88,17 +88,38 @@ class Experiment:
             self._replace_tokens["_PROJECT_DIR_"] = self._replace_tokens["_PARAM_DIR_"]
         else:
             self._replace_tokens["_PROJECT_DIR_"] = os.path.abspath(project_dir)
+        project_root = self._replace_tokens["_PROJECT_DIR_"]
+
+        def _existing_project_ref(ref: typing.Optional[str]) -> typing.Optional[str]:
+            if not ref:
+                return None
+            candidate = os.path.abspath(os.path.join(project_root, ref))
+            if os.path.isfile(os.path.join(candidate, "scenario.xproject")):
+                return ref
+            norm = ref.replace("\\", "/")
+            marker = "/scenario/"
+            idx = norm.lower().find(marker)
+            if idx >= 0:
+                scenario_rel = norm[idx + 1:]
+                for fixed_ref in (scenario_rel, f"../{scenario_rel}"):
+                    fixed_path = os.path.abspath(os.path.join(project_root, fixed_ref))
+                    if os.path.isfile(os.path.join(fixed_path, "scenario.xproject")):
+                        return fixed_ref
+            return None
+
         # Backward compatibility: newer parameterisations use LandscapeScenario
         # instead of the legacy Project key expected by base.Project.
-        project_ref = self._replace_tokens.get("Project")
+        project_ref = _existing_project_ref(self._replace_tokens.get("Project"))
         if not project_ref:
-            project_ref = self._replace_tokens.get("LandscapeScenario")
-            if project_ref:
-                # Resolve scenario/<name> from parameterisation dir to project dir.
-                # Example: parameterisation + ../scenario/<name>
-                norm = project_ref.replace("\\", "/")
-                if norm.startswith("scenario/"):
-                    project_ref = f"../{norm}"
+            landscape_ref = self._replace_tokens.get("LandscapeScenario")
+            if landscape_ref:
+                project_ref = _existing_project_ref(landscape_ref)
+                if not project_ref:
+                    norm = landscape_ref.replace("\\", "/")
+                    if norm.startswith("scenario/"):
+                        project_ref = _existing_project_ref(f"../{norm}") or f"../{norm}"
+                    else:
+                        project_ref = landscape_ref
         if not project_ref:
             raise KeyError("Project")
 

@@ -1,6 +1,7 @@
 """The Landscape Model startup script."""
 import datetime
 import os
+import re
 import sys
 import typing
 import xml.etree.ElementTree as ET
@@ -65,8 +66,11 @@ def run(argument: str, basedir: typing.Optional[str] = None) -> None:
     # noinspection SpellCheckingInspection
     if ext == ".xrun":
         parameters = base.UserParameters(argument)
-        timestamp = datetime.datetime.now().strftime("%d%m%y%H%M%S")
-        parameters.params["ExperimentID"] = f"{parameters.params['ExperimentID']}_{timestamp}"
+        experiment_id = str(parameters.params.get("ExperimentID", "Simulation")).strip()
+        if not re.search(r"_\d{8}-\d{6}$", experiment_id):
+            timestamp = datetime.datetime.now().strftime("%d%m%Y-%H%M%S")
+            experiment_id = f"{experiment_id}_{timestamp}"
+        parameters.params["ExperimentID"] = experiment_id
         experiment = base.Experiment(
             parameters,
             os.path.join(os.path.dirname(__file__), "..", "..", "run"),

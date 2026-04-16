@@ -301,7 +301,11 @@ class MultiObserver(Observer):
              Nothing.
         """
         if not self._error and re.search("(?<!std. )error", text, re.IGNORECASE):
-            self._error = text, ""
+            # Certain component-level messages can contain "error" although the MC run continues.
+            if re.search(r"gdal error|error in optim\(", text, re.IGNORECASE):
+                self._warning = text, ""
+            else:
+                self._error = text, ""
         if not self._error and re.search("warn", text, re.IGNORECASE):
             self._warning = text, ""
         if not self._error and re.search("note", text, re.IGNORECASE):

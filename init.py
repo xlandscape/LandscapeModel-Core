@@ -44,6 +44,33 @@ def _yaml_to_xrun(yaml_path: str) -> str:
     return xrun_path
 
 
+def _print_windows_policy_block_guidance(error: OSError) -> bool:
+    """
+    Prints actionable guidance for WinError 4551 (blocked runtime binary on Windows).
+
+    Args:
+        error: The OSError raised during import.
+
+    Returns:
+        True when a known policy-blocking case was handled, False otherwise.
+    """
+    if os.name != "nt":
+        return False
+    if getattr(error, "winerror", None) != 4551:
+        return False
+    runtime_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "bin", "python-3.9.7-amd64"))
+    print("ERROR: Windows blocked loading a bundled runtime binary (WinError 4551).")
+    print("This is usually caused by Windows policy or downloaded-file blocking metadata.")
+    print("")
+    print("Try in PowerShell:")
+    print(f"  Get-ChildItem -Path '{runtime_root}' -Recurse -File | Unblock-File")
+    print("")
+    print("Then retry the run.")
+    print("If it still fails, re-extract xAquaticRisk to a trusted local folder")
+    print("or ask your administrator to allow this path/runtime under application control policy.")
+    return True
+
+
 def run(argument: str, basedir: typing.Optional[str] = None) -> None:
     """
     Runs the Landscape Model.
@@ -55,7 +82,12 @@ def run(argument: str, basedir: typing.Optional[str] = None) -> None:
     Returns:
         Nothing.
     """
-    import base
+    try:
+        import base
+    except OSError as error:
+        if _print_windows_policy_block_guidance(error):
+            raise SystemExit(1) from error
+        raise
     sys.path.extend([os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "variant"))])
     ext = os.path.splitext(argument)[1].lower()
     # noinspection SpellCheckingInspection

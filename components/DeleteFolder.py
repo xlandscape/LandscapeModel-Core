@@ -3,6 +3,7 @@ Class definition of the Landscape Model DeleteFolder component.
 """
 import attrib
 import base
+import errno
 import shutil
 import typing
 
@@ -18,6 +19,7 @@ class DeleteFolder(base.Component):
     base.VERSION.changed("1.7.0", "Harmonized init signature of `components.DeleteFolder` with base class")
     base.VERSION.changed("1.18.0", "Code refactory in `components.DeleteFolder`")
     base.VERSION.added("1.18.1", "Semantic information to inputs of `components.DeleteFolder`")
+    base.VERSION.fixed("1.18.2", "Robust deletion of folders in `components.DeleteFolder` when files disappear during cleanup")
 
     def __init__(self, name: str, default_observer: base.Observer, default_store: typing.Optional[base.Store]) -> None:
         super(DeleteFolder, self).__init__(name, default_observer, default_store)
@@ -39,4 +41,15 @@ class DeleteFolder(base.Component):
         Runs the component.
         :return: Nothing
         """
-        shutil.rmtree(self._inputs["Path"].read().values)
+        folder_path = self._inputs["Path"].read().values
+        shutil.rmtree(folder_path, onerror=self._handle_delete_error)
+
+    @staticmethod
+    def _handle_delete_error(function: typing.Callable[..., typing.Any], path: str, exc_info: tuple[type, BaseException, typing.Any]) -> None:
+        """Ignore missing-path races during recursive deletion and raise all other errors."""
+        exception = exc_info[1]
+        if isinstance(exception, FileNotFoundError):
+            return
+        if isinstance(exception, OSError) and exception.errno == errno.ENOENT:
+            return
+        raise exception

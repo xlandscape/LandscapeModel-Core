@@ -98,11 +98,15 @@ def run(argument: str, basedir: typing.Optional[str] = None) -> None:
     # noinspection SpellCheckingInspection
     if ext in (".xrun", ".yaml", ".yml"):
         parameters = base.UserParameters(argument)
-        experiment_id = str(parameters.params.get("ExperimentID", "Simulation")).strip()
-        if not re.search(r"_\d{8}-\d{6}$", experiment_id):
+        exp_id = str(parameters.params.get("ExperimentID", "Simulation")).strip() or "Simulation"
+        # Keep IDs that already use the required suffix; otherwise replace any legacy suffix.
+        if re.search(r"_\d{8}-\d{6}$", exp_id):
+            normalized_exp_id = exp_id
+        else:
+            base_exp_id = re.sub(r"_(?:\d{12}|\d{14}|\d{6}-\d{6}|\d{8}-\d{6})$", "", exp_id)
             timestamp = datetime.datetime.now().strftime("%d%m%Y-%H%M%S")
-            experiment_id = f"{experiment_id}_{timestamp}"
-        parameters.params["ExperimentID"] = experiment_id
+            normalized_exp_id = f"{base_exp_id}_{timestamp}"
+        parameters.params["ExperimentID"] = normalized_exp_id
         experiment = base.Experiment(
             parameters,
             os.path.join(os.path.dirname(__file__), "..", "..", "run"),

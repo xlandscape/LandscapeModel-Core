@@ -24,6 +24,7 @@ class BeeForage(base.Component):
         # CHANGELOG
         base.VERSION.added("1.14.0", "`components.BeeForage`")
         base.VERSION.changed("1.18.0", "Code refactory in `components.BeeForage`")
+        base.VERSION.fixed("1.19.1", "`components.BeeForage` writes pollen for vegetation classes without nectar")
 
         super(BeeForage, self).__init__(name, default_observer, default_store)
         self._inputs = base.InputContainer(
@@ -146,12 +147,12 @@ class BeeForage(base.Component):
                 self.default_observer.write_message(
                     2, f"No bee forage defined for vegetation class {vegetation_class} (feature {feature_ids[i]})")
             else:
-                if numpy.count_nonzero(vegetation_class_timeseries["nectar"]) > 0:
-                    nectar_per_day = mapping[vegetation_class]["nectar"]
-                    nectar_per_day.shape = (1, simulated_days)
-                    self.outputs["Nectar"].set_values(
-                        nectar_per_day, slices=(i, slice(0, simulated_days)), create=False)
-                    pollen_per_day = mapping[vegetation_class]["pollen"]
-                    pollen_per_day.shape = (1, simulated_days)
-                    self.outputs["Pollen"].set_values(
-                        pollen_per_day, slices=(i, slice(0, simulated_days)), create=False)
+                # Write both rows for every mapped class: a pollen-only class (e.g. maize, sorghum, hazelnut)
+                # has no nectar but still provides pollen, and a class without any forage gets zeros instead
+                # of the store's NaN fill value.
+                nectar_per_day = vegetation_class_timeseries["nectar"].reshape(1, simulated_days)
+                self.outputs["Nectar"].set_values(
+                    nectar_per_day, slices=(i, slice(0, simulated_days)), create=False)
+                pollen_per_day = vegetation_class_timeseries["pollen"].reshape(1, simulated_days)
+                self.outputs["Pollen"].set_values(
+                    pollen_per_day, slices=(i, slice(0, simulated_days)), create=False)

@@ -5,6 +5,8 @@ import base.VersionInfo
 
 # RELEASES
 VERSION: base.VersionCollection = base.VersionCollection(
+    base.VersionInfo("1.19.1", "2026-10-22"),
+    base.VersionInfo("1.19.0", "2026-03-03"),
     base.VersionInfo("1.18.1", "2025-12-11"),
     base.VersionInfo("1.18.0", "2025-11-15"),
     base.VersionInfo("1.17.0", "2024-11-06"),
@@ -184,6 +186,9 @@ VERSION.changed("1.8.0", "Replaced Legacy format strings by f-strings in `init.p
 VERSION.changed("1.9.0", "Switched to Google docstring style in `init.py`")
 VERSION.changed("1.12.4", "Increased encapsulation of Jupyter notebook in `init.py`")
 VERSION.changed("1.18.0", "Code refactory in `init.py`")
+VERSION.added("1.19.0", "YAML parameterisation files (`.yaml`, `.yml`) in `init.py`")
+VERSION.changed("1.19.0", "Parameter `SimID` renamed to `ExperimentID`; a timestamp is appended at start-up")
+VERSION.changed("1.19.0", "Parameter `Project` renamed to `LandscapeScenario`")
 
 # CHANGELOG document.py
 VERSION.added("1.4.9", "`document.py`")

@@ -2,6 +2,24 @@
 
 This is the changelog for the Landscape Model core. It was automatically created on 2025-12-11.
 
+## [1.19.1] - 2026-10-22
+
+### Fixed
+
+- `components.BeeForage` writes pollen for vegetation classes without nectar
+
+## [1.19.0] - 2026-03-03
+
+### Added
+
+- YAML parameterisation files (`.yaml`, `.yml`) in `init.py`
+
+### Changed
+
+- Parameter `SimID` renamed to `ExperimentID`; a timestamp is appended at start-up
+
+- Parameter `Project` renamed to `LandscapeScenario`
+
 ## [1.18.1] - 2025-12-11
 
 ### Added
